@@ -45,41 +45,52 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditDictionaryViewModel : AddEditConfigDataModel<ILexeme>
+    public class AddEditDictionaryViewModel : PagedDataModel<IDictata>
     {
-        [Display(Name = "Apply Existing Template", Description = "Apply an existing object's data to this new data.")]
-        [UIHint("DictataList")]
-        [DictataDataBinder]
-        public override ILexeme Template { get; set; }
-
-        public AddEditDictionaryViewModel() : base("", ConfigDataType.Dictionary)
+        internal override Func<IDictata, bool> SearchFilter
         {
+            get
+            {
+                return item => item.Name.ToLower().Contains(SearchTerms.ToLower());
+            }
+        }
+
+        internal override Func<IDictata, object> OrderPrimary
+        {
+            get
+            {
+                return item => item.Name;
+            }
+        }
+
+
+        internal override Func<IDictata, object> OrderSecondary
+        {
+            get
+            {
+                return item => item.FormGroup;
+            }
+        }
+
+        public AddEditDictionaryViewModel(IEnumerable<IDictata> items)
+        : base(items)
+        {
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
             ValidWords = ConfigDataCache.GetAll<ILexeme>();
             ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Lexeme();
         }
 
-        public AddEditDictionaryViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Dictionary)
+        public AddEditDictionaryViewModel() : base(Enumerable.Empty<IDictata>())
         {
-            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            CurrentPageNumber = 1;
+            ItemsPerPage = 20;
+            ValidWords = ConfigDataCache.GetAll<ILexeme>();
+            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Lexeme();
-
-            //apply template
-            if (DataTemplate != null)
-            {
-                DataObject.Language = DataTemplate.Language;
-            }
-        }
-
-        public AddEditDictionaryViewModel(string archivePath, ILexeme item) : base(archivePath, ConfigDataType.Dictionary, item)
-        {
-            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
-            ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
-            DataObject = (Lexeme)item;
         }
 
         [Display(Name = "Word", Description = "The new word's name/spelling.")]

@@ -3,6 +3,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -302,6 +303,7 @@ namespace NetMud.Data.Linguistic
         [JsonConstructor]
         public Dictata()
         {
+            Name = "";
             WordType = LexicalType.None;
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
@@ -328,14 +330,33 @@ namespace NetMud.Data.Linguistic
         /// <param name="lexica">the incoming lexica phrase</param>
         public Dictata(ILexica lexica)
         {
+            Name = "";
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
             PhraseAntonyms = new HashSet<IDictataPhrase>();
             PhraseSynonyms = new HashSet<IDictataPhrase>();
             Semantics = new HashSet<string>();
 
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            if (lexica.Context?.Language == null)
+            {
+                if (globalConfig?.BaseLanguage == null)
+                {
+                    Language = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
+                }
+                else
+                {
+                    Language = globalConfig.BaseLanguage;
+                }
+            }
+            else
+            {
+                Language = lexica.Context.Language;
+            }
+
             var maybeLex = ConfigDataCache.Get<ILexeme>(
-                new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", lexica.Context.Language.Name, lexica.Phrase), ConfigDataType.Dictionary));
+                new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Language.Name, lexica.Phrase), ConfigDataType.Dictionary));
 
             if (maybeLex == null)
             {
@@ -346,6 +367,7 @@ namespace NetMud.Data.Linguistic
             {
                 var wordForm = maybeLex.WordForms.FirstOrDefault(form => form.WordType == lexica.Type);
 
+                Name = lexica.Phrase;
                 WordType = lexica.Type;
                 Synonyms = wordForm.Synonyms;
                 Antonyms = wordForm.Antonyms;
@@ -390,6 +412,18 @@ namespace NetMud.Data.Linguistic
                     lex.SystemSave();
                     lex.PersistToCache();
                 }
+            }
+            else
+            {
+                lex = new Lexeme()
+                {
+                    Name = Name,
+                    Language = Language
+                };
+
+                lex.AddNewForm(this);
+                lex.SystemSave();
+                lex.PersistToCache();
             }
 
             return lex;

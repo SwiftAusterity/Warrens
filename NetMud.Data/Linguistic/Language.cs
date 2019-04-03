@@ -148,6 +148,7 @@ namespace NetMud.Data.Linguistic
             EnsureDictionary();
             return result;
         }
+
         private void EnsureDictionary()
         {
             if (!string.IsNullOrWhiteSpace(BaseWords.ArticleDeterminant))

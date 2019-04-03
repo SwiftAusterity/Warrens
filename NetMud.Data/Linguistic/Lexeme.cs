@@ -92,7 +92,6 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Individual meanings and types under this
         /// </summary>
-        [DictataCollectionDataBinder]
         public HashSet<IDictata> WordForms { get; set; }
 
         [JsonConstructor]

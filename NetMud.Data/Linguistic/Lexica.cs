@@ -97,7 +97,7 @@ namespace NetMud.Data.Linguistic
         public IDictata GetDictata()
         {
             var lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Context?.Language?.Name, Phrase), ConfigDataType.Dictionary));
-            var dict = lex.GetForm(Type);
+            var dict = lex?.GetForm(Type);
 
             if (dict == null)
             {
@@ -113,12 +113,17 @@ namespace NetMud.Data.Linguistic
         /// <returns></returns>
         public IDictata GenerateDictata()
         {
+            if (string.IsNullOrWhiteSpace(Phrase))
+            {
+                return null;
+            }
+
             var dict = new Dictata(this);
 
             var lex = new Lexeme()
             {
                 Name = Phrase,
-                Language = Context.Language
+                Language = dict.Language
             };
 
             lex.AddNewForm(dict);

@@ -5,8 +5,6 @@
 }
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Name, new { archivedValue = archivedTemplate?.Name ?? "" })
-    @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"], archivedValue = archivedTemplate?.Language?.Name ?? "" })
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
 </div>
-<h4>Forms</h4>
-@Html.EditorFor(m => m.WordForms)

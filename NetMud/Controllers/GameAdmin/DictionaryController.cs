@@ -103,9 +103,9 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add(string Template = "")
+        public ActionResult Add()
         {
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(Template)
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -136,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(string id, string ArchivePath = "")
+        public ActionResult Edit(string id)
         {
             string message = string.Empty;
 
@@ -148,9 +148,10 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(ArchivePath, obj)
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel()
             {
-                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = (Lexeme)obj
             };
 
             return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);

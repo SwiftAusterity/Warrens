@@ -88,6 +88,9 @@ namespace NetMud
             //Load structural data next
             Templates.LoadEverythingToCache();
 
+            //Ensure we have base words for the language every time
+            globalConfig.BaseLanguage.SystemSave();
+
             HotBackup hotBack = new HotBackup();
 
             //Our live data restore failed, reload the entire world from backing data
