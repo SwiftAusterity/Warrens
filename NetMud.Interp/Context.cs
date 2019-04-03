@@ -900,9 +900,8 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                T validObject = default;
-
-                long parmID = -1;
+                T validObject;
+                long parmID;
                 if (!long.TryParse(currentParmString, out parmID))
                 {
                     validObject = TemplateCache.GetByKeywords<T>(currentParmString);

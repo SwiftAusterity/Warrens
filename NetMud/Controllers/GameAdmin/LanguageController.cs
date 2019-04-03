@@ -56,8 +56,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Language/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(string removeId = "", string authorizeRemove = "", string unapproveId = "", string authorizeUnapprove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -121,11 +120,10 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditLanguageViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             ILanguage newObj = vModel.DataObject;
-
+            string message;
             if (!newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 message = "Error; Creation failed.";
@@ -142,13 +140,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(string id, string ArchivePath = "")
         {
-            string message = string.Empty;
-
             ILanguage obj = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), id, ConfigDataType.Language));
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
@@ -164,10 +160,10 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, AddEditLanguageViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             ILanguage obj = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), id, ConfigDataType.Language));
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";

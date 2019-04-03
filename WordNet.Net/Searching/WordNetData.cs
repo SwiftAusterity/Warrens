@@ -157,9 +157,8 @@ namespace WordNet.Net.Searching
             long top = 0;
             long mid = (bot - top) / 2 + top;
             long diff = 666; // ???
-            string key = "";
-            string line = "";
-
+            string key;
+            string line;
             do
             {
                 fp.DiscardBufferedData();
@@ -220,7 +219,6 @@ namespace WordNet.Net.Searching
         {
             int n;
             searchKey = searchKey.ToLower(); // for some reason some WordNet words are stored with a capitalised first letter, whilst all words in the sense index are lowercase
-            string key = "";
             string line = BinSearch(searchKey, '%', fp);
 
             // we have found an exact match (or no match)
@@ -232,7 +230,7 @@ namespace WordNet.Net.Searching
             // set the search down the list and work up
             fp.DiscardBufferedData();
             fp.BaseStream.Position -= 4000;
-
+            string key;
             // move down until we find the first matching key
             do
             {

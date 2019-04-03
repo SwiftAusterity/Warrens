@@ -45,8 +45,6 @@ namespace NetMud.Commands.EntityManipulation
                 return;
             }
 
-            string errorMessage = string.Empty;
-
             int price = merchant.HaggleCheck(thing);
 
             if(price <= 0)

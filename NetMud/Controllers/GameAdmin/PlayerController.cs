@@ -78,8 +78,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Player/Remove/{removeId?}/{authorizeRemove?}")]
         public ActionResult Remove(string removeId, string authorizeRemove)
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());

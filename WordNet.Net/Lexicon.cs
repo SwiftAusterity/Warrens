@@ -114,7 +114,7 @@ namespace WordNet.Net
 
                 // check morphs
                 Morph morphs = new Morph(word, PartOfSpeech.Of(pos), netData);
-                string morph = "";
+                string morph;
                 while ((morph = morphs.Next()) != null)
                 {
                     index = new Index(morph, PartOfSpeech.Of(pos), netData);
@@ -247,7 +247,7 @@ namespace WordNet.Net
 
                 // generate morph list
                 Morph morphs = new Morph(word, PartOfSpeech.Of(pos), netData);
-                string morph = "";
+                string morph;
                 while ((morph = morphs.Next()) != null)
                 {
                     // get an index to a synset collection

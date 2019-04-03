@@ -91,71 +91,73 @@ namespace WordNet.Net
 		public string Next()
 		{
 			string word, tmp;
-			int prep = 0, cnt, st_idx = 0, end_idx = 0, end_idx1, end_idx2;
-			string append = "";
+            int cnt, st_idx = 0, end_idx1, end_idx2;
 
-			/* first time through for this string */
-			if (firsttime)
-			{
-				firsttime = false;
-				cnt = str.Split('_').Length;
-				svprep = 0;
+            /* first time through for this string */
+            if (firsttime)
+            {
+                firsttime = false;
+                cnt = str.Split('_').Length;
+                svprep = 0;
 
-				/* first try exception list */
-				e = new Exceptions(str, pos, netData);
-				if ((tmp = e.Next()) != null && tmp != str)
-				{
-					svcnt = 1; /* force next time to pass NULL */
-					return tmp;
-				}
-				/* then try simply morph on original string */
-				if (pos.Key != "verb" && ((tmp = Morphword(str)) != null) && str != tmp)
+                /* first try exception list */
+                e = new Exceptions(str, pos, netData);
+                if ((tmp = e.Next()) != null && tmp != str)
+                {
+                    svcnt = 1; /* force next time to pass NULL */
+                    return tmp;
+                }
+                /* then try simply morph on original string */
+                if (pos.Key != "verb" && ((tmp = Morphword(str)) != null) && str != tmp)
                 {
                     return tmp;
                 }
 
+                int prep;
                 if (pos.Key == "verb" && cnt > 1 && (prep = Hasprep(str, cnt)) != 0)
-				{
-					svprep = prep;
-					return Morphprep(str);
-				}
-				else
-				{
-					svcnt = cnt = str.Split('_').Length;
-					while (--cnt > 0)
-					{
-						end_idx1 = str.Substring(st_idx).IndexOf('_') + st_idx;
-						end_idx2 = str.Substring(st_idx).IndexOf('-') + st_idx;
-						if (end_idx1 >= st_idx && end_idx2 >= st_idx)
-						{
-							if (end_idx1 < end_idx2)
-							{
-								end_idx = end_idx1;
-								append = "_";
-							}
-							else
-							{
-								end_idx = end_idx2;
-								append = "-";
-							}
-						}
-						else if (end_idx1 >= st_idx)
-						{
-							end_idx = end_idx1;
-							append = "_";
-						}
-						else
-						{
-							end_idx = end_idx2;
-							append = "-";
-						}
-						if (end_idx < 0)
+                {
+                    svprep = prep;
+                    return Morphprep(str);
+                }
+                else
+                {
+                    svcnt = cnt = str.Split('_').Length;
+                    while (--cnt > 0)
+                    {
+                        end_idx1 = str.Substring(st_idx).IndexOf('_') + st_idx;
+                        end_idx2 = str.Substring(st_idx).IndexOf('-') + st_idx;
+                        int end_idx;
+                        string append;
+                        if (end_idx1 >= st_idx && end_idx2 >= st_idx)
+                        {
+                            if (end_idx1 < end_idx2)
+                            {
+                                end_idx = end_idx1;
+                                append = "_";
+                            }
+                            else
+                            {
+                                end_idx = end_idx2;
+                                append = "-";
+                            }
+                        }
+                        else if (end_idx1 >= st_idx)
+                        {
+                            end_idx = end_idx1;
+                            append = "_";
+                        }
+                        else
+                        {
+                            end_idx = end_idx2;
+                            append = "-";
+                        }
+                        if (end_idx < 0)
                         {
                             return null;
                         }
 
                         word = str.Substring(st_idx, end_idx - st_idx);
-						if ((tmp = Morphword(word)) != null)
+                        if ((tmp = Morphword(word)) != null)
                         {
                             searchstr += tmp;
                         }
@@ -165,10 +167,10 @@ namespace WordNet.Net
                         }
 
                         searchstr += append;
-						st_idx = end_idx + 1;
-					}
-					word = str.Substring(st_idx);
-					if ((tmp = Morphword(word)) != null)
+                        st_idx = end_idx + 1;
+                    }
+                    word = str.Substring(st_idx);
+                    if ((tmp = Morphword(word)) != null)
                     {
                         searchstr += tmp;
                     }
@@ -186,31 +188,31 @@ namespace WordNet.Net
                         return null;
                     }
                 }
-			}
-			else  // not firsttime
-			{
-				if (svprep > 0)
-				{
-					svprep = 0;
-					return null;
-				}
-				else if (svcnt == 1)
+            }
+            else  // not firsttime
+            {
+                if (svprep > 0)
+                {
+                    svprep = 0;
+                    return null;
+                }
+                else if (svcnt == 1)
                 {
                     return e.Next();
                 }
                 else
-				{
-					svcnt = 1;
-					e = new Exceptions(str, pos, netData);
-					if ((tmp = e.Next()) != null && tmp != str)
+                {
+                    svcnt = 1;
+                    e = new Exceptions(str, pos, netData);
+                    if ((tmp = e.Next()) != null && tmp != str)
                     {
                         return tmp;
                     }
 
                     return null;
-				}
-			}
-		}
+                }
+            }
+        }
 
         private string Morphword(string word)
 		{
@@ -274,11 +276,10 @@ namespace WordNet.Net
         private int Hasprep(string s, int wdcnt)
 		{
 			int i, wdnum;
-			int pos = 0;
-			for (wdnum = 2; wdnum <= wdcnt; wdnum++)
+            for (wdnum = 2; wdnum <= wdcnt; wdnum++)
 			{
-				pos = s.IndexOf('_');
-				for (pos++, i = 0; i < prepositions.Length; i++)
+                int pos = s.IndexOf('_');
+                for (pos++, i = 0; i < prepositions.Length; i++)
 				{
 					int len = prepositions[i].Length;
 					if (len <= s.Length - pos && s.Substring(pos, len) == prepositions[i]

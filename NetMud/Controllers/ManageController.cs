@@ -91,7 +91,6 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditAccountConfig(ManageAccountViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             Account obj = authedUser.GameAccount;
 
@@ -107,7 +106,7 @@ namespace NetMud.Controllers
             }
 
             UserManager.UpdateAsync(authedUser);
-
+            string message;
             if (obj.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.Log("*WEB* - EditGameAccount[" + authedUser.GameAccount.GlobalIdentityHandle + "]", LogChannels.AccountActivity);
@@ -144,7 +143,6 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddCharacter(ManageCharactersViewModel vModel)
         {
-            string message = string.Empty;
             string userId = User.Identity.GetUserId();
             ManageCharactersViewModel model = new ManageCharactersViewModel
             {
@@ -167,7 +165,7 @@ namespace NetMud.Controllers
                 newChar.GamePermissionsRank = vModel.NewCharacter.GamePermissionsRank;
             }
 
-            message = model.AuthedUser.GameAccount.AddCharacter(newChar);
+            string message = model.AuthedUser.GameAccount.AddCharacter(newChar);
 
             return RedirectToAction("ManageCharacters", new { Message = message });
         }
@@ -175,7 +173,6 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult EditCharacter(long id)
         {
-            string message = string.Empty;
             string userId = User.Identity.GetUserId();
             ApplicationUser user = UserManager.FindById(userId);
 
@@ -195,7 +192,6 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditCharacter(long id, AddEditCharacterViewModel vModel)
         {
-            string message = string.Empty;
             string userId = User.Identity.GetUserId();
             ApplicationUser authedUser = UserManager.FindById(userId);
             IPlayerTemplate obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), authedUser.GlobalIdentityHandle, id));
@@ -206,14 +202,14 @@ namespace NetMud.Controllers
             obj.SuperSenses = vModel.DataObject.SuperSenses;
             obj.GamePermissionsRank = vModel.DataObject.GamePermissionsRank;
             obj.Race = vModel.DataObject.Race;
-            
+            string message;
             if (obj == null)
             {
                 message = "That character does not exist";
             }
             else
             {
-                if(obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.Log("*WEB* - EditCharacter[" + authedUser.GameAccount.GlobalIdentityHandle + "]", LogChannels.AccountActivity);
                     message = "Edit Successful.";
@@ -582,8 +578,7 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RemoveUIModule(long ID, string authorize)
         {
-            string message = string.Empty;
-
+            string message;
             if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
             {
                 message = "You must check the proper authorize radio button first.";
@@ -627,7 +622,6 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddUIModule(AddEditUIModuleViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             UIModule newObj = new UIModule
@@ -638,7 +632,7 @@ namespace NetMud.Controllers
                 Width = vModel.Width,
                 HelpText = vModel.HelpText
             };
-
+            string message;
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
                 message = "Error; Creation failed.";
@@ -655,7 +649,6 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult EditUIModule(long id)
         {
-            string message = string.Empty;
             AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
@@ -665,7 +658,7 @@ namespace NetMud.Controllers
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("UIModules", new { Message = message });
             }
 
@@ -683,10 +676,10 @@ namespace NetMud.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditUIModule(long id, AddEditUIModuleViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IUIModule obj = TemplateCache.Get<IUIModule>(id);
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";

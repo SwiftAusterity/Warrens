@@ -39,7 +39,7 @@ namespace NetMud.Commands.System
             IInanimateTemplate newObject = (IInanimateTemplate)Subject;
             IMobile initator = (IMobile)Actor;
             List<string> sb = new List<string>();
-            IInanimate entityObject = null;
+            IInanimate entityObject;
 
             //No target = spawn to inventory
             if (Target != null)

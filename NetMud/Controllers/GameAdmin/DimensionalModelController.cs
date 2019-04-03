@@ -57,8 +57,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"DimensionalModel/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -123,9 +122,8 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditDimensionalModelDataViewModel vModel, HttpPostedFileBase modelFile)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-
+            string message;
             try
             {
                 IDimensionalModelData newModel = vModel.DataObject;
@@ -168,7 +166,6 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            string message = string.Empty;
             AddEditDimensionalModelDataViewModel vModel = new AddEditDimensionalModelDataViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
@@ -178,7 +175,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
@@ -191,10 +188,10 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Edit(long id, AddEditDimensionalModelDataViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IDimensionalModelData obj = TemplateCache.Get<IDimensionalModelData>(id);
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";

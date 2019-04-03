@@ -278,7 +278,6 @@ namespace NetMud.Cartography
         public static IRoom FindCenterOfMap(string[,,] map, int zIndex = -1)
         {
             int zCenter = zIndex;
-            string roomId = "";
 
             //If we want a specific z index thats fine, otherwise we find the middle Z
             if (zIndex == -1)
@@ -289,7 +288,7 @@ namespace NetMud.Cartography
             int xCenter = (map.GetUpperBound(0) - map.GetLowerBound(0)) / 2 + map.GetLowerBound(0);
             int yCenter = (map.GetUpperBound(1) - map.GetLowerBound(1)) / 2 + map.GetLowerBound(1);
 
-            roomId = map[xCenter, yCenter, zCenter];
+            string roomId = map[xCenter, yCenter, zCenter];
 
             if (string.IsNullOrWhiteSpace(roomId))
             {
@@ -725,7 +724,6 @@ namespace NetMud.Cartography
         public static IRoomTemplate FindCenterOfMap(long[,,] map, int zIndex = -1)
         {
             int zCenter = zIndex;
-            long roomId = -1;
 
             //If we want a specific z index thats fine, otherwise we find the middle Z
             if (zIndex == -1)
@@ -736,7 +734,7 @@ namespace NetMud.Cartography
             int xCenter = (map.GetUpperBound(0) - map.GetLowerBound(0)) / 2 + map.GetLowerBound(0);
             int yCenter = (map.GetUpperBound(1) - map.GetLowerBound(1)) / 2 + map.GetLowerBound(1);
 
-            roomId = map[xCenter, yCenter, zCenter];
+            long roomId = map[xCenter, yCenter, zCenter];
 
             if (roomId < 0)
             {

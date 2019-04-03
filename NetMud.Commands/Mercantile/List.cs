@@ -44,7 +44,7 @@ namespace NetMud.Commands.EntityManipulation
                 return;
             }
 
-            string errorMessage = string.Empty;
+            string errorMessage;
             if (wantsSellSheet)
             {
                 errorMessage = merchant.RenderInventory(Actor);

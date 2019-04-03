@@ -44,7 +44,7 @@ namespace NetMud.Communication.Messaging
         /// <returns>translated text</returns>
         public static IEnumerable<string> TranslateColorVariables(string[] messages, IEntity recipient)
         {
-            int i = 0;
+            int i;
             for (i = 0; i < messages.Length; i++)
             {
                 messages[i] = TranslateColorVariables(messages[i], recipient);

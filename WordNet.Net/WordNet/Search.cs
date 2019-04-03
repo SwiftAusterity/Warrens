@@ -169,11 +169,10 @@ namespace WordNet.Net.WordNet
         // done by findtheinfo().
         private void Findtheinfo()
         {
-            SynonymSet cursyn = null;
             Indexes ixs = new Indexes(word, pos, netData);
-            Index idx = null;
             int depth = sch.rec ? 1 : 0;
             senses = new List<SynonymSet>();
+            Index idx;
             switch (sch.ptp.Mnemonic)
             {
                 case "OVERVIEW":
@@ -247,7 +246,7 @@ namespace WordNet.Net.WordNet
 
                                 if (!skipToEnd)
                                 {
-                                    cursyn = new SynonymSet(idx, sense, this, netData);
+                                    SynonymSet cursyn = new SynonymSet(idx, sense, this, netData);
 
                                     //TODO: moved senses.add(cursyn) from here to each case and handled it differently according to search - this handling needs to be verified to ensure the filter is not to limiting
                                     switch (sch.ptp.Mnemonic)

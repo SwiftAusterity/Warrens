@@ -11,8 +11,7 @@
 
 <h3>Word Forms</h3>
 @Html.ActionLink("Add New Word Form", "AddDictata", "Dictionary", new { lexemeId = Model.DataObject.UniqueKey }, new { @class = "addNew" })
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { EntityTypeName = "Locale", IncludeAddLink = false, Columns = tableColumns, Values = Model.CurrentPageOfItems })
-
+@Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { RemoveMethodName = "RemoveDictata", EntityTypeName = "Dictata", IncludeAddLink = false, IncludeUnapprove = false, Columns = tableColumns, Values = Model.CurrentPageOfItems })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

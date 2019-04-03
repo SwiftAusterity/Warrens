@@ -56,8 +56,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"DictionaryPhrase/Remove/{removeId?}/{authorizeRemove?}")]
         public ActionResult Remove(string removeId = "", string authorizeRemove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -116,11 +115,10 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditDictionaryPhraseViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IDictataPhrase newObj = vModel.DataObject;
-
+            string message;
             if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddDictataPhrase[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -137,13 +135,11 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(string id, string ArchivePath = "")
         {
-            string message = string.Empty;
-
             IDictataPhrase obj = ConfigDataCache.Get<IDictataPhrase>(new ConfigDataCacheKey(typeof(IDictataPhrase), id, ConfigDataType.Dictionary));
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 

@@ -84,10 +84,10 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/EditZone")]
         public ActionResult EditZone(string birthMark, ViewZoneViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IZone obj = LiveCache.Get<IZone>(new LiveCacheKey(typeof(Zone), birthMark));
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";
@@ -319,10 +319,10 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/EditWorld")]
         public ActionResult EditWorld(string birthMark, ViewGaiaViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IGaia obj = LiveCache.Get<IGaia>(new LiveCacheKey(typeof(Gaia), birthMark));
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";

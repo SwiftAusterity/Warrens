@@ -13,8 +13,6 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            IEnumerable<string> valueCollection = input as IEnumerable<string>;
-
             HashSet<IWordPairRule> collective = new HashSet<IWordPairRule>();
 
             return collective;

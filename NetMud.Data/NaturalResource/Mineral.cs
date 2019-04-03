@@ -204,8 +204,7 @@ namespace NetMud.Data.NaturalResource
                 Position = LexicalPosition.PartOf,
                 Tense = LexicalTense.Present
             };
-
-            var sizeWord = "large";
+            string sizeWord;
             if (amount < 20)
             {
                 sizeWord = "sparse";

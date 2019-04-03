@@ -135,13 +135,12 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult StopRunningProcess(string processName)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             Processor.ShutdownLoop(processName, 600, "{0} seconds before " + processName + " is shutdown.", 60);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningProcess[" + processName + "]", authedUser.GameAccount.GlobalIdentityHandle);
-            message = "Cancel signal sent.";
+            string message = "Cancel signal sent.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -149,13 +148,12 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult StopRunningAllProcess()
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             Processor.ShutdownAll(600, "{0} seconds before TOTAL WORLD SHUTDOWN.", 60);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningALLPROCESSES", authedUser.GameAccount.GlobalIdentityHandle);
-            message = "Cancel signal sent for entire world.";
+            string message = "Cancel signal sent for entire world.";
 
             return RedirectToAction("Index", new { Message = message });
         }
@@ -229,7 +227,6 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult GlobalConfig(DashboardViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
@@ -239,7 +236,7 @@ namespace NetMud.Controllers.GameAdmin
             globalConfig.BaseLanguage = vModel.BaseLanguage;
             globalConfig.AzureTranslationKey = vModel.AzureTranslationKey;
             globalConfig.TranslationActive = vModel.TranslationActive;
-
+            string message;
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditGlobalConfig[" + globalConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
@@ -257,7 +254,6 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult GossipConfig(DashboardViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
 
@@ -269,7 +265,7 @@ namespace NetMud.Controllers.GameAdmin
             gossipConfig.SuspendMultiplier = vModel.SuspendMultiplier;
             gossipConfig.SupportedChannels = vModel.SupportedChannels;
             gossipConfig.SupportedFeatures = vModel.SupportedFeatures;
-
+            string message;
             if (gossipConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditGossipConfig[" + gossipConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
