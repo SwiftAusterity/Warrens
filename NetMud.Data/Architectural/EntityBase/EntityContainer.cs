@@ -116,7 +116,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>success status</returns>
         public bool Add(T entity)
         {
-            var newKey = new LiveCacheKey(entity);
+            LiveCacheKey newKey = new LiveCacheKey(entity);
             if (Birthmarks[genericCollectionLabel].Any(mark => mark.KeyHash().Equals(newKey.KeyHash())))
             {
                 return false;
@@ -132,7 +132,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>yes it contains it or no it does not</returns>
         public bool Contains(T entity)
         {
-            var newKey = new LiveCacheKey(entity);
+            LiveCacheKey newKey = new LiveCacheKey(entity);
             return Birthmarks.Values.Any(hs => hs.Any(mark => mark.KeyHash().Equals(newKey.KeyHash())));
         }
 
@@ -143,7 +143,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>success status</returns>
         public bool Remove(T entity)
         {
-            var newKey = new LiveCacheKey(entity);
+            LiveCacheKey newKey = new LiveCacheKey(entity);
             if (!Birthmarks[genericCollectionLabel].Any(mark => mark.KeyHash().Equals(newKey.KeyHash())))
             {
                 return false;

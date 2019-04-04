@@ -252,7 +252,7 @@ namespace NetMud.Data.NaturalResource
         /// <returns>the output strings</returns>
         public virtual ISensoryEvent GetImmediateDescription(IEntity viewer, MessagingType sense)
         {
-            var self = GetSelf(sense);
+            ISensoryEvent self = GetSelf(sense);
             switch (sense)
             {
                 case MessagingType.Audible:
@@ -329,8 +329,8 @@ namespace NetMud.Data.NaturalResource
                 float value = 30; 
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -399,8 +399,8 @@ namespace NetMud.Data.NaturalResource
                 float value = 30;
                 ValueRange<float> range = viewer.GetAuditoryRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -453,8 +453,8 @@ namespace NetMud.Data.NaturalResource
                 float value = 30;
                 ValueRange<float> range = viewer.GetPsychicRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -507,8 +507,8 @@ namespace NetMud.Data.NaturalResource
                 float value = 30;
                 ValueRange<float> range = viewer.GetTasteRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -562,8 +562,8 @@ namespace NetMud.Data.NaturalResource
                 float value = 30;
                 ValueRange<float> range = viewer.GetOlefactoryRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -616,8 +616,8 @@ namespace NetMud.Data.NaturalResource
                 float value = 30;
                 ValueRange<float> range = viewer.GetTactileRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -671,7 +671,7 @@ namespace NetMud.Data.NaturalResource
             }
 
             //Add the existential modifiers
-            var me = GetImmediateDescription(viewer, sensoryTypes[0]);
+            ISensoryEvent me = GetImmediateDescription(viewer, sensoryTypes[0]);
             me.TryModify(LexicalType.Noun, GrammaticalType.DirectObject, "ground")
                 .TryModify(
                     new Tuple<LexicalType, GrammaticalType, string>[] {
@@ -684,7 +684,7 @@ namespace NetMud.Data.NaturalResource
 
         public virtual ILexicalParagraph RenderResourceCollection(IEntity viewer, int amount)
         {
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -693,7 +693,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var me = GetImmediateDescription(viewer, MessagingType.Visible);
+            ISensoryEvent me = GetImmediateDescription(viewer, MessagingType.Visible);
             me.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), collectiveContext));
 
             return new LexicalParagraph(me);

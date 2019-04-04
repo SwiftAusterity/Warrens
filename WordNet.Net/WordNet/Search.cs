@@ -233,7 +233,7 @@ namespace WordNet.Net.WordNet
                                 prflag = false;
                                 /* Determine if this synset has already been done
 								   with a different spelling. If so, skip it. */
-                                var skipToEnd = false;
+                                bool skipToEnd = false;
                                 for (int j = 0; j < senses.Count; j++)
                                 {
                                     SynonymSet ss = senses[j];
@@ -543,7 +543,6 @@ namespace WordNet.Net.WordNet
         private void WNOverview()
         {
             Index idx;
-            //senses = new ArrayList();
             senses = new List<SynonymSet>();
             Indexes ixs = new Indexes(word, pos, netData);
             while ((idx = ixs.Next()) != null)
@@ -553,7 +552,7 @@ namespace WordNet.Net.WordNet
 				   synset with synset offset and/or lexical file information.*/
                 for (int sens = 0; sens < idx.offs.Length; sens++)
                 {
-                    var skipToEnd = false;
+                    bool skipToEnd = false;
                     for (int j = 0; j < senses.Count; j++)
                     {
                         SynonymSet ss = senses[j];

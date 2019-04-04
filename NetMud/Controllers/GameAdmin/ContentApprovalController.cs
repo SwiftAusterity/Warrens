@@ -62,7 +62,7 @@ namespace NetMud.Controllers.GameAdmin
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
                                                                 && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
 
-            foreach(var thing in newList)
+            foreach(IKeyedData thing in newList)
             {
                 thing.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Approved);
 

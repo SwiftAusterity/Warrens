@@ -6,11 +6,14 @@ using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Caching;
 using System.Web;
 using WordNet.Net;
 using WordNet.Net.Searching;
+using WordNet.Net.WordNet;
 
 namespace NetMud.Communication.Lexical
 {
@@ -41,19 +44,81 @@ namespace NetMud.Communication.Lexical
             {
                 if (MapLexicalTypes(dictata.WordType) != PartsOfSpeech.None)
                 {
-                    var exists = true;
+                    bool exists = true;
                     SearchSet searchSet = null;
-                    ArrayList results = new ArrayList();
+                    List<Search> results = new List<Search>();
                     WordNet.OverviewFor(dictata.Name, MapLexicalTypes(dictata.WordType).ToString(), ref exists, ref searchSet, results);
 
-                    if (exists)
+                    //TODO: Do something with the results
+                    if (exists && results != null)
                     {
-                        //TODO: Do something with the results
+                        LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
+                        //syn sets
+                        foreach (SynonymSet synSet in results.SelectMany(result => result.senses))
+                        {
+                            //grab semantics somehow
+                            List<string> semantics = new List<string>();
+                            string definition = synSet.defn.Substring(0, synSet.defn.IndexOf(';')).Trim();
+                            string[] defWords = definition.Split(' ');
+
+                            foreach(string defWord in defWords)
+                            {
+                                ILexeme defLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", dictata.Language.Name, defWord));
+
+                                if(defLex == null)
+                                {
+                                    //TODO: make the word
+                                }
+
+                                if(defLex == null || !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
+                                {
+                                    semantics.Add(defWord);
+                                }
+                            }
+
+                            if(dictata.Semantics.Count() < semantics.Count())
+                            {
+                                semantics.AddRange(dictata.Semantics);
+                                dictata.Semantics = new HashSet<string>(semantics.Distinct());
+                            }
+
+                            ///wsns indicates hypo/hypernymity so
+                            int baseWeight = synSet.words[synSet.sense].wnsns;
+                            dictata.Severity = baseWeight;
+
+                            foreach (Lexeme word in synSet.words)
+                            {
+                                ///wsns indicates hypo/hypernymity so
+                                int mySeverity = word.wnsns;
+
+                                //Don't bother if this word is already the same word we started with
+                                if (word.word.Equals(dictata.Name, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    continue;
+                                }
+
+                                //it's a phrase
+                                if (word.word.Contains("_"))
+                                {
+                                    string[] words = word.word.Split('_');
+
+                                    foreach (string phraseWord in words)
+                                    {
+
+                                    }
+                                }
+                                else
+                                {
+                                    dictata.MakeRelatedWord(dictata.Language, word.word, true);
+                                }
+                            }
+                        }
+
                         return true;
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
                 //don't barf on this
@@ -149,9 +214,9 @@ namespace NetMud.Communication.Lexical
 
         public static void LoadWordnet()
         {
-            var wordNetPath = HttpContext.Current.Server.MapPath("/FileStore/wordnet/");
+            string wordNetPath = HttpContext.Current.Server.MapPath("/FileStore/wordnet/");
 
-            if(!Directory.Exists(wordNetPath))
+            if (!Directory.Exists(wordNetPath))
             {
                 LoggingUtility.LogError(new FileNotFoundException("WordNet data not found."));
                 return;

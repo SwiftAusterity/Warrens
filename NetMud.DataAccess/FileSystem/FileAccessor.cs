@@ -117,7 +117,7 @@ namespace NetMud.DataAccess.FileSystem
 
             if (!mappedName.EndsWith("/"))
             {
-                mappedName = mappedName + "/";
+                mappedName += "/";
             }
 
             try
@@ -256,7 +256,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             try
             {
-                var backupDirs = Directory.GetDirectories(baseDirectoryPath).Where(dir => !dir.Any(chr => char.IsLetter(chr))).OrderByDescending(dirName => dirName);
+                IOrderedEnumerable<string> backupDirs = Directory.GetDirectories(baseDirectoryPath).Where(dir => !dir.Any(chr => char.IsLetter(chr))).OrderByDescending(dirName => dirName);
 
                 //TODO: Make this a system setting
                 if (backupDirs.Count() >= 10)

@@ -215,7 +215,7 @@ namespace NetMud.Data.NaturalResource
                 return new LexicalParagraph();
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -224,7 +224,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -250,20 +250,20 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "vast";
             }
 
-            var observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, MessagingType.Visible)
+            SensoryEvent observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, MessagingType.Visible)
             {
                 Strength = GetVisibleDelta(viewer)
             };
 
-            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "forest", collectiveContext),
+            SensoryEvent collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "forest", collectiveContext),
                                                 GetVisibleDelta(viewer), MessagingType.Visible);
 
-            var me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
+            ISensoryEvent me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
             me.Event.Role = GrammaticalType.Descriptive;
 
             collectiveNoun.TryModify(me);
 
-            var senseVerb = new SensoryEvent(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext), me.Strength, MessagingType.Visible);
+            SensoryEvent senseVerb = new SensoryEvent(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext), me.Strength, MessagingType.Visible);
 
             if (!string.IsNullOrWhiteSpace(sizeWord))
             {

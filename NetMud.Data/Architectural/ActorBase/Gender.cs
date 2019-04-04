@@ -121,7 +121,7 @@ namespace NetMud.Data.Architectural.ActorBase
 
         private void EnsureDictionary()
         {
-            var collective = new Lexeme()
+            Lexeme collective = new Lexeme()
             {
                 Name = Collective,
                 WordForms = new HashSet<IDictata>() {
@@ -141,7 +141,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            var possessive = new Lexeme()
+            Lexeme possessive = new Lexeme()
             {
                 Name = Possessive,
                 WordForms = new HashSet<IDictata>() {
@@ -161,7 +161,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            var baseWord = new Lexeme()
+            Lexeme baseWord = new Lexeme()
             {
                 Name = Base,
                 WordForms = new HashSet<IDictata>() {
@@ -181,7 +181,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            var adult = new Lexeme()
+            Lexeme adult = new Lexeme()
             {
                 Name = Adult,
                 WordForms = new HashSet<IDictata>() {
@@ -201,7 +201,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            var child = new Lexeme()
+            Lexeme child = new Lexeme()
             {
                 Name = Child,
                 WordForms = new HashSet<IDictata>() {

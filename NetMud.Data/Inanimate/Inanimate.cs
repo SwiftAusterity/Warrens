@@ -279,7 +279,7 @@ namespace NetMud.Data.Inanimate
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -288,7 +288,7 @@ namespace NetMud.Data.Inanimate
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -301,7 +301,7 @@ namespace NetMud.Data.Inanimate
             List<ISensoryEvent> messages = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
-                var me = GetSelf(sense);
+                ISensoryEvent me = GetSelf(sense);
 
                 switch (sense)
                 {

@@ -105,7 +105,7 @@ namespace NetMud.Utility
         /// <returns>is it a number</returns>
         public static bool IsNumeric<T>(this string str)
         {
-            var tType = typeof(T);
+            Type tType = typeof(T);
             if (!string.IsNullOrWhiteSpace(str))
             {
                 if (tType == typeof(byte))

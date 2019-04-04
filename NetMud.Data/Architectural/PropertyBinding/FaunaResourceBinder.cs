@@ -14,7 +14,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            var id = long.Parse(stringInput);
+            long id = long.Parse(stringInput);
 
             return TemplateCache.Get<IFauna>(id);
         }

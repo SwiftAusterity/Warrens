@@ -185,8 +185,8 @@ namespace NetMud.DataAccess.FileSystem
                     return; //we don't do players here, ever
             }
 
-            var currentDirName = dirName + "/" + CurrentDirectoryName;
-            var archivedDirName = dirName + "/" + ArchiveDirectoryName;
+            string currentDirName = dirName + "/" + CurrentDirectoryName;
+            string archivedDirName = dirName + "/" + ArchiveDirectoryName;
 
             //wth, no current directory? Noithing to move then
             if (VerifyDirectory(currentDirName, false) && VerifyDirectory(archivedDirName))
@@ -195,7 +195,7 @@ namespace NetMud.DataAccess.FileSystem
 
                 DirectoryInfo currentRoot = new DirectoryInfo(currentDirName);
 
-                var backupDir = archivedDirName + DatedBackupDirectory;
+                string backupDir = archivedDirName + DatedBackupDirectory;
                 if (!string.IsNullOrWhiteSpace(backupName))
                 {
                     backupDir = string.Format("{0}{1}/", archivedDirName, backupName);

@@ -68,7 +68,7 @@ namespace NetMud
             LexicalProcessor.LoadWordnet();
 
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
-            var instance = HttpContext.Current.ApplicationInstance;
+            HttpApplication instance = HttpContext.Current.ApplicationInstance;
             Assembly asm = instance.GetType().BaseType.Assembly;
             Version v = asm.GetName().Version;
 
@@ -145,7 +145,7 @@ namespace NetMud
 
                 foreach (string verb in commandVerbs)
                 {
-                    var newVerb = new Dictata()
+                    Dictata newVerb = new Dictata()
                     {
                         Name = verb,
                         Determinant = false,

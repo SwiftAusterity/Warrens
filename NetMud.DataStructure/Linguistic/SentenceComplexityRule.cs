@@ -74,10 +74,10 @@ namespace NetMud.DataStructure.Linguistic
                 return 0;
             }
 
-            var firstSubjectPivot = first.Subject.FirstOrDefault(word => word.Item1.Event.Role == SubjectPivot);
-            var firstPredicatePivot = first.Predicate.FirstOrDefault(word => word.Item1.Event.Role == PredicatePivot);
-            var secondSubjectPivot = second.Subject.FirstOrDefault(word => word.Item1.Event.Role == SubjectPivot);
-            var secondPredicatePivot = second.Predicate.FirstOrDefault(word => word.Item1.Event.Role == PredicatePivot);
+            Tuple<ISensoryEvent, short> firstSubjectPivot = first.Subject.FirstOrDefault(word => word.Item1.Event.Role == SubjectPivot);
+            Tuple<ISensoryEvent, short> firstPredicatePivot = first.Predicate.FirstOrDefault(word => word.Item1.Event.Role == PredicatePivot);
+            Tuple<ISensoryEvent, short> secondSubjectPivot = second.Subject.FirstOrDefault(word => word.Item1.Event.Role == SubjectPivot);
+            Tuple<ISensoryEvent, short> secondPredicatePivot = second.Predicate.FirstOrDefault(word => word.Item1.Event.Role == PredicatePivot);
 
             if (CheckPivotValidity(firstSubjectPivot?.Item1?.Event, secondSubjectPivot?.Item1?.Event)
                 && CheckNonPivotValidity(first, second))
@@ -117,14 +117,14 @@ namespace NetMud.DataStructure.Linguistic
 
         private bool CheckNonPivotValidity(ILexicalSentence first, ILexicalSentence second)
         {
-            var significantTypes = new GrammaticalType[] { GrammaticalType.Verb, GrammaticalType.ConjugatedVerb, GrammaticalType.Subject, GrammaticalType.DirectObject };
-            var firstChecks = first.Predicate.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != SubjectPivot && significantTypes.Contains(word.Item1.Event.Role));
-            var secondChecks = second.Subject.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != PredicatePivot && significantTypes.Contains(word.Item1.Event.Role));
+            GrammaticalType[] significantTypes = new GrammaticalType[] { GrammaticalType.Verb, GrammaticalType.ConjugatedVerb, GrammaticalType.Subject, GrammaticalType.DirectObject };
+            global::System.Collections.Generic.IEnumerable<Tuple<ISensoryEvent, short>> firstChecks = first.Predicate.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != SubjectPivot && significantTypes.Contains(word.Item1.Event.Role));
+            global::System.Collections.Generic.IEnumerable<Tuple<ISensoryEvent, short>> secondChecks = second.Subject.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != PredicatePivot && significantTypes.Contains(word.Item1.Event.Role));
 
-            var firstMatches = second.Predicate.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != SubjectPivot && significantTypes.Contains(word.Item1.Event.Role));
-            var secondMatches = first.Subject.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != PredicatePivot && significantTypes.Contains(word.Item1.Event.Role));
+            global::System.Collections.Generic.IEnumerable<Tuple<ISensoryEvent, short>> firstMatches = second.Predicate.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != SubjectPivot && significantTypes.Contains(word.Item1.Event.Role));
+            global::System.Collections.Generic.IEnumerable<Tuple<ISensoryEvent, short>> secondMatches = first.Subject.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != PredicatePivot && significantTypes.Contains(word.Item1.Event.Role));
 
-            var returnValue = !PivotMatch;
+            bool returnValue = !PivotMatch;
             if(firstChecks.Any())
             {
                 returnValue = returnValue 

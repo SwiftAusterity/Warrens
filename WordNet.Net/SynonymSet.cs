@@ -153,8 +153,8 @@ namespace WordNet.Net
         private void Parse(string s, PartOfSpeech fpos, string word)
 		{
 			int j;
-			var st = s.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-            var stI = 0;
+            string[] st = s.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+            int stI = 0;
 			int off = int.Parse(st[stI++]);
 			fnum = int.Parse(st[stI++]);
 			string f = st[stI++];
@@ -1064,8 +1064,8 @@ namespace WordNet.Net
 			if (str != null)
 			{
 				str = str.Substring(lx.word.Length + 11);
-				var st = str.Split(new char[] { ' ', ',', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                var stI = 0;
+                string[] st = str.Split(new char[] { ' ', ',', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                int stI = 0;
 				string offset;
 				while ((offset = st[stI++]) != null)
 				{

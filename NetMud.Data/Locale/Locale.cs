@@ -311,7 +311,7 @@ namespace NetMud.Data.Locale
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -320,7 +320,7 @@ namespace NetMud.Data.Locale
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -330,9 +330,9 @@ namespace NetMud.Data.Locale
             };
 
             List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
-            foreach (var sense in sensoryTypes)
+            foreach (MessagingType sense in sensoryTypes)
             {
-                var me = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, sense);
+                SensoryEvent me = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, sense);
                 ILexica senseVerb = null;
                 IEnumerable<ISensoryEvent> senseDescs = Enumerable.Empty<ISensoryEvent>();
 
@@ -343,7 +343,7 @@ namespace NetMud.Data.Locale
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
 
-                        var audibleDescs = GetAudibleDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> audibleDescs = GetAudibleDescriptives(viewer);
 
                         if (audibleDescs.Count() == 0)
                         {
@@ -368,7 +368,7 @@ namespace NetMud.Data.Locale
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
 
-                        var smellDescs = GetOlefactoryDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> smellDescs = GetOlefactoryDescriptives(viewer);
 
                         if (smellDescs.Count() == 0)
                         {
@@ -393,7 +393,7 @@ namespace NetMud.Data.Locale
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
 
-                        var psyDescs = GetPsychicDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> psyDescs = GetPsychicDescriptives(viewer);
 
                         if (psyDescs.Count() == 0)
                         {
@@ -421,7 +421,7 @@ namespace NetMud.Data.Locale
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
 
-                        var seeDescs = GetVisibleDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> seeDescs = GetVisibleDescriptives(viewer);
 
                         if (seeDescs.Count() == 0)
                         {
@@ -445,9 +445,9 @@ namespace NetMud.Data.Locale
 
                 if (senseVerb != null && senseDescs.Count() > 0)
                 {
-                    var senseEvents = senseDescs.Select(desc => desc.Event);
+                    IEnumerable<ILexica> senseEvents = senseDescs.Select(desc => desc.Event);
 
-                    foreach(var evt in senseEvents)
+                    foreach(ILexica evt in senseEvents)
                     {
                         evt.Context = discreteContext;
                         senseVerb.TryModify(evt);

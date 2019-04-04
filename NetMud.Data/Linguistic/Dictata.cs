@@ -29,6 +29,8 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The text of the word
         /// </summary>
+        [Display(Name = "Name", Description = "The lexeme this form belongs to.")]
+        [DataType(DataType.Text)]
         public string Name { get; set; }
 
         /// <summary>
@@ -193,7 +195,7 @@ namespace NetMud.Data.Linguistic
                 }
 
                 _synonyms = new HashSet<DictataKey>(
-                    value.Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
+                    value.Where(k => k != null).Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
             }
         }
 
@@ -228,7 +230,7 @@ namespace NetMud.Data.Linguistic
                 }
 
                 _antonyms = new HashSet<DictataKey>(
-                    value.Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
+                    value.Where(k => k != null).Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
             }
         }
 
@@ -262,7 +264,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _phraseSynonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
+                _phraseSynonyms = new HashSet<ConfigDataCacheKey>(value.Where(k => k != null).Select(k => new ConfigDataCacheKey(k)));
             }
         }
 
@@ -296,13 +298,24 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _phraseAntonyms = new HashSet<ConfigDataCacheKey>(value.Select(k => new ConfigDataCacheKey(k)));
+                _phraseAntonyms = new HashSet<ConfigDataCacheKey>(value.Where(k => k != null).Select(k => new ConfigDataCacheKey(k)));
             }
         }
 
         [JsonConstructor]
         public Dictata()
         {
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            if (globalConfig?.BaseLanguage == null)
+            {
+                Language = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
+            }
+            else
+            {
+                Language = globalConfig.BaseLanguage;
+            }
+
             Name = "";
             WordType = LexicalType.None;
             Antonyms = new HashSet<IDictata>();
@@ -314,7 +327,18 @@ namespace NetMud.Data.Linguistic
 
         public Dictata(string name, short formGrouping)
         {
-            Name = name;
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            if (globalConfig?.BaseLanguage == null)
+            {
+                Language = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
+            }
+            else
+            {
+                Language = globalConfig.BaseLanguage;
+            }
+
+            Name = name.ToLower();
             FormGroup = formGrouping;
             WordType = LexicalType.None;
             Antonyms = new HashSet<IDictata>();
@@ -355,7 +379,7 @@ namespace NetMud.Data.Linguistic
                 Language = lexica.Context.Language;
             }
 
-            var maybeLex = ConfigDataCache.Get<ILexeme>(
+            ILexeme maybeLex = ConfigDataCache.Get<ILexeme>(
                 new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Language.Name, lexica.Phrase), ConfigDataType.Dictionary));
 
             if (maybeLex == null)
@@ -365,7 +389,7 @@ namespace NetMud.Data.Linguistic
             }
             else if (maybeLex.WordForms.Any(form => form.WordType == lexica.Type))
             {
-                var wordForm = maybeLex.WordForms.FirstOrDefault(form => form.WordType == lexica.Type);
+                IDictata wordForm = maybeLex.WordForms.FirstOrDefault(form => form.WordType == lexica.Type);
 
                 Name = lexica.Phrase;
                 WordType = lexica.Type;
@@ -397,16 +421,90 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// creates a related dictata and lexeme with a new word
+        /// </summary>
+        /// <param name="synonym"></param>
+        /// <returns></returns>
+        public ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym)
+        {
+            ILexeme possibleLex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", language.Name, word), ConfigDataType.Dictionary));
+
+            if (possibleLex == null)
+            {
+                possibleLex = new Lexeme()
+                {
+                    Name = word,
+                    IsSynMapped = false,
+                    Language = language
+                };
+            }
+
+            Dictata newDict = new Dictata()
+            {
+                Name = word,
+                Language = language,
+                Severity = Severity,
+                Quality = Quality,
+                Elegance = Elegance,
+                Tense = Tense,
+                WordType = WordType,
+                Feminine = Feminine,
+                Possessive = Possessive,
+                Plural = Plural,
+                Determinant = Determinant,
+                Positional = Positional,
+                Perspective = Perspective,
+                Semantics = Semantics
+            };
+
+            HashSet<IDictata> synonyms = Synonyms;
+            synonyms.Add(this);
+
+            if (synonym)
+            {
+                newDict.Synonyms = synonyms;
+                newDict.Antonyms = Antonyms;
+                newDict.PhraseSynonyms = PhraseSynonyms;
+                newDict.PhraseAntonyms = PhraseAntonyms;
+
+                HashSet<IDictata> mySynonyms = Synonyms;
+                mySynonyms.Add(newDict);
+
+                Synonyms = mySynonyms;
+            }
+            else
+            {
+                newDict.Synonyms = Antonyms;
+                newDict.Antonyms = synonyms;
+                newDict.PhraseSynonyms = PhraseAntonyms;
+                newDict.PhraseAntonyms = PhraseSynonyms;
+
+                HashSet<IDictata> antonyms = Antonyms;
+                antonyms.Add(newDict);
+
+                Antonyms = antonyms;
+            }
+
+            possibleLex.AddNewForm(newDict);
+
+            possibleLex.SystemSave();
+            possibleLex.PersistToCache();
+            GetLexeme().SystemSave();
+
+            return possibleLex;
+        }
+
+        /// <summary>
         /// Get the lexeme for this word
         /// </summary>
         /// <returns>the lexeme</returns>
         public ILexeme GetLexeme()
         {
-            var lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Language.Name, Name), ConfigDataType.Dictionary));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Language.Name, Name), ConfigDataType.Dictionary));
 
-            if(lex != null)
+            if (lex != null)
             {
-                if(!lex.WordForms.Any(form => form == this))
+                if (!lex.WordForms.Any(form => form == this))
                 {
                     lex.AddNewForm(this);
                     lex.SystemSave();

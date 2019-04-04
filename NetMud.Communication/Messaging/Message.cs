@@ -138,7 +138,7 @@ namespace NetMud.Communication.Messaging
 
             if (Target != null && ToTarget.Any())
             {
-                var language = Target.IsPlayer() ? ((IPlayer)Target).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
+                ILanguage language = Target.IsPlayer() ? ((IPlayer)Target).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
                 if (ToTarget.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                 {
                     Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Override), entities));

@@ -258,8 +258,8 @@ namespace NetMud.Data.Linguistic
         /// <returns>if it matches</returns>
         public bool Matches(ILexica lex, ILexica pairedWord)
         {
-            var fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
-            var fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            string[] fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            string[] fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
             return (ToRole == GrammaticalType.None || ToRole == pairedWord.Role)
                     && (ToType == LexicalType.None || ToType == pairedWord.Type)

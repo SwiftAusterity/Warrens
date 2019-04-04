@@ -732,7 +732,7 @@ namespace NetMud.Controllers
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
+            IPlayerTemplate currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
 
             AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
             {
@@ -789,7 +789,7 @@ namespace NetMud.Controllers
                 return RedirectToAction("Playlists", new { Message = "That playlist does not exist." });
             }
 
-            var currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
+            IPlayerTemplate currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
             AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),

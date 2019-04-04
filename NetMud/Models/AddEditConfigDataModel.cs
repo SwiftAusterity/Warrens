@@ -48,7 +48,7 @@ namespace NetMud.Models
         internal void GetArchivedTemplate(ConfigData fileAccessor, ConfigDataType type, T item)
         {
             Type templateType = typeof(T);
-            var typeName = templateType.Name;
+            string typeName = templateType.Name;
 
             if (templateType.IsInterface)
             {
@@ -58,7 +58,7 @@ namespace NetMud.Models
 
             DirectoryInfo archiveDir = new DirectoryInfo(fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName + ArchivePath + "/");
 
-            var potentialFiles = archiveDir.GetFiles(item.UniqueKey + "." + typeName);
+            FileInfo[] potentialFiles = archiveDir.GetFiles(item.UniqueKey + "." + typeName);
 
             if (potentialFiles.Any())
             {
@@ -68,14 +68,14 @@ namespace NetMud.Models
 
         internal string[] GetArchiveNames(ConfigData fileAccessor, ConfigDataType type, string itemName)
         {
-            var typeName = typeof(T).Name;
+            string typeName = typeof(T).Name;
 
             if (typeof(T).IsInterface)
             {
                 typeName = typeName.Substring(1);
             }
 
-            var archiveDirName = fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName;
+            string archiveDirName = fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName;
 
             if (!fileAccessor.VerifyDirectory(archiveDirName))
             {

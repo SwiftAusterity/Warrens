@@ -449,7 +449,7 @@ namespace NetMud.Interp
 
                 if (paramType == typeof(IPathway))
                 {
-                    var validPaths = Actor.CurrentLocation.CurrentLocation().GetPathways().Where(dest => dest.DirectionType == dirType);
+                    IEnumerable<IPathway> validPaths = Actor.CurrentLocation.CurrentLocation().GetPathways().Where(dest => dest.DirectionType == dirType);
 
                     if (validPaths.Count() > 0)
                     {

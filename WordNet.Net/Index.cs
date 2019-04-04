@@ -72,8 +72,8 @@ namespace WordNet.Net
                 return;
             }
 
-            var st = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-            var stI = 0;
+            string[] st = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+            int stI = 0;
             wd = st[stI++]; /* the word */
             pos = PartOfSpeech.Of(st[stI++]); /* the part of speech */
             sense_cnt = int.Parse(st[stI++]); /* collins count */

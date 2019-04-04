@@ -148,7 +148,7 @@ namespace NetMud.Cartography
                     string rowString = string.Empty;
                     for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
                     {
-                        var xString = expandedMap[x, y];
+                        string xString = expandedMap[x, y];
                         if (string.IsNullOrWhiteSpace(xString))
                         {
                             if (!forAdmin || x <= xMax)
@@ -259,7 +259,7 @@ namespace NetMud.Cartography
             string asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
             string destinationId = "";
             string destinationName = string.Empty;
-            var pathType = PathwayType.None;
+            PathwayType pathType = PathwayType.None;
 
             if (path != null && path.Destination != null)
             {
@@ -279,7 +279,7 @@ namespace NetMud.Cartography
                     }
                     else
                     {
-                        var classString = "zone";
+                        string classString = "zone";
 
                         if (pathType == PathwayType.Locale)
                         {
@@ -312,7 +312,7 @@ namespace NetMud.Cartography
                 }
                 else
                 {
-                    var classString = "zone";
+                    string classString = "zone";
 
                     if (pathType == PathwayType.Locale)
                     {
@@ -353,9 +353,9 @@ namespace NetMud.Cartography
                 MovementDirectionType.DownWest
             };
 
-            var hasUp = destination.GetPathways().Any(path => upPaths.Contains(path.DirectionType));
-            var hasDown = destination.GetPathways().Any(path => downPaths.Contains(path.DirectionType));
-            var extraClass = "";
+            bool hasUp = destination.GetPathways().Any(path => upPaths.Contains(path.DirectionType));
+            bool hasDown = destination.GetPathways().Any(path => downPaths.Contains(path.DirectionType));
+            string extraClass = "";
 
             string character = "O";
 
@@ -543,7 +543,7 @@ namespace NetMud.Cartography
                     string rowString = string.Empty;
                     for (x = 0; x <= expandedMap.GetUpperBound(0); x++)
                     {
-                        var xString = expandedMap[x, y];
+                        string xString = expandedMap[x, y];
                         if (string.IsNullOrWhiteSpace(xString))
                         {
                             if (!forAdmin || x <= xMax)
@@ -654,7 +654,7 @@ namespace NetMud.Cartography
             string asciiCharacter = Utilities.TranslateDirectionToAsciiCharacter(directionType);
             long destinationId = -1;
             string destinationName = string.Empty;
-            var pathType = PathwayType.None;
+            PathwayType pathType = PathwayType.None;
 
             if (path != null && path.Destination != null)
             {
@@ -674,7 +674,7 @@ namespace NetMud.Cartography
                     }
                     else
                     {
-                        var classString = "zone";
+                        string classString = "zone";
 
                         if (pathType == PathwayType.Locale)
                         {
@@ -707,7 +707,7 @@ namespace NetMud.Cartography
                 }
                 else
                 {
-                    var classString = "zone";
+                    string classString = "zone";
 
                     if (pathType == PathwayType.Locale)
                     {
@@ -748,9 +748,9 @@ namespace NetMud.Cartography
                 MovementDirectionType.DownWest
             };
 
-            var hasUp = destination.GetPathways().Any(path => upPaths.Contains(path.DirectionType));
-            var hasDown = destination.GetPathways().Any(path => downPaths.Contains(path.DirectionType));
-            var extraClass = "";
+            bool hasUp = destination.GetPathways().Any(path => upPaths.Contains(path.DirectionType));
+            bool hasDown = destination.GetPathways().Any(path => downPaths.Contains(path.DirectionType));
+            string extraClass = "";
 
             string character = "O";
 

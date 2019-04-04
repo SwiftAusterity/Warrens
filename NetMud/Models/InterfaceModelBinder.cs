@@ -96,11 +96,11 @@ namespace NetMud.Models
                     //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
                     IList<string> keys = new List<string>();
 
-                    var i = 0;
-                    foreach (var key in formValueProvider.GetKeysFromPrefix(keyName))
+                    int i = 0;
+                    foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(keyName))
                     {
-                        var oldKey = key.Value;
-                        var reKeyedKey = string.Format("{1}[{0}]{2}", i, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+                        string oldKey = key.Value;
+                        string reKeyedKey = string.Format("{1}[{0}]{2}", i, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
 
                         keys.Add(reKeyedKey);
 
@@ -150,11 +150,11 @@ namespace NetMud.Models
                                 //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
                                 IList<string> keys = new List<string>();
 
-                                var index = 0;
-                                foreach (var key in formValueProvider.GetKeysFromPrefix(childKeyName))
+                                int index = 0;
+                                foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(childKeyName))
                                 {
-                                    var oldKey = key.Value;
-                                    var reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+                                    string oldKey = key.Value;
+                                    string reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
 
                                     keys.Add(reKeyedKey);
 
@@ -321,21 +321,21 @@ namespace NetMud.Models
 
                     if (containedType.IsClass && !typeof(string).Equals(containedType))
                     {
-                        var properties = containedType.GetProperties();
+                        System.Reflection.PropertyInfo[] properties = containedType.GetProperties();
                         FormValueProvider formValueProvider = (FormValueProvider)((ValueProviderCollection)bindingContext.ValueProvider).FirstOrDefault(vp => vp.GetType() == typeof(FormValueProvider));
 
                         //HashSet<object> valueArray = new HashSet<object>();
                         dynamic valueArray = Activator.CreateInstance(propertyDescriptor.PropertyType, false);
-                        foreach (var baseKey in formValueProvider.GetKeysFromPrefix(keyName))
+                        foreach (KeyValuePair<string, string> baseKey in formValueProvider.GetKeysFromPrefix(keyName))
                         {
                             int propIterator = 0;
                             dynamic newItem = Activator.CreateInstance(containedType, false);
 
                             //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
-                            foreach (var prop in properties)
+                            foreach (System.Reflection.PropertyInfo prop in properties)
                             {
-                                var propType = prop.PropertyType;
-                                var propertyBinder = (PropertyBinderAttribute)prop.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
+                                Type propType = prop.PropertyType;
+                                PropertyBinderAttribute propertyBinder = (PropertyBinderAttribute)prop.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
 
                                 string childKeyName = string.Format("{0}.{1}", baseKey.Value, prop.Name);
 
@@ -345,11 +345,11 @@ namespace NetMud.Models
                                     //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
                                     IList<string> keys = new List<string>();
 
-                                    var index = 0;
-                                    foreach (var key in formValueProvider.GetKeysFromPrefix(childKeyName))
+                                    int index = 0;
+                                    foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(childKeyName))
                                     {
-                                        var oldKey = key.Value;
-                                        var reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.LastIndexOf('[')), oldKey.Substring(oldKey.LastIndexOf(']') + 1));
+                                        string oldKey = key.Value;
+                                        string reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.LastIndexOf('[')), oldKey.Substring(oldKey.LastIndexOf(']') + 1));
 
                                         keys.Add(reKeyedKey);
 
@@ -395,18 +395,18 @@ namespace NetMud.Models
                                     {
                                         if (innerContainedType.IsClass && !typeof(string).Equals(innerContainedType))
                                         {
-                                            var innerProperties = innerContainedType.GetProperties();
+                                            System.Reflection.PropertyInfo[] innerProperties = innerContainedType.GetProperties();
                                             dynamic innerValueArray = Activator.CreateInstance(propType, false);
 
-                                            foreach (var innerBaseKey in keys)
+                                            foreach (string innerBaseKey in keys)
                                             {
                                                 dynamic innerNewItem = Activator.CreateInstance(innerContainedType, false);
 
                                                 //Do we have a class or interface? We want top parse ALL the submitted values in the post and try to fill that one class object up with its props
-                                                foreach (var innerProp in innerProperties)
+                                                foreach (System.Reflection.PropertyInfo innerProp in innerProperties)
                                                 {
-                                                    var innerPropType = innerProp.PropertyType;
-                                                    var innerPropertyBinder = (PropertyBinderAttribute)innerProp.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
+                                                    Type innerPropType = innerProp.PropertyType;
+                                                    PropertyBinderAttribute innerPropertyBinder = (PropertyBinderAttribute)innerProp.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
 
                                                     string innerChildKeyName = string.Format("{0}.{1}", innerBaseKey, innerProp.Name);
 
@@ -416,11 +416,11 @@ namespace NetMud.Models
                                                         //We have to get the keys from the valid provider that match the pattern razor is feeding us "type.type.type[#].type[#] potentially"
                                                         IList<string> innerKeys = new List<string>();
 
-                                                        var innerIndex = 0;
-                                                        foreach (var key in formValueProvider.GetKeysFromPrefix(innerChildKeyName))
+                                                        int innerIndex = 0;
+                                                        foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(innerChildKeyName))
                                                         {
-                                                            var oldKey = key.Value;
-                                                            var reKeyedKey = string.Format("{1}[{0}]{2}", innerIndex, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+                                                            string oldKey = key.Value;
+                                                            string reKeyedKey = string.Format("{1}[{0}]{2}", innerIndex, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
 
                                                             innerKeys.Add(reKeyedKey);
 
@@ -432,14 +432,14 @@ namespace NetMud.Models
                                                             IList<object> values = new List<object>();
                                                             if (propertyBinder != null)
                                                             {
-                                                                foreach (var key in innerKeys)
+                                                                foreach (string key in innerKeys)
                                                                 {
                                                                     values.Add(propertyBinder.Convert(bindingContext.ValueProvider.GetValue(key)));
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                foreach (var key in innerKeys)
+                                                                foreach (string key in innerKeys)
                                                                 {
                                                                     values.Add(bindingContext.ValueProvider.GetValue(key).AttemptedValue);
                                                                 }
@@ -490,14 +490,14 @@ namespace NetMud.Models
                                             IList<object> values = new List<object>();
                                             if (propertyBinder != null)
                                             {
-                                                foreach (var key in keys)
+                                                foreach (string key in keys)
                                                 {
                                                     values.Add(propertyBinder.Convert(bindingContext.ValueProvider.GetValue(key)));
                                                 }
                                             }
                                             else
                                             {
-                                                foreach (var key in keys)
+                                                foreach (string key in keys)
                                                 {
                                                     values.Add(bindingContext.ValueProvider.GetValue(key).AttemptedValue);
                                                 }
@@ -562,11 +562,11 @@ namespace NetMud.Models
 
         PropertyBinderAttribute TryFindPropertyBinderAttribute(PropertyDescriptor propertyDescriptor)
         {
-            var binder = propertyDescriptor.Attributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
+            PropertyBinderAttribute binder = propertyDescriptor.Attributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
 
             if (binder == null && propertyDescriptor.ComponentType.IsInterface && !propertyDescriptor.PropertyType.IsValueType)
             {
-                var componentType = propertyDescriptor.ComponentType;
+                Type componentType = propertyDescriptor.ComponentType;
 
                 //Convert the interface to the concrete class by finding a concrete class that impls this interface
                 if (!componentType.IsGenericType)
@@ -599,8 +599,8 @@ namespace NetMud.Models
                         return null;
                     }
 
-                    var typeProps = type.GetProperties();
-                    var myProp = typeProps.FirstOrDefault(prop => prop.Name == propertyDescriptor.Name && prop.PropertyType == propertyDescriptor.PropertyType);
+                    System.Reflection.PropertyInfo[] typeProps = type.GetProperties();
+                    System.Reflection.PropertyInfo myProp = typeProps.FirstOrDefault(prop => prop.Name == propertyDescriptor.Name && prop.PropertyType == propertyDescriptor.PropertyType);
 
                     return (PropertyBinderAttribute)myProp.GetCustomAttributes(typeof(PropertyBinderAttribute), true).FirstOrDefault();
                 }
@@ -617,8 +617,8 @@ namespace NetMud.Models
 
                     Type genericType = type.MakeGenericType(componentType.GenericTypeArguments);
 
-                    var typeProps = genericType.GetProperties();
-                    var myProp = typeProps.FirstOrDefault(prop => prop.Name == propertyDescriptor.Name && prop.PropertyType == propertyDescriptor.PropertyType);
+                    System.Reflection.PropertyInfo[] typeProps = genericType.GetProperties();
+                    System.Reflection.PropertyInfo myProp = typeProps.FirstOrDefault(prop => prop.Name == propertyDescriptor.Name && prop.PropertyType == propertyDescriptor.PropertyType);
 
                     return myProp.CustomAttributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
                 }

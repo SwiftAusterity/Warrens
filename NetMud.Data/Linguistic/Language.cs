@@ -133,7 +133,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool Save(IAccount editor, StaffRank rank)
         {
-            var result = base.Save(editor, rank);
+            bool result = base.Save(editor, rank);
             EnsureDictionary();
             return result;
         }
@@ -144,7 +144,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool SystemSave()
         {
-            var result = base.SystemSave();
+            bool result = base.SystemSave();
             EnsureDictionary();
             return result;
         }

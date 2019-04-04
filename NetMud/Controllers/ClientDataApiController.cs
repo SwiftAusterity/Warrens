@@ -56,7 +56,7 @@ namespace NetMud.Controllers
         {
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            var lang = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), language, ConfigDataType.Language));
+            ILanguage lang = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), language, ConfigDataType.Language));
 
             if (user != null && lang != null)
             {

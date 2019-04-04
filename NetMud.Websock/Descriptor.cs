@@ -176,14 +176,14 @@ namespace NetMud.Websock
             IEnumerable<string> populace = Enumerable.Empty<string>();
             string locationDescription = string.Empty;
 
-            var lexicalContext = new LexicalContext(_currentPlayer)
+            LexicalContext lexicalContext = new LexicalContext(_currentPlayer)
             {
                 Language = _currentPlayer.Template<IPlayerTemplate>().Account.Config.UILanguage,
                 Perspective = NarrativePerspective.SecondPerson,
                 Position = LexicalPosition.Near
             };
 
-            var toCluster = new Message(currentContainer.RenderToVisible(_currentPlayer));
+            Message toCluster = new Message(currentContainer.RenderToVisible(_currentPlayer));
 
             if (currentContainer != null)
             {
@@ -484,7 +484,7 @@ namespace NetMud.Websock
             int padding = 3 - ((authTicketValue.Length + 3) % 4);
             if (padding != 0)
             {
-                authTicketValue = authTicketValue + new string('=', padding);
+                authTicketValue += new string('=', padding);
             }
 
             byte[] bytes = Convert.FromBase64String(authTicketValue);

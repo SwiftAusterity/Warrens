@@ -1,0 +1,43 @@
+﻿@model NetMud.Models.Admin.AddEditDictataViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Word", new string[] { "Dashboard", "Dictionary", Model.ParentObject.Name }, new string[] { "/GameAdmin", "/Dictionary", "/Dictionary/Edit/" + Model.ParentObject.UniqueKey });
+}
+
+    <div class="accordionWrapper">
+        <h5>Add Related Word</h5>
+        @using (Html.BeginForm("AddRelatedWord", "Dictionary", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <input type="hidden" name="lexemeId" id="lexemeId" value="@Model.ParentObject.UniqueKey" />
+            <input type="hidden" name="id" id="id" value="@Model.DataObject.UniqueKey" />
+
+            <div class="form-group row">
+                @Html.EditorFor(m => m.Word)
+                @Html.EditorFor(m => m.Synonym)
+                @Html.EditorFor(m => m.Elegance)
+                @Html.EditorFor(m => m.Severity)
+                @Html.EditorFor(m => m.Quality)
+            </div>
+
+            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Add Related Word", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Dictionary", IncludeCancel = true })
+        }
+    </div>
+
+<section id="editDictataForm">
+    @using (Html.BeginForm("EditDictata", "Dictionary", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="lexemeId" id="lexemeId" value="@Model.ParentObject.UniqueKey" />
+        <input type="hidden" name="id" id="id" value="@Model.DataObject.UniqueKey" />
+
+        @Html.EditorFor(m => m.DataObject, new { ValidWords = Model.ValidWords, ValidLanguages = Model.ValidLanguages, ValidPhrases = Model.ValidPhrases })
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Dictionary", IncludeCancel = true })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

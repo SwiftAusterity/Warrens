@@ -53,7 +53,7 @@ namespace NetMud.Data.Architectural.Serialization
 
         private string GetStringFromBytes(byte[] bytes)
         {
-            var returnString = Encoding.ASCII.GetString(bytes);
+            string returnString = Encoding.ASCII.GetString(bytes);
 
             if (string.IsNullOrWhiteSpace(returnString) || returnString.Substring(1, 1) == "\0")
             {

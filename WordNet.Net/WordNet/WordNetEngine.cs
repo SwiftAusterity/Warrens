@@ -22,6 +22,7 @@
  */
 
 using System.Collections;
+using System.Collections.Generic;
 using WordNet.Net.Searching;
 using WordNet.Net.WordNet;
 
@@ -40,7 +41,7 @@ namespace WordNet.Net
             netData = new WordNetData(dictPath);
         }
 
-        public void OverviewFor(string t, string p, ref bool b, ref SearchSet obj, ArrayList list)
+        public void OverviewFor(string t, string p, ref bool b, ref SearchSet obj, List<Search> list)
         {
             PartOfSpeech pos = PartOfSpeech.Of(p);
             SearchSet ss = netData.Is_defined(t, pos);
@@ -56,7 +57,7 @@ namespace WordNet.Net
                 {
                     if (m != t)
                     {
-                        ss = ss + netData.Is_defined(m, pos);
+                        ss += netData.Is_defined(m, pos);
                         AddSearchFor(m, pos, list);
                     }
                 }
@@ -66,7 +67,7 @@ namespace WordNet.Net
             obj = ss;
         }
 
-        private bool AddSearchFor(string s, PartOfSpeech pos, ArrayList list)
+        private bool AddSearchFor(string s, PartOfSpeech pos, List<Search> list)
         {
             Search se = new Search(s, false, pos, new SearchType(false, "OVERVIEW"), 0, netData);
             if (se.lexemes.Count > 0)

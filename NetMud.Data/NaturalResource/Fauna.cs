@@ -104,7 +104,7 @@ namespace NetMud.Data.NaturalResource
                 return new LexicalParagraph();
             }
 
-            var personalContext = new LexicalContext(viewer)
+            LexicalContext personalContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -113,7 +113,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -122,7 +122,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -148,10 +148,10 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "large";
             }
 
-            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Race.CollectiveNoun, discreteContext), 
+            SensoryEvent collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Race.CollectiveNoun, discreteContext), 
                                                 GetVisibleDelta(viewer), MessagingType.Visible);
 
-            var me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
+            ISensoryEvent me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
             me.Event.Role = GrammaticalType.Descriptive;
             me.Event.Context = collectiveContext;
 
@@ -162,7 +162,7 @@ namespace NetMud.Data.NaturalResource
                 collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
             }
 
-            var observer = new Lexica(LexicalType.Pronoun, GrammaticalType.DirectObject, "you", personalContext);
+            Lexica observer = new Lexica(LexicalType.Pronoun, GrammaticalType.DirectObject, "you", personalContext);
 
             collectiveNoun.TryModify(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "roams", personalContext).TryModify(observer, true));
 

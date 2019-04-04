@@ -29,8 +29,8 @@ namespace NetMud.Cartography
                 return null;
             }
 
-            var paths = origin.GetPathways();
-            var dirPath = paths.FirstOrDefault(path => path.DirectionType == direction);
+            IEnumerable<IPathwayTemplate> paths = origin.GetPathways();
+            IPathwayTemplate dirPath = paths.FirstOrDefault(path => path.DirectionType == direction);
 
             if (dirPath != null)
                 return dirPath.Destination;

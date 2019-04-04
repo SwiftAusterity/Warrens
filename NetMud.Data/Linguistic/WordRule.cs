@@ -238,8 +238,8 @@ namespace NetMud.Data.Linguistic
         /// <returns>if it matches</returns>
         public bool Matches(ILexica lex)
         {
-            var fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
-            var fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            string[] fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            string[] fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
             return (fromBegins.Count() == 0 || fromBegins.Any(bw => lex.Phrase.StartsWith(bw)))
                     && (fromEnds.Count() == 0 || fromEnds.Any(bw => lex.Phrase.EndsWith(bw)))

@@ -66,7 +66,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/Zone")]
         public ActionResult Zone(string birthMark, ViewZoneViewModel viewModel)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             ViewZoneViewModel vModel = new ViewZoneViewModel(birthMark)
             {
                 AuthedUser = authedUser,
@@ -243,7 +243,7 @@ namespace NetMud.Controllers.GameAdmin
                     string type = values[0];
                     string phrase = values[1];
 
-                    var obj = LiveCache.Get<IZone>(new LiveCacheKey(typeof(IZone), id));
+                    IZone obj = LiveCache.Get<IZone>(new LiveCacheKey(typeof(IZone), id));
 
                     if (obj == null)
                     {
@@ -301,7 +301,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/World")]
         public ActionResult World(string birthMark, ViewZoneViewModel viewModel)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             ViewGaiaViewModel vModel = new ViewGaiaViewModel(birthMark)
             {
                 AuthedUser = authedUser,
@@ -371,7 +371,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/Inanimate")]
         public ActionResult Inanimate(string birthMark, ViewZoneViewModel viewModel)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             ViewInanimateViewModel vModel = new ViewInanimateViewModel(birthMark)
             {
                 AuthedUser = authedUser,
@@ -404,7 +404,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/NPC")]
         public ActionResult NPC(string birthMark, ViewZoneViewModel viewModel)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             ViewIntelligenceViewModel vModel = new ViewIntelligenceViewModel(birthMark)
             {
                 AuthedUser = authedUser,
@@ -437,7 +437,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/Room")]
         public ActionResult Room(string birthMark, ViewZoneViewModel viewModel)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             ViewRoomViewModel vModel = new ViewRoomViewModel(birthMark)
             {
                 AuthedUser = authedUser,
@@ -470,7 +470,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"LiveAdmin/Locale")]
         public ActionResult Locale(string birthMark, ViewZoneViewModel viewModel)
         {
-            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             ViewLocaleViewModel vModel = new ViewLocaleViewModel(birthMark)
             {
                 AuthedUser = authedUser,

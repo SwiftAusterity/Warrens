@@ -5,23 +5,23 @@
 }
 <h4>Details</h4>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Name, new { archivedValue = archivedTemplate?.Name ?? "" })
+    @Html.EditorFor(m => m.Name, new { disabled = "disabled" })
     @Html.EditorFor(m => m.WordType)
-    @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"], archivedValue = archivedTemplate?.Language?.Name ?? "" })
-    @Html.EditorFor(m => m.Tense, new { archivedValue = archivedTemplate?.Tense.ToString() ?? "" })
-    @Html.EditorFor(m => m.Perspective, new { archivedValue = archivedTemplate?.Perspective.ToString() ?? "" })
+    @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
+    @Html.EditorFor(m => m.Tense)
+    @Html.EditorFor(m => m.Perspective)
 </div>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Severity, new { archivedValue = archivedTemplate?.Severity.ToString() ?? "" })
-    @Html.EditorFor(m => m.Elegance, new { archivedValue = archivedTemplate?.Elegance.ToString() ?? "" })
-    @Html.EditorFor(m => m.Quality, new { archivedValue = archivedTemplate?.Quality.ToString() ?? "" })
+    @Html.EditorFor(m => m.Severity)
+    @Html.EditorFor(m => m.Elegance)
+    @Html.EditorFor(m => m.Quality)
 </div>
 <div class="form-group row">
-    @Html.EditorFor(m => m.Positional, new { archivedValue = archivedTemplate?.Positional.ToString() ?? "" })
-    @Html.EditorFor(m => m.Determinant, new { archivedValue = archivedTemplate?.Determinant.ToString() ?? "" })
-    @Html.EditorFor(m => m.Possessive, new { archivedValue = archivedTemplate?.Possessive.ToString() ?? "" })
-    @Html.EditorFor(m => m.Plural, new { archivedValue = archivedTemplate?.Plural.ToString() ?? "" })
-    @Html.EditorFor(m => m.Feminine, new { archivedValue = archivedTemplate?.Feminine.ToString() ?? "" })
+    @Html.EditorFor(m => m.Positional)
+    @Html.EditorFor(m => m.Determinant)
+    @Html.EditorFor(m => m.Possessive)
+    @Html.EditorFor(m => m.Plural)
+    @Html.EditorFor(m => m.Feminine)
 </div>
 <h4>Semantic Tags</h4>
 @Html.EditorFor(m => m.Semantics)

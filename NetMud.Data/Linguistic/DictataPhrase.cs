@@ -504,42 +504,42 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool Remove(IAccount remover, StaffRank rank)
         {
-            var removalState = base.Remove(remover, rank);
+            bool removalState = base.Remove(remover, rank);
 
             if(removalState)
             {
-                var synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
-                var antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
-                var synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
-                var antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
+                IEnumerable<IDictata> synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
+                IEnumerable<IDictata> antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
+                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
+                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
 
-                foreach (var word in synonyms)
+                foreach (IDictata word in synonyms)
                 {
-                    var syns = new HashSet<IDictataPhrase>(word.PhraseSynonyms);
+                    HashSet<IDictataPhrase> syns = new HashSet<IDictataPhrase>(word.PhraseSynonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseSynonyms = syns;
                     word.GetLexeme().Save(remover, rank);
                 }
 
-                foreach (var word in antonyms)
+                foreach (IDictata word in antonyms)
                 {
-                    var ants = new HashSet<IDictataPhrase>(word.PhraseAntonyms);
+                    HashSet<IDictataPhrase> ants = new HashSet<IDictataPhrase>(word.PhraseAntonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseAntonyms = ants;
                     word.GetLexeme().Save(remover, rank);
                 }
 
-                foreach (var phrase in synonymPhrases)
+                foreach (IDictataPhrase phrase in synonymPhrases)
                 {
-                    var syns = new HashSet<IDictataPhrase>(phrase.PhraseSynonyms);
+                    HashSet<IDictataPhrase> syns = new HashSet<IDictataPhrase>(phrase.PhraseSynonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     phrase.PhraseSynonyms = syns;
                     phrase.Save(remover, rank);
                 }
 
-                foreach (var phrase in antonymPhrases)
+                foreach (IDictataPhrase phrase in antonymPhrases)
                 {
-                    var ants = new HashSet<IDictataPhrase>(phrase.PhraseAntonyms);
+                    HashSet<IDictataPhrase> ants = new HashSet<IDictataPhrase>(phrase.PhraseAntonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     phrase.PhraseAntonyms = ants;
                     phrase.Save(remover, rank);
@@ -555,7 +555,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool Save(IAccount editor, StaffRank rank)
         {
-            var removalState = base.Remove(editor, rank);
+            bool removalState = base.Remove(editor, rank);
 
             if (removalState)
             {
@@ -571,7 +571,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool SystemSave()
         {
-            var removalState = base.SystemRemove();
+            bool removalState = base.SystemRemove();
 
             if (removalState)
             {
@@ -587,42 +587,42 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool SystemRemove()
         {
-            var removalState = base.SystemRemove();
+            bool removalState = base.SystemRemove();
 
             if (removalState)
             {
-                var synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
-                var antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
-                var synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
-                var antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
+                IEnumerable<IDictata> synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
+                IEnumerable<IDictata> antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
+                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
+                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
 
-                foreach (var word in synonyms)
+                foreach (IDictata word in synonyms)
                 {
-                    var syns = new HashSet<IDictataPhrase>(word.PhraseSynonyms);
+                    HashSet<IDictataPhrase> syns = new HashSet<IDictataPhrase>(word.PhraseSynonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseSynonyms = syns;
                     word.GetLexeme().SystemSave();
                 }
 
-                foreach (var word in antonyms)
+                foreach (IDictata word in antonyms)
                 {
-                    var ants = new HashSet<IDictataPhrase>(word.PhraseAntonyms);
+                    HashSet<IDictataPhrase> ants = new HashSet<IDictataPhrase>(word.PhraseAntonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.PhraseAntonyms = ants;
                     word.GetLexeme().SystemSave();
                 }
 
-                foreach (var phrase in synonymPhrases)
+                foreach (IDictataPhrase phrase in synonymPhrases)
                 {
-                    var syns = new HashSet<IDictataPhrase>(phrase.PhraseSynonyms);
+                    HashSet<IDictataPhrase> syns = new HashSet<IDictataPhrase>(phrase.PhraseSynonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     phrase.PhraseSynonyms = syns;
                     phrase.SystemSave();
                 }
 
-                foreach (var phrase in antonymPhrases)
+                foreach (IDictataPhrase phrase in antonymPhrases)
                 {
-                    var ants = new HashSet<IDictataPhrase>(phrase.PhraseAntonyms);
+                    HashSet<IDictataPhrase> ants = new HashSet<IDictataPhrase>(phrase.PhraseAntonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     phrase.PhraseAntonyms = ants;
                     phrase.SystemSave();

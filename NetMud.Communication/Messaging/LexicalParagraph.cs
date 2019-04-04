@@ -67,9 +67,9 @@ namespace NetMud.Communication.Messaging
         public void Unpack(LexicalContext overridingContext = null)
         {
             //Clean them out
-            var sentences = new List<ILexicalSentence>();
+            List<ILexicalSentence> sentences = new List<ILexicalSentence>();
 
-            foreach (var sensoryEvent in Events)
+            foreach (ISensoryEvent sensoryEvent in Events)
             {
                 sentences.AddRange(sensoryEvent.Unpack(overridingContext));
             }
@@ -88,24 +88,24 @@ namespace NetMud.Communication.Messaging
                 return Override;
             }
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
             if (Sentences.Count == 0 || overridingContext != null)
             {
                 Unpack(overridingContext);
             }
 
-            var removedSentences = new List<int>();
-            var finalSentences = new List<ILexicalSentence>();
-            for (var i = 0; i < Sentences.Count(); i++)
+            List<int> removedSentences = new List<int>();
+            List<ILexicalSentence> finalSentences = new List<ILexicalSentence>();
+            for (int i = 0; i < Sentences.Count(); i++)
             {
                 if (removedSentences.Contains(i))
                 {
                     continue;
                 }
 
-                var sentence = Sentences[i];
-                for (var n = i + 1; n < Sentences.Count(); n++)
+                ILexicalSentence sentence = Sentences[i];
+                for (int n = i + 1; n < Sentences.Count(); n++)
                 {
                     if (removedSentences.Contains(n))
                     {
@@ -113,9 +113,9 @@ namespace NetMud.Communication.Messaging
                     }
 
                     ILexicalSentence secondSentence = Sentences[n];
-                    foreach (var complexityRule in sentence.Language.ComplexityRules)
+                    foreach (SentenceComplexityRule complexityRule in sentence.Language.ComplexityRules)
                     {
-                        var match = complexityRule.MatchesRule(sentence, secondSentence, overridingContext.Elegance);
+                        short match = complexityRule.MatchesRule(sentence, secondSentence, overridingContext.Elegance);
 
                         if (match != 0)
                         {
@@ -136,7 +136,7 @@ namespace NetMud.Communication.Messaging
                 }
             }
 
-            foreach (var sentence in finalSentences)
+            foreach (ILexicalSentence sentence in finalSentences)
             {
                 sb.Append(sentence.Describe() + " ");
             }
@@ -165,16 +165,16 @@ namespace NetMud.Communication.Messaging
                     first.Subject = second.Subject;
                     break;
                 case -1:
-                    var newSubjects = new List<Tuple<ISensoryEvent, short>>();
+                    List<Tuple<ISensoryEvent, short>> newSubjects = new List<Tuple<ISensoryEvent, short>>();
                     newSubjects.AddRange(first.Subject);
                     newSubjects.AddRange(second.Subject.Where(sub => !newSubjects.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
 
-                    foreach (var sub in newSubjects.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
+                    foreach (ILexica sub in newSubjects.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
                     {
                         sub.Context.Plural = true;
                     }
 
-                    foreach (var sub in newSubjects.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
+                    foreach (Tuple<ISensoryEvent, short> sub in newSubjects.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
                     {
                         sub.Item1.Event.Context.Plural = true;
                     }
@@ -182,16 +182,16 @@ namespace NetMud.Communication.Messaging
                     first.Subject = newSubjects;
                     break;
                 case -2:
-                    var newPredicates = new List<Tuple<ISensoryEvent, short>>();
+                    List<Tuple<ISensoryEvent, short>> newPredicates = new List<Tuple<ISensoryEvent, short>>();
                     newPredicates.AddRange(first.Predicate);
                     newPredicates.AddRange(second.Predicate.Where(sub => !newPredicates.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
 
-                    foreach (var pred in newPredicates.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
+                    foreach (ILexica pred in newPredicates.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
                     {
                         pred.Context.Plural = true;
                     }
 
-                    foreach (var pred in newPredicates.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
+                    foreach (Tuple<ISensoryEvent, short> pred in newPredicates.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
                     {
                         pred.Item1.Event.Context.Plural = true;
                     }
@@ -200,7 +200,7 @@ namespace NetMud.Communication.Messaging
                     break;
             }
 
-            var newModifiers = new List<Tuple<ISensoryEvent, short>>();
+            List<Tuple<ISensoryEvent, short>> newModifiers = new List<Tuple<ISensoryEvent, short>>();
             newModifiers.AddRange(first.Modifiers);
             newModifiers.AddRange(second.Modifiers);
 

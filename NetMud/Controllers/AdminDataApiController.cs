@@ -187,8 +187,8 @@ namespace NetMud.Controllers
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var origin = TemplateCache.Get<IRoomTemplate>(originId);
-            var destination = TemplateCache.Get<IRoomTemplate>(destinationId);
+            IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(originId);
+            IRoomTemplate destination = TemplateCache.Get<IRoomTemplate>(destinationId);
 
             string message = string.Empty;
 

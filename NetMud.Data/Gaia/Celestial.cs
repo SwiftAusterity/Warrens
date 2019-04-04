@@ -170,7 +170,7 @@ namespace NetMud.Data.Gaia
         /// <returns>the output strings</returns>
         public string GetDescribableName(IEntity viewer)
         {
-            var strength = GetVisibleDelta(viewer);
+            short strength = GetVisibleDelta(viewer);
 
             return GetSelf(MessagingType.Visible, strength).ToString();
         }
@@ -238,7 +238,7 @@ namespace NetMud.Data.Gaia
                             Tense = LexicalTense.Present
                         };
 
-                        var skyContext = new LexicalContext(viewer)
+                        LexicalContext skyContext = new LexicalContext(viewer)
                         {
                             Determinant = true,
                             Perspective = NarrativePerspective.None,
@@ -283,8 +283,8 @@ namespace NetMud.Data.Gaia
                 float value = Luminosity; //TODO: make this based on outside conditions
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {

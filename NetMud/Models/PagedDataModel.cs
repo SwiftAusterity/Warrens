@@ -52,7 +52,7 @@ namespace NetMud.Models
                 int skip = (CurrentPageNumber - 1) * ItemsPerPage;
                 int take = Math.Abs(Items.Count() - skip) >= ItemsPerPage ? ItemsPerPage : Math.Abs(Items.Count() - skip);
 
-                var filteredItems = Items;
+                IEnumerable<T> filteredItems = Items;
                 if (!string.IsNullOrWhiteSpace(SearchTerms))
                 {
                     filteredItems = filteredItems.Where(item => SearchFilter(item));

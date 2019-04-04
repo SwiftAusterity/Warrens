@@ -183,14 +183,14 @@ namespace NetMud.Communication.Lexical
 
             if (anonymize)
             {
-                var pronounContext = Event.Context.Clone();
+                LexicalContext pronounContext = Event.Context.Clone();
                 pronounContext.Perspective = NarrativePerspective.SecondPerson;
                 pronounContext.Position = LexicalPosition.None;
                 pronounContext.Tense = LexicalTense.None;
                 pronounContext.Determinant = false;
                 pronounContext.Semantics = new HashSet<string>();
 
-                var pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
+                IDictata pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
                 Event.Phrase = pronoun.Name;
                 Event.Type = LexicalType.Pronoun;
             }
@@ -208,12 +208,12 @@ namespace NetMud.Communication.Lexical
                 //This is to catch directly described entities, we have to add a verb to it for it to make sense. "Complete sentence rule"
                 if (subject.Modifiers.Any() && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                 {
-                    var verbContext = subject.Context.Clone();
+                    LexicalContext verbContext = subject.Context.Clone();
                     verbContext.Semantics = new HashSet<string> { "existential" };
                     verbContext.Determinant = false;
-                    var verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
+                    IDictata verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
 
-                    var verbLex = verb.GetLexica(GrammaticalType.Verb, verbContext);
+                    ILexica verbLex = verb.GetLexica(GrammaticalType.Verb, verbContext);
                     verbLex.TryModify(subject.Modifiers);
 
                     subject.Modifiers = new HashSet<ILexica>();
@@ -235,7 +235,7 @@ namespace NetMud.Communication.Lexical
                     //full obfuscation happens at 100 only
                     if (Strength <= -100 || Strength >= 100)
                     {
-                        var lex = RunObscura(SensoryType, subject, subject.Context.Observer, Strength > 0);
+                        ILexica lex = RunObscura(SensoryType, subject, subject.Context.Observer, Strength > 0);
 
                         sentences.Add(lex.MakeSentence(SentenceType.Statement, SensoryType, Strength));
                     }
@@ -260,7 +260,7 @@ namespace NetMud.Communication.Lexical
 
         private ILexica RunObscura(MessagingType sensoryType, ILexica subject, IEntity observer, bool over)
         {
-            var context = new LexicalContext(observer)
+            LexicalContext context = new LexicalContext(observer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.FirstPerson,

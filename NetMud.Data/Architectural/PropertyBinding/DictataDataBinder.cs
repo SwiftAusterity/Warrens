@@ -16,7 +16,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            var returnValue = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), stringInput, ConfigDataType.Dictionary))?.WordForms.FirstOrDefault();
+            IDictata returnValue = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), stringInput, ConfigDataType.Dictionary))?.WordForms.FirstOrDefault();
 
             return returnValue;
         }

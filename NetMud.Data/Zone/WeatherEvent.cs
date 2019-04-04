@@ -84,8 +84,8 @@ namespace NetMud.Data.Zone
                 float value = 30; //TODO: make this based on outside conditions
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -139,8 +139,8 @@ namespace NetMud.Data.Zone
                 float value = 30; //TODO: make this based on outside conditions
                 ValueRange<float> range = viewer.GetAuditoryRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -207,8 +207,8 @@ namespace NetMud.Data.Zone
                 float value = 30; //TODO: make this based on outside conditions
                 ValueRange<float> range = viewer.GetOlefactoryRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -276,8 +276,8 @@ namespace NetMud.Data.Zone
                 float value = 30; //TODO: make this based on outside conditions
                 ValueRange<float> range = viewer.GetTactileRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -334,11 +334,11 @@ namespace NetMud.Data.Zone
         /// <returns>the output strings</returns>
         public ILexicalParagraph RenderToVisible(IEntity viewer)
         {
-            var strength = GetVisibleDelta(viewer);
+            short strength = GetVisibleDelta(viewer);
 
             ISensoryEvent me = GetSelf(MessagingType.Visible, strength);
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -347,7 +347,7 @@ namespace NetMud.Data.Zone
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -375,7 +375,7 @@ namespace NetMud.Data.Zone
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var skyContext = new LexicalContext(viewer)
+            LexicalContext skyContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.None,
@@ -385,7 +385,7 @@ namespace NetMud.Data.Zone
             };
 
             IList<ISensoryEvent> Messages = new List<ISensoryEvent>();
-            foreach (var sense in sensoryTypes)
+            foreach (MessagingType sense in sensoryTypes)
             {
                 ISensoryEvent me = GetSelf(sense);
 
@@ -401,7 +401,7 @@ namespace NetMud.Data.Zone
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        var audibleDescs = GetAudibleDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> audibleDescs = GetAudibleDescriptives(viewer);
 
                         if(audibleDescs.Count() == 0)
                         {
@@ -415,7 +415,7 @@ namespace NetMud.Data.Zone
                         me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                     case MessagingType.Olefactory:
-                        var smellDescs = GetOlefactoryDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> smellDescs = GetOlefactoryDescriptives(viewer);
 
                         if (smellDescs.Count() == 0)
                         {
@@ -429,7 +429,7 @@ namespace NetMud.Data.Zone
                         me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                     case MessagingType.Tactile:
-                        var touchDescs = GetTouchDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> touchDescs = GetTouchDescriptives(viewer);
 
                         if (touchDescs.Count() == 0)
                         {
@@ -561,7 +561,7 @@ namespace NetMud.Data.Zone
         /// <returns>the output strings</returns>
         public string GetDescribableName(IEntity viewer)
         {
-            var strength = GetVisibleDelta(viewer);
+            short strength = GetVisibleDelta(viewer);
 
             return GetSelf(MessagingType.Visible, strength).ToString();
         }

@@ -31,10 +31,10 @@ namespace NetMud.Communication.Lexical
             try
             {
                 object[] body = new object[] { new { Text = phrase } };
-                var requestBody = JsonConvert.SerializeObject(body);
+                string requestBody = JsonConvert.SerializeObject(body);
 
-                using (var client = new HttpClient())
-                using (var request = new HttpRequestMessage())
+                using (HttpClient client = new HttpClient())
+                using (HttpRequestMessage request = new HttpRequestMessage())
                 {
                     // Set the method to POST
                     request.Method = HttpMethod.Post;
@@ -49,8 +49,8 @@ namespace NetMud.Communication.Lexical
                     request.Headers.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
 
                     // Send request, get response
-                    var response = client.SendAsync(request).Result;
-                    var jsonResponse = response.Content.ReadAsStringAsync().Result;
+                    HttpResponseMessage response = client.SendAsync(request).Result;
+                    string jsonResponse = response.Content.ReadAsStringAsync().Result;
 
                     dynamic result = JsonConvert.DeserializeObject(jsonResponse);
 
@@ -94,7 +94,7 @@ namespace NetMud.Communication.Lexical
                 word.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.GetLexeme().SuitableForUse 
+            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.GetLexeme().SuitableForUse 
                                                                                 && dict.Language == word.Language 
                                                                                 && dict.WordType == word.WordType);
 
@@ -110,7 +110,7 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type && dict.GetLexeme().SuitableForUse);
+            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type && dict.GetLexeme().SuitableForUse);
 
             return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
         }
@@ -146,7 +146,7 @@ namespace NetMud.Communication.Lexical
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
-                var rankedWords = new List<Tuple<IDictata, int>>
+                List<Tuple<IDictata, int>> rankedWords = new List<Tuple<IDictata, int>>
                 {
                     new Tuple<IDictata, int>(baseWord, GetSynonymRanking(baseWord, context))
                 };
@@ -170,8 +170,8 @@ namespace NetMud.Communication.Lexical
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
-                var rankedWords = new List<Tuple<IDictata, int>>();
-                var baseRanking = GetSynonymRanking(basePhrase, context);
+                List<Tuple<IDictata, int>> rankedWords = new List<Tuple<IDictata, int>>();
+                int baseRanking = GetSynonymRanking(basePhrase, context);
 
                 rankedWords.AddRange(possibleWords.Select(word => new Tuple<IDictata, int>(word, GetSynonymRanking(word, context))));
 
@@ -200,8 +200,8 @@ namespace NetMud.Communication.Lexical
 
         private static IDictata GetRelatedWord(IDictata baseWord, IEnumerable<IDictata> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
         {
-            var rankedWords = new Dictionary<IDictata, int>();
-            foreach (var word in possibleWords)
+            Dictionary<IDictata, int> rankedWords = new Dictionary<IDictata, int>();
+            foreach (IDictata word in possibleWords)
             {
                 int rating = 0;
 
@@ -212,15 +212,15 @@ namespace NetMud.Communication.Lexical
                 rankedWords.Add(word, rating);
             }
 
-            var closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
+            KeyValuePair<IDictata, int> closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
 
             return closestWord.Key ?? baseWord;
         }
 
         private static IDictata GetRelatedWord(IDictataPhrase basePhrase, IEnumerable<IDictata> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
         {
-            var rankedWords = new Dictionary<IDictata, int>();
-            foreach (var word in possibleWords)
+            Dictionary<IDictata, int> rankedWords = new Dictionary<IDictata, int>();
+            foreach (IDictata word in possibleWords)
             {
                 int rating = 0;
 
@@ -231,7 +231,7 @@ namespace NetMud.Communication.Lexical
                 rankedWords.Add(word, rating);
             }
 
-            var closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
+            KeyValuePair<IDictata, int> closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
 
             return closestWord.Key;
         }
@@ -244,20 +244,20 @@ namespace NetMud.Communication.Lexical
             }
 
             //try to downgrade word
-            var rankedWords = new Dictionary<IDictata, int>();
-            foreach (var possibleWord in possibleWords)
+            Dictionary<IDictata, int> rankedWords = new Dictionary<IDictata, int>();
+            foreach (IDictata possibleWord in possibleWords)
             {
                 int rating = Math.Abs(word.Quality + (Math.Abs(obscureStrength) * -1) - possibleWord.Quality);
 
                 rankedWords.Add(possibleWord, rating);
             }
 
-            var closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
-            var newWord = closestWord.Key;
+            KeyValuePair<IDictata, int> closestWord = rankedWords.OrderBy(pair => pair.Value).FirstOrDefault();
+            IDictata newWord = closestWord.Key;
 
-            var descriptiveWordTypes = new LexicalType[] { LexicalType.Adjective, LexicalType.Adverb };
-            var remainderWordTypes = new LexicalType[] { LexicalType.Verb, LexicalType.Preposition, LexicalType.Conjunction, LexicalType.Article };
-            var nounWordTypes = new LexicalType[] { LexicalType.Pronoun, LexicalType.ProperNoun, LexicalType.Noun };
+            LexicalType[] descriptiveWordTypes = new LexicalType[] { LexicalType.Adjective, LexicalType.Adverb };
+            LexicalType[] remainderWordTypes = new LexicalType[] { LexicalType.Verb, LexicalType.Preposition, LexicalType.Conjunction, LexicalType.Article };
+            LexicalType[] nounWordTypes = new LexicalType[] { LexicalType.Pronoun, LexicalType.ProperNoun, LexicalType.Noun };
             if (newWord != null)
             {
                 //Adjectives/adverbs/articles get eaten
@@ -275,7 +275,7 @@ namespace NetMud.Communication.Lexical
                 //pronouns become "it"
                 if (nounWordTypes.Contains(newWord.WordType))
                 {
-                    var itContext = new LexicalContext(null)
+                    LexicalContext itContext = new LexicalContext(null)
                     {
                         Determinant = false,
                         Plural = false,
@@ -309,7 +309,7 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            var possibleWords = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Language == context.Language && dict.SuitableForUse);
+            IEnumerable<IDictataPhrase> possibleWords = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Language == context.Language && dict.SuitableForUse);
 
             return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
         }
@@ -385,8 +385,8 @@ namespace NetMud.Communication.Lexical
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
-                var rankedPhrases = new List<Tuple<IDictataPhrase, int>>();
-                var baseRanking = GetSynonymRanking(baseWord, context);
+                List<Tuple<IDictataPhrase, int>> rankedPhrases = new List<Tuple<IDictataPhrase, int>>();
+                int baseRanking = GetSynonymRanking(baseWord, context);
 
                 rankedPhrases.AddRange(possiblePhrases.Select(phrase => new Tuple<IDictataPhrase, int>(phrase, GetSynonymRanking(phrase, context))));
 
@@ -412,7 +412,7 @@ namespace NetMud.Communication.Lexical
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
-                var rankedPhrases = new List<Tuple<IDictataPhrase, int>>
+                List<Tuple<IDictataPhrase, int>> rankedPhrases = new List<Tuple<IDictataPhrase, int>>
                 {
                     new Tuple<IDictataPhrase, int>(basePhrase, GetSynonymRanking(basePhrase, context))
                 };
@@ -436,8 +436,8 @@ namespace NetMud.Communication.Lexical
 
         private static IDictataPhrase GetRelatedPhrase(IDictata baseWord, IEnumerable<IDictataPhrase> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
         {
-            var rankedPhrasess = new Dictionary<IDictataPhrase, int>();
-            foreach (var word in possibleWords)
+            Dictionary<IDictataPhrase, int> rankedPhrasess = new Dictionary<IDictataPhrase, int>();
+            foreach (IDictataPhrase word in possibleWords)
             {
                 int rating = 0;
 
@@ -448,15 +448,15 @@ namespace NetMud.Communication.Lexical
                 rankedPhrasess.Add(word, rating);
             }
 
-            var closestPhrase = rankedPhrasess.OrderBy(pair => pair.Value).FirstOrDefault();
+            KeyValuePair<IDictataPhrase, int> closestPhrase = rankedPhrasess.OrderBy(pair => pair.Value).FirstOrDefault();
 
             return closestPhrase.Key;
         }
 
         private static IDictataPhrase GetRelatedPhrase(IDictataPhrase basePhrase, IEnumerable<IDictataPhrase> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
         {
-            var rankedPhrases = new Dictionary<IDictataPhrase, int>();
-            foreach (var word in possibleWords)
+            Dictionary<IDictataPhrase, int> rankedPhrases = new Dictionary<IDictataPhrase, int>();
+            foreach (IDictataPhrase word in possibleWords)
             {
                 int rating = 0;
 
@@ -467,7 +467,7 @@ namespace NetMud.Communication.Lexical
                 rankedPhrases.Add(word, rating);
             }
 
-            var closestPhrase = rankedPhrases.OrderBy(pair => pair.Value).FirstOrDefault();
+            KeyValuePair<IDictataPhrase, int> closestPhrase = rankedPhrases.OrderBy(pair => pair.Value).FirstOrDefault();
 
             return closestPhrase.Key ?? basePhrase;
         }

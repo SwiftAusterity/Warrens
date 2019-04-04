@@ -166,8 +166,8 @@ namespace NetMud.Data.Room
             {
                 if (Origin != null && Destination != null)
                 {
-                    var originIsZone = Origin.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)) ? true : false;
-                    var destinationIsZone = Destination.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)) ? true : false;
+                    bool originIsZone = Origin.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)) ? true : false;
+                    bool destinationIsZone = Destination.GetType().GetInterfaces().Contains(typeof(IZoneTemplate)) ? true : false;
 
                     if (originIsZone && destinationIsZone)
                     {
@@ -308,7 +308,7 @@ namespace NetMud.Data.Room
         {
             try
             {
-                var collectiveContext = new LexicalContext(null)
+                LexicalContext collectiveContext = new LexicalContext(null)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.ThirdPerson,

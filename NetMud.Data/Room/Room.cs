@@ -101,7 +101,7 @@ namespace NetMud.Data.Room
             {
                 _coordinates = value;
 
-                var dt = Template<IRoomTemplate>();
+                IRoomTemplate dt = Template<IRoomTemplate>();
                 if (dt != null)
                 {
                     dt.Coordinates = _coordinates;
@@ -267,7 +267,7 @@ namespace NetMud.Data.Room
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -276,7 +276,7 @@ namespace NetMud.Data.Room
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -289,7 +289,7 @@ namespace NetMud.Data.Room
             List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
-                var me = GetSelf(sense);
+                ISensoryEvent me = GetSelf(sense);
 
                 switch (sense)
                 {
@@ -478,17 +478,17 @@ namespace NetMud.Data.Room
                 sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            foreach (var resource in FaunaNaturalResources)
+            foreach (INaturalResourceSpawn<IFauna> resource in FaunaNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in FloraNaturalResources)
+            foreach (INaturalResourceSpawn<IFlora> resource in FloraNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in MineralNaturalResources)
+            foreach (INaturalResourceSpawn<IMineral> resource in MineralNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }

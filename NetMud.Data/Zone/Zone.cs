@@ -205,7 +205,7 @@ namespace NetMud.Data.Zone
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -214,7 +214,7 @@ namespace NetMud.Data.Zone
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -227,7 +227,7 @@ namespace NetMud.Data.Zone
             List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
-                var me = GetSelf(sense);
+                ISensoryEvent me = GetSelf(sense);
                 switch (sense)
                 {
                     case MessagingType.Audible:
@@ -398,17 +398,17 @@ namespace NetMud.Data.Zone
                 sensoryOutput.AddRange(wEvent.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            foreach (var resource in FloraNaturalResources)
+            foreach (INaturalResourceSpawn<IFlora> resource in FloraNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in FaunaNaturalResources)
+            foreach (INaturalResourceSpawn<IFauna> resource in FaunaNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in MineralNaturalResources)
+            foreach (INaturalResourceSpawn<IMineral> resource in MineralNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
@@ -420,7 +420,7 @@ namespace NetMud.Data.Zone
             }
 
             //render our locales out
-            foreach (var path in GetPathways())
+            foreach (IPathway path in GetPathways())
             {
                 sensoryOutput.AddRange(path.RenderAsContents(viewer, sensoryTypes).Events);
             }
@@ -771,8 +771,8 @@ namespace NetMud.Data.Zone
 
         private bool AdvanceResources()
         {
-            var rand = new Random();
-            var bS = Template<IZoneTemplate>();
+            Random rand = new Random();
+            IZoneTemplate bS = Template<IZoneTemplate>();
 
             if (FloraNaturalResources.Count() == 0 && bS.FloraResourceSpawn.Count() != 0)
             {
@@ -785,7 +785,7 @@ namespace NetMud.Data.Zone
             {
                 foreach (INaturalResourceSpawn<IFlora> population in FloraNaturalResources)
                 {
-                    var baseRate = bS.FloraResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+                    INaturalResourceSpawn<IFlora> baseRate = bS.FloraResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
 
                     if (baseRate == null || population.RateFactor > 100 * baseRate.RateFactor)
                     {
@@ -807,7 +807,7 @@ namespace NetMud.Data.Zone
             {
                 foreach (INaturalResourceSpawn<IMineral> population in MineralNaturalResources)
                 {
-                    var baseRate = bS.MineralResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+                    INaturalResourceSpawn<IMineral> baseRate = bS.MineralResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
 
                     if (baseRate == null || population.RateFactor > 25 * baseRate.RateFactor)
                     {
@@ -829,7 +829,7 @@ namespace NetMud.Data.Zone
             {
                 foreach (INaturalResourceSpawn<IFauna> population in FaunaNaturalResources)
                 {
-                    var baseRate = bS.FaunaResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+                    INaturalResourceSpawn<IFauna> baseRate = bS.FaunaResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
 
                     if (baseRate == null || population.RateFactor > 1000 * baseRate.RateFactor)
                     {

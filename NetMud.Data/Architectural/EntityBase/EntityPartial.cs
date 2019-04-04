@@ -497,7 +497,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            var strength = GetVisibleDelta(viewer);
+            short strength = GetVisibleDelta(viewer);
 
             return GetSelf(MessagingType.Visible, strength).ToString();
         }
@@ -536,8 +536,8 @@ namespace NetMud.Data.Architectural.EntityBase
                 float value = GetCurrentLuminosity();
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if(lowDelta < 0)
                 {
@@ -596,9 +596,9 @@ namespace NetMud.Data.Architectural.EntityBase
                 Descriptives = new HashSet<ISensoryEvent>();
             }
             
-            foreach(var desc in Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible))
+            foreach(ISensoryEvent desc in Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible))
             {
-                var senseDelta = GetVisibleDelta(viewer, desc.Strength);
+                short senseDelta = GetVisibleDelta(viewer, desc.Strength);
 
                 yield return desc;
             }
@@ -628,8 +628,8 @@ namespace NetMud.Data.Architectural.EntityBase
                 float value = 30; //Something to do with material composition probably or vocal range?
                 ValueRange<float> range = viewer.GetAuditoryRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -696,8 +696,8 @@ namespace NetMud.Data.Architectural.EntityBase
                 float value = 30; //Something to do with material composition or emotional state
                 ValueRange<float> range = viewer.GetPsychicRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -765,8 +765,8 @@ namespace NetMud.Data.Architectural.EntityBase
                 float value = 30; //Something to do with material composition 
                 ValueRange<float> range = viewer.GetTasteRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -835,8 +835,8 @@ namespace NetMud.Data.Architectural.EntityBase
                 float value = 30; //Something to do with material composition 
                 ValueRange<float> range = viewer.GetOlefactoryRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {
@@ -904,8 +904,8 @@ namespace NetMud.Data.Architectural.EntityBase
                 float value = 30; //Something to do with material composition or emotional state
                 ValueRange<float> range = viewer.GetTactileRange();
 
-                var lowDelta = value - (range.Low - modifier);
-                var highDelta = (range.High + modifier) - value;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
 
                 if (lowDelta < 0)
                 {

@@ -436,7 +436,7 @@ namespace NetMud.Data.Gaia
 
                 if (OrbitalPosition >= maxOrbit)
                 {
-                    OrbitalPosition = OrbitalPosition - maxOrbit;
+                    OrbitalPosition -= maxOrbit;
                 }
             }
 

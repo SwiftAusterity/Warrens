@@ -90,9 +90,9 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult Purge()
         {
-            var dictionary = ConfigDataCache.GetAll<IDictataPhrase>();
+            System.Collections.Generic.IEnumerable<IDictataPhrase> dictionary = ConfigDataCache.GetAll<IDictataPhrase>();
 
-            foreach(var dict in dictionary)
+            foreach(IDictataPhrase dict in dictionary)
             {
                 dict.SystemRemove();
             }
@@ -182,11 +182,11 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                foreach(var syn in obj.Synonyms)
+                foreach(IDictata syn in obj.Synonyms)
                 {
                     if(!syn.PhraseSynonyms.Any(dict => dict == obj))
                     {
-                        var synonyms = syn.PhraseSynonyms;
+                        System.Collections.Generic.HashSet<IDictataPhrase> synonyms = syn.PhraseSynonyms;
                         synonyms.Add(obj);
 
                         syn.PhraseSynonyms = synonyms;
@@ -194,11 +194,11 @@ namespace NetMud.Controllers.GameAdmin
                     }
                 }
 
-                foreach (var ant in obj.Antonyms)
+                foreach (IDictata ant in obj.Antonyms)
                 {
                     if (!ant.PhraseAntonyms.Any(dict => dict == obj))
                     {
-                        var antonyms = ant.PhraseAntonyms;
+                        System.Collections.Generic.HashSet<IDictataPhrase> antonyms = ant.PhraseAntonyms;
                         antonyms.Add(obj);
 
                         ant.PhraseAntonyms = antonyms;
@@ -206,11 +206,11 @@ namespace NetMud.Controllers.GameAdmin
                     }
                 }
 
-                foreach (var syn in obj.PhraseSynonyms)
+                foreach (IDictataPhrase syn in obj.PhraseSynonyms)
                 {
                     if (!syn.PhraseSynonyms.Any(dict => dict == obj))
                     {
-                        var synonyms = syn.PhraseSynonyms;
+                        System.Collections.Generic.HashSet<IDictataPhrase> synonyms = syn.PhraseSynonyms;
                         synonyms.Add(obj);
 
                         syn.PhraseSynonyms = synonyms;
@@ -218,11 +218,11 @@ namespace NetMud.Controllers.GameAdmin
                     }
                 }
 
-                foreach (var ant in obj.PhraseAntonyms)
+                foreach (IDictataPhrase ant in obj.PhraseAntonyms)
                 {
                     if (!ant.PhraseAntonyms.Any(dict => dict == obj))
                     {
-                        var antonyms = ant.PhraseAntonyms;
+                        System.Collections.Generic.HashSet<IDictataPhrase> antonyms = ant.PhraseAntonyms;
                         antonyms.Add(obj);
 
                         ant.PhraseAntonyms = antonyms;

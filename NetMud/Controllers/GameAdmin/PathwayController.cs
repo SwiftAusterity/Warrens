@@ -101,7 +101,7 @@ namespace NetMud.Controllers.GameAdmin
             //New room or existing room
             if (destinationRoomId.Equals(-1))
             {
-                var origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
+                IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
 
                 AddPathwayWithRoomTemplateViewModel vModel = new AddPathwayWithRoomTemplateViewModel
                 {
@@ -121,9 +121,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                var origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
-                var destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId);
-                var pathwayTemplate = TemplateCache.Get<IPathwayTemplate>(id);
+                IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
+                IRoomTemplate destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId);
+                IPathwayTemplate pathwayTemplate = TemplateCache.Get<IPathwayTemplate>(id);
 
                 if(pathwayTemplate == null)
                 {
@@ -150,7 +150,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var origin = TemplateCache.Get<IRoomTemplate>(vModel.Origin.Id);
+            IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(vModel.Origin.Id);
             IRoomTemplate newRoom = vModel.Destination;
             newRoom.ParentLocation = origin.ParentLocation;
 

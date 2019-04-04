@@ -111,6 +111,13 @@ namespace NetMud.DataStructure.Linguistic
         ILexeme GetLexeme();
 
         /// <summary>
+        /// creates a related dictata and lexeme with a new word
+        /// </summary>
+        /// <param name="synonym"></param>
+        /// <returns></returns>
+        ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym);
+
+        /// <summary>
         /// Create a lexica from this
         /// </summary>
         /// <returns></returns>

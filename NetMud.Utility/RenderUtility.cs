@@ -159,7 +159,7 @@ namespace NetMud.Utility
                 }
                 else
                 {
-                    str = str + padString;
+                    str += padString;
                 }
 
                 padAmount--;

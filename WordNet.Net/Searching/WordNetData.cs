@@ -309,21 +309,21 @@ namespace WordNet.Net.Searching
                     // WN2.1 - TDMS
                     if (pt.Ident <= LASTTYPE)
                     {
-                        retval = retval + pt;
+                        retval += pt;
                     }
                     else if (pt.Mnemonic == "INSTANCE")
                     {
-                        retval = retval + "HYPERPTR";
+                        retval += "HYPERPTR";
                     }
                     else if (pt.Mnemonic == "INSTANCES")
                     {
-                        retval = retval + "HYPOPTR";
+                        retval += "HYPOPTR";
                     }
 
                     // WN2.1 - TDMS
                     if (pt.Mnemonic == "SIMPTR")
                     {
-                        retval = retval + "ANTPTR";
+                        retval += "ANTPTR";
                     }
 
                     if (fpos.Key == "noun")
@@ -331,31 +331,31 @@ namespace WordNet.Net.Searching
                         /* set generic HOLONYM and/or MERONYM bit if necessary */
                         if (pt >= "ISMEMBERPTR" && pt <= "ISPARTPTR")
                         {
-                            retval = retval + "HOLONYM";
+                            retval += "HOLONYM";
                         }
                         else if (pt >= "HASMEMBERPTR" && pt <= "HASPARTPTR")
                         {
-                            retval = retval + "MERONYM";
+                            retval += "MERONYM";
                         }
                     }
                 }
 
                 if (fpos.Key == "noun")
                 {
-                    retval = retval + "RELATIVES";
+                    retval += "RELATIVES";
                     if (index.HasHoloMero("HMERONYM", s))
                     {
-                        retval = retval + "HMERONYM";
+                        retval += "HMERONYM";
                     }
 
                     if (index.HasHoloMero("HHOLONYM", s))
                     {
-                        retval = retval + "HHOLONYM";
+                        retval += "HHOLONYM";
                     }
 
                     if (retval["HYPERPTR"])
                     {
-                        retval = retval + "COORDS";
+                        retval += "COORDS";
                     }
                 }
                 else if (fpos.Key == "verb")
