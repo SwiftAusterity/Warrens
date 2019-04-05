@@ -73,24 +73,28 @@ namespace WordNet.Net
             }
 
             string[] st = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-            int stI = 0;
-            wd = st[stI++]; /* the word */
-            pos = PartOfSpeech.Of(st[stI++]); /* the part of speech */
-            sense_cnt = int.Parse(st[stI++]); /* collins count */
 
-            int ptruse_cnt = int.Parse(st[stI++]); /* number of pointers types */
-			ptruse = new PointerType[ptruse_cnt];
-			for (j = 0; j < ptruse_cnt; j++)
+            if (st.Length >= 6)
             {
-                ptruse[j] = PointerType.Of(st[stI++]);
-            }
+                int stI = 0;
+                wd = st[stI++]; /* the word */
+                pos = PartOfSpeech.Of(st[stI++]); /* the part of speech */
+                sense_cnt = int.Parse(st[stI++]); /* collins count */
 
-            int off_cnt = int.Parse(st[stI++]);
-			offs = new int[off_cnt];
-			tagsense_cnt = int.Parse(st[stI++]);
-			for (j = 0; j < off_cnt; j++)
-            {
-                offs[j] = int.Parse(st[stI++]);
+                int ptruse_cnt = int.Parse(st[stI++]); /* number of pointers types */
+                ptruse = new PointerType[ptruse_cnt];
+                for (j = 0; j < ptruse_cnt; j++)
+                {
+                    ptruse[j] = PointerType.Of(st[stI++]);
+                }
+
+                int off_cnt = int.Parse(st[stI++]);
+                offs = new int[off_cnt];
+                tagsense_cnt = int.Parse(st[stI++]);
+                for (j = 0; j < off_cnt; j++)
+                {
+                    offs[j] = int.Parse(st[stI++]);
+                }
             }
 		}
 
@@ -111,13 +115,16 @@ namespace WordNet.Net
                 pbase = PointerType.Of("ISMEMBERPTR");
             }
 
-            for (int i = 0; i < offs.Length; i++)
-			{
-				SynonymSet s = new SynonymSet(offs[i], PartOfSpeech.Of("noun"), "", search, 0, netData);
-
-				if (s.Has(pbase) || s.Has(pbase + 1) || s.Has(pbase + 2))
+            if (offs != null)
+            {
+                for (int i = 0; i < offs.Length; i++)
                 {
-                    return true;
+                    SynonymSet s = new SynonymSet(offs[i], PartOfSpeech.Of("noun"), "", search, 0, netData);
+
+                    if (s.Has(pbase) || s.Has(pbase + 1) || s.Has(pbase + 2))
+                    {
+                        return true;
+                    }
                 }
             }
 

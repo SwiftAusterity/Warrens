@@ -76,7 +76,7 @@ namespace WordNet.Net
 
             string origstr = s;
 			pos = p;
-			if (pos.Clss == "SATELLITE")
+			if (pos?.Clss == "SATELLITE")
             {
                 pos = PartOfSpeech.Of("adj");
             }

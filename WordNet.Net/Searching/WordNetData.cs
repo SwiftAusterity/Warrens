@@ -71,11 +71,21 @@ namespace WordNet.Net.Searching
 
         public StreamReader Index(PartOfSpeech p)
         {
+            if(p == null)
+            {
+                return null;
+            }
+
             return (StreamReader)indexfps[p.Key];
         }
 
         public StreamReader Data(PartOfSpeech p)
         {
+            if (p == null)
+            {
+                return null;
+            }
+
             return (StreamReader)datafps[p.Key];
         }
 
@@ -153,6 +163,11 @@ namespace WordNet.Net.Searching
 
         public string BinSearch(string searchKey, char marker, StreamReader fp)
         {
+            if(fp == null)
+            {
+                return string.Empty;
+            }
+
             long bot = fp.BaseStream.Seek(0, SeekOrigin.End);
             long top = 0;
             long mid = (bot - top) / 2 + top;
@@ -340,7 +355,7 @@ namespace WordNet.Net.Searching
                     }
                 }
 
-                if (fpos.Key == "noun")
+                if (fpos?.Key == "noun")
                 {
                     retval += "RELATIVES";
                     if (index.HasHoloMero("HMERONYM", s))
@@ -358,7 +373,7 @@ namespace WordNet.Net.Searching
                         retval += "COORDS";
                     }
                 }
-                else if (fpos.Key == "verb")
+                else if (fpos?.Key == "verb")
                 {
                     retval = retval + "RELATIVES" + "FRAMES"; // added frames - TDMS
                 }

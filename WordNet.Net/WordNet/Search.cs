@@ -547,6 +547,11 @@ namespace WordNet.Net.WordNet
             Indexes ixs = new Indexes(word, pos, netData);
             while ((idx = ixs.Next()) != null)
             {
+                if(idx.offs == null)
+                {
+                    continue;
+                }
+
                 buf += "\n";
                 /* Print synset for each sense.  If requested, precede
 				   synset with synset offset and/or lexical file information.*/

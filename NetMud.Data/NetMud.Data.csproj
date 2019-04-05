@@ -248,6 +248,10 @@
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
       <Name>NetMud.Utility</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WordNet.Net\WordNet.Net.csproj">
+      <Project>{F12805B0-D74A-4E5B-A482-7C7CCB69D572}</Project>
+      <Name>WordNet.Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

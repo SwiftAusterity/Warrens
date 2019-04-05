@@ -1,6 +1,7 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
 using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
@@ -9,7 +10,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Web.Script.Serialization;
+using WordNet.Net;
+using WordNet.Net.Searching;
+using WordNet.Net.WordNet;
 
 namespace NetMud.Data.Linguistic
 {
@@ -124,6 +129,73 @@ namespace NetMud.Data.Linguistic
             BaseWords = new BaseLanguageMembers();
             TransformationRules = new HashSet<IDictataTransformationRule>();
             PhraseRules = new HashSet<DictataPhraseRule>();
+        }
+
+        /// <summary>
+        /// Create or modify a lexeme with no word form basis, gets tricky with best fit scenarios
+        /// </summary>
+        /// <param name="word">just the text of the word</param>
+        /// <returns>A lexeme</returns>
+        public ILexeme CreateOrModifyLexeme(string word)
+        {
+            ILexeme newLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
+
+            if(newLex != null && newLex.ContainedTypes().Any())
+            {
+                return newLex;
+            }
+
+            bool exists = true;
+            SearchSet searchSet = null;
+            List<Search> results = new List<Search>();
+            LexicalProcessor.WordNet.OverviewFor(word, string.Empty, ref exists, ref searchSet, results);
+
+            //We in theory have every single word form for this word now
+            if (exists && results != null)
+            {
+                foreach (SynonymSet synSet in results.SelectMany(result => result.senses))
+                {
+                    newLex = CreateOrModifyLexeme(word, LexicalProcessor.MapLexicalTypes(synSet.pos.Flag), new string[0]);
+                }
+            }
+
+            return newLex;
+        }
+
+        /// <summary>
+        /// Create or modify a lexeme within this language
+        /// </summary>
+        /// <param name="word">the word we're making</param>
+        /// <returns></returns>
+        public ILexeme CreateOrModifyLexeme(string word, LexicalType form, string[] semantics)
+        {
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
+
+            if (lex == null)
+            {
+                lex = new Lexeme()
+                {
+                    Name = word,
+                    Language = this
+                };
+            }
+
+            if (lex.GetForm(form, semantics, false) == null)
+            {
+                var newDict = new Dictata()
+                {
+                    Name = word,
+                    WordType = form,
+                    Language = this,
+                    Semantics = new HashSet<string>(semantics)
+                };
+
+                lex.AddNewForm(newDict);
+                lex.SystemSave();
+                lex.PersistToCache();
+            }
+
+            return lex;
         }
 
         #region Data persistence functions

@@ -1097,7 +1097,7 @@ namespace WordNet.Net
 			int i;
 			string wdbuf = words[which - 1].word.Replace(' ', '_').ToLower();
 			Index idx = new Index(wdbuf, pos, netData);
-			if (idx != null)
+			if (idx?.offs != null)
             {
                 for (i = 0; i < idx.offs.Length; i++)
                 {

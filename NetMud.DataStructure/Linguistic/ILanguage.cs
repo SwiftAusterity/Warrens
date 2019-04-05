@@ -72,5 +72,19 @@ namespace NetMud.DataStructure.Linguistic
         /// The base needed words for a language to function
         /// </summary>
         BaseLanguageMembers BaseWords { get; set; }
+
+        /// <summary>
+        /// Create or modify a lexeme within this language
+        /// </summary>
+        /// <param name="word">the word we're making</param>
+        /// <returns></returns>
+        ILexeme CreateOrModifyLexeme(string word, LexicalType form, string[] semantics);
+
+        /// <summary>
+        /// Create or modify a lexeme with no word form basis, gets tricky with best fit scenarios
+        /// </summary>
+        /// <param name="word">just the text of the word</param>
+        /// <returns>A lexeme</returns>
+        ILexeme CreateOrModifyLexeme(string word);
     }
 }

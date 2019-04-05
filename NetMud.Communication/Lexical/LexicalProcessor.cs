@@ -26,7 +26,7 @@ namespace NetMud.Communication.Lexical
         private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
         private static readonly string tokenCacheKey = "WordNetEngine";
 
-        internal static WordNetEngine WordNet
+        public static WordNetEngine WordNet
         {
             get
             {
@@ -58,19 +58,15 @@ namespace NetMud.Communication.Lexical
                         {
                             //grab semantics somehow
                             List<string> semantics = new List<string>();
-                            string definition = synSet.defn.Substring(0, synSet.defn.IndexOf(';')).Trim();
+                            var indexSplit = synSet.defn.IndexOf(';');
+                            string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
                             string[] defWords = definition.Split(' ');
 
                             foreach(string defWord in defWords)
                             {
-                                ILexeme defLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", dictata.Language.Name, defWord));
+                                var defLex = dictata.Language.CreateOrModifyLexeme(defWord);
 
-                                if(defLex == null)
-                                {
-                                    //TODO: make the word
-                                }
-
-                                if(defLex == null || !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
+                                if(defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
                                 {
                                     semantics.Add(defWord);
                                 }
@@ -83,7 +79,7 @@ namespace NetMud.Communication.Lexical
                             }
 
                             ///wsns indicates hypo/hypernymity so
-                            int baseWeight = synSet.words[synSet.sense].wnsns;
+                            int baseWeight = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
                             dictata.Severity = baseWeight;
 
                             foreach (Lexeme word in synSet.words)
@@ -104,7 +100,9 @@ namespace NetMud.Communication.Lexical
 
                                     foreach (string phraseWord in words)
                                     {
+                                        var defLex = dictata.Language.CreateOrModifyLexeme(phraseWord);
 
+                                        //make the phrase? maybe later
                                     }
                                 }
                                 else
@@ -114,6 +112,8 @@ namespace NetMud.Communication.Lexical
                             }
                         }
 
+                        dictata.GetLexeme().SystemSave();
+                        dictata.GetLexeme().PersistToCache();
                         return true;
                     }
                 }

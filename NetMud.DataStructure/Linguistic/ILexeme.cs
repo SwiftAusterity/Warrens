@@ -57,5 +57,14 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="formGroup">the form grouping id</param>
         /// <returns>the word</returns>
         IDictata GetForm(LexicalType wordType, short formGroup = -1);
+
+        /// <summary>
+        /// Get a word form by criteria
+        /// </summary>
+        /// <param name="form">the lexical type</param>
+        /// <param name="semantics">the semantic meaning</param>
+        /// <param name="bestFit">should we grab best fit for meaning or be more exacting</param>
+        /// <returns>the word, or nothing</returns>
+        IDictata GetForm(LexicalType form, string[] semantics, bool bestFit = true);
     }
 }

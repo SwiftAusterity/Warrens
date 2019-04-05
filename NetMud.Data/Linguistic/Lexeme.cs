@@ -272,6 +272,34 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// Get a word form by criteria
+        /// </summary>
+        /// <param name="word">the text name of the word</param>
+        /// <param name="form">the lexical type</param>
+        /// <param name="semantics">the semantic meaning</param>
+        /// <param name="bestFit">should we grab best fit for meaning or be more exacting</param>
+        /// <returns>the word, or nothing</returns>
+        public IDictata GetForm(LexicalType form, string[] semantics, bool bestFit = true)
+        {
+            IDictata returnValue = null;
+
+            if (bestFit || semantics.Count() == 0)
+            {
+                returnValue = WordForms.Where(wordForm => wordForm.WordType == form)
+                                .OrderByDescending(wordForm => semantics.Sum(sem => wordForm.Semantics.Contains(sem) ? 1 : 0))
+                                .FirstOrDefault();
+            }
+            else
+            {
+                var expectedMinimumSemanticSimilarity = semantics.Count() / 2;
+                returnValue = WordForms.FirstOrDefault(wordForm => wordForm.WordType == form
+                                                        && semantics.Sum(sem => wordForm.Semantics.Contains(sem) ? 1 : 0) >= expectedMinimumSemanticSimilarity);
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
         /// Map the synnet of this word
         /// </summary>
         public void MapSynNet(bool cascade = false)
@@ -288,9 +316,9 @@ namespace NetMud.Data.Linguistic
             }
 
             //We've been mapped, set it and save the state
-            //IsSynMapped = true;
-            //PersistToCache();
-            //SystemSave();
+            IsSynMapped = true;
+            PersistToCache();
+            SystemSave();
         }
 
         #region Equality Functions

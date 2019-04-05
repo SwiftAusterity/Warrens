@@ -43,27 +43,45 @@ namespace WordNet.Net
 
         public void OverviewFor(string t, string p, ref bool b, ref SearchSet obj, List<Search> list)
         {
-            PartOfSpeech pos = PartOfSpeech.Of(p);
-            SearchSet ss = netData.Is_defined(t, pos);
-            Morph ms = new Morph(t, pos, netData);
-            hasmatch = AddSearchFor(t, pos, list); 
+            SearchSet ss = null;
 
-            //TODO: if this isn't reset then morphs aren't checked on subsequent searches - check for side effects of resetting this manually
-            if (!hasmatch)
+            if (string.IsNullOrWhiteSpace(p))
             {
-                string m;
-                // loop through morphs (if there are any)
-                while ((m = ms.Next()) != null)
+                OverviewFor(t, PartsOfSpeech.Adjective.ToString(), ref b, ref obj, list);
+                OverviewFor(t,  PartsOfSpeech.Adverb.ToString(), ref b, ref obj, list);
+                OverviewFor(t,  PartsOfSpeech.Noun.ToString(), ref b, ref obj, list);
+                OverviewFor(t, PartsOfSpeech.Verb.ToString(), ref b, ref obj, list);
+
+                ss = obj;
+            }
+            else
+            { 
+                PartOfSpeech pos = PartOfSpeech.Of(p);
+
+                if (!string.IsNullOrWhiteSpace(pos?.Key))
                 {
-                    if (m != t)
+                    ss = netData.Is_defined(t, pos);
+                    Morph ms = new Morph(t, pos, netData);
+                    hasmatch = AddSearchFor(t, pos, list);
+
+                    //TODO: if this isn't reset then morphs aren't checked on subsequent searches - check for side effects of resetting this manually
+                    if (!hasmatch)
                     {
-                        ss += netData.Is_defined(m, pos);
-                        AddSearchFor(m, pos, list);
+                        string m;
+                        // loop through morphs (if there are any)
+                        while ((m = ms.Next()) != null)
+                        {
+                            if (m != t)
+                            {
+                                ss += netData.Is_defined(m, pos);
+                                AddSearchFor(m, pos, list);
+                            }
+                        }
                     }
                 }
             }
 
-            b = ss.NonEmpty;
+            b = ss?.NonEmpty ?? false;
             obj = ss;
         }
 

@@ -101,7 +101,7 @@ namespace NetMud.DataAccess.FileSystem
             string fullFileName = dirName + entityFileName;
             string archiveFileDirectory = GetArchiveDirectoryForEntity(entity);
 
-            CullDirectoryCount(archiveFileDirectory);
+            CullDirectoryCount(GetBaseBackupDirectoryForEntity(entity));
 
             try
             {
@@ -150,6 +150,25 @@ namespace NetMud.DataAccess.FileSystem
             return GetCurrentDirectoryForEntity(entityThing);
         }
 
+        private string GetBaseBackupDirectoryForEntity(IConfigData entity)
+        {
+            string dirName = BaseDirectory;
+
+            switch (entity.Type)
+            {
+                default:
+                    dirName += entity.Type.ToString();
+                    break;
+                case ConfigDataType.Player:
+                    dirName += "Players/" + entity.Name;
+                    break;
+            }
+
+            dirName += "/" + ArchiveDirectoryName;
+
+            return dirName;
+        }
+
         private string GetArchiveDirectoryForEntity(IConfigData entity)
         {
             string dirName = BaseDirectory;
@@ -160,7 +179,7 @@ namespace NetMud.DataAccess.FileSystem
                     dirName += entity.Type.ToString();
                     break;
                 case ConfigDataType.Player:
-                    dirName += BaseDirectory + "Players/" + entity.Name;
+                    dirName += "Players/" + entity.Name;
                     break;
             }
 
