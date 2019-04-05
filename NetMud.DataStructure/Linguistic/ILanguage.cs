@@ -85,6 +85,6 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="word">just the text of the word</param>
         /// <returns>A lexeme</returns>
-        ILexeme CreateOrModifyLexeme(string word);
+        ILexeme CreateOrModifyLexeme(string word, bool cascade = true);
     }
 }

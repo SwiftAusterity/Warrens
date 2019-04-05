@@ -129,7 +129,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the word with changes</returns>
         public IDictata AddNewForm(IDictata newWord)
         {
-            HashSet<IDictata> existingWords = WordForms;
+            HashSet<IDictata> existingWords = new HashSet<IDictata>(WordForms);
 
             //Easy way - we dont have one with this type at all
             //Hard way - reject if our semantics are similar by count and the semantics lists match

@@ -27,7 +27,11 @@ namespace NetMud.Backup
             {
                 LoggingUtility.Log("World BackingData backup to current INITIATED.", LogChannels.Backup, true);
 
-                fileAccessor.ArchiveFull(ConfigDataType.Dictionary, backupName);
+                if (!string.IsNullOrWhiteSpace(backupName))
+                {
+                    fileAccessor.ArchiveFull(ConfigDataType.Dictionary, backupName);
+                }
+
                 fileAccessor.ArchiveFull(ConfigDataType.Language, backupName);
 
                 LoggingUtility.Log("Entire backing data set archived.", LogChannels.Backup, true);

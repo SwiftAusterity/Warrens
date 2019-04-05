@@ -569,7 +569,8 @@ namespace NetMud.Data.Linguistic
                         return -1;
                     }
 
-                    if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType)
+                    if (other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType
+                        && Semantics.Count() == other.Semantics.Count() && Semantics.All(semantic => other.Semantics.Contains(semantic)))
                     {
                         return 1;
                     }
@@ -596,7 +597,8 @@ namespace NetMud.Data.Linguistic
             {
                 try
                 {
-                    return other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType;
+                    return other.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase) && other.WordType == WordType
+                        && Semantics.Count() == other.Semantics.Count() && Semantics.All(semantic => other.Semantics.Contains(semantic));
                 }
                 catch (Exception ex)
                 {
@@ -625,7 +627,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the hash code</returns>
         public int GetHashCode(IDictata obj)
         {
-            return obj.GetType().GetHashCode() + obj.Name.GetHashCode() + obj.WordType.GetHashCode();
+            return obj.GetType().GetHashCode() + obj.Name.GetHashCode() + obj.WordType.GetHashCode() + obj.Semantics.Count();
         }
 
         /// <summary>
@@ -634,7 +636,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the hash code</returns>
         public override int GetHashCode()
         {
-            return GetType().GetHashCode() + Name.GetHashCode() + WordType.GetHashCode();
+            return GetType().GetHashCode() + Name.GetHashCode() + WordType.GetHashCode() + Semantics.Count();
         }
 
         public IDictata Clone()

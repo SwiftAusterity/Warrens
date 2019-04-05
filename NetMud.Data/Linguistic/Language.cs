@@ -136,11 +136,11 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="word">just the text of the word</param>
         /// <returns>A lexeme</returns>
-        public ILexeme CreateOrModifyLexeme(string word)
+        public ILexeme CreateOrModifyLexeme(string word, bool cascade = true)
         {
             ILexeme newLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
 
-            if(newLex != null && newLex.ContainedTypes().Any())
+            if(newLex != null || !cascade)
             {
                 return newLex;
             }
@@ -153,9 +153,32 @@ namespace NetMud.Data.Linguistic
             //We in theory have every single word form for this word now
             if (exists && results != null)
             {
+                LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
+
                 foreach (SynonymSet synSet in results.SelectMany(result => result.senses))
                 {
-                    newLex = CreateOrModifyLexeme(word, LexicalProcessor.MapLexicalTypes(synSet.pos.Flag), new string[0]);
+                    //grab semantics somehow
+                    List<string> semantics = new List<string>();
+                    var indexSplit = synSet.defn.IndexOf(';');
+                    string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
+                    string[] defWords = definition.Split(' ');
+
+                    foreach (string defWord in defWords)
+                    {
+                        if(defWord.Equals(word, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        var defLex = CreateOrModifyLexeme(defWord, false);
+
+                        if (defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
+                        {
+                            semantics.Add(defWord);
+                        }
+                    }
+
+                    newLex = CreateOrModifyLexeme(word, LexicalProcessor.MapLexicalTypes(synSet.pos.Flag), semantics.ToArray());
                 }
             }
 
