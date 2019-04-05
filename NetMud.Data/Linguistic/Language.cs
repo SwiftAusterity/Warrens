@@ -252,7 +252,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.ArticleDeterminant,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.ArticleDeterminant,
@@ -276,7 +276,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.ArticleNonDeterminant,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.ArticleNonDeterminant,
@@ -300,7 +300,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.Conjunction,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.Conjunction,
@@ -324,7 +324,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.NeutralPronounFirstPersonPossessive,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.NeutralPronounFirstPersonPossessive,
@@ -348,7 +348,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.NeutralPronounFirstPersonSingular,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.NeutralPronounFirstPersonSingular,
@@ -372,7 +372,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.NeutralPronounSecondPersonPlural,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.NeutralPronounSecondPersonPlural,
@@ -396,7 +396,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.NeutralPronounSecondPersonPossessive,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.NeutralPronounSecondPersonPossessive,
@@ -420,7 +420,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.NeutralPronounSecondPersonSingular,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.NeutralPronounSecondPersonSingular,
@@ -444,7 +444,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.VerbExistentialPlural,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.VerbExistentialPlural,
@@ -469,7 +469,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.VerbExistentialSingular,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.VerbExistentialSingular,
@@ -494,7 +494,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.PrepositionAround,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.PrepositionAround,
@@ -518,7 +518,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.PrepositionAttached,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.PrepositionAttached,
@@ -542,7 +542,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.PrepositionFar,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.PrepositionFar,
@@ -566,7 +566,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.PrepositionInside,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.PrepositionInside,
@@ -590,7 +590,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.PrepositionNear,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.PrepositionNear,
@@ -614,7 +614,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.PrepositionOn,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.PrepositionOn,
@@ -638,7 +638,7 @@ namespace NetMud.Data.Linguistic
                 {
                     Name = BaseWords.PrepositionOf,
                     Language = this,
-                    WordForms = new HashSet<IDictata>() {
+                    WordForms = new IDictata[] {
                         new Dictata()
                         {
                             Name = BaseWords.PrepositionOf,

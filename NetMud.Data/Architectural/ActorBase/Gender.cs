@@ -124,7 +124,7 @@ namespace NetMud.Data.Architectural.ActorBase
             Lexeme collective = new Lexeme()
             {
                 Name = Collective,
-                WordForms = new HashSet<IDictata>() {
+                WordForms = new IDictata[] {
                     new Dictata()
                     {
                         Name = Collective,
@@ -144,7 +144,7 @@ namespace NetMud.Data.Architectural.ActorBase
             Lexeme possessive = new Lexeme()
             {
                 Name = Possessive,
-                WordForms = new HashSet<IDictata>() {
+                WordForms = new IDictata[] {
                     new Dictata()
                     {
                         Name = Possessive,
@@ -164,7 +164,7 @@ namespace NetMud.Data.Architectural.ActorBase
             Lexeme baseWord = new Lexeme()
             {
                 Name = Base,
-                WordForms = new HashSet<IDictata>() {
+                WordForms = new IDictata[] {
                     new Dictata()
                     {
                         Name = Base,
@@ -184,7 +184,7 @@ namespace NetMud.Data.Architectural.ActorBase
             Lexeme adult = new Lexeme()
             {
                 Name = Adult,
-                WordForms = new HashSet<IDictata>() {
+                WordForms = new IDictata[] {
                     new Dictata()
                     {
                         Name = Adult,
@@ -204,7 +204,7 @@ namespace NetMud.Data.Architectural.ActorBase
             Lexeme child = new Lexeme()
             {
                 Name = Child,
-                WordForms = new HashSet<IDictata>() {
+                WordForms = new IDictata[] {
                     new Dictata()
                     {
                         Name = Child,

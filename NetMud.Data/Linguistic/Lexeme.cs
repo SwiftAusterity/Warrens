@@ -92,12 +92,12 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Individual meanings and types under this
         /// </summary>
-        public HashSet<IDictata> WordForms { get; set; }
+        public IDictata[] WordForms { get; set; }
 
         [JsonConstructor]
         public Lexeme()
         {
-            WordForms = new HashSet<IDictata>();
+            WordForms = new IDictata[0];
             Name = string.Empty;
 
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
@@ -146,7 +146,7 @@ namespace NetMud.Data.Linguistic
 
                 newWord.FormGroup = (short)(maxForm + 1);
                 existingWords.Add(newWord);
-                WordForms = existingWords;
+                WordForms = existingWords.ToArray();
                 SystemSave();
                 PersistToCache();
             }
@@ -437,7 +437,7 @@ namespace NetMud.Data.Linguistic
             {
                 Language = Language,
                 Name = Name,
-                WordForms = new HashSet<IDictata>(WordForms.Select(form => form.Clone()))
+                WordForms = WordForms.Select(form => form.Clone()).ToArray()
             };
         }
         #endregion

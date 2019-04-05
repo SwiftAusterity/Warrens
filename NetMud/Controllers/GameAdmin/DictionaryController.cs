@@ -7,6 +7,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -297,9 +298,9 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else 
                 {
-                    System.Collections.Generic.HashSet<IDictata> wordForms = lex.WordForms;
+                    HashSet<IDictata> wordForms = lex.WordForms.ToHashSet();
                     wordForms.RemoveWhere(form => form.UniqueKey == removeId);
-                    lex.WordForms = wordForms;
+                    lex.WordForms = wordForms.ToArray();
 
                     lex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstants[" + removeId + "]", authedUser.GameAccount.GlobalIdentityHandle);

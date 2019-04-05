@@ -18,7 +18,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Individual meanings and types under this
         /// </summary>
-        HashSet<IDictata> WordForms { get; set; }
+        IDictata[] WordForms { get; set; }
 
         /// <summary>
         /// What types exist within the valid wordforms
