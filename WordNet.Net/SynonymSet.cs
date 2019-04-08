@@ -99,13 +99,13 @@ namespace WordNet.Net
 		public AdjSynSetType sstype;
 		public int sense; // "global" variable: will match search.sense-1 if this is nonzero
 		public IList<SynonymSet> senses = null; // of SynSet (creates our hierarchy) - TDMS 6 Oct 2005
-        private Search search;
+        private readonly Search search;
 		public Pointer[] ptrs;		/* number of pointers */
 		public Pointer thisptr; // the current pointertype - TDMS 17 Nov 2005
 		public ArrayList frames = new ArrayList(); /* of SynSetFrame */
 		public string defn;		/* synset gloss (definition) */
 		public AdjMarker adj_marker;
-        private WordNetData netData;
+        private readonly WordNetData netData;
 
 		public SynonymSet(WordNetData netdata)
 		{

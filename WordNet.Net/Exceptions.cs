@@ -31,8 +31,8 @@ namespace WordNet.Net
     public class Exceptions
 	{
         // exception list files
-        private Hashtable excfps = new Hashtable();
-        private WordNetData netData;
+        private readonly Hashtable excfps = new Hashtable();
+        private readonly WordNetData netData;
 
 		public Exceptions(WordNetData netdata)
 		{
@@ -48,7 +48,7 @@ namespace WordNet.Net
             }
 		}
 
-        private string line = null;
+        private readonly string line = null;
         private int beglp = 0, endlp = -1;
 
 		public Exceptions(string word, string p, WordNetData netdata)

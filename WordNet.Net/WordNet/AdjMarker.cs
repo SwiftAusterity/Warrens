@@ -32,7 +32,7 @@ namespace WordNet.Net.WordNet
     [Serializable]
 	public class AdjMarker
 	{
-        private static Hashtable marks = new Hashtable();
+        private static readonly Hashtable marks = new Hashtable();
 		public string mnem;
 		public string mark;
 

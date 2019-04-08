@@ -31,7 +31,7 @@ namespace WordNet.Net
 {
     public class WordNetOption
 	{
-        private static Hashtable opts = new Hashtable();
+        private static readonly Hashtable opts = new Hashtable();
 
 		public static WordNetOption Opt(string a)
 		{

@@ -115,8 +115,9 @@ namespace NetMud.Communication.Lexical
                     foreach (string defWord in defWords)
                     {
                         var currentWord = defWord.ToLower();
+                        currentWord = rgx.Replace(currentWord, "");
 
-                        if (currentWord.Equals(word))
+                        if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
                         {
                             continue;
                         }
@@ -136,12 +137,16 @@ namespace NetMud.Communication.Lexical
                     ///wsns indicates hypo/hypernymity so
                     int baseWeight = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
                     newDict.Severity = baseWeight;
+                    newDict.Elegance = Math.Max(0, newDict.Name.SyllableCount() * 3);
+                    newDict.Quality = synSet.words.Count();
 
                     foreach (Lexeme synWord in synSet.words)
                     {
                         ///wsns indicates hypo/hypernymity so
                         int mySeverity = synWord.wnsns;
-
+                        int myElegance = Math.Max(0, synWord.word.SyllableCount() * 3);
+                        int myQuality = synWord.semcor?.semcor ?? 0;
+                        
                         //Don't bother if this word is already the same word we started with
                         if (synWord.word.Equals(newDict.Name, StringComparison.InvariantCultureIgnoreCase))
                         {
@@ -160,6 +165,14 @@ namespace NetMud.Communication.Lexical
                         }
                         else
                         {
+                            var newWord = synWord.word.ToLower();
+                            newWord = rgx.Replace(newWord, "");
+
+                            if (newWord.Equals(word) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+                            {
+                                continue;
+                            }
+
                             newDict.MakeRelatedWord(language, synWord.word, true);
                         }
                     }

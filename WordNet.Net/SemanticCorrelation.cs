@@ -35,7 +35,7 @@ namespace WordNet.Net
     public class SemanticCorrelation
     {
         public int semcor = 0;
-        private WordNetData netData;
+        private readonly WordNetData netData;
 
         public SemanticCorrelation(WordNetData netdata)
         {

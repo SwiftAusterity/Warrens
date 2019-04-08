@@ -9,7 +9,7 @@ namespace NetMud.Cartography.ProceduralGeneration
     /// </summary>
     public class LocaleGenerator
     {
-        private Random _randomizer;
+        private readonly Random _randomizer;
         private const string roomSymbol = "*";
 
         /// <summary>

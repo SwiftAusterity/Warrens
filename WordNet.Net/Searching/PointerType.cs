@@ -32,7 +32,7 @@ namespace WordNet.Net.Searching
     [Serializable]
     public class PointerType
     {
-        private static Hashtable ptypes = new Hashtable();
+        private static readonly Hashtable ptypes = new Hashtable();
 
         private PointerType()
         {

@@ -14,7 +14,7 @@ namespace NetMud.CentralControl
     /// </summary>
     public static class Processor
     {
-        private static ObjectCache globalCache = MemoryCache.Default;
+        private static readonly ObjectCache globalCache = MemoryCache.Default;
         private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
         private static readonly string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
         private static readonly string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";

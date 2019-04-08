@@ -51,9 +51,9 @@ namespace WordNet.Net
 		 *-------------*/
 
         /// <summary>This gets used a lot, so I decided to cache it in memory.</summary>
-        private PartsOfSpeech[] enums =
+        private readonly PartsOfSpeech[] enums =
             (PartsOfSpeech[])Enum.GetValues(typeof(PartsOfSpeech));
-        private WordNetData netData;
+        private readonly WordNetData netData;
 
         /*--------
 		 * Methods

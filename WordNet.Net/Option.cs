@@ -54,7 +54,7 @@ namespace WordNet.Net
 			return (Option)opts[ix];
 		}
 
-		private static ArrayList opts = new ArrayList();
+		private static readonly ArrayList opts = new ArrayList();
 
         private Option(string a, string m, string p, int h, string b)
 		{

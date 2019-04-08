@@ -29,9 +29,9 @@ namespace WordNet.Net
 {
 	public class BitSet // BitArray seems to be bad news, so here goes
 	{
-        private int nbits;
-        private int size;
-        private int[] bits;
+        private readonly int nbits;
+        private readonly int size;
+        private readonly int[] bits;
 
 		public BitSet(int n)
 		{

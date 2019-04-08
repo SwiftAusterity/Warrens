@@ -82,7 +82,7 @@ namespace NetMud.Interp
         /// <summary>
         /// All commands in the system
         /// </summary>
-        private IEnumerable<Type> LoadedCommands;
+        private readonly IEnumerable<Type> LoadedCommands;
 
         /// <summary>
         /// regex for finding disambiguated entities (stuff that has the same keywords)

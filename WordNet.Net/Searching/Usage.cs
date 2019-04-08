@@ -31,7 +31,7 @@ namespace WordNet.Net.Searching
 {
     public class Usage
     {
-        private static ArrayList frames = new ArrayList();
+        private static readonly ArrayList frames = new ArrayList();
 
         public static Usage Frame(int i)
         {

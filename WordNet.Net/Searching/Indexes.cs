@@ -34,10 +34,10 @@ namespace WordNet.Net.Searching
         // TDMS - 14 Aug 2005 - added a new index count
         // so that we could patch more possibilities into
         // the strings array below
-        private static int stringscount = 7;
+        private static readonly int stringscount = 7;
         private readonly Index[] offsets = new Index[stringscount]; // of Index
         private int offset = 0;
-        private PartOfSpeech fpos;
+        private readonly PartOfSpeech fpos;
 
         public Indexes(string str, PartOfSpeech pos, WordNetData netdata)
         {

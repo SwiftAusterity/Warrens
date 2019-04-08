@@ -136,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
                 SystemDefault = vModel.SystemDefault
             };
 
-            System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
+            IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {

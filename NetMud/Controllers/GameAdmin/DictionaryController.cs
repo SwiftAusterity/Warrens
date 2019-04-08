@@ -92,7 +92,7 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult Purge()
         {
-            System.Collections.Generic.IEnumerable<ILexeme> dictionary = ConfigDataCache.GetAll<ILexeme>();
+            IEnumerable<ILexeme> dictionary = ConfigDataCache.GetAll<ILexeme>();
 
             foreach(ILexeme dict in dictionary)
             {
@@ -227,7 +227,7 @@ namespace NetMud.Controllers.GameAdmin
                 Semantics = dict.Semantics
             };
 
-            System.Collections.Generic.HashSet<IDictata> synonyms = dict.Synonyms;
+            HashSet<IDictata> synonyms = dict.Synonyms;
             synonyms.Add(dict);
 
             if (vModel.Synonym)
@@ -252,14 +252,14 @@ namespace NetMud.Controllers.GameAdmin
             {
                 if (vModel.Synonym)
                 {
-                    System.Collections.Generic.HashSet<IDictata> mySynonyms = dict.Synonyms;
+                    HashSet<IDictata> mySynonyms = dict.Synonyms;
                     mySynonyms.Add(relatedWord);
 
                     dict.Synonyms = mySynonyms;
                 }
                 else
                 {
-                    System.Collections.Generic.HashSet<IDictata> antonyms = dict.Antonyms;
+                    HashSet<IDictata> antonyms = dict.Antonyms;
                     antonyms.Add(relatedWord);
 
                     dict.Antonyms = antonyms;
@@ -425,7 +425,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (!syn.Synonyms.Any(dict => dict == obj))
                     {
-                        System.Collections.Generic.HashSet<IDictata> synonyms = syn.Synonyms;
+                        HashSet<IDictata> synonyms = syn.Synonyms;
                         synonyms.Add(obj);
 
                         ILexeme synLex = syn.GetLexeme();
@@ -440,7 +440,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (!ant.Antonyms.Any(dict => dict == obj))
                     {
-                        System.Collections.Generic.HashSet<IDictata> antonyms = ant.Antonyms;
+                        HashSet<IDictata> antonyms = ant.Antonyms;
                         antonyms.Add(obj);
 
                         ILexeme antLex = ant.GetLexeme();
@@ -454,7 +454,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (!syn.Synonyms.Any(dict => dict == obj))
                     {
-                        System.Collections.Generic.HashSet<IDictata> synonyms = syn.Synonyms;
+                        HashSet<IDictata> synonyms = syn.Synonyms;
                         synonyms.Add(obj);
 
                         syn.Synonyms = synonyms;
@@ -466,7 +466,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (!ant.Antonyms.Any(dict => dict == obj))
                     {
-                        System.Collections.Generic.HashSet<IDictata> antonyms = ant.Antonyms;
+                        HashSet<IDictata> antonyms = ant.Antonyms;
                         antonyms.Add(obj);
 
                         ant.Antonyms = antonyms;

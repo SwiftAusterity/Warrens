@@ -32,8 +32,8 @@ namespace WordNet.Net.Searching
     public class WordNetData
     {
         public string path;
-        private Hashtable indexfps = new Hashtable();
-        private Hashtable datafps = new Hashtable();
+        private readonly Hashtable indexfps = new Hashtable();
+        private readonly Hashtable datafps = new Hashtable();
 
         public WordNetData(string dictPath)
         {

@@ -40,7 +40,7 @@ namespace WordNet.Net
 		public int[] offs = null;		/* synset offsets */
 		public SynonymSet[] syns = null;   /* cached */
 		public Index next = null;
-        private WordNetData netData;
+        private readonly WordNetData netData;
 
 		/* From search.c:
 		 * Find word in index file and return parsed entry in data structure.

@@ -98,6 +98,38 @@ namespace NetMud.Utility
         }
 
         /// <summary>
+        /// Count syllables in english words only
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public static int SyllableCount(this string word)
+        {
+            word = word.ToLower().Trim();
+            bool lastWasVowel = false;
+            var vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'y' };
+            int count = 0;
+
+            //a string is an IEnumerable<char>; convenient.
+            foreach (var c in word)
+            {
+                if (vowels.Contains(c))
+                {
+                    if (!lastWasVowel)
+                        count++;
+                    lastWasVowel = true;
+                }
+                else
+                    lastWasVowel = false;
+            }
+
+            if ((word.EndsWith("e") || (word.EndsWith("es") || word.EndsWith("ed")))
+                  && !word.EndsWith("le"))
+                count--;
+
+            return count;
+        }
+
+        /// <summary>
         /// Is this any number of a specific type
         /// </summary>
         /// <typeparam name="T">the number type</typeparam>

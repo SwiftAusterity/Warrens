@@ -34,7 +34,7 @@ namespace WordNet.Net
     public class WordNetEngine
     {
         public bool hasmatch = false; // determines whether morphs are considered
-        private WordNetData netData;
+        private readonly WordNetData netData;
 
         public WordNetEngine(string dictPath)
         {

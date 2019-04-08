@@ -26,17 +26,17 @@ namespace NetMud.DataAccess.Cache
         /// <summary>
         /// The place everything gets stored
         /// </summary>
-        private ObjectCache _globalCache = MemoryCache.Default;
+        private readonly ObjectCache _globalCache = MemoryCache.Default;
 
         /// <summary>
         /// The general storage policy
         /// </summary>
-        private CacheItemPolicy _globalPolicy = new CacheItemPolicy();
+        private readonly CacheItemPolicy _globalPolicy = new CacheItemPolicy();
 
         /// <summary>
         /// The cache type (affects the "ids")
         /// </summary>
-        private CacheType _type;
+        private readonly CacheType _type;
 
         /// <summary>
         /// Create a new CacheAccessor with its type

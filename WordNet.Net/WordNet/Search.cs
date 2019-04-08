@@ -53,8 +53,8 @@ namespace WordNet.Net.WordNet
         internal bool prlexid = false;
         public int taggedSenses;
         public const int ALLSENSES = 0;
-        private CustomGrep customgrep = null;
-        private WordNetData netData;
+        private readonly CustomGrep customgrep = null;
+        private readonly WordNetData netData;
         private int lastholomero = 0;
 
         public Search(string theWord, bool doMorphs, string thePartOfSpeech, string theSearchType, int sn, WordNetData netdata)

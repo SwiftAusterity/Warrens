@@ -52,18 +52,19 @@ namespace WordNet.Net
         private static readonly int[] offsets = { 0, 8, 8, 16 };
         private static readonly int[] cnts = { 8, 8, 8, 4 }; // 0 changed to 8 - Troy
 
-        private static string[] prepositions = 
+        private static readonly string[] prepositions = 
 		{
 			"to", "at", "of", "on", "off", "in", "out", "up", "down", "from", 
 			"with", "into", "for", "about", "between" 
 		};
-        private string searchstr, str;
+        private string searchstr;
+        private readonly string str;
         private int svcnt, svprep;
-        private PartOfSpeech pos;
+        private readonly PartOfSpeech pos;
         private Exceptions e;
         private bool firsttime;
         private readonly int cnt;
-        private WordNetData netData;
+        private readonly WordNetData netData;
 
 		public Morph(string s, string p, WordNetData netdata)
 			: this(s, PartOfSpeech.Of(p), netdata)
