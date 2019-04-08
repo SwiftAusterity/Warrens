@@ -302,12 +302,12 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Map the synnet of this word
         /// </summary>
-        public void MapSynNet(bool cascade = false)
+        public bool MapSynNet()
         {
             //Not a whole lot of point here
             if (IsSynMapped)
             {
-                return;
+                return true;
             }
 
             foreach (IDictata dict in WordForms)
@@ -319,6 +319,8 @@ namespace NetMud.Data.Linguistic
             IsSynMapped = true;
             PersistToCache();
             SystemSave();
+
+            return true;
         }
 
         #region Equality Functions

@@ -30,6 +30,8 @@ namespace NetMud
             //Load the "config" data first
             ConfigData.LoadEverythingToCache();
 
+            LexicalProcessor.LoadWordnet();
+
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
             //We dont move forward without a global config
@@ -65,7 +67,11 @@ namespace NetMud
                 globalConfig.SystemSave();
             }
 
-            LexicalProcessor.LoadWordnet();
+            //Ensure we have base words for the language every time
+            globalConfig.BaseLanguage.SystemSave();
+
+            //Hoover up all the verbs from commands that someone might have coded
+            ProcessSystemVerbs(globalConfig.BaseLanguage);
 
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
             HttpApplication instance = HttpContext.Current.ApplicationInstance;
@@ -87,9 +93,6 @@ namespace NetMud
 
             //Load structural data next
             Templates.LoadEverythingToCache();
-
-            //Ensure we have base words for the language every time
-            globalConfig.BaseLanguage.SystemSave();
 
             HotBackup hotBack = new HotBackup();
 
@@ -120,9 +123,6 @@ namespace NetMud
 
                 LiveCache.Add(gossipServer, "GossipWebClient");
             }
-
-            //Hoover up all the verbs from commands that someone might have coded
-            ProcessSystemVerbs(globalConfig.BaseLanguage);
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
             Func<bool> backingDataBackupFunction = Templates.WriteFullBackup;

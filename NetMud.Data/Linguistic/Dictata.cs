@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural.PropertyBinding;
+﻿using NetMud.CentralControl;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
@@ -487,9 +489,11 @@ namespace NetMud.Data.Linguistic
 
             possibleLex.AddNewForm(newDict);
 
-            possibleLex.SystemSave();
-            possibleLex.PersistToCache();
-            GetLexeme().SystemSave();
+            Processor.StartSubscriptionLoop("WordNetMapping", possibleLex.MapSynNet, 60, true);
+
+            var myLex = GetLexeme();
+            myLex.SystemSave();
+            myLex.PersistToCache();
 
             return possibleLex;
         }
@@ -507,7 +511,6 @@ namespace NetMud.Data.Linguistic
                 if (!lex.WordForms.Any(form => form == this))
                 {
                     lex.AddNewForm(this);
-                    lex.SystemSave();
                     lex.PersistToCache();
                 }
             }
@@ -520,7 +523,6 @@ namespace NetMud.Data.Linguistic
                 };
 
                 lex.AddNewForm(this);
-                lex.SystemSave();
                 lex.PersistToCache();
             }
 

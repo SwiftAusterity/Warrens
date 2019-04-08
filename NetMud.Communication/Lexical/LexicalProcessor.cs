@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using WordNet.Net;
 using WordNet.Net.Searching;
@@ -43,78 +45,8 @@ namespace NetMud.Communication.Lexical
             {
                 if (MapLexicalTypes(dictata.WordType) != PartsOfSpeech.None)
                 {
-                    bool exists = true;
-                    SearchSet searchSet = null;
-                    List<Search> results = new List<Search>();
-                    WordNet.OverviewFor(dictata.Name, MapLexicalTypes(dictata.WordType).ToString(), ref exists, ref searchSet, results);
-
-                    //TODO: Do something with the results
-                    if (exists && results != null)
-                    {
-                        LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
-                        //syn sets
-                        foreach (SynonymSet synSet in results.SelectMany(result => result.senses))
-                        {
-                            //grab semantics somehow
-                            List<string> semantics = new List<string>();
-                            var indexSplit = synSet.defn.IndexOf(';');
-                            string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
-                            string[] defWords = definition.Split(' ');
-
-                            foreach(string defWord in defWords)
-                            {
-                                var defLex = dictata.Language.CreateOrModifyLexeme(defWord);
-
-                                if(defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
-                                {
-                                    semantics.Add(defWord);
-                                }
-                            }
-
-                            if(dictata.Semantics.Count() < semantics.Count())
-                            {
-                                semantics.AddRange(dictata.Semantics);
-                                dictata.Semantics = new HashSet<string>(semantics.Distinct());
-                            }
-
-                            ///wsns indicates hypo/hypernymity so
-                            int baseWeight = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
-                            dictata.Severity = baseWeight;
-
-                            foreach (Lexeme word in synSet.words)
-                            {
-                                ///wsns indicates hypo/hypernymity so
-                                int mySeverity = word.wnsns;
-
-                                //Don't bother if this word is already the same word we started with
-                                if (word.word.Equals(dictata.Name, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    continue;
-                                }
-
-                                //it's a phrase
-                                if (word.word.Contains("_"))
-                                {
-                                    string[] words = word.word.Split('_');
-
-                                    foreach (string phraseWord in words)
-                                    {
-                                        var defLex = dictata.Language.CreateOrModifyLexeme(phraseWord);
-
-                                        //make the phrase? maybe later
-                                    }
-                                }
-                                else
-                                {
-                                    dictata.MakeRelatedWord(dictata.Language, word.word, true);
-                                }
-                            }
-                        }
-
-                        dictata.GetLexeme().SystemSave();
-                        dictata.GetLexeme().PersistToCache();
-                        return true;
-                    }
+                    var wordList = new List<string>();
+                    CreateOrModifyLexeme(dictata.Language, dictata.Name, ref wordList);
                 }
             }
             catch (Exception ex)
@@ -124,6 +56,121 @@ namespace NetMud.Communication.Lexical
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Create or modify a lexeme with no word form basis, gets tricky with best fit scenarios
+        /// </summary>
+        /// <param name="word">just the text of the word</param>
+        /// <returns>A lexeme</returns>
+        public static ILexeme CreateOrModifyLexeme(ILanguage language, string word, ref List<string> processedWords)
+        {
+            word = word.ToLower();
+
+            Regex rgx = new Regex("[^a-z -]");
+            word = rgx.Replace(word, "");
+
+            if (string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-'))
+            {
+                return null;
+            }
+
+            ILexeme newLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", language.Name, word));
+
+            if (newLex == null)
+            {
+                newLex = language.CreateOrModifyLexeme(word, LexicalType.None, new string[0]);
+            }
+
+            if (newLex.IsSynMapped || processedWords.Any(wrd => wrd.Equals(word)))
+            {
+                if (!processedWords.Any(wrd => wrd.Equals(word)))
+                {
+                    processedWords.Add(word);
+                }
+
+                return newLex;
+            }
+
+            processedWords.Add(word);
+
+            bool exists = true;
+            SearchSet searchSet = null;
+            List<Search> results = new List<Search>();
+            WordNet.OverviewFor(word, string.Empty, ref exists, ref searchSet, results);
+
+            //We in theory have every single word form for this word now
+            if (exists && results != null)
+            {
+                LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
+
+                foreach (SynonymSet synSet in results.SelectMany(result => result.senses))
+                {
+                    //grab semantics somehow
+                    List<string> semantics = new List<string>();
+                    var indexSplit = synSet.defn.IndexOf(';');
+                    string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
+                    string[] defWords = definition.Split(' ');
+
+                    foreach (string defWord in defWords)
+                    {
+                        var currentWord = defWord.ToLower();
+
+                        if (currentWord.Equals(word))
+                        {
+                            continue;
+                        }
+
+                        var defLex = language.CreateOrModifyLexeme(currentWord, LexicalType.None, new string[0]);
+
+                        if (defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
+                        {
+                            semantics.Add(currentWord);
+                        }
+                    }
+
+                    var type = MapLexicalTypes(synSet.pos.Flag);
+                    newLex = language.CreateOrModifyLexeme(word, type, semantics.ToArray());
+                    var newDict = newLex.GetForm(type, semantics.ToArray(), false);
+
+                    ///wsns indicates hypo/hypernymity so
+                    int baseWeight = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
+                    newDict.Severity = baseWeight;
+
+                    foreach (Lexeme synWord in synSet.words)
+                    {
+                        ///wsns indicates hypo/hypernymity so
+                        int mySeverity = synWord.wnsns;
+
+                        //Don't bother if this word is already the same word we started with
+                        if (synWord.word.Equals(newDict.Name, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        //it's a phrase
+                        if (synWord.word.Contains("_"))
+                        {
+                            string[] words = synWord.word.Split('_');
+
+                            //foreach (string phraseWord in words)
+                            //{
+                            //    //make the phrase? maybe later
+                            //}
+                        }
+                        else
+                        {
+                            newDict.MakeRelatedWord(language, synWord.word, true);
+                        }
+                    }
+                }
+            }
+
+            newLex.IsSynMapped = true;
+            newLex.SystemSave();
+            newLex.PersistToCache();
+
+            return newLex;
         }
 
         /// <summary>
@@ -177,9 +224,8 @@ namespace NetMud.Communication.Lexical
                 lexeme = maybeLexeme;
             }
 
+            lexeme.IsSynMapped = false;
             lexeme.MapSynNet();
-            lexeme.SystemSave();
-            lexeme.PersistToCache();
             lexeme.FillLanguages();
 
             return lexeme;

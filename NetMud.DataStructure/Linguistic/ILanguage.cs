@@ -79,12 +79,5 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="word">the word we're making</param>
         /// <returns></returns>
         ILexeme CreateOrModifyLexeme(string word, LexicalType form, string[] semantics);
-
-        /// <summary>
-        /// Create or modify a lexeme with no word form basis, gets tricky with best fit scenarios
-        /// </summary>
-        /// <param name="word">just the text of the word</param>
-        /// <returns>A lexeme</returns>
-        ILexeme CreateOrModifyLexeme(string word, bool cascade = true);
     }
 }

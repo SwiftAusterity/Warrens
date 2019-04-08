@@ -34,7 +34,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Map the synnet of this word
         /// </summary>
-        void MapSynNet(bool cascade = false);
+        bool MapSynNet();
 
         /// <summary>
         /// Add a new word form to this lexeme

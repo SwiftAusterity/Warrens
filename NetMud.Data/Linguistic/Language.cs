@@ -6,11 +6,13 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
+using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
 using WordNet.Net;
 using WordNet.Net.Searching;
@@ -132,66 +134,22 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
-        /// Create or modify a lexeme with no word form basis, gets tricky with best fit scenarios
-        /// </summary>
-        /// <param name="word">just the text of the word</param>
-        /// <returns>A lexeme</returns>
-        public ILexeme CreateOrModifyLexeme(string word, bool cascade = true)
-        {
-            ILexeme newLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
-
-            if(newLex != null || !cascade)
-            {
-                return newLex;
-            }
-
-            bool exists = true;
-            SearchSet searchSet = null;
-            List<Search> results = new List<Search>();
-            LexicalProcessor.WordNet.OverviewFor(word, string.Empty, ref exists, ref searchSet, results);
-
-            //We in theory have every single word form for this word now
-            if (exists && results != null)
-            {
-                LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
-
-                foreach (SynonymSet synSet in results.SelectMany(result => result.senses))
-                {
-                    //grab semantics somehow
-                    List<string> semantics = new List<string>();
-                    var indexSplit = synSet.defn.IndexOf(';');
-                    string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
-                    string[] defWords = definition.Split(' ');
-
-                    foreach (string defWord in defWords)
-                    {
-                        if(defWord.Equals(word, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        var defLex = CreateOrModifyLexeme(defWord, false);
-
-                        if (defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
-                        {
-                            semantics.Add(defWord);
-                        }
-                    }
-
-                    newLex = CreateOrModifyLexeme(word, LexicalProcessor.MapLexicalTypes(synSet.pos.Flag), semantics.ToArray());
-                }
-            }
-
-            return newLex;
-        }
-
-        /// <summary>
         /// Create or modify a lexeme within this language
         /// </summary>
         /// <param name="word">the word we're making</param>
         /// <returns></returns>
         public ILexeme CreateOrModifyLexeme(string word, LexicalType form, string[] semantics)
         {
+            word = word.ToLower();
+
+            Regex rgx = new Regex("[^a-z -]");
+            word = rgx.Replace(word, "");
+
+            if (string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
+            {
+                return null;
+            }
+
             ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
 
             if (lex == null)
@@ -203,7 +161,7 @@ namespace NetMud.Data.Linguistic
                 };
             }
 
-            if (lex.GetForm(form, semantics, false) == null)
+            if (form != LexicalType.None && lex.GetForm(form, semantics, false) == null)
             {
                 var newDict = new Dictata()
                 {
@@ -214,9 +172,9 @@ namespace NetMud.Data.Linguistic
                 };
 
                 lex.AddNewForm(newDict);
-                lex.SystemSave();
-                lex.PersistToCache();
             }
+
+            lex.PersistToCache();
 
             return lex;
         }
