@@ -120,6 +120,18 @@ namespace NetMud.Models.Admin
         [DataType(DataType.Text)]
         public string AzureTranslationKey { get; set; }
 
+        [Display(Name = "Deep Lex", Description = "Do words get deep lexed through Mirriam Webster?")]
+        [UIHint("Boolean")]
+        public bool DeepLexActive { get; set; }
+
+        [Display(Name = "Mirriam Dictionary Key", Description = "The API key for your mirriam webster dictionary service.")]
+        [DataType(DataType.Text)]
+        public string MirriamDictionaryKey { get; set; }
+
+        [Display(Name = "Mirriam Thesaurus Key", Description = "The API key for your mirriam webster thesaurus service.")]
+        [DataType(DataType.Text)]
+        public string MirriamThesaurusKey { get; set; }
+
         [Display(Name = "Base Language", Description = "The base language for the system.")]
         [UIHint("LanguageList")]
         [LanguageDataBinder]

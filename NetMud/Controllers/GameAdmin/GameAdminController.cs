@@ -234,8 +234,14 @@ namespace NetMud.Controllers.GameAdmin
             globalConfig.AdminsOnly = vModel.AdminsOnly;
             globalConfig.UserCreationActive = vModel.UserCreationActive;
             globalConfig.BaseLanguage = vModel.BaseLanguage;
+
             globalConfig.AzureTranslationKey = vModel.AzureTranslationKey;
             globalConfig.TranslationActive = vModel.TranslationActive;
+
+            globalConfig.DeepLexActive = vModel.DeepLexActive;
+            globalConfig.MirriamDictionaryKey = vModel.MirriamDictionaryKey;
+            globalConfig.MirriamThesaurusKey = vModel.MirriamThesaurusKey;
+
             string message;
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
@@ -265,6 +271,7 @@ namespace NetMud.Controllers.GameAdmin
             gossipConfig.SuspendMultiplier = vModel.SuspendMultiplier;
             gossipConfig.SupportedChannels = vModel.SupportedChannels;
             gossipConfig.SupportedFeatures = vModel.SupportedFeatures;
+
             string message;
             if (gossipConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

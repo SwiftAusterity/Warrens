@@ -34,6 +34,21 @@ namespace NetMud.DataStructure.System
         string AzureTranslationKey { get; set; }
 
         /// <summary>
+        /// Is the deep lex active?
+        /// </summary>
+        bool DeepLexActive { get; set; }
+
+        /// <summary>
+        /// Dictionary key for the deep lex
+        /// </summary>
+        string MirriamDictionaryKey { get; set; }
+
+        /// <summary>
+        /// Thesaurus key for the deep lex
+        /// </summary>
+        string MirriamThesaurusKey { get; set; }
+
+        /// <summary>
         /// The base language for the system
         /// </summary>
         ILanguage BaseLanguage { get; set; }

@@ -385,6 +385,12 @@
                     @Html.EditorFor(m => m.AzureTranslationKey)
                 </div>
 
+                <div class="form-group row">
+                    @Html.EditorFor(m => m.DeepLexActive)
+                    @Html.EditorFor(m => m.MirriamDictionaryKey)
+                    @Html.EditorFor(m => m.MirriamThesaurusKey)
+                </div>
+
 
                 @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameAdmin", IncludeCancel = false })
             }
