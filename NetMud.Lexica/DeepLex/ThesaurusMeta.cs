@@ -3,7 +3,7 @@
 namespace NetMud.Lexica.DeepLex
 {
     [Serializable]
-    public class Meta
+    public class ThesaurusMeta
     {
         public string id { get; set; }
 
@@ -18,5 +18,11 @@ namespace NetMud.Lexica.DeepLex
         public string[] stems { get; set; }
 
         public bool offensive { get; set; }
+
+        public string[] syns { get; set; }
+
+        public string[] ants { get; set; }
+
+        public Target target { get; set; }
     }
 }

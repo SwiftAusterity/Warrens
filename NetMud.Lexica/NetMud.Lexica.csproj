@@ -44,18 +44,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeepLex\AntonymList.cs" />
+    <Compile Include="DeepLex\Artwork.cs" />
+    <Compile Include="DeepLex\AttributionOfQuote.cs" />
+    <Compile Include="DeepLex\BiographicalNameWrap.cs" />
+    <Compile Include="DeepLex\CalledAlsoNote.cs" />
+    <Compile Include="DeepLex\CalledAlsoNoteTarget.cs" />
     <Compile Include="DeepLex\CognateCrossReference.cs" />
     <Compile Include="DeepLex\CognateCrossReferenceTarget.cs" />
+    <Compile Include="DeepLex\DefinedRunOn.cs" />
+    <Compile Include="DeepLex\DefiningText.cs" />
+    <Compile Include="DeepLex\Definition.cs" />
     <Compile Include="DeepLex\DictionaryEntry.cs" />
+    <Compile Include="DeepLex\DividedSense.cs" />
+    <Compile Include="DeepLex\Etymology.cs" />
     <Compile Include="DeepLex\Headword.cs" />
     <Compile Include="DeepLex\Inflection.cs" />
     <Compile Include="DeepLex\Meta.cs" />
     <Compile Include="DeepLex\MirriamWebsterHarness.cs" />
+    <Compile Include="DeepLex\NearAntonymList.cs" />
+    <Compile Include="DeepLex\ParagraphText.cs" />
     <Compile Include="DeepLex\Pronounciation.cs" />
     <Compile Include="DeepLex\PronounciationSound.cs" />
+    <Compile Include="DeepLex\QuotationsSection.cs" />
+    <Compile Include="DeepLex\RelatedWordList.cs" />
+    <Compile Include="DeepLex\RunIn.cs" />
+    <Compile Include="DeepLex\RunInWrap.cs" />
+    <Compile Include="DeepLex\Sense.cs" />
     <Compile Include="DeepLex\SenseSequence.cs" />
+    <Compile Include="DeepLex\Subsource.cs" />
+    <Compile Include="DeepLex\SupplementalInformationNote.cs" />
+    <Compile Include="DeepLex\SynonymList.cs" />
+    <Compile Include="DeepLex\SynonymousPhraseList.cs" />
+    <Compile Include="DeepLex\SynonymsSection.cs" />
+    <Compile Include="DeepLex\Table.cs" />
+    <Compile Include="DeepLex\Target.cs" />
     <Compile Include="DeepLex\ThesaurusEntry.cs" />
+    <Compile Include="DeepLex\ThesaurusMeta.cs" />
+    <Compile Include="DeepLex\ThesaurusStatusLabel.cs" />
+    <Compile Include="DeepLex\ThesaurusVariant.cs" />
+    <Compile Include="DeepLex\ThesaurusVerbVariant.cs" />
+    <Compile Include="DeepLex\UndefinedRunOns.cs" />
+    <Compile Include="DeepLex\UndefinedRunOnText.cs" />
+    <Compile Include="DeepLex\UsageNotes.cs" />
+    <Compile Include="DeepLex\UsageSection.cs" />
     <Compile Include="DeepLex\Variant.cs" />
+    <Compile Include="DeepLex\VerbalIllustration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
