@@ -107,10 +107,6 @@
       <Project>{dbc07a3d-3a1e-48c1-9a72-d115ff3e4349}</Project>
       <Name>NetMud.Authentication</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
-      <Project>{F4EAB5D7-93FA-4B7B-9E6D-B7F191E66945}</Project>
-      <Name>NetMud.Cartography</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>
       <Name>NetMud.Communication</Name>
@@ -126,10 +122,6 @@
     <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
       <Project>{8b2cb5f6-65ca-4458-856b-6957e9309dbb}</Project>
       <Name>NetMud.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Gaia\NetMud.Gaia.csproj">
-      <Project>{69F61BFC-0E4D-484D-BEF2-DCB1F4181340}</Project>
-      <Name>NetMud.Gaia</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Interp\NetMud.Interp.csproj">
       <Project>{0c46dab6-27fd-4117-acf6-0b8440614aa0}</Project>

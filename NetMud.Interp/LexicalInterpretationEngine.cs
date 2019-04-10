@@ -1,10 +1,6 @@
-﻿using NetMud.Communication.Lexical;
-using NetMud.Data.Linguistic;
-using NetMud.DataAccess.Cache;
+﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;

@@ -1,8 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Room;
-using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.Web.Script.Serialization;

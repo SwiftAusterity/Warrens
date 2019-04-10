@@ -1,16 +1,10 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Gaia;
-using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.NaturalResource;
-using NetMud.DataStructure.Room;
-using NetMud.DataStructure.Zone;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -43,45 +37,11 @@ namespace NetMud.Data.Architectural.EntityBase
         }
 
         /// <summary>
-        /// Current base humidity
+        /// current maximum section
         /// </summary>
-        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Humidity", Description = "The current barometric pressure.")]
-        [DataType(DataType.Text)]
-        public virtual int Humidity { get; set; }
-
-        /// <summary>
-        /// Base temperature
-        /// </summary>
-        [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
-        [Display(Name = "Temperature", Description = "The current ambient temperature.")]
-        [DataType(DataType.Text)]
-        public virtual int Temperature { get; set; }
-
-        /// <summary>
-        /// Collection of model section name to material composition mappings
-        /// </summary>
-        [UIHint("FaunaResourceSpawnCollection")]
-        public HashSet<INaturalResourceSpawn<IFauna>> FaunaNaturalResources { get; set; }
-
-        /// <summary>
-        /// Collection of model section name to material composition mappings
-        /// </summary>
-        [UIHint("FloraResourceSpawnCollection")]
-        public HashSet<INaturalResourceSpawn<IFlora>> FloraNaturalResources { get; set; }
-
-        /// <summary>
-        /// Collection of model section name to material composition mappings
-        /// </summary>
-        [UIHint("MineralResourceSpawnCollection")]
-        public HashSet<INaturalResourceSpawn<IMineral>> MineralNaturalResources { get; set; }
+        public ulong MaxSection { get; set; }
 
         #region Container
-        /// <summary>
-        /// Inanimates contained in this
-        /// </summary>
-        public IEntityContainer<IInanimate> Contents { get; set; }
-
         /// <summary>
         /// Any mobiles (players, npcs) contained in this
         /// </summary>
@@ -105,11 +65,6 @@ namespace NetMud.Data.Architectural.EntityBase
                 contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
             }
 
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                contents.AddRange(Contents.EntitiesContained().Select(ent => (T)ent));
-            }
-
             return contents;
         }
 
@@ -128,11 +83,6 @@ namespace NetMud.Data.Architectural.EntityBase
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
                 contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
-            }
-
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                contents.AddRange(Contents.EntitiesContained(containerName).Select(ent => (T)ent));
             }
 
             return contents;
@@ -159,21 +109,6 @@ namespace NetMud.Data.Architectural.EntityBase
         public string MoveInto<T>(T thing, string containerName)
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
-
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                IInanimate obj = (IInanimate)thing;
-
-                if (Contents.Contains(obj, containerName))
-                {
-                    return "That is already in the container";
-                }
-
-                Contents.Add(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -215,21 +150,6 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                IInanimate obj = (IInanimate)thing;
-
-                if (!Contents.Contains(obj, containerName))
-                {
-                    return "That is not in the container";
-                }
-
-                Contents.Remove(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
                 IMobile obj = (IMobile)thing;
@@ -248,113 +168,6 @@ namespace NetMud.Data.Architectural.EntityBase
             return "Invalid type to move from container.";
         }
         #endregion
-
-        public IEnumerable<IPathway> GetPathways(bool inward = false)
-        {
-            return LiveCache.GetAll<IPathway>().Where(path => path.Destination != null
-                                                            && path.Origin != null
-                                                            && (path.Origin.Equals(this) || (inward && path.Destination.Equals(this))));
-        }
-
-        /// <summary>
-        /// Pathways leading out of (or into) this that are a zone
-        /// </summary>
-        public IEnumerable<IPathway> GetZonePathways(bool inward = false)
-        {
-            return GetPathways(inward).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IZone))
-                                                  || (inward && path.Origin.GetType().GetInterfaces().Contains(typeof(IZone)) && path.Origin != this));
-        }
-
-        /// <summary>
-        /// Pathways leading out of (or into) this that are from a different locale
-        /// </summary>
-        public IEnumerable<IPathway> GetLocalePathways(bool inward = false)
-        {
-            return GetPathways(inward).Where(path => path.Destination.GetType().GetInterfaces().Contains(typeof(IRoom))
-                                            && (GetType().GetInterfaces().Contains(typeof(IZone))
-                                                || ((IRoom)path.Destination).ParentLocation.BirthMark != ((IRoom)this).ParentLocation.BirthMark));
-        }
-
-        /// <summary>
-        /// Get the surrounding locations based on a strength radius
-        /// </summary>
-        /// <param name="strength">number of places to go out</param>
-        /// <returns>list of valid surrounding locations</returns>
-        public virtual IEnumerable<ILocation> GetSurroundings(int strength)
-        {
-            List<ILocation> radiusLocations = new List<ILocation>();
-            IEnumerable<IPathway> paths = GetPathways();
-
-            //If we don't have any paths out what can we even do
-            if (paths.Count() == 0)
-            {
-                return radiusLocations;
-            }
-
-            int currentRadius = 0;
-            while (currentRadius <= strength && paths.Count() > 0)
-            {
-                IEnumerable<ILocation> currentLocsSet = paths.Select(path => path.Destination);
-
-                if (currentLocsSet.Count() == 0)
-                {
-                    break;
-                }
-
-                radiusLocations.AddRange(currentLocsSet);
-                paths = currentLocsSet.SelectMany(ro => ro.GetPathways());
-
-                currentRadius++;
-            }
-
-            return radiusLocations;
-        }
-
-        /// <summary>
-        /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
-        /// </summary>
-        /// <param name="viewer">Whom is looking</param>
-        /// <returns>What celestials are visible</returns>
-        public abstract IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer);
-
-        /// <summary>
-        /// "Functional" Humiditiy
-        /// </summary>
-        /// <returns></returns>
-        public virtual int EffectiveHumidity()
-        {
-            //TODO: More stuff
-            return Humidity;
-        }
-
-        /// <summary>
-        /// Functional temperature
-        /// </summary>
-        /// <returns></returns>
-        public virtual int EffectiveTemperature()
-        {
-            //TODO: More Stuff
-            return Temperature;
-        }
-
-        /// <summary>
-        /// Are we out doors?
-        /// </summary>
-        /// <returns>if we are outside</returns>
-        public virtual bool IsOutside()
-        {
-            //TODO: make this work
-            return true;// GeographicalUtilities.IsOutside(GetBiome());
-        }
-
-        /// <summary>
-        /// Get the biome
-        /// </summary>
-        /// <returns>the biome</returns>
-        public virtual Biome GetBiome()
-        {
-            return Biome.Fabricated;
-        }
 
         public abstract IGlobalPosition GetContainerAsLocation();
     }

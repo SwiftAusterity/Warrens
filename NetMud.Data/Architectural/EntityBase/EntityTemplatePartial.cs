@@ -1,6 +1,4 @@
-﻿using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,11 +34,6 @@ namespace NetMud.Data.Architectural.EntityBase
         [JsonIgnore]
         [ScriptIgnore]
         public abstract string[] Keywords { get; set; }
-
-        /// <summary>
-        /// Set of output relevant to this exit. These are essentially single word descriptions to render the path
-        /// </summary>
-        public HashSet<ISensoryEvent> Descriptives { get; set; }
 
         /// <summary>
         /// List of live qualities of this entity
@@ -103,12 +96,6 @@ namespace NetMud.Data.Architectural.EntityBase
 
             return value;
         }
-
-        /// <summary>
-        /// Get's the entity's model dimensions
-        /// </summary>
-        /// <returns>height, length, width</returns>
-        public abstract Dimensions GetModelDimensions();
 
         /// <summary>
         /// Gets the errors for data fitness

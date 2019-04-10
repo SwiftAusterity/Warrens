@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Architectural.PropertyBinding;
-using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
 
 namespace NetMud.Data.Architectural.PropertyBinding

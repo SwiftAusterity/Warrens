@@ -1,7 +1,4 @@
-﻿using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Architectural.EntityBase;
+﻿using NetMud.DataAccess.Cache;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

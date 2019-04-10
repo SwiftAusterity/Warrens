@@ -3,7 +3,6 @@ using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using System.Collections.Generic;
 

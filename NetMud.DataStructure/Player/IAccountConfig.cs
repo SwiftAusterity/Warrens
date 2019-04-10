@@ -1,5 +1,4 @@
 ﻿using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
 
@@ -34,11 +33,6 @@ namespace NetMud.DataStructure.Player
         /// Does someone see chatter from the Gossip network?
         /// </summary>
         bool GossipSubscriber { get; set; }
-
-        /// <summary>
-        /// The UI language for output purposes
-        /// </summary>
-        ILanguage UILanguage { get; set; }
 
         /// <summary>
         /// The modules to load. Module, quadrant

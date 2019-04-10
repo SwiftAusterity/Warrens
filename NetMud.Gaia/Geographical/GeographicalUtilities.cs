@@ -1,8 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
-using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Room;
-using NetMud.DataStructure.Zone;
 using System;
 using System.Linq;
 
@@ -11,31 +9,6 @@ namespace NetMud.Gaia.Geographical
     public static class GeographicalUtilities
     {
         #region Biomes
-        public static bool IsOutside(Biome biome)
-        {
-            bool returnValue = true;
-
-            switch (biome)
-            {
-                case Biome.Aquatic:
-                case Biome.AquaticFloor:
-                case Biome.Cavernous:
-                case Biome.Fabricated:
-                    returnValue = false;
-                    break;
-                case Biome.Air:
-                case Biome.AquaticSurface:
-                case Biome.Desert:
-                case Biome.Forest:
-                case Biome.Mountainous:
-                case Biome.Plains:
-                case Biome.Rainforest:
-                case Biome.Swamp:
-                    break;
-            }
-
-            return returnValue;
-        }
         #endregion
 
         #region Size

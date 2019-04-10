@@ -1,22 +1,14 @@
-﻿using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural.DataIntegrity;
-using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.Data.Linguistic;
+﻿using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Room
@@ -63,90 +55,14 @@ namespace NetMud.Data.Room
             set { _keywords = value; }
         }
 
-        /// <summary>
-        /// Framework for the physics model of an entity
-        /// </summary>
-        [NonNullableDataIntegrity("Physical Model is invalid.")]
-        [UIHint("TwoDimensionalModel")]
-        public IDimensionalModel Model { get; set; }
-
         [JsonProperty("Medium")]
         private TemplateCacheKey _medium { get; set; }
-
-        /// <summary>
-        /// What is in the middle of the room
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [NonNullableDataIntegrity("Medium material is invalid.")]
-        [Display(Name = "Medium", Description = "What the 'empty' space of the room is made of. (likely AIR, sometimes stone or dirt)")]
-        [UIHint("MaterialList")]
-        [MaterialDataBinder]
-        public IMaterial Medium
-        {
-            get
-            {
-                return TemplateCache.Get<IMaterial>(_medium);
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _medium = new TemplateCacheKey(value);
-                }
-            }
-        }
-
-        [JsonProperty("ParentLocation")]
-        private TemplateCacheKey _parentLocation { get; set; }
-
-        /// <summary>
-        /// What zone this belongs to
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [NonNullableDataIntegrity("Parent Location is invalid.")]
-        [Display(Name = "Parent Locale", Description = "The locale this room belongs to.")]
-        [UIHint("LocaleRoomDisplay")]
-        public ILocaleTemplate ParentLocation
-        {
-            get
-            {
-                return TemplateCache.Get<ILocaleTemplate>(_parentLocation);
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _parentLocation = new TemplateCacheKey(value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Current coordinates of the room on its world map
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public Coordinate Coordinates { get; set; }
 
         /// <summary>
         /// Blank constructor
         /// </summary>
         public RoomTemplate()
         {
-            Model = new DimensionalModel();
-            Descriptives = new HashSet<ISensoryEvent>();
-        }
-
-        /// <summary>
-        /// Spawn new room with its model
-        /// </summary>
-        [JsonConstructor]
-        public RoomTemplate(DimensionalModel model)
-        {
-            Model = model;
-            Descriptives = new HashSet<ISensoryEvent>();
         }
 
         /// <summary>
@@ -156,11 +72,6 @@ namespace NetMud.Data.Room
         public override IList<string> FitnessReport()
         {
             IList<string> dataProblems = base.FitnessReport();
-
-            if (Coordinates?.X < 0 || Coordinates?.Y < 0 || Coordinates?.Z < 0)
-            {
-                dataProblems.Add("Coordinates are invalid.");
-            }
 
             return dataProblems;
         }
@@ -173,15 +84,6 @@ namespace NetMud.Data.Room
         public int GetDistanceDestination(ILocationData destination)
         {
             return -1;
-        }
-
-        /// <summary>
-        /// Get's the entity's model dimensions
-        /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Dimensions GetModelDimensions()
-        {
-            return new Dimensions(Model.Height, Model.Length, Model.Width);
         }
 
         /// <summary>
@@ -198,8 +100,6 @@ namespace NetMud.Data.Room
             //approval will be handled inside the base call
             IKeyedData obj = base.Create(creator, rank);
 
-            ParentLocation.RemapInterior();
-
             return obj;
         }
 
@@ -210,13 +110,6 @@ namespace NetMud.Data.Room
         public override IDictionary<string, string> SignificantDetails()
         {
             IDictionary<string, string> returnList = base.SignificantDetails();
-
-            returnList.Add("Medium", Medium.Name);
-
-            foreach (ISensoryEvent desc in Descriptives)
-            {
-                returnList.Add("Descriptives", string.Format("{0} ({1}): {2}", desc.SensoryType, desc.Strength, desc.Event.ToString()));
-            }
 
             return returnList;
         }
@@ -229,26 +122,6 @@ namespace NetMud.Data.Room
         {
             try
             {
-                LexicalContext collectiveContext = new LexicalContext(null)
-                {
-                    Determinant = true,
-                    Perspective = NarrativePerspective.ThirdPerson,
-                    Plural = false,
-                    Position = LexicalPosition.None,
-                    Tense = LexicalTense.Present
-                };
-
-                List<IDictata> dictatas = new List<IDictata>
-                {
-                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name, collectiveContext))
-                };
-                dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
-
-                foreach (IDictata dictata in dictatas)
-                {
-                    LexicalProcessor.VerifyLexeme(dictata.GetLexeme());
-                }
-
                 TemplateCache.Add(this);
             }
             catch (Exception ex)

@@ -1,11 +1,6 @@
 ﻿using NetMud.Authentication;
 using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Gaia;
-using NetMud.DataStructure.Locale;
-using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
-using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

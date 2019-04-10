@@ -1,5 +1,4 @@
 ﻿using NetMud.Authentication;
-using NetMud.DataStructure.Architectural.EntityBase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

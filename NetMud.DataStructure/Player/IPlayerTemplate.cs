@@ -15,7 +15,7 @@ namespace NetMud.DataStructure.Player
         /// <summary>
         /// Last known location Id for character in live world
         /// </summary>
-        IGlobalPosition CurrentLocation { get; set; }
+        ulong CurrentSlice { get; set; }
 
         /// <summary>
         /// Given name + surname

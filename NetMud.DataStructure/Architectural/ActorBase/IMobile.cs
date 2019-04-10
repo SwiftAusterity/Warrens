@@ -1,16 +1,9 @@
-﻿using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Inanimate;
-
-namespace NetMud.DataStructure.Architectural.ActorBase
+﻿namespace NetMud.DataStructure.Architectural.ActorBase
 {
     /// <summary>
     /// Midpoint entity interface for players/npcs
     /// </summary>
-    public interface IMobile : IActor, IContains, IGetTired, ICanBeHarmed
+    public interface IMobile : IActor, IGetTired, ICanBeHarmed
     {
-        /// <summary>
-        /// Held objects for the player
-        /// </summary>
-        IEntityContainer<IInanimate> Inventory { get; set; }
     }
 }

@@ -1,14 +1,6 @@
 ﻿using NetMud.Authentication;
-using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Gaia;
-using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.Locale;
-using NetMud.DataStructure.NPC;
 using NetMud.DataStructure.Room;
-using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

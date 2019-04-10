@@ -1,7 +1,5 @@
-﻿using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural.EntityBase;
+﻿using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Room;
-using NetMud.Data.Zone;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using System;

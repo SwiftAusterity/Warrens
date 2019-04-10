@@ -3,7 +3,6 @@ using NetMud.Communication.Messaging;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using System.Collections.Generic;
 

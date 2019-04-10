@@ -100,10 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InternalChannel.cs" />
-    <Compile Include="Lexical\LexicalProcessor.cs" />
-    <Compile Include="Lexical\SensoryEvent.cs" />
-    <Compile Include="Lexical\Thesaurus.cs" />
-    <Compile Include="Messaging\LexicalParagraph.cs" />
     <Compile Include="Messaging\Message.cs" />
     <Compile Include="Messaging\MessagingUtility.cs" />
     <Compile Include="SystemComm.cs" />
@@ -111,10 +107,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
-      <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
-      <Name>NetMud.Cartography</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
       <Project>{25B53EF7-E51C-4EE5-A04C-DD8797CFF58F}</Project>
       <Name>NetMud.DataAccess</Name>
@@ -127,14 +119,13 @@
       <Project>{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}</Project>
       <Name>NetMud.Utility</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WordNet.Net\WordNet.Net.csproj">
-      <Project>{F12805B0-D74A-4E5B-A482-7C7CCB69D572}</Project>
-      <Name>WordNet.Net</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Lexical\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

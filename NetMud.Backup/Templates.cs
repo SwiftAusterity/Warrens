@@ -1,8 +1,5 @@
 ﻿using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Gaia;
-using NetMud.Data.Locale;
 using NetMud.Data.Room;
-using NetMud.Data.Zone;
 using NetMud.DataAccess;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Architectural;

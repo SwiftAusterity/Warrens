@@ -1,15 +1,12 @@
 ﻿using NetMud.Backup;
 using NetMud.CentralControl;
 using NetMud.Commands.Attributes;
-using NetMud.Communication.Lexical;
 using NetMud.Data.Gossip;
-using NetMud.Data.Linguistic;
 using NetMud.Data.System;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Gossip;
-using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Gossip;
@@ -29,8 +26,6 @@ namespace NetMud
         {
             //Load the "config" data first
             ConfigData.LoadEverythingToCache();
-
-            LexicalProcessor.LoadWordnet();
 
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 

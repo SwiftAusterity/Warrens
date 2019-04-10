@@ -1,6 +1,4 @@
 ﻿using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using System;
 using System.Collections.Generic;
@@ -17,62 +15,62 @@ namespace NetMud.Communication.Messaging
         /// <summary>
         /// Message to send to the acting entity
         /// </summary>
-        public IEnumerable<ILexicalParagraph> ToActor { get; set; }
+        public IEnumerable<string> ToActor { get; set; }
 
         /// <summary>
         /// Message to send to the subject of the command
         /// </summary>
-        public IEnumerable<ILexicalParagraph> ToSubject { get; set; }
+        public IEnumerable<string> ToSubject { get; set; }
 
         /// <summary>
         /// Message to send to the target of the command
         /// </summary>
-        public IEnumerable<ILexicalParagraph> ToTarget { get; set; }
+        public IEnumerable<string> ToTarget { get; set; }
 
         /// <summary>
         /// Message to send to the origin location of the command/event
         /// </summary>
-        public IEnumerable<ILexicalParagraph> ToOrigin { get; set; }
+        public IEnumerable<string> ToOrigin { get; set; }
 
         /// <summary>
         /// Message to send to the destination location of the command/event
         /// </summary>
-        public IEnumerable<ILexicalParagraph> ToDestination { get; set; }
+        public IEnumerable<string> ToDestination { get; set; }
 
         /// <summary>
         /// New up an empty cluster
         /// </summary>
         public Message()
         {
-            ToActor = Enumerable.Empty<ILexicalParagraph>();
-            ToSubject = Enumerable.Empty<ILexicalParagraph>();
-            ToTarget = Enumerable.Empty<ILexicalParagraph>();
-            ToOrigin = Enumerable.Empty<ILexicalParagraph>();
-            ToDestination = Enumerable.Empty<ILexicalParagraph>();
+            ToActor = Enumerable.Empty<string>();
+            ToSubject = Enumerable.Empty<string>();
+            ToTarget = Enumerable.Empty<string>();
+            ToOrigin = Enumerable.Empty<string>();
+            ToDestination = Enumerable.Empty<string>();
         }
 
         /// <summary>
         /// New up a clister with just toactor for system messages
         /// </summary>
-        public Message(ILexicalParagraph toActor)
+        public Message(string toActor)
         {
-            ToActor = new List<ILexicalParagraph> { toActor };
-            ToSubject = Enumerable.Empty<ILexicalParagraph>();
-            ToTarget = Enumerable.Empty<ILexicalParagraph>();
-            ToOrigin = Enumerable.Empty<ILexicalParagraph>();
-            ToDestination = Enumerable.Empty<ILexicalParagraph>();
+            ToActor = new List<string> { toActor };
+            ToSubject = Enumerable.Empty<string>();
+            ToTarget = Enumerable.Empty<string>();
+            ToOrigin = Enumerable.Empty<string>();
+            ToDestination = Enumerable.Empty<string>();
         }
 
         /// <summary>
         /// New up a clister with just toactor for system messages
         /// </summary>
-        public Message(IEnumerable<ILexicalParagraph> toActor)
+        public Message(IEnumerable<string> toActor)
         {
             ToActor = toActor;
-            ToSubject = Enumerable.Empty<ILexicalParagraph>();
-            ToTarget = Enumerable.Empty<ILexicalParagraph>();
-            ToOrigin = Enumerable.Empty<ILexicalParagraph>();
-            ToDestination = Enumerable.Empty<ILexicalParagraph>();
+            ToSubject = Enumerable.Empty<string>();
+            ToTarget = Enumerable.Empty<string>();
+            ToOrigin = Enumerable.Empty<string>();
+            ToDestination = Enumerable.Empty<string>();
         }
 
         /// <summary>
@@ -83,8 +81,8 @@ namespace NetMud.Communication.Messaging
         /// <param name="target">Message to send to the target of the command</param>
         /// <param name="origin">Message to send to the origin location of the command/event</param>
         /// <param name="destination">Message to send to the destination location of the command/event</param>
-        public Message(IEnumerable<ILexicalParagraph> actor, IEnumerable<ILexicalParagraph> subject, IEnumerable<ILexicalParagraph> target, 
-            IEnumerable<ILexicalParagraph> origin, IEnumerable<ILexicalParagraph> destination)
+        public Message(IEnumerable<string> actor, IEnumerable<string> subject, IEnumerable<string> target,
+            IEnumerable<string> origin, IEnumerable<string> destination)
         {
             ToActor = actor;
             ToSubject = subject;
@@ -114,39 +112,17 @@ namespace NetMud.Communication.Messaging
 
             if (Actor != null && ToActor.Any())
             {
-                if (ToActor.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                {
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Override), entities));
-                }
-                else
-                {
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Describe()), entities));
-                }
+                Actor.WriteTo(TranslateOutput(ToActor, entities));
             }
 
             if (Subject != null && ToSubject.Any())
             {
-                if (ToSubject.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                {
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Override), entities));
-                }
-                else
-                {
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Describe()), entities));
-                }
+                Subject.WriteTo(TranslateOutput(ToSubject, entities));
             }
 
             if (Target != null && ToTarget.Any())
             {
-                ILanguage language = Target.IsPlayer() ? ((IPlayer)Target).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
-                if (ToTarget.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                {
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Override), entities));
-                }
-                else
-                {
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Describe()), entities));
-                }
+                Target.WriteTo(TranslateOutput(ToTarget, entities));
             }
 
             //TODO: origin and destination are areas of effect on their surrounding areas
@@ -158,14 +134,7 @@ namespace NetMud.Communication.Messaging
                 //Message dudes in the location, including non-person entities since they might have triggers
                 foreach (IEntity dude in validContents)
                 {
-                    if (ToOrigin.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                    {
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Override), entities));
-                    }
-                    else
-                    {
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Describe()), entities));
-                    }
+                    dude.WriteTo(TranslateOutput(ToOrigin, entities));
                 }
             }
 
@@ -176,38 +145,9 @@ namespace NetMud.Communication.Messaging
                 //Message dudes in the location, including non-person entities since they might have triggers
                 foreach (IEntity dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
                 {
-                    if (ToDestination.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
-                    {
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Override), entities));
-                    }
-                    else
-                    {
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Describe()), entities));
-                    }
+                    dude.WriteTo(TranslateOutput(ToDestination, entities));
                 }
             }
-        }
-
-        /// <summary>
-        /// Get the string version of all the contained messages
-        /// </summary>
-        /// <param name="target">The entity type to select the messages of</param>
-        /// <returns>Everything unpacked</returns>
-        public string Unpack(TargetEntity target, LexicalContext overridingContext = null)
-        {
-            switch(target)
-            {
-                case TargetEntity.Destination:
-                    return string.Join(" ", ToDestination.Select(msg => msg.Describe(overridingContext)));
-                case TargetEntity.Origin:
-                    return string.Join(" ", ToOrigin.Select(msg => msg.Describe(overridingContext)));
-                case TargetEntity.Subject:
-                    return string.Join(" ", ToSubject.Select(msg => msg.Describe(overridingContext)));
-                case TargetEntity.Target:
-                    return string.Join(" ", ToTarget.Select(msg => msg.Describe(overridingContext)));
-            }
-
-            return string.Join(" ", ToActor.Select(msg => msg.Describe(overridingContext)));
         }
 
         //TODO: Sentence combinatory logic for lexica output

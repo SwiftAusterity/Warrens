@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Linguistic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin

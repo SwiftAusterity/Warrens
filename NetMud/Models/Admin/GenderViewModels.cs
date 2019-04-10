@@ -1,7 +1,4 @@
-﻿using NetMud.Data.Architectural.ActorBase;
-using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.DataStructure.Architectural.ActorBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

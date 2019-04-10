@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Architectural.ActorBase;
-using NetMud.DataStructure.Architectural.EntityBase;
+﻿using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -127,30 +126,11 @@ namespace NetMud.Communication.Messaging
                     case MessagingTargetType.Target:
                         message = message.Replace("$T$", thing.TemplateName);
                         break;
-                    case MessagingTargetType.GenderPronoun:
-                        if (thing.GetType() != typeof(IGender))
-                        {
-                            break;
-                        }
-
-                        IGender chr = (IGender)thing;
-                        message = message.Replace("$G$", chr.Base);
-                        break;
                     case MessagingTargetType.AmountOfSubject:
                         message = message.Replace("$#S$", kvp.Value.Length.ToString());
                         break;
                     case MessagingTargetType.AmountOfTarget:
                         message = message.Replace("$#T$", kvp.Value.Length.ToString());
-                        break;
-                    case MessagingTargetType.Direction:
-                    case MessagingTargetType.ReverseDirection:
-                        /* TODO
-                        if (!thing.GetType().GetInterfaces().Contains(typeof(IPathway)))
-                            break;
-
-                        var pathData = thing.Template<IPathwayTemplate>();
-                        message = message.Replace("$DIR$", Utilities.TranslateToDirection(pathData.DegreesFromNorth, 0, kvp.Key == MessagingTargetType.ReverseDirection).ToString());
-                         */
                         break;
                 }
             }

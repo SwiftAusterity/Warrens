@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
 using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Room;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

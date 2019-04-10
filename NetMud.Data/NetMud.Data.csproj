@@ -81,8 +81,6 @@
   <ItemGroup>
     <Compile Include="Administrative\Help.cs" />
     <Compile Include="Administrative\JournalEntry.cs" />
-    <Compile Include="Architectural\ActorBase\Gender.cs" />
-    <Compile Include="Architectural\ActorBase\Race.cs" />
     <Compile Include="Architectural\ConfigData.cs" />
     <Compile Include="Architectural\DataHelpers.cs" />
     <Compile Include="Architectural\DataIntegrity\BaseDataIntegrity.cs" />
@@ -92,97 +90,26 @@
     <Compile Include="Architectural\DataIntegrity\NonNullableDataIntegrityAttribute.cs" />
     <Compile Include="Architectural\DataIntegrity\ShortDataIntegrityAttribute.cs" />
     <Compile Include="Architectural\DataIntegrity\StringDataIntegrityAttribute.cs" />
-    <Compile Include="Architectural\EntityBase\DimensionalModel.cs" />
-    <Compile Include="Architectural\EntityBase\DimensionalModelData.cs" />
-    <Compile Include="Architectural\EntityBase\DimensionalModelNode.cs" />
-    <Compile Include="Architectural\EntityBase\DimensionalModelPlane.cs" />
     <Compile Include="Architectural\EntityBase\EntityContainer.cs" />
     <Compile Include="Architectural\EntityBase\EntityContainerData.cs" />
     <Compile Include="Architectural\EntityBase\EntityPartial.cs" />
     <Compile Include="Architectural\EntityBase\EntityTemplatePartial.cs" />
-    <Compile Include="Architectural\EntityBase\MaterialComposition.cs" />
-    <Compile Include="Architectural\EntityBase\ModelPartComposition.cs" />
     <Compile Include="Architectural\EntityBase\LocationTemplateEntityPartial.cs" />
     <Compile Include="Architectural\EntityBase\LocationEntityPartial.cs" />
-    <Compile Include="Architectural\EntityBase\Material.cs" />
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
-    <Compile Include="Architectural\PropertyBinding\DictataPhraseCollectionDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\DictataPhraseDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\FaunaResourceBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\MineralResourceBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\WordPairRuleCollectionDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\CelestialCollectionDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\DictataCollectionDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\DictataDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\HelpDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\MineralCollectionDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\LanguageDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\MineralDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\PhysicalModelDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\AffectPatternDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\PathwayTemplateDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\LocaleTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\GenderDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\RoomTemplateDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\MaterialDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\DimensionalModelNodeDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\FaunaDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\FloraDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\RaceDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\CelestialDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\GaiaTemplateDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\InanimateCollectionTemplateDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\FloraResourceDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\InanimateTemplateDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\NonPlayerCharacterTemplateDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\ZoneTemplateDataBinder.cs" />
     <Compile Include="Architectural\Serialization\CacheKeyDictionaryConverter.cs" />
     <Compile Include="Architectural\Serialization\ConcreteTypeConverter.cs" />
     <Compile Include="Architectural\Serialization\DescriptiveEnumConverter.cs" />
     <Compile Include="Architectural\Serialization\SerializableDataPartial.cs" />
     <Compile Include="Architectural\TemplatePartial.cs" />
-    <Compile Include="Gaia\Celestial.cs" />
-    <Compile Include="Gaia\CelestialPosition.cs" />
-    <Compile Include="Gaia\Chronology.cs" />
-    <Compile Include="Gaia\EconomicBasis.cs" />
-    <Compile Include="Gaia\EconomicTrend.cs" />
-    <Compile Include="Gaia\Economy.cs" />
-    <Compile Include="Gaia\Gaia.cs" />
-    <Compile Include="Gaia\GaiaTemplate.cs" />
-    <Compile Include="Gaia\PressureSystem.cs" />
-    <Compile Include="Gaia\TimeOfDay.cs" />
     <Compile Include="Gossip\GossipConfig.cs" />
-    <Compile Include="Inanimate\Inanimate.cs" />
-    <Compile Include="Inanimate\InanimateComponent.cs" />
-    <Compile Include="Inanimate\InanimateTemplate.cs" />
-    <Compile Include="Inanimate\ItemStack.cs" />
-    <Compile Include="Linguistic\ContractionRule.cs" />
-    <Compile Include="Linguistic\DictataPhrase.cs" />
-    <Compile Include="Linguistic\Dictata.cs" />
-    <Compile Include="Linguistic\Lexeme.cs" />
-    <Compile Include="Linguistic\WordPairRule.cs" />
-    <Compile Include="Linguistic\DictataTransformationRule.cs" />
-    <Compile Include="Linguistic\Language.cs" />
-    <Compile Include="Linguistic\Lexica.cs" />
-    <Compile Include="Linguistic\LexicalSentence.cs" />
-    <Compile Include="Linguistic\WordRule.cs" />
-    <Compile Include="Locale\Locale.cs" />
-    <Compile Include="Locale\LocaleTemplate.cs" />
-    <Compile Include="NaturalResource\Fauna.cs" />
-    <Compile Include="NaturalResource\Flora.cs" />
-    <Compile Include="NaturalResource\Mineral.cs" />
-    <Compile Include="NaturalResource\NaturalResourceDataPartial.cs" />
-    <Compile Include="NPC\IntelligenceControl\Memory.cs" />
-    <Compile Include="NPC\IntelligenceControl\Personality.cs" />
-    <Compile Include="NPC\IntelligenceControl\Preference.cs" />
-    <Compile Include="NPC\IntelligenceControl\Reflection.cs" />
-    <Compile Include="NPC\Merchandise.cs" />
-    <Compile Include="NPC\NonPlayerCharacter.cs" />
-    <Compile Include="NPC\NonPlayerCharacterTemplate.cs" />
     <Compile Include="Player\Account.cs" />
     <Compile Include="Player\AccountConfig.cs" />
     <Compile Include="Player\Acquaintence.cs" />
@@ -192,26 +119,11 @@
     <Compile Include="Player\Playlist.cs" />
     <Compile Include="Player\UIModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Room\Pathway.cs" />
-    <Compile Include="Room\PathwayTemplate.cs" />
     <Compile Include="Room\Room.cs" />
     <Compile Include="Room\RoomTemplate.cs" />
     <Compile Include="System\GlobalConfig.cs" />
-    <Compile Include="Zone\AdventureTemplate.cs" />
-    <Compile Include="Zone\FaunaResourceSpawn.cs" />
-    <Compile Include="Zone\FloraResourceSpawn.cs" />
-    <Compile Include="Zone\LiveMap.cs" />
-    <Compile Include="Zone\Map.cs" />
-    <Compile Include="Zone\MineralResourceSpawn.cs" />
-    <Compile Include="Zone\WeatherEvent.cs" />
-    <Compile Include="Zone\Zone.cs" />
-    <Compile Include="Zone\ZoneTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
-      <Project>{f4eab5d7-93fa-4b7b-9e6d-b7f191e66945}</Project>
-      <Name>NetMud.Cartography</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.CentralControl\NetMud.CentralControl.csproj">
       <Project>{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}</Project>
       <Name>NetMud.CentralControl</Name>
@@ -228,17 +140,9 @@
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Gaia\NetMud.Gaia.csproj">
-      <Project>{69f61bfc-0e4d-484d-bef2-dcb1f4181340}</Project>
-      <Name>NetMud.Gaia</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Gossip\NetMud.Gossip.csproj">
       <Project>{D98549E9-9D8C-46A7-83B2-9A4D68504F31}</Project>
       <Name>NetMud.Gossip</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Intelligence\NetMud.Intelligence.csproj">
-      <Project>{780050f3-603f-4396-94b2-5bfef50a4265}</Project>
-      <Name>NetMud.Intelligence</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetMud.Physics\NetMud.Physics.csproj">
       <Project>{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}</Project>
@@ -247,10 +151,6 @@
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
       <Name>NetMud.Utility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WordNet.Net\WordNet.Net.csproj">
-      <Project>{F12805B0-D74A-4E5B-A482-7C7CCB69D572}</Project>
-      <Name>WordNet.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

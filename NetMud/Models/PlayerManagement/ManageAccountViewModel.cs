@@ -1,7 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
-using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -1,9 +1,4 @@
-﻿using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.Data.NPC;
-using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Architectural.ActorBase;
-using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.NPC;
+﻿using NetMud.DataAccess.Cache;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

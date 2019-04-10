@@ -2,17 +2,14 @@
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
-using NetMud.DataStructure.Zone;
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;

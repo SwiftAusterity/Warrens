@@ -1,5 +1,4 @@
 ﻿using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Player;
 using System;
 using System.IO;
@@ -143,21 +142,6 @@ namespace NetMud.DataAccess.FileSystem
                 //We have the player in live cache now so make it move to the right place
                 newPlayerToLoad.GetFromWorldOrSpawn();
                 newPlayerToLoad.UpsertToLiveWorldCache(true);
-
-                //We'll need one of these per container on players
-                if (Directory.Exists(playerDirectory + "Inventory/"))
-                {
-                    DirectoryInfo inventoryDirectory = new DirectoryInfo(playerDirectory + "Inventory/");
-
-                    foreach (FileInfo file in inventoryDirectory.EnumerateFiles())
-                    {
-                        IInanimate blankObject = Activator.CreateInstance("NetMud.Data", "NetMud.Data.Game.Inanimate") as IInanimate;
-
-                        IInanimate newObj = (IInanimate)blankObject.FromBytes(ReadFile(file));
-                        newObj.UpsertToLiveWorldCache(true);
-                        newObj.TryMoveTo(newPlayerToLoad.GetContainerAsLocation());
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -227,26 +211,6 @@ namespace NetMud.DataAccess.FileSystem
             {
                 WriteToFile(fullFileName, entity.ToBytes());
                 LiveData liveDataWrapper = new LiveData();
-
-                //We also need to write out all the inventory
-                foreach (IInanimate obj in entity.Inventory.EntitiesContained())
-                {
-                    string baseTypeName = "Inventory";
-
-                    DirectoryInfo entityDirectory;
-
-                    //Is there a directory for this entity type? If not, then create it
-                    if (!Directory.Exists(dir.FullName + baseTypeName))
-                    {
-                        entityDirectory = Directory.CreateDirectory(dir.FullName + baseTypeName);
-                    }
-                    else
-                    {
-                        entityDirectory = new DirectoryInfo(dir.FullName + baseTypeName);
-                    }
-
-                    liveDataWrapper.WriteSpecificEntity(entityDirectory, obj);
-                }
             }
             catch (Exception ex)
             {

@@ -43,14 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Astronomical\AstronomicalUtilities.cs" />
     <Compile Include="Geographical\CrowdSizeDescription.cs" />
     <Compile Include="Geographical\DimensionalSizeDescription.cs" />
     <Compile Include="Geographical\GeographicalUtilities.cs" />
     <Compile Include="Geographical\ObjectContainmentSizeDescription.cs" />
-    <Compile Include="Meteorological\HumidityType.cs" />
-    <Compile Include="Meteorological\TemperatureType.cs" />
-    <Compile Include="Meteorological\MeteorologicalUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

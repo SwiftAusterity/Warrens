@@ -1,27 +1,12 @@
-﻿using NetMud.Communication.Messaging;
-using NetMud.Data.Architectural;
-using NetMud.Data.Architectural.DataIntegrity;
+﻿using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Gaia;
-using NetMud.DataStructure.Inanimate;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.Locale;
-using NetMud.DataStructure.NaturalResource;
 using NetMud.DataStructure.Room;
-using NetMud.DataStructure.System;
-using NetMud.DataStructure.Zone;
-using NetMud.Gaia.Geographical;
-using NetMud.Gaia.Meteorological;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -55,106 +40,11 @@ namespace NetMud.Data.Room
         }
 
         /// <summary>
-        /// Framework for the physics model of an entity
-        /// </summary>
-        [UIHint("TwoDimensionalModel")]
-        public IDimensionalModel Model { get; set; }
-
-        [JsonProperty("ParentLocation")]
-        private LiveCacheKey _parentLocation { get; set; }
-
-        /// <summary>
-        /// The locale this belongs to
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [NonNullableDataIntegrity("Rooms must have a locale affiliation.")]
-        public ILocale ParentLocation
-        {
-            get
-            {
-                return LiveCache.Get<ILocale>(_parentLocation);
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _parentLocation = new LiveCacheKey(value);
-                }
-            }
-        }
-
-        [ScriptIgnore]
-        [JsonIgnore]
-        private Coordinate _coordinates { get; set; }
-
-        [ScriptIgnore]
-        [JsonIgnore]
-        [UIHint("Coordinate")]
-        public Coordinate Coordinates
-        {
-            get
-            {
-                return _coordinates;
-            }
-            set
-            {
-                _coordinates = value;
-
-                IRoomTemplate dt = Template<IRoomTemplate>();
-                if (dt != null)
-                {
-                    dt.Coordinates = _coordinates;
-                    dt.PersistToCache();
-                }
-
-            }
-        }
-
-        [JsonProperty("Medium")]
-        private TemplateCacheKey _medium { get; set; }
-
-        /// <summary>
-        /// What is in the middle of the room
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [NonNullableDataIntegrity("Medium material is invalid.")]
-        [Display(Name = "Medium", Description = "What the 'empty' space of the room is made of. (likely AIR, sometimes stone or dirt)")]
-        [UIHint("MaterialList")]
-        [MaterialDataBinder]
-        public IMaterial Medium
-        {
-            get
-            {
-                return TemplateCache.Get<IMaterial>(_medium);
-            }
-            set
-            {
-                if (value != null)
-                {
-                    _medium = new TemplateCacheKey(value);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get's the entity's model dimensions
-        /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Dimensions GetModelDimensions()
-        {
-            return new Dimensions(Model.Height, Model.Length, Model.Width);
-        }
-
-        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Room()
         {
-            Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
-            Coordinates = new Coordinate(-1, -1, -1);
         }
 
         /// <summary>
@@ -163,72 +53,11 @@ namespace NetMud.Data.Room
         /// <param name="room">the backing data</param>
         public Room(IRoomTemplate room)
         {
-            Contents = new EntityContainer<IInanimate>();
             MobilesInside = new EntityContainer<IMobile>();
-            Coordinates = new Coordinate(-1, -1, -1);
 
             TemplateId = room.Id;
 
             GetFromWorldOrSpawn();
-        }
-
-        /// <summary>
-        /// Gets the remaining distance and next "step" to the destination room
-        /// </summary>
-        /// <param name="destination">The room you're heading for</param>
-        /// <returns>distance (in rooms) and the next path you'd have to use</returns>
-        public Tuple<int, IPathway> GetDistanceAndNextStepDestination(ILocation destination)
-        {
-            int distance = -1;
-            IPathway nextStep = null;
-
-            return new Tuple<int, IPathway>(distance, nextStep);
-        }
-
-        /// <summary>
-        /// Get the visibile celestials. Depends on luminosity, viewer perception and celestial positioning
-        /// </summary>
-        /// <param name="viewer">Whom is looking</param>
-        /// <returns>What celestials are visible</returns>
-        public override IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer)
-        {
-            IRoomTemplate dT = Template<IRoomTemplate>();
-            IZone zone = CurrentLocation.CurrentZone;
-
-            bool canSeeSky = IsOutside() && dT.Coordinates.Z >= zone.Template<IZoneTemplate>().BaseElevation;
-
-            if (!canSeeSky)
-                return Enumerable.Empty<ICelestial>();
-
-            //The zone knows about the celestial positioning
-            return zone.GetVisibileCelestials(viewer);
-        }
-
-        /// <summary>
-        /// Get the current luminosity rating of the place you're in
-        /// </summary>
-        /// <returns>The current Luminosity</returns>
-        public override float GetCurrentLuminosity()
-        {
-            float lumins = 0;
-
-            IZone zone = CurrentLocation.CurrentZone;
-            if (zone != null)
-            {
-                zone.GetCurrentLuminosity();
-            }
-
-            foreach (IMobile dude in MobilesInside.EntitiesContained())
-            {
-                lumins += dude.GetCurrentLuminosity();
-            }
-
-            foreach (IInanimate thing in Contents.EntitiesContained())
-            {
-                lumins += thing.GetCurrentLuminosity();
-            }
-
-            return lumins;
         }
 
         public override IGlobalPosition GetContainerAsLocation()

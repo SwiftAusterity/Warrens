@@ -1,16 +1,13 @@
-﻿using NetMud.DataStructure.Linguistic;
-using System.Collections.Generic;
-
-namespace NetMud.DataStructure.Architectural.EntityBase
-{ 
+﻿namespace NetMud.DataStructure.Architectural.EntityBase
+{
     /// <summary>
     /// Indicates a data structure has additional descriptives, is part of rendering
     /// </summary>
     public interface IDescribable
     {
         /// <summary>
-        /// Set of output relevant to this exit
+        /// The description
         /// </summary>
-        HashSet<ISensoryEvent> Descriptives { get; set; }
+        string Description { get; set; }
     }
 }

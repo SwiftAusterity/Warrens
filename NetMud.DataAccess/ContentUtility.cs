@@ -1,5 +1,4 @@
-﻿using NetMud.DataStructure.Zone;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +16,7 @@ namespace NetMud.DataAccess
         /// </summary>
         /// <param name="zone">The zone in question</param>
         /// <returns>Dict of Name, Uri</returns>
-        public static IDictionary<string, string> GetMusicTracksForZone(IZone zone)
+        public static IDictionary<string, string> GetMusicTracks()
         {
             //TODO: Zone stuff
             IEnumerable<string> names = Enumerable.Empty<string>();

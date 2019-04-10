@@ -1,10 +1,6 @@
 ﻿using NetMud.Commands.Attributes;
-using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.Zone;
 using System;
 using System.Collections.Generic;
 
@@ -17,12 +13,12 @@ namespace NetMud.Commands.Administrative
     [CommandPermission(StaffRank.Guest)]
     [CommandParameter(CommandUsage.Subject, typeof(IZone), CacheReferenceType.Entity, false)] //for names
     [CommandRange(CommandRangeType.Global, 0)]
-    public class GotoZone : CommandPartial
+    public class GotoSlice : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public GotoZone()
+        public GotoSlice()
         {
             //Generic constructor for all IHelpfuls is needed
         }
@@ -32,32 +28,7 @@ namespace NetMud.Commands.Administrative
         /// </summary>
         public override void Execute()
         {
-            IZone moveTo = (IZone)Subject;
-
-            LexicalParagraph toActor = new LexicalParagraph()
-            {
-                Override = "You teleport."
-            };
-
-            LexicalParagraph toOrigin = new LexicalParagraph()
-            {
-                Override = "$A$ disappears in a puff of smoke."
-            };
-
-            LexicalParagraph toDest = new LexicalParagraph()
-            {
-                Override = "$A$ appears out of nowhere."
-            };
-
-            Message messagingObject = new Message(toActor)
-            {
-                ToOrigin = new List<ILexicalParagraph> { toOrigin },
-                ToDestination = new List<ILexicalParagraph> { toDest }
-            };
-
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
-
-            Actor.TryTeleport((IGlobalPosition)moveTo.CurrentLocation.Clone());
+            ulong moveTo = (ulong)Subject;
         }
 
         /// <summary>
