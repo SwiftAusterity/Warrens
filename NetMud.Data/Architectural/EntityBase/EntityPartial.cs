@@ -497,11 +497,6 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             return GetType().GetHashCode() + BirthMark.GetHashCode();
         }
-
-        public bool TryMoveDirection(MovementDirectionType direction, IGlobalPosition newPosition)
-        {
-            return true;
-        }
         #endregion
 
         public abstract object Clone();

@@ -66,18 +66,14 @@
     <Compile Include="Architectural\ActorBase\IHaveHealth.cs" />
     <Compile Include="Architectural\ActorBase\IHaveStamina.cs" />
     <Compile Include="Architectural\ActorBase\IMobile.cs" />
-    <Compile Include="Architectural\ActorBase\IThink.cs" />
     <Compile Include="Architectural\ActorBase\MobilityState.cs" />
     <Compile Include="Architectural\CacheType.cs" />
     <Compile Include="Architectural\ConfigDataType.cs" />
-    <Compile Include="Architectural\Coordinate.cs" />
-    <Compile Include="Architectural\Dimensions.cs" />
     <Compile Include="Architectural\EntityBase\DamageResistance.cs" />
     <Compile Include="Architectural\EntityBase\DamageType.cs" />
     <Compile Include="Architectural\EntityBase\Qualification.cs" />
     <Compile Include="Architectural\ISingleton.cs" />
     <Compile Include="Architectural\PropertyValidation\MarkdownStringLengthValidator.cs" />
-    <Compile Include="Architectural\EntityBase\IDecay.cs" />
     <Compile Include="Architectural\EntityBase\IDescribable.cs" />
     <Compile Include="Architectural\EntityBase\IEntity.cs" />
     <Compile Include="Architectural\EntityBase\IExist.cs" />
@@ -91,7 +87,6 @@
     <Compile Include="Architectural\EntityBase\IQuality.cs" />
     <Compile Include="Architectural\EntityBase\IRenderInLocation.cs" />
     <Compile Include="Architectural\EntityBase\ITemplate.cs" />
-    <Compile Include="Architectural\EntityBase\IThrowable.cs" />
     <Compile Include="Architectural\EntityBase\IVisible.cs" />
     <Compile Include="Architectural\EntityBase\QualityType.cs" />
     <Compile Include="Architectural\IAmOwned.cs" />
@@ -107,14 +102,17 @@
     <Compile Include="Architectural\ISpawnAsMultiple.cs" />
     <Compile Include="Architectural\ISpawnAsSingleton.cs" />
     <Compile Include="Architectural\MarkdownString.cs" />
-    <Compile Include="Architectural\PropertyBinding\CoordinateTileMapDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\PropertyBinderAttribute.cs" />
     <Compile Include="Architectural\PropertyValidation\FloatValueRangeValidator.cs" />
     <Compile Include="Architectural\PropertyValidation\IntValueRangeValidator.cs" />
     <Compile Include="Architectural\PropertyValidation\ShortValueRangeValidator.cs" />
     <Compile Include="Architectural\PropertyValidation\UnicodeStringValidator.cs" />
     <Compile Include="Architectural\QualityValue.cs" />
+    <Compile Include="Architectural\ValuePair.cs" />
     <Compile Include="Architectural\ValueRange.cs" />
+    <Compile Include="Combat\FightingArtCriteria.cs" />
+    <Compile Include="Combat\IFightingArt.cs" />
+    <Compile Include="Combat\IFightingArtCombination.cs" />
     <Compile Include="Gossip\IGossipClient.cs" />
     <Compile Include="Gossip\IGossipConfig.cs" />
     <Compile Include="Player\AcquaintenceNotifications.cs" />
@@ -141,7 +139,6 @@
     <Compile Include="System\IHelpful.cs" />
     <Compile Include="System\IMessage.cs" />
     <Compile Include="System\MessagingTargetType.cs" />
-    <Compile Include="System\MovementDirectionType.cs" />
     <Compile Include="System\SupportedColors.cs" />
     <Compile Include="System\TargetEntity.cs" />
   </ItemGroup>
