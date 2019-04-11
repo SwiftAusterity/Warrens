@@ -5,5 +5,6 @@
     /// </summary>
     public interface IMobile : IActor, IGetTired, ICanBeHarmed
     {
+        MobilityState StancePosition { get; set; }
     }
 }

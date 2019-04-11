@@ -1,85 +1,88 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Player;
+using NetMud.Utility;
+using System;
 
 namespace NetMud.DataStructure.Combat
 {
-    public interface IFightingArt
+    [Serializable]
+    public class FightingArt : IFightingArt
     {
         /// <summary>
-        /// How much stam this takes
+        /// How much stam this takes/damages
         /// </summary>
-        ValuePair<int> Stamina { get; set; }
+        public ValuePair<int> Stamina { get; set; }
 
         /// <summary>
-        /// How much health this costs the actor
+        /// How much health this costs/damages the actor/victim
         /// </summary>
-        ValuePair<int> Health { get; set; }
+        public ValuePair<int> Health { get; set; }
 
         /// <summary>
         /// How much stagger this has when it hits
         /// </summary>
-        int Stagger { get; set; }
+        public int Stagger { get; set; }
 
         /// <summary>
         /// Results in actor/victim stance change
         /// </summary>
-        ValuePair<MobilityState> StanceResult { get; set; }
+        public ValuePair<MobilityState> StanceResult { get; set; }
 
         /// <summary>
         /// The min and max distance this is usable
         /// </summary>
-        ValueRange<ulong> DistanceRange { get; set; }
+        public ValueRange<ulong> DistanceRange { get; set; }
 
         /// <summary>
         /// How should this alter the combatent distance
         /// </summary>
-        ulong DistanceChange { get; set; }
+        public ulong DistanceChange { get; set; }
 
         /// <summary>
         /// How many action frames this takes to execute from init before the hit
         /// </summary>
-        int Setup { get; set; }
+        public int Setup { get; set; }
 
         /// <summary>
         /// How many action frames this takes to execute after the hit to end
         /// </summary>
-        int Recovery { get; set; }
+        public int Recovery { get; set; }
 
         /// <summary>
         /// How many frames this adds to the recovery of the Actor when blocked and how much additional stagger it does when blocked
         /// </summary>
-        int Impact { get; set; }
+        public int Impact { get; set; }
 
         /// <summary>
         /// How much stagger-armor does this have while executing (reduces incoming stagger directly, does not reduce stagger costs)
         /// </summary>
-        int Armor { get; set; }
+        public int Armor { get; set; }
 
         /// <summary>
         /// Is this a part of a multipart attack
         /// </summary>
-        string RekkaKey { get; set; }
+        public string RekkaKey { get; set; }
 
         /// <summary>
         /// Where in the multipart attack does this go
         /// </summary>
-        int RekkaPosition { get; set; }
+        public int RekkaPosition { get; set; }
 
         /// <summary>
         /// Where does this move aim
         /// </summary>
-        AnatomyAim Aim { get; set; }
+        public AnatomyAim Aim { get; set; }
 
         /// <summary>
         /// Criteria for usage for actor
         /// </summary>
-        IFightingArtCriteria ActorCriteria { get; set; }
+        public IFightingArtCriteria ActorCriteria { get; set; }
 
         /// <summary>
         /// Criteria for usage for victim
         /// </summary>
-        IFightingArtCriteria VictimCriteria { get; set; }
+        public IFightingArtCriteria VictimCriteria { get; set; }
 
         /// <summary>
         /// Is this art valid to be used at the moment
@@ -87,6 +90,12 @@ namespace NetMud.DataStructure.Combat
         /// <param name="actor">who's doing the hitting</param>
         /// <param name="victim">who's being hit</param>
         /// <returns>yea or nay</returns>
-        bool IsValid(IPlayer actor, IPlayer victim, ulong distance, IFightingArt lastAttack = null);
+        public bool IsValid(IPlayer actor, IPlayer victim, ulong distance, IFightingArt lastAttack = null)
+        {
+            return distance.IsBetweenOrEqual(DistanceRange.Low, DistanceRange.High)
+                && actor.CurrentHealth >= Health.Actor 
+                && actor.CurrentStamina >= Stamina.Actor
+                && (lastAttack == null || (lastAttack.RekkaKey.Equals(RekkaKey) && lastAttack.RekkaPosition == RekkaPosition -1));
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
-using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
@@ -10,11 +9,9 @@ using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
-using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -91,6 +88,9 @@ namespace NetMud.Data.Players
         /// Current health for this
         /// </summary>
         public int CurrentHealth { get; set; }
+
+        public MobilityState StancePosition { get; set; }
+
         #endregion
 
         [ScriptIgnore]

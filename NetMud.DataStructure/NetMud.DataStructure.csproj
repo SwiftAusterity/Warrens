@@ -110,7 +110,8 @@
     <Compile Include="Architectural\QualityValue.cs" />
     <Compile Include="Architectural\ValuePair.cs" />
     <Compile Include="Architectural\ValueRange.cs" />
-    <Compile Include="Combat\FightingArtCriteria.cs" />
+    <Compile Include="Combat\AnatomyAim.cs" />
+    <Compile Include="Combat\IFightingArtCriteria.cs" />
     <Compile Include="Combat\IFightingArt.cs" />
     <Compile Include="Combat\IFightingArtCombination.cs" />
     <Compile Include="Gossip\IGossipClient.cs" />

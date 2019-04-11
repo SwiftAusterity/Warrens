@@ -1,11 +1,14 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
-using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
+using NetMud.DataStructure.Player;
+using NetMud.Utility;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace NetMud.DataStructure.Combat
+namespace NetMud.Data.Combat
 {
-    public class FightingArtCriteria
+    public class FightingArtCriteria : IFightingArtCriteria
     {
         /// <summary>
         /// Does the target need to have at least X health or at most X stamina to use?
@@ -25,7 +28,7 @@ namespace NetMud.DataStructure.Combat
         /// <summary>
         /// The min and max distance this is usable
         /// </summary>
-        public ValueRange<ulong> Distance { get; set; }
+        public ValueRange<ulong> DistanceRange { get; set; }
 
         /// <summary>
         /// Validate the criteria against the actor and victim
@@ -33,9 +36,12 @@ namespace NetMud.DataStructure.Combat
         /// <param name="actor">who's doing the hitting</param>
         /// <param name="victim">who's being hit</param>
         /// <returns></returns>
-        public bool Validate(IEntity actor, IEntity victim)
+        public bool Validate(IPlayer target, ulong distance)
         {
-            return true;
+            return target.CurrentStamina.IsBetweenOrEqual(StaminaRange.Low, StaminaRange.High)
+                && target.CurrentHealth.IsBetweenOrEqual(HealthRange.Low, HealthRange.High)
+                && (ValidStances.Count() == 0 || ValidStances.Contains(target.StancePosition))
+                && distance.IsBetweenOrEqual(DistanceRange.Low, DistanceRange.High);
         }
     }
 }

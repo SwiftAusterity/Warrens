@@ -5,7 +5,6 @@ using NetMud.Data.Room;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
-using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Room;
 using NetMud.Models.Admin;
 using System.Linq;

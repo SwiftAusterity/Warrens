@@ -413,7 +413,6 @@
     <Content Include="Views\Shared\LiveListTable.cshtml" />
     <Content Include="Views\Shared\ShowLiveEntity.cshtml" />
     <Content Include="Views\Shared\TitleAndBreadcrumbs.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\AffectPattern.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ColorPicker.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Help.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Quality.cshtml" />

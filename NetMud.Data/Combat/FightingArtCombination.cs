@@ -1,21 +1,27 @@
 ﻿using NetMud.DataStructure.Player;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.DataStructure.Combat
 {
-    public interface IFightingArtCombination
+    [Serializable]
+    public class FightingArtCombination : IFightingArtCombination
     {
         /// <summary>
         /// The available arts for this combo
         /// </summary>
-        HashSet<IFightingArt> Arts { get; set; }
+        public HashSet<IFightingArt> Arts { get; set; }
 
         /// <summary>
         /// Get the next move to use
         /// </summary>
         /// <param name="lastAttack">Was there an attack last go</param>
         /// <returns>The next art to use</returns>
-        IFightingArt GetNext(IFightingArt lastAttack);
+        public IFightingArt GetNext(IFightingArt lastAttack)
+        {
+            return lastAttack;
+        }
 
         /// <summary>
         /// Is this combo valid to be active at all
@@ -23,6 +29,9 @@ namespace NetMud.DataStructure.Combat
         /// <param name="actor">who's doing the hitting</param>
         /// <param name="victim">who's being hit</param>
         /// <returns>yea or nay</returns>
-        bool IsValid(IPlayer actor, IPlayer victim, ulong distance);
+        public bool IsValid(IPlayer actor, IPlayer victim, ulong distance)
+        {
+            return Arts.All(art => art.IsValid(actor, victim, distance));
+        }
     }
 }
