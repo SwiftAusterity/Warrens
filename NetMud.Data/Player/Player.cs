@@ -7,6 +7,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
@@ -142,11 +143,17 @@ namespace NetMud.Data.Players
         public string AccountHandle { get; set; }
 
         /// <summary>
+        /// fArt Combos
+        /// </summary>
+        public HashSet<IFightingArtCombination> Combos { get; set; }
+
+        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Player()
         {
             Qualities = new HashSet<IQuality>();
+            Combos = new HashSet<IFightingArtCombination>();
         }
 
         /// <summary>
@@ -158,6 +165,7 @@ namespace NetMud.Data.Players
             Qualities = new HashSet<IQuality>();
             TemplateId = character.Id;
             AccountHandle = character.AccountHandle;
+            Combos = new HashSet<IFightingArtCombination>();
             GetFromWorldOrSpawn();
         }
 
@@ -251,6 +259,7 @@ namespace NetMud.Data.Players
                 SurName = me.SurName;
                 StillANoob = me.StillANoob;
                 GamePermissionsRank = me.GamePermissionsRank;
+                Combos = me.Combos;
 
                 if (CurrentHealth == 0)
                 {
@@ -309,6 +318,7 @@ namespace NetMud.Data.Players
             SurName = ch.SurName;
             StillANoob = ch.StillANoob;
             GamePermissionsRank = ch.GamePermissionsRank;
+            Combos = ch.Combos;
 
             IGlobalPosition spawnTo = position ?? GetBaseSpawn();
 

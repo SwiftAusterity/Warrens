@@ -1,5 +1,7 @@
 ﻿using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Combat;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Player
 {
@@ -27,5 +29,10 @@ namespace NetMud.DataStructure.Player
         /// Is this character not graduated from the tutorial
         /// </summary>
         bool StillANoob { get; set; }
+
+        /// <summary>
+        /// fArt Combos
+        /// </summary>
+        HashSet<IFightingArtCombination> Combos { get; set; }
     }
 }

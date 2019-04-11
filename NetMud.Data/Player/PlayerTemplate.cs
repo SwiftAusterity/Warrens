@@ -7,6 +7,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
@@ -126,6 +127,11 @@ namespace NetMud.Data.Players
         public int TotalStamina { get; set; }
 
         /// <summary>
+        /// fArt Combos
+        /// </summary>
+        public HashSet<IFightingArtCombination> Combos { get; set; }
+
+        /// <summary>
         /// Empty constructor
         /// </summary>
         public PlayerTemplate()
@@ -133,6 +139,7 @@ namespace NetMud.Data.Players
             TotalHealth = 100;
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
+            Combos = new HashSet<IFightingArtCombination>();
         }
 
         [JsonConstructor]
@@ -142,6 +149,7 @@ namespace NetMud.Data.Players
             TotalHealth = 100;
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
+            Combos = new HashSet<IFightingArtCombination>();
         }
 
         /// <summary>

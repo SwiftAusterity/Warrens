@@ -1,17 +1,45 @@
-﻿using NetMud.DataStructure.Player;
+﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Player;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.DataStructure.Combat
 {
     [Serializable]
     public class FightingArtCombination : IFightingArtCombination
     {
+        [JsonProperty("Arts")]
+        public HashSet<TemplateCacheKey> _arts { get; set; }
+
         /// <summary>
         /// The available arts for this combo
         /// </summary>
-        public HashSet<IFightingArt> Arts { get; set; }
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<IFightingArt> Arts
+        {
+            get
+            {
+                if (_arts == null)
+                {
+                    _arts = new HashSet<TemplateCacheKey>();
+                }
+
+                return new HashSet<IFightingArt>(_arts.Select(k => TemplateCache.Get<IFightingArt>(k)));
+            }
+            set
+            {
+                if (value == null)
+                {
+                    return;
+                }
+
+                _arts = new HashSet<TemplateCacheKey>(value.Select(k => new TemplateCacheKey(k)));
+            }
+        }
 
         /// <summary>
         /// Get the next move to use

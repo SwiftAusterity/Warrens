@@ -4,7 +4,7 @@ using NetMud.DataStructure.Player;
 
 namespace NetMud.DataStructure.Combat
 {
-    public interface IFightingArt
+    public interface IFightingArt : ILookupData
     {
         /// <summary>
         /// How much stam this takes

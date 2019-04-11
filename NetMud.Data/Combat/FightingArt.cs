@@ -1,14 +1,25 @@
-﻿using NetMud.DataStructure.Architectural;
+﻿using NetMud.Data.Architectural;
+using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Player;
 using NetMud.Utility;
+using Newtonsoft.Json;
 using System;
+using System.Web.Script.Serialization;
 
 namespace NetMud.DataStructure.Combat
 {
     [Serializable]
-    public class FightingArt : IFightingArt
+    public class FightingArt : LookupDataPartial, IFightingArt
     {
+        /// <summary>
+        /// What type of approval is necessary for this content
+        /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
+
         /// <summary>
         /// How much stam this takes/damages
         /// </summary>
