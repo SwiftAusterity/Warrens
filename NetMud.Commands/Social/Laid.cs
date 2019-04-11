@@ -21,9 +21,9 @@ namespace NetMud.Commands.Social
 
         public override void Execute()
         {
-            Message messagingObject = new Message(new LexicalParagraph("You get laid, fucked, fapfapfap."));
+            Message messagingObject = new Message("You get laid, fucked, fapfapfap.");
 
-            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()

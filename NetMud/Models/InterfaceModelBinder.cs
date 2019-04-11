@@ -24,11 +24,7 @@ namespace NetMud.Models
 
                     if (modelType == typeof(ILocationData))
                     {
-                        if (bindingContext.ModelName.Contains("Zone"))
-                        {
-                            type = typeof(ZoneTemplate);
-                        }
-                        else if (bindingContext.ModelName.Contains("Room"))
+                        if (bindingContext.ModelName.Contains("Room"))
                         {
                             type = typeof(RoomTemplate);
                         }
@@ -36,11 +32,6 @@ namespace NetMud.Models
                     else
                     {
                         type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
-
-                        if (type == null)
-                        {
-                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
-                        }
                     }
 
                     if (type == null)
@@ -209,11 +200,6 @@ namespace NetMud.Models
                                 else
                                 {
                                     type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
-
-                                    if (type == null)
-                                    {
-                                        type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
-                                    }
                                 }
 
                                 if (type == null)
@@ -307,11 +293,6 @@ namespace NetMud.Models
                         else
                         {
                             type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
-
-                            if (type == null)
-                            {
-                                type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
-                            }
                         }
 
                         containedType = type ?? throw new Exception("Invalid Binding Interface");
@@ -379,11 +360,6 @@ namespace NetMud.Models
                                         else
                                         {
                                             type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
-
-                                            if (type == null)
-                                            {
-                                                type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
-                                            }
                                         }
 
                                         innerContainedType = type ?? throw new Exception("Invalid Binding Interface");
@@ -573,11 +549,7 @@ namespace NetMud.Models
 
                     if (componentType == typeof(ILocationData))
                     {
-                        if (componentType.Name.Contains("Zone"))
-                        {
-                            type = typeof(ZoneTemplate);
-                        }
-                        else if (componentType.Name.Contains("Room"))
+                        if (componentType.Name.Contains("Room"))
                         {
                             type = typeof(RoomTemplate);
                         }
@@ -585,11 +557,6 @@ namespace NetMud.Models
                     else
                     {
                         type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
-
-                        if (type == null)
-                        {
-                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
-                        }
                     }
 
                     if (type == null)

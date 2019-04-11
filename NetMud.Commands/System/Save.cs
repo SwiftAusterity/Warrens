@@ -29,15 +29,11 @@ namespace NetMud.Commands.System
         /// </summary>
         public override void Execute()
         {
-            List<string> sb = new List<string>();
-
             IPlayer player = (IPlayer)Actor;
 
-            ILexicalParagraph toActor = new LexicalParagraph("You save your life.");
+            Message messagingObject = new Message("You save your life.");
 
-            Message messagingObject = new Message(toActor);
-
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null, 0);
 
             PlayerData playerDataWrapper = new PlayerData();
 

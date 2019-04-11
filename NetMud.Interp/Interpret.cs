@@ -22,24 +22,6 @@ namespace NetMud.Interp
         {
             try
             {
-                //kind of cheaty for now
-                if(commandString.StartsWith("lext "))
-                {
-                    LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    IEnumerable<string> parsed = lexicalInterp.Parse(actor, commandString.Replace("lext ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
-                    parsed.Append(commandString);
-
-                    return parsed;
-                }
-                else if(commandString.StartsWith("lexp "))
-                {
-                    LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    IEnumerable<string> parsed = lexicalInterp.Parse(actor, commandString.Replace("lexp ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordType));
-                    parsed.Append(commandString);
-
-                    return parsed;
-                }
-
                 IContext commandContext = new Context(commandString, actor);
 
                 //Derp, we had an error with accessing the command somehow, usually to do with parameter collection or access permissions

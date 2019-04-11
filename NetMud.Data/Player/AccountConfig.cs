@@ -154,43 +154,6 @@ namespace NetMud.Data.Players
             }
         }
 
-        /// <summary>
-        /// The UI language for output purposes
-        /// </summary>
-        [JsonProperty("UILanguage")]
-        private ConfigDataCacheKey _uiLanguage { get; set; }
-
-        /// <summary>
-        /// The UI language for output purposes
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Game UI Language", Description = "The language the game will output to you while playing.")]
-        [UIHint("LanguageList")]
-        [LanguageDataBinder]
-        public ILanguage UILanguage
-        {
-            get
-            {
-                if (_uiLanguage == null)
-                {
-                    return null;
-                }
-
-                return ConfigDataCache.Get<ILanguage>(_uiLanguage);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _uiLanguage = null;
-                    return;
-                }
-
-                _uiLanguage = new ConfigDataCacheKey(value);
-            }
-        }
-
         [JsonConstructor]
         public AccountConfig()
         {
@@ -198,12 +161,6 @@ namespace NetMud.Data.Players
             Notifications = new List<IPlayerMessage>();
             Playlists = new HashSet<IPlaylist>();
             UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
-
-            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-            if(globalConfig != null)
-            {
-                UILanguage = globalConfig.BaseLanguage;
-            }
         }
 
         public AccountConfig(IAccount account)
@@ -218,12 +175,6 @@ namespace NetMud.Data.Players
             if (string.IsNullOrWhiteSpace(Name))
             {
                 Name = _account.GlobalIdentityHandle;
-            }
-
-            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-            if (globalConfig != null)
-            {
-                UILanguage = globalConfig.BaseLanguage;
             }
 
             UITutorialMode = true;
@@ -303,7 +254,6 @@ namespace NetMud.Data.Players
                 GossipSubscriber = newConfig.GossipSubscriber;
                 SoundMuted = newConfig.SoundMuted;
                 MusicMuted = newConfig.MusicMuted;
-                UILanguage = newConfig.UILanguage;
 
                 GetNotifications(configData, charDirectory);
 

@@ -76,10 +76,8 @@ namespace NetMud.Controllers
                 GossipSubscriber = account.Config.GossipSubscriber,
                 PermanentlyMuteMusic = account.Config.MusicMuted,
                 PermanentlyMuteSound = account.Config.SoundMuted,
-                UILanguage = account.Config.UILanguage,
                 ChosenRole = user.GetStaffRank(User),
-                ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank)),
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>().Where(lang => lang.SuitableForUse && lang.UIOnly)
+                ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank))
             };
 
             return View(model);
@@ -96,7 +94,6 @@ namespace NetMud.Controllers
             obj.Config.GossipSubscriber = vModel.GossipSubscriber;
             obj.Config.MusicMuted = vModel.PermanentlyMuteMusic;
             obj.Config.SoundMuted = vModel.PermanentlyMuteSound;
-            obj.Config.UILanguage = vModel.UILanguage;
 
             if (vModel.LogChannels != null)
             {
@@ -128,11 +125,8 @@ namespace NetMud.Controllers
             ManageCharactersViewModel model = new ManageCharactersViewModel
             {
                 AuthedUser = UserManager.FindById(userId),
-                NewCharacter = new PlayerTemplate(),
-                ValidGenders = TemplateCache.GetAll<IGender>()
+                NewCharacter = new PlayerTemplate()
             };
-
-            model.ValidRaces = TemplateCache.GetAll<IRace>();
 
             return View(model);
         }
@@ -144,18 +138,14 @@ namespace NetMud.Controllers
             string userId = User.Identity.GetUserId();
             ManageCharactersViewModel model = new ManageCharactersViewModel
             {
-                AuthedUser = UserManager.FindById(userId),
-                ValidGenders = TemplateCache.GetAll<IGender>()
+                AuthedUser = UserManager.FindById(userId)
             };
 
             PlayerTemplate newChar = new PlayerTemplate
             {
                 Name = vModel.NewCharacter.Name,
                 SurName = vModel.NewCharacter.SurName,
-                Gender = vModel.NewCharacter.Gender,
-                SuperSenses = vModel.NewCharacter.SuperSenses,
                 GamePermissionsRank = StaffRank.Player,
-                Race = vModel.NewCharacter.Race
             };
 
             if (User.IsInRole("Admin"))
@@ -178,9 +168,7 @@ namespace NetMud.Controllers
             AddEditCharacterViewModel model = new AddEditCharacterViewModel
             {
                 AuthedUser  = user,
-                DataObject = obj,
-                ValidRaces = TemplateCache.GetAll<IRace>(),
-                ValidGenders = TemplateCache.GetAll<IGender>()
+                DataObject = obj
             };
 
             return View(model);
@@ -196,10 +184,7 @@ namespace NetMud.Controllers
 
             obj.Name = vModel.DataObject.Name;
             obj.SurName = vModel.DataObject.SurName;
-            obj.Gender = vModel.DataObject.Gender;
-            obj.SuperSenses = vModel.DataObject.SuperSenses;
             obj.GamePermissionsRank = vModel.DataObject.GamePermissionsRank;
-            obj.Race = vModel.DataObject.Race;
             string message;
             if (obj == null)
             {
@@ -735,7 +720,7 @@ namespace NetMud.Controllers
             AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
             {
                 AuthedUser = authedUser,
-                ValidSongs = ContentUtility.GetMusicTracksForZone(currentCharacter?.CurrentLocation?.CurrentZone)
+                ValidSongs = ContentUtility.GetMusicTracks()
             };
 
             return View(vModel);
@@ -793,7 +778,7 @@ namespace NetMud.Controllers
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 Name = obj.Name,
                 DataObject = obj,
-                ValidSongs = ContentUtility.GetMusicTracksForZone(currentCharacter?.CurrentLocation?.CurrentZone)
+                ValidSongs = ContentUtility.GetMusicTracks()
             };
 
             return View(vModel);

@@ -99,15 +99,13 @@ namespace NetMud.Communication.Messaging
         /// <param name="Target">The command's target entity</param>
         /// <param name="OriginLocation">The location the acting entity acted in</param>
         /// <param name="DestinationLocation">The location the command is targetting</param>
-        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation)
+        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IGlobalPosition OriginLocation, IGlobalPosition DestinationLocation, ulong radius)
         {
             Dictionary<MessagingTargetType, IEntity[]> entities = new Dictionary<MessagingTargetType, IEntity[]>
             {
                 { MessagingTargetType.Actor, new IEntity[] { Actor } },
                 { MessagingTargetType.Subject, new IEntity[] { Subject } },
-                { MessagingTargetType.Target, new IEntity[] { Target } },
-                { MessagingTargetType.OriginLocation, new IEntity[] { OriginLocation } },
-                { MessagingTargetType.DestinationLocation, new IEntity[] { DestinationLocation } }
+                { MessagingTargetType.Target, new IEntity[] { Target } }
             };
 
             if (Actor != null && ToActor.Any())
@@ -128,8 +126,7 @@ namespace NetMud.Communication.Messaging
             //TODO: origin and destination are areas of effect on their surrounding areas
             if (OriginLocation != null && ToOrigin.Any())
             {
-                IContains oLoc = (IContains)OriginLocation;
-                IEnumerable<IEntity> validContents = oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
+                IEnumerable<IEntity> validContents = OriginLocation.GetContents(radius).Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
 
                 //Message dudes in the location, including non-person entities since they might have triggers
                 foreach (IEntity dude in validContents)
@@ -140,10 +137,10 @@ namespace NetMud.Communication.Messaging
 
             if (DestinationLocation != null && ToDestination.Any())
             {
-                IContains oLoc = (IContains)DestinationLocation;
+                IEnumerable<IEntity> validContents = DestinationLocation.GetContents(radius).Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target));
 
                 //Message dudes in the location, including non-person entities since they might have triggers
-                foreach (IEntity dude in oLoc.GetContents<IEntity>().Where(dud => !dud.Equals(Actor) && !dud.Equals(Subject) && !dud.Equals(Target)))
+                foreach (IEntity dude in validContents)
                 {
                     dude.WriteTo(TranslateOutput(ToDestination, entities));
                 }

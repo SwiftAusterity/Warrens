@@ -1,9 +1,7 @@
 ﻿using NetMud.Authentication;
-using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Room;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.Admin
 {
@@ -28,10 +26,9 @@ namespace NetMud.Models.Admin
         {
             get
             {
-                return item => item.ParentLocation.Name;
+                return item => item.Name;
             }
         }
-
 
         internal override Func<IRoomTemplate, object> OrderSecondary
         {
@@ -50,28 +47,7 @@ namespace NetMud.Models.Admin
         {
         }
 
-        public IEnumerable<ILocaleTemplate> ValidLocales { get; set; }
         public IEnumerable<IRoomTemplate> ValidRooms { get; set; }
-        public IEnumerable<IRoomTemplate> ValidLocaleRooms { get; set; }
-        public IEnumerable<IZoneTemplate> ValidZones { get; set; }
-        public IEnumerable<IMaterial> ValidMaterials { get; set; }
-        public IEnumerable<IDimensionalModelData> ValidModels { get; set; }
-
-        [UIHint("RoomToZonePathwayTemplate")]
-        public IPathwayTemplate ZonePathway { get; set; }
-
-        [UIHint("RoomToLocalePathwayTemplate")]
-        public IPathwayTemplate LocaleRoomPathway { get; set; }
-
-        [UIHint("LocaleTemplateList")]
-        [Display(Name = "Destination Locale", Description = "What locale this path should lead to.")]
-        [LocaleTemplateDataBinder]
-        public ILocaleTemplate LocaleRoomPathwayDestinationLocale { get; set; }
-
-        [UIHint("RoomTemplateList")]
-        [Display(Name = "Destination Room", Description = "What room this path should lead to in the locale.")]
-        [RoomTemplateDataBinder]
-        public IRoomTemplate LocaleRoomPathwayDestination { get; set; }
 
         public IRoomTemplate DataObject { get; set; }
     }

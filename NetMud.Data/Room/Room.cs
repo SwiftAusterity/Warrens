@@ -1,13 +1,10 @@
 ﻿using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Room;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Room
@@ -44,7 +41,6 @@ namespace NetMud.Data.Room
         /// </summary>
         public Room()
         {
-            MobilesInside = new EntityContainer<IMobile>();
         }
 
         /// <summary>
@@ -53,16 +49,9 @@ namespace NetMud.Data.Room
         /// <param name="room">the backing data</param>
         public Room(IRoomTemplate room)
         {
-            MobilesInside = new EntityContainer<IMobile>();
-
             TemplateId = room.Id;
 
             GetFromWorldOrSpawn();
-        }
-
-        public override IGlobalPosition GetContainerAsLocation()
-        {
-            return new GlobalPosition(CurrentLocation.CurrentZone, CurrentLocation.CurrentLocale, this);
         }
 
         /// <summary>
@@ -79,7 +68,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override ILexicalParagraph RenderToVisible(IEntity viewer)
+        public override string RenderToVisible(IEntity viewer)
         {
             return GetFullDescription(viewer);
         }
@@ -89,266 +78,9 @@ namespace NetMud.Data.Room
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public override ILexicalParagraph GetFullDescription(IEntity viewer, MessagingType[] sensoryTypes = null)
+        public override string GetFullDescription(IEntity viewer)
         {
-            if (sensoryTypes == null || sensoryTypes.Count() == 0)
-            {
-                sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
-            }
-
-            LexicalContext collectiveContext = new LexicalContext(viewer)
-            {
-                Determinant = true,
-                Perspective = NarrativePerspective.SecondPerson,
-                Plural = false,
-                Position = LexicalPosition.Around,
-                Tense = LexicalTense.Present
-            };
-
-            LexicalContext discreteContext = new LexicalContext(viewer)
-            {
-                Determinant = true,
-                Perspective = NarrativePerspective.ThirdPerson,
-                Plural = false,
-                Position = LexicalPosition.Attached,
-                Tense = LexicalTense.Present
-            };
-
-            //Self becomes the first sense in the list
-            List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
-            foreach (MessagingType sense in sensoryTypes)
-            {
-                ISensoryEvent me = GetSelf(sense);
-
-                switch (sense)
-                {
-                    case MessagingType.Audible:
-                        me.Strength = GetAudibleDelta(viewer);
-
-                        IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
-
-                        me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
-
-                        ILexica uberSounds = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
-                        uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
-
-                        foreach (ISensoryEvent desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
-                        {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
-                            newDesc.TryModify(desc.Event.Modifiers);
-
-                            uberSounds.TryModify(newDesc);
-                        }
-
-                        if (uberSounds.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                        {
-                            me.TryModify(uberSounds);
-                        }
-
-                        break;
-                    case MessagingType.Olefactory:
-                        me.Strength = GetOlefactoryDelta(viewer);
-
-                        IEnumerable<ISensoryEvent> oDescs = GetOlefactoryDescriptives(viewer);
-
-                        me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
-
-                        ILexica uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
-                        uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
-
-                        foreach (ISensoryEvent desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
-                        {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
-                            newDesc.TryModify(desc.Event.Modifiers);
-
-                            uberSmells.TryModify(newDesc);
-                        }
-
-                        if (uberSmells.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                        {
-                            me.TryModify(uberSmells);
-                        }
-
-                        break;
-                    case MessagingType.Psychic:
-                        me.Strength = GetPsychicDelta(viewer);
-
-                        IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
-
-                        me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
-
-                        Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
-
-                        ILexica uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
-                        uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
-
-                        foreach (ISensoryEvent desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
-                        {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
-                            newDesc.TryModify(desc.Event.Modifiers);
-
-                            uberPsy.TryModify(newDesc);
-                        }
-
-                        if (uberPsy.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                        {
-                            me.TryModify(collectivePsy);
-                        }
-
-                        break;
-                    case MessagingType.Taste:
-                        me.Strength = GetTasteDelta(viewer);
-
-                        IEnumerable<ISensoryEvent> taDescs = GetPsychicDescriptives(viewer);
-
-                        me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
-
-                        ILexica uberTaste = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", collectiveContext);
-                        uberTaste.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
-
-                        foreach (ISensoryEvent desc in taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
-                        {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
-                            newDesc.TryModify(desc.Event.Modifiers);
-
-                            uberTaste.TryModify(newDesc);
-                        }
-
-                        if (uberTaste.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                        {
-                            me.TryModify(uberTaste);
-                        }
-
-                        break;
-                    case MessagingType.Tactile:
-                        me.Strength = GetTactileDelta(viewer);
-
-                        IEnumerable<ISensoryEvent> tDescs = GetTouchDescriptives(viewer);
-
-                        me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
-
-                        ILexica uberTouch = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel", collectiveContext);
-                        uberTouch.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
-
-                        foreach (ISensoryEvent desc in tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
-                        {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
-                            newDesc.TryModify(desc.Event.Modifiers);
-
-                            uberTouch.TryModify(newDesc);
-                        }
-
-                        if (uberTouch.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                        {
-                            me.TryModify(uberTouch);
-                        }
-
-                        //Add the temperature
-                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
-                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
-                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
-                        });
-
-                        break;
-                    case MessagingType.Visible:
-                        me.Strength = GetVisibleDelta(viewer);
-
-                        IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
-
-                        me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
-
-                        ILexica uberSight = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
-                        uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
-
-                        foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
-                        {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
-                            newDesc.TryModify(desc.Event.Modifiers);
-
-                            uberSight.TryModify(newDesc);
-                        }
-
-                        if (uberSight.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
-                        {
-                            me.TryModify(uberSight);
-                        }
-
-                        //Describe the size and population of this zone
-                        DimensionalSizeDescription roomSize = GeographicalUtilities.ConvertSizeToType(GetModelDimensions(), GetType());
-
-                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, roomSize.ToString());
-
-                        //Render people in the zone
-                        CrowdSizeDescription populationSize = GeographicalUtilities.GetCrowdSize(GetContents<IMobile>().Count());
-
-                        string crowdSize = "lonely";
-                        if ((short)populationSize > (short)roomSize)
-                        {
-                            crowdSize = "crowded";
-                        }
-                        else if (populationSize > CrowdSizeDescription.Intimate)
-                        {
-                            crowdSize = "sparsely populated";
-                        }
-
-                        me.TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, crowdSize);
-
-                        break;
-                }
-
-                if (me != null)
-                {
-                    sensoryOutput.Add(me);
-                }
-            }
-
-            foreach (ICelestial celestial in GetVisibileCelestials(viewer))
-            {
-                sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
-            }
-
-            foreach (INaturalResourceSpawn<IFauna> resource in FaunaNaturalResources)
-            {
-                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
-            }
-
-            foreach (INaturalResourceSpawn<IFlora> resource in FloraNaturalResources)
-            {
-                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
-            }
-
-            foreach (INaturalResourceSpawn<IMineral> resource in MineralNaturalResources)
-            {
-                sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
-            }
-
-            foreach (IPathway path in GetPathways())
-            {
-                sensoryOutput.AddRange(path.RenderAsContents(viewer, sensoryTypes).Events);
-            }
-
-            foreach (IInanimate obj in GetContents<IInanimate>())
-            {
-                sensoryOutput.AddRange(obj.RenderAsContents(viewer, sensoryTypes).Events);
-            }
-
-            foreach (IMobile mob in GetContents<IMobile>().Where(player => !player.Equals(viewer)))
-            {
-                sensoryOutput.AddRange(mob.RenderAsContents(viewer, sensoryTypes).Events);
-            }
-
-            return new LexicalParagraph(sensoryOutput);
-        }
-
-        /// <summary>
-        /// Renders out an ascii map of this room plus all rooms in the radius
-        /// </summary>
-        /// <param name="radius">how far away to render</param>
-        /// <returns>the string</returns>
-        public string RenderCenteredMap(int radius, bool visibleOnly)
-        {
-            //TODO: fix visibility
-            return Cartography.Rendering.RenderRadiusMap(this, 3, visibleOnly);
+            return Description;
         }
         #endregion
 
@@ -373,7 +105,7 @@ namespace NetMud.Data.Room
         /// </summary>
         public override void SpawnNewInWorld()
         {
-            SpawnNewInWorld(new GlobalPosition(this));
+            SpawnNewInWorld(new GlobalPosition());
         }
 
 
@@ -387,24 +119,8 @@ namespace NetMud.Data.Room
             IRoomTemplate bS = Template<IRoomTemplate>() ?? throw new InvalidOperationException("Missing backing data store on room spawn event.");
 
             Keywords = new string[] { bS.Name.ToLower() };
-            Model = bS.Model;
-            Descriptives = bS.Descriptives;
             Qualities = bS.Qualities;
-
-            if (FloraNaturalResources == null)
-            {
-                FloraNaturalResources = new HashSet<INaturalResourceSpawn<IFlora>>();
-            }
-
-            if (FaunaNaturalResources == null)
-            {
-                FaunaNaturalResources = new HashSet<INaturalResourceSpawn<IFauna>>();
-            }
-
-            if (MineralNaturalResources == null)
-            {
-                MineralNaturalResources = new HashSet<INaturalResourceSpawn<IMineral>>();
-            }
+            Description = bS.Description;
 
             if (string.IsNullOrWhiteSpace(BirthMark))
             {
@@ -413,15 +129,6 @@ namespace NetMud.Data.Room
             }
 
             UpsertToLiveWorldCache(true);
-
-            ParentLocation = LiveCache.Get<ILocale>(bS.ParentLocation.Id);
-            spawnTo.CurrentLocale = ParentLocation;
-            spawnTo.CurrentZone = ParentLocation.ParentLocation;
-
-            if (spawnTo?.CurrentLocale == null || spawnTo?.CurrentZone == null)
-            {
-                spawnTo = new GlobalPosition(this);
-            }
 
             CurrentLocation = spawnTo;
 

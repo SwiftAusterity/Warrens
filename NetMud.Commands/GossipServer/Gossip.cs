@@ -88,12 +88,10 @@ namespace NetMud.Commands.GossipServer
                 }
             }
 
-            ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
-
             //TODO: language outputs
-            Message messagingObject = new Message(toActor);
+            Message messagingObject = new Message(sb.ToString());
 
-            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
         }
 
         /// <summary>

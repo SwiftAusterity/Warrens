@@ -47,49 +47,6 @@ namespace NetMud.Controllers
             return Json(user.GameAccount.Config.UITutorialMode);
         }
 
-        [HttpPost]
-        [Route("api/ClientDataApi/ToggleTutorialMode/{language}", Name = "ClientDataAPI_ChangeLanguage")]
-        public JsonResult<bool> ChangeUILanguage(string language)
-        {
-            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
-
-            ILanguage lang = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), language, ConfigDataType.Language));
-
-            if (user != null && lang != null)
-            {
-                user.GameAccount.Config.UILanguage = lang;
-                user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
-            }
-
-            return Json(user.GameAccount.Config.UITutorialMode);
-        }
-
-        [HttpGet]
-        public string GetEntityModelView(long modelId)
-        {
-            IDimensionalModelData model = TemplateCache.Get<IDimensionalModelData>(modelId);
-
-            if (model == null)
-            {
-                return string.Empty;
-            }
-
-            return Render.FlattenModelForWeb(model);
-        }
-
-        [HttpGet]
-        public string RenderRoomWithRadius(long id, int radius)
-        {
-            IRoomTemplate centerRoom = TemplateCache.Get<IRoomTemplate>(id);
-
-            if (centerRoom == null || radius < 0)
-            {
-                return "Invalid inputs.";
-            }
-
-            return Rendering.RenderRadiusMap(centerRoom, radius, false);
-        }
-
         [HttpGet]
         public JsonResult<IUIModule> GetUIModuleContent(string moduleName)
         {

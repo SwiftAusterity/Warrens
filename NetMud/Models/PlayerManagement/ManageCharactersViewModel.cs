@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Player;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.Models.PlayerManagement
@@ -8,9 +7,6 @@ namespace NetMud.Models.PlayerManagement
     public class ManageCharactersViewModel : IBaseViewModel
     {
         public ApplicationUser AuthedUser { get; set; }
-
-        public IEnumerable<IRace> ValidRaces { get; set; }
-        public IEnumerable<IGender> ValidGenders { get; set; }
 
         [UIHint("PlayerTemplate")]
         public IPlayerTemplate NewCharacter { get; set; }
@@ -27,8 +23,6 @@ namespace NetMud.Models.PlayerManagement
 
         [UIHint("PlayerTemplate")]
         public IPlayerTemplate DataObject { get; set; }
-        public IEnumerable<IRace> ValidRaces { get; set; }
-        public IEnumerable<IGender> ValidGenders { get; set; }
     }
 
 }

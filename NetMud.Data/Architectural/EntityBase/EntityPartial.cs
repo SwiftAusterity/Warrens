@@ -228,16 +228,6 @@ namespace NetMud.Data.Architectural.EntityBase
 
         #region Movement
         /// <summary>
-        /// Move this inside of something
-        /// </summary>
-        /// <param name="container">The container to move into</param>
-        /// <returns>was this thing moved?</returns>
-        public virtual string TryMoveTo(IContains container)
-        {
-            return TryMoveTo(new GlobalPosition(container));
-        }
-
-        /// <summary>
         /// Change the position of this without physical movement
         /// </summary>
         /// <param name="newPosition">The new position the thing is in, will return with the original one if nothing moved</param>

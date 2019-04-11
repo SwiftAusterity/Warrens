@@ -59,30 +59,11 @@ namespace NetMud.Data.Players
             set { _keywords = value; }
         }
 
-        [JsonProperty("Gender")]
-        private TemplateCacheKey _gender { get; set; }
 
         /// <summary>
-        /// Gender data string for player characters
+        /// Last known location Id for character in live world
         /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [NonNullableDataIntegrity("Gender is required.")]
-        [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
-        [DataType("GenderList")]
-        [GenderDataBinder]
-        [Required]
-        public IGender Gender
-        {
-            get
-            {
-                return TemplateCache.Get<IGender>(_gender);
-            }
-            set
-            {
-                _gender = new TemplateCacheKey(value);
-            }
-        }
+        public ulong CurrentSlice { get; set; }
 
         /// <summary>
         /// "family name" for player character
@@ -105,36 +86,6 @@ namespace NetMud.Data.Players
         [UIHint("EnumDropDownList")]
         public StaffRank GamePermissionsRank { get; set; }
 
-        /// <summary>
-        /// Sensory overrides for staff member characters
-        /// </summary>
-        [Display(Name = "Super Senses", Description = "What sensory ranges are maxed for testing purposes.")]
-        [UIHint("SuperSenses")]
-        public HashSet<MessagingType> SuperSenses { get; set; }
-
-        [JsonProperty("RaceData")]
-        private TemplateCacheKey _race { get; set; }
-
-        /// <summary>
-        /// The race data for the character
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [NonNullableDataIntegrity("Missing racial data.")]
-        [Display(Name = "Race", Description = "Your genetic basis. Many races must be unlocked through specific means.")]
-        [UIHint("RaceList")]
-        [RaceDataBinder]
-        public IRace Race
-        {
-            get
-            {
-                return TemplateCache.Get<IRace>(_race);
-            }
-            set
-            {
-                _race = new TemplateCacheKey(value);
-            }
-        }
 
         /// <summary>
         /// The last known location Id this character was seen in by system (for restore/backup purposes)
@@ -182,7 +133,6 @@ namespace NetMud.Data.Players
             TotalHealth = 100;
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
-            SuperSenses = new HashSet<MessagingType>();
         }
 
         [JsonConstructor]
@@ -192,34 +142,6 @@ namespace NetMud.Data.Players
             TotalHealth = 100;
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
-            SuperSenses = new HashSet<MessagingType>();
-        }
-
-        /// <summary>
-        /// Get's the entity's model dimensions
-        /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Dimensions GetModelDimensions()
-        {
-            try
-            {
-                if (Race == null)
-                {
-                    return new Dimensions(0, 0, 0);
-                }
-
-                int height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
-                int length = Race.Torso.Model.Length;
-                int width = Race.Torso.Model.Width;
-
-                return new Dimensions(height, length, width);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogError(ex);
-            }
-
-            return new Dimensions(0, 0, 0);
         }
 
         /// <summary>
@@ -273,20 +195,6 @@ namespace NetMud.Data.Players
                 Created = DateTime.Now;
                 Creator = creator;
                 CreatorRank = rank;
-
-                //Default godsight to all false on creation unless you're making a new administrator
-                if (rank == StaffRank.Admin)
-                {
-                    SuperSenses = new HashSet<MessagingType>()
-                    {
-                        MessagingType.Audible,
-                        MessagingType.Olefactory,
-                        MessagingType.Psychic,
-                        MessagingType.Tactile,
-                        MessagingType.Taste,
-                        MessagingType.Visible
-                    };
-                }
 
                 //No approval stuff necessary here
                 ApproveMe(creator, rank);
@@ -449,14 +357,11 @@ namespace NetMud.Data.Players
                 Name = Name,
                 AccountHandle = AccountHandle,
                 GamePermissionsRank = GamePermissionsRank,
-                Gender = Gender,
                 Qualities = Qualities,
                 SurName = SurName,
                 StillANoob = StillANoob,
-                SuperSenses = SuperSenses,
                 TotalHealth = TotalHealth,
-                TotalStamina = TotalStamina,
-                Race = Race
+                TotalStamina = TotalStamina
             };
         }
         #endregion

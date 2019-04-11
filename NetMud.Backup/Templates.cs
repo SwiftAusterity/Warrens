@@ -60,11 +60,7 @@ namespace NetMud.Backup
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(GaiaTemplate) ? 6 :
-                                                                            type == typeof(ZoneTemplate) ? 5 :
-                                                                            type == typeof(LocaleTemplate) ? 4 :
-                                                                            type == typeof(RoomTemplate) ? 3 :
-                                                                            type == typeof(PathwayTemplate) ? 2 :
+            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(RoomTemplate) ? 3 :
                                                                             type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
             {
                 LoadAllToCache(t);

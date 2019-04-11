@@ -6,6 +6,5 @@ namespace NetMud.Websock.OutputFormatting
     public class SelfStatus
     {
         public BodyStatus Body { get; set; }
-        public MindStatus Mind { get; set; }
     }
 }

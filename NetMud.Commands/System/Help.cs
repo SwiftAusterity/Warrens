@@ -42,11 +42,9 @@ namespace NetMud.Commands.System
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
+            Message messagingObject = new Message(sb.ToString());
 
-            Message messagingObject = new Message(toActor);
-
-            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
         }
 
         /// <summary>

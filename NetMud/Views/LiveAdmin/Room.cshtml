@@ -1,81 +1,15 @@
 ﻿@model NetMud.Models.Admin.ViewRoomViewModel
 @{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("View Room", new string[] { "Dashboard", "Rooms" }, new string[] { "/GameAdmin#tabs-2", "/LiveAdmin/Rooms" });
-    var longDesc = new NetMud.Communication.Messaging.Message(Model.DataObject.RenderToVisible(null)).Unpack(NetMud.DataStructure.System.TargetEntity.Actor);
 }
 <h3>@Model.DataObject.TemplateName</h3>
-<div class="accordionWrapper">
-    <h5>Description</h5>
-    <div>
-        <h4>
-            @longDesc
-        </h4>
-        @using (Html.BeginForm("Room", "LiveAdmin", FormMethod.Get, new { id = "descriptionModifier" }))
-        {
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="birthMark" id="birthMark" value="@Model.DataObject.BirthMark" />
-            <div class="form-group row">
-                @Html.EditorFor(m => m.Language, new { validItems = Model.ValidLanguages })
-                @Html.EditorFor(m => m.Quality)
-                @Html.EditorFor(m => m.Severity)
-                @Html.EditorFor(m => m.Elegance)
-            </div>
-            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "ReDescribe", ReturnAction = "Room", ReturnController = "LiveAdmin", IncludeCancel = false })
-        }
-    </div>
-</div>
 <div id="tabs">
     <ul>
         <li><a href="#tabs-1">View</a></li>
-        <li><a href="#tabs-2">Contents</a></li>
-        <li><a href="#tabs-3">Edit</a></li>
-        <li><a href="#tabs-4">Map</a></li>
+        <li><a href="#tabs-2">Edit</a></li>
     </ul>
     <div id="tabs-1" data-tabNumber="1">
         <div class="entityDataInfoCard">
-            <h4>Environmental</h4>
-            <hr />
-            <div>
-                <span>Coordinates</span>
-                <span>@Model.DataObject.Coordinates.ToString()</span>
-            </div>
-            <div>
-                <span>Medium</span>
-                <span>@Model.DataObject.Medium</span>
-            </div>
-            <div>
-                <span>Humidity</span>
-                <span>@Model.DataObject.EffectiveHumidity()</span>
-            </div>
-            <div>
-                <span>Temperature Variance</span>
-                <span>@Model.DataObject.EffectiveTemperature()</span>
-            </div>
-
-            <h4>Natural Resources</h4>
-            <hr />
-            @foreach (var resource in Model.DataObject.FloraNaturalResources)
-            {
-                <div>
-                    <span>@resource.Resource.Name</span>
-                    <span>@resource.RateFactor</span>
-                </div>
-            }
-            @foreach (var resource in Model.DataObject.MineralNaturalResources)
-            {
-                <div>
-                    <span>@resource.Resource.Name</span>
-                    <span>@resource.RateFactor</span>
-                </div>
-            }
-            @foreach (var resource in Model.DataObject.FaunaNaturalResources)
-            {
-                <div>
-                    <span>@resource.Resource.Name</span>
-                    <span>@resource.RateFactor</span>
-                </div>
-            }
-
             <h4>Qualities</h4>
             <hr />
             @foreach (var quality in Model.DataObject.Qualities)
@@ -85,38 +19,6 @@
         </div>
     </div>
     <div id="tabs-2" data-tabNumber="2">
-        <div class="entityDataInfoCard">
-            <h4>Players</h4>
-            <hr />
-            @foreach (var content in Model.DataObject.MobilesInside.EntitiesContained().Where(cont => cont.IsPlayer()))
-            {
-                <div>
-                    <span>@content.TemplateName</span>
-                    <span>@content.CurrentHealth</span>
-                </div>
-            }
-
-            <h4>NPCs</h4>
-            <hr />
-            @foreach (var content in Model.DataObject.MobilesInside.EntitiesContained().Where(cont => !cont.IsPlayer()))
-            {
-                <div>
-                    <span>@content.TemplateName</span>
-                    <span>@content.CurrentHealth</span>
-                </div>
-            }
-
-            <h4>Items</h4>
-            <hr />
-            @foreach (var content in Model.DataObject.Contents.EntitiesContained())
-            {
-                <div>
-                    <span>@content.TemplateName</span>
-                </div>
-            }
-        </div>
-    </div>
-    <div id="tabs-3" data-tabNumber="3">
         <section id="editRoomForm">
             @using (Html.BeginForm("EditRoom", "LiveAdmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
@@ -124,17 +26,11 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <input type="hidden" name="birthMark" id="birthMark" value="@Model.DataObject.BirthMark" />
 
-                @Html.EditorFor(m => m.DataObject, new { ValidMaterials = Model.ValidMaterials, ValidModels = Model.ValidModels })
+                @Html.EditorFor(m => m.DataObject)
 
-                @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Zone", IncludeCancel = true })
+                @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Room", IncludeCancel = true })
             }
         </section>
-
-        @Html.Partial("~/Views/LiveAdmin/Room/SensoryEventList.cshtml", Model.DataObject)
-    </div>
-    <div id="tabs-4" data-tabNumber="4">
-        <div class="clearfix"></div>
-        @Html.Partial("LiveAsciiMap", new NetMud.Models.LiveAsciiMapViewModel("RenderLiveRoomForEditWithRadius", Model.DataObject.BirthMark, 0, 10))
     </div>
 </div>
 @section Scripts {

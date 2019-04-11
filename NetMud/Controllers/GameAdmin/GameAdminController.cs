@@ -58,50 +58,23 @@ namespace NetMud.Controllers.GameAdmin
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                Inanimates = TemplateCache.GetAll<IInanimateTemplate>(),
-                NPCs = TemplateCache.GetAll<INonPlayerCharacterTemplate>(),
-                Zones = TemplateCache.GetAll<IZoneTemplate>(),
-                Worlds = TemplateCache.GetAll<IGaiaTemplate>(),
-                Locales = TemplateCache.GetAll<ILocaleTemplate>(),
                 Rooms = TemplateCache.GetAll<IRoomTemplate>(),
 
                 HelpFiles = TemplateCache.GetAll<IHelp>(),
-                Races = TemplateCache.GetAll<IRace>(),
-                Celestials = TemplateCache.GetAll<ICelestial>(),
                 Journals = TemplateCache.GetAll<IJournalEntry>(),
-                DimensionalModels = TemplateCache.GetAll<IDimensionalModelData>(),
-                Flora = TemplateCache.GetAll<IFlora>(),
-                Fauna = TemplateCache.GetAll<IFauna>(),
-                Minerals = TemplateCache.GetAll<IMineral>(),
-                Materials = TemplateCache.GetAll<IMaterial>(),
-                DictionaryWords = ConfigDataCache.GetAll<ILexeme>(),
-                DictionaryPhrases = ConfigDataCache.GetAll<IDictataPhrase>(),
-                Languages = ConfigDataCache.GetAll<ILanguage>(),
-                Genders = TemplateCache.GetAll<IGender>(),
                 UIModules = ConfigDataCache.GetAll<IUIModule>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),
-                LiveInanimates = LiveCache.GetAll<IInanimate>().Count(),
-                LiveNPCs = LiveCache.GetAll<INonPlayerCharacter>().Count(),
-                LiveZones = LiveCache.GetAll<IZone>().Count(),
-                LiveWorlds = LiveCache.GetAll<IGaia>().Count(),
-                LiveLocales = LiveCache.GetAll<ILocale>().Count(),
                 LiveRooms = LiveCache.GetAll<IRoom>().Count(),
 
                 ConfigDataObject = globalConfig,
                 WebsocketPortalActive = globalConfig.WebsocketPortalActive,
                 AdminsOnly = globalConfig.AdminsOnly,
                 UserCreationActive = globalConfig.UserCreationActive,
-                BaseLanguage = globalConfig.BaseLanguage,
-                AzureTranslationKey = globalConfig.AzureTranslationKey,
-                TranslationActive = globalConfig.TranslationActive,
 
                 QualityChange = new string[0],
                 QualityChangeValue = new int[0],
-
-                ValidZones = TemplateCache.GetAll<IZoneTemplate>(true),
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
 
                 GossipConfigDataObject = gossipConfig,
                 GossipActive = gossipConfig.GossipActive,
@@ -224,14 +197,6 @@ namespace NetMud.Controllers.GameAdmin
             globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
             globalConfig.AdminsOnly = vModel.AdminsOnly;
             globalConfig.UserCreationActive = vModel.UserCreationActive;
-            globalConfig.BaseLanguage = vModel.BaseLanguage;
-
-            globalConfig.AzureTranslationKey = vModel.AzureTranslationKey;
-            globalConfig.TranslationActive = vModel.TranslationActive;
-
-            globalConfig.DeepLexActive = vModel.DeepLexActive;
-            globalConfig.MirriamDictionaryKey = vModel.MirriamDictionaryKey;
-            globalConfig.MirriamThesaurusKey = vModel.MirriamThesaurusKey;
 
             string message;
             if (globalConfig.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))

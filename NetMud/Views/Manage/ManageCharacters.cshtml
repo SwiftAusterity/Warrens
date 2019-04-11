@@ -8,8 +8,6 @@
     var tableColumns = new Dictionary<string, Func<dynamic, string>>();
     var linkText = Html.ActionLink("99999999", "EditCharacter", new { id = 88888888 }).ToString();
     tableColumns.Add("Name", obj => linkText.Replace("99999999", obj.FullName()).Replace("88888888", obj.Id.ToString()));
-    tableColumns.Add("Race", obj => obj.Race == null ? "" : obj.Race.Name);
-    tableColumns.Add("Gender", obj => obj.Gender.Name);
     tableColumns.Add("N00b", obj => obj.StillANoob.ToString());
     tableColumns.Add("Permissions", obj => obj.GamePermissionsRank.ToString());
 }
@@ -24,7 +22,7 @@
 
         <h3>New Character</h3>
         <hr/>
-        @Html.EditorFor(m => m.NewCharacter, new { ValidRaces = Model.ValidRaces, ValidGenders = Model.ValidGenders })
+        @Html.EditorFor(m => m.NewCharacter)
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "ManageCharacters", ReturnController = "Manage", IncludeCancel = true })
     }

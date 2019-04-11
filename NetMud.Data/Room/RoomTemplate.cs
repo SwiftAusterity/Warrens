@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural.EntityBase;
+﻿using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -9,6 +10,7 @@ using NetMud.DataStructure.Room;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Room
@@ -55,8 +57,16 @@ namespace NetMud.Data.Room
             set { _keywords = value; }
         }
 
-        [JsonProperty("Medium")]
-        private TemplateCacheKey _medium { get; set; }
+        /// <summary>
+        /// The description
+        /// </summary>
+
+        [StringDataIntegrity("Description is required.")]
+        [StringLength(20000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
+        [Display(Name = "Description", Description = "Description for the room.")]
+        [DataType(DataType.Text)]
+        [Required]
+        public string Description { get; set; }
 
         /// <summary>
         /// Blank constructor

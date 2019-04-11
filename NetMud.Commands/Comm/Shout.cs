@@ -26,17 +26,14 @@ namespace NetMud.Commands.Comm
         /// </summary>
         public override void Execute()
         {
-            ILexicalParagraph toActor = new LexicalParagraph(string.Format("You shout '{0}'", Subject));
+            IEnumerable<string> toOrigin = new string[] { string.Format("$A$ shouts '{0}'", Subject) };
 
-            ILexicalParagraph toArea = new LexicalParagraph(string.Format("$A$ shouts '{0}'", Subject));
-
-            //TODO: language outputs
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new Message(string.Format("You shout '{0}'", Subject))
             {
-                ToOrigin = new List<ILexicalParagraph> { toArea }
+                ToOrigin = toOrigin
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null, 15);
         }
 
         /// <summary>

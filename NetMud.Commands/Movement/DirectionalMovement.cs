@@ -1,8 +1,11 @@
 ﻿using NetMud.Commands.Attributes;
+using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.Utility;
 using NutMud.Commands.Rendering;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Movement
@@ -11,34 +14,9 @@ namespace NetMud.Commands.Movement
     /// Handles mobile movement commands. All cardinal directions plus "enter <door>" type pathways
     /// </summary>
     [CommandSuppressName]
-    [CommandKeyword("enter", false)]
-    [CommandKeyword("east", true, "e", false, true)]
-    [CommandKeyword("north", true, "n", false, true)]
-    [CommandKeyword("northeast", true, "ne", false, true)]
-    [CommandKeyword("northwest", true, "nw", false, true)]
-    [CommandKeyword("south", true, "s", false, true)]
-    [CommandKeyword("southwest", true, "sw", false, true)]
-    [CommandKeyword("southeast", true, "se", false, true)]
-    [CommandKeyword("west", true, "w", false, true)]
-    [CommandKeyword("up", true, "u", false, true)]
-    [CommandKeyword("down", true, "d", false, true)]
-    [CommandKeyword("upnorth", true, "un", false, true)]
-    [CommandKeyword("upnortheast", true, "une", false, true)]
-    [CommandKeyword("upnorthwest", true, "unw", false, true)]
-    [CommandKeyword("upsouth", true, "us", false, true)]
-    [CommandKeyword("upsouthwest", true, "usw", false, true)]
-    [CommandKeyword("upsoutheast", true, "use", false, true)]
-    [CommandKeyword("upwest", true, "uw", false, true)]
-    [CommandKeyword("downnorth", true, "dn", false, true)]
-    [CommandKeyword("downnortheast", true, "dne", false, true)]
-    [CommandKeyword("downnorthwest", true, "dnw", false, true)]
-    [CommandKeyword("downsouth", true, "ds", false, true)]
-    [CommandKeyword("downsouthwest", true, "dsw", false, true)]
-    [CommandKeyword("downsoutheast", true, "dse", false, true)]
-    [CommandKeyword("downwest", true, "dw", false, true)]
+    [CommandKeyword("forward", true, "ahead", true, false)]
+    [CommandKeyword("backward", true, "back", true, false)]
     [CommandPermission(StaffRank.Player)]
-    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Pathway }, "[a-zA-z]+", true)]
-    [CommandParameter(CommandUsage.Subject, typeof(IPathway), new CacheReferenceType[] { CacheReferenceType.Direction }, "[a-zA-z]+", true)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class DirectionalMovement : CommandPartial
     {
@@ -55,17 +33,39 @@ namespace NetMud.Commands.Movement
         /// </summary>
         public override void Execute()
         {
-            List<string> sb = new List<string>();
-            IPathway targetPath = (IPathway)Subject;
+            string subject = Subject.ToString();
+            ulong newPosition = 0;
 
-            Actor.TryMoveTo(targetPath.Destination.GetContainerAsLocation());
+            switch (subject)
+            {
+                case "forward":
+                    if (Actor.CurrentLocation.CurrentSection >= ulong.MaxValue)
+                    {
+                        RenderError("You're already as close to the door as you can be.");
+                        return;
+                    }
 
-            targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.Origin, targetPath.Destination);
+                    newPosition = Actor.CurrentLocation.CurrentSection + 1;
+                    break;
+                case "backward":
+                    if (Actor.CurrentLocation.CurrentSection <= 0)
+                    {
+                        RenderError("You're already as far away from the door as you can be.");
+                        return;
+                    }
 
-            //Render the next room to them
-            Look lookCommand = new Look() { Actor = Actor, Subject = null, OriginLocation = Actor.CurrentLocation };
+                    newPosition = Actor.CurrentLocation.CurrentSection - 1;
+                    break;
+            }
 
-            lookCommand.Execute();
+            var newPos = (IGlobalPosition)Actor.CurrentLocation.Clone();
+            newPos.CurrentSection = newPosition;
+
+            Actor.TryMoveTo(newPos);
+
+            var msg = new Message(string.Format("You move half the distance {0}.", subject));
+
+            msg.ExecuteMessaging(Actor, null, null, newPos, null, 3);
         }
 
         /// <summary>
@@ -75,9 +75,7 @@ namespace NetMud.Commands.Movement
         public override IEnumerable<string> RenderSyntaxHelp()
         {
             List<string> dirList = new List<string>() {
-                "east", "north", "northeast", "northwest", "south", "southeast", "southwest", "west", "Up", "Down"
-                , "Upnorth", "Upnortheast", "Upnorthwest", "Upsouth", "Upsouthwest", "Upsoutheast", "Upwest"
-                , "Downnorth", "Downnortheast", "Downnorthwest", "Downsouth", "Downsouthwest", "Downsoutheast", "Downwest"
+                "forward", "backward"
             };
 
             List<string> sb = new List<string>
@@ -99,35 +97,7 @@ namespace NetMud.Commands.Movement
                 return @"
 ### Movement
 
-Movement is accomplished via the 8 cardinal directions + elevation:
-
-- North
-- East
-- South
-- West
-- Northwest
-- Northeast
-- Southwest
-- Southeast
-- Up
-- Down
-- Upnorth
-- Upnortheast
-- Upnorthwest
-- Upsouth
-- Upsouthwest
-- Upsoutheast
-- Upwest
-- Downnorth
-- Downnortheast
-- Downnorthwest
-- Downsouth
-- Downsouthwest
-- Downsoutheast
-- Downwest
-
-The web client binds the arrow keys and the numpad keys to their appropriate direction. Each direction also has a shortened alias of the first (or relevant 2) letter of the direction.
-";
+Movement is accomplished by going forward or backward.";
             }
             set { }
         }

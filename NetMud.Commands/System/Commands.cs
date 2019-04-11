@@ -69,11 +69,9 @@ namespace NetMud.Commands.System
 
             returnStrings.Add(sb.ToString());
 
-            ILexicalParagraph toActor = new LexicalParagraph(string.Join(" ", returnStrings));
+            Message messagingObject = new Message(string.Join(" ", returnStrings));
 
-            Message messagingObject = new Message(toActor);
-
-            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()

@@ -67,7 +67,7 @@ namespace NetMud.Commands.Attributes
         {
             Message messagingObject = new Message(error);
 
-            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Architectural.EntityBase;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.System
@@ -33,7 +34,7 @@ namespace NetMud.DataStructure.System
         /// <summary>
         /// Container the Actor is in when the command is invoked
         /// </summary>
-        ulong Position { get; }
+        IGlobalPosition Position { get; }
 
         /// <summary>
         /// The command (method) we found after parsing

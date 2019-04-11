@@ -77,12 +77,9 @@
     <Compile Include="Architectural\EntityBase\Qualification.cs" />
     <Compile Include="Architectural\ISingleton.cs" />
     <Compile Include="Architectural\PropertyValidation\MarkdownStringLengthValidator.cs" />
-    <Compile Include="Architectural\EntityBase\IContains.cs" />
     <Compile Include="Architectural\EntityBase\IDecay.cs" />
     <Compile Include="Architectural\EntityBase\IDescribable.cs" />
     <Compile Include="Architectural\EntityBase\IEntity.cs" />
-    <Compile Include="Architectural\EntityBase\IEntityContainer.cs" />
-    <Compile Include="Architectural\EntityBase\IEntityContainerData.cs" />
     <Compile Include="Architectural\EntityBase\IExist.cs" />
     <Compile Include="Architectural\EntityBase\IGlobalPosition.cs" />
     <Compile Include="Architectural\EntityBase\IHasPositioning.cs" />

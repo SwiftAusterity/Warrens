@@ -6,15 +6,8 @@
 <div class="form-group row">
     @Html.EditorFor(m => m.Name)
     @Html.EditorFor(m => m.SurName)
-    @Html.EditorFor(m => m.Gender, new { validItems = ViewData["ValidGenders"] })
-    @Html.EditorFor(m => m.Race, new { validItems = ViewData["ValidRaces"] })
     @if (User.IsInRole("Admin"))
     {
         @Html.EditorFor(m => m.GamePermissionsRank)
     }
 </div>
-@if (User.IsInRole("Admin") || User.IsInRole("Builder") || User.IsInRole("Guest"))
-{
-    <h4>Super Senses</h4>
-    @Html.EditorFor(m => m.SuperSenses)
-}

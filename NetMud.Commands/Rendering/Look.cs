@@ -35,28 +35,26 @@ namespace NutMud.Commands.Rendering
             //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
             {
-                //sb.AddRange(OriginLocation.CurrentLocation.RenderToVisible(Actor));
-
                 ///Need to do like HMR with a simple "update UI" pipeline TODO
-                Message blankMessenger = new Message(new LexicalParagraph("You observe your surroundings."));
+                Message blankMessenger = new Message("You observe your surroundings.");
 
-                blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
+                blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation, null, 0);
                 return;
             }
 
             ILookable lookTarget = (ILookable)Subject;
 
-            ILexicalParagraph toOrigin = new LexicalParagraph("$A$ looks at $T$.");
+            IEnumerable<string> toOrigin = new string[] { "$A$ looks at $T$." };
 
-            ILexicalParagraph toSubject = new LexicalParagraph("$A$ looks at YOU.");
+            IEnumerable<string> toSubject = new string[] { "$A$ looks at $T$." };
 
             Message messagingObject = new Message(lookTarget.RenderToVisible(Actor))
             {
-                ToOrigin = new List<ILexicalParagraph> { toOrigin },
-                ToSubject = new List<ILexicalParagraph> { toSubject }
+                ToOrigin = toOrigin,
+                ToSubject = toSubject
             };
 
-            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
+            messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation, null, 0);
         }
 
         /// <summary>
@@ -81,7 +79,7 @@ namespace NutMud.Commands.Rendering
         {
             get
             {
-                return string.Format("Look provides useful information about the location you are in or a target object or mobile.");
+                return string.Format("Look provides useful information about the location you are in or a target player.");
             }
             set { }
         }

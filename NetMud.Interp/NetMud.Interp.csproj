@@ -45,7 +45,6 @@
     <Compile Include="CommandPackage.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Interpret.cs" />
-    <Compile Include="LexicalInterpretationEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -33,11 +33,6 @@ namespace NetMud.Models.PlayerManagement
         [DataType(DataType.Text)]
         public string GlobalIdentityHandle { get; set; }
 
-        [Display(Name = "Game UI Language", Description = "The language the game will output to you while playing.")]
-        [UIHint("LanguageList")]
-        [LanguageDataBinder]
-        public ILanguage UILanguage { get; set; }
-
         public int UIModuleCount { get; set; }
         public int NotificationCount { get; set; }
 
@@ -45,7 +40,6 @@ namespace NetMud.Models.PlayerManagement
         [UIHint("EnumDropDownList")]
         public StaffRank ChosenRole { get; set; }
 
-        public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<StaffRank> ValidRoles { get; set; }
         public IAccount DataObject { get; set; }
     }

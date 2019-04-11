@@ -1,16 +1,6 @@
 ﻿@model NetMud.DataStructure.Architectural.EntityBase.IEntity
 
-@{
-    var location = Model.CurrentLocation;
-
-    var container = location.CurrentContainer == null ? "" : location.CurrentContainer.TemplateName;
-}
-
-<h4>@location.CurrentZone.TemplateName</h4>
-@if(!string.IsNullOrWhiteSpace(container))
-{
-    <span style="font-style: italic; color: yellowgreen;">inside @container</span>
-}
+<h4>@Model.CurrentLocation.CurrentSection</h4>
 
 <div class="parserClient">
     <div class="textParserClient">

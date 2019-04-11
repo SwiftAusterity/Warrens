@@ -31,20 +31,16 @@ namespace NetMud.Commands.System
         /// </summary>
         public override void Execute()
         {
-            List<string> sb = new List<string>();
-
             IPlayer player = (IPlayer)Actor;
-            ILexicalParagraph toActor = new LexicalParagraph("You exit this reality.");
 
-            ILexicalParagraph toOrigin = new LexicalParagraph("$A$ exits this reality.");
+            IEnumerable<string> toOrigin = new string[] { "$A$ exits this reality." };
 
-
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new Message("You exit this reality.")
             {
-                ToOrigin = new List<ILexicalParagraph> { toOrigin }
+                ToOrigin = toOrigin
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null, 0);
 
             PlayerData playerDataWrapper = new PlayerData();
 

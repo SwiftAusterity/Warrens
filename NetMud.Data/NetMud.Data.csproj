@@ -90,8 +90,6 @@
     <Compile Include="Architectural\DataIntegrity\NonNullableDataIntegrityAttribute.cs" />
     <Compile Include="Architectural\DataIntegrity\ShortDataIntegrityAttribute.cs" />
     <Compile Include="Architectural\DataIntegrity\StringDataIntegrityAttribute.cs" />
-    <Compile Include="Architectural\EntityBase\EntityContainer.cs" />
-    <Compile Include="Architectural\EntityBase\EntityContainerData.cs" />
     <Compile Include="Architectural\EntityBase\EntityPartial.cs" />
     <Compile Include="Architectural\EntityBase\EntityTemplatePartial.cs" />
     <Compile Include="Architectural\EntityBase\LocationTemplateEntityPartial.cs" />
@@ -99,7 +97,6 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
-    <Compile Include="Architectural\PropertyBinding\WordPairRuleCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\HelpDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\AffectPatternDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />

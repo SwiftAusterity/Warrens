@@ -37,37 +37,6 @@ namespace NetMud
                 globalConfig.SystemSave();
             }
 
-            if (globalConfig.BaseLanguage == null)
-            {
-                ILanguage baseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
-
-                if (baseLanguage == null)
-                {
-                    LoggingUtility.Log("There are no valid languages. Generating new base language.", LogChannels.SystemErrors, true);
-
-                    baseLanguage = new Language()
-                    {
-                        Name = "English",
-                        GoogleLanguageCode = "en-us",
-                        AntecendentPunctuation = true,
-                        PrecedentPunctuation = false,
-                        Gendered = false,
-                        UIOnly = true
-                    };
-
-                    baseLanguage.SystemSave();
-                }
-
-                globalConfig.BaseLanguage = baseLanguage;
-                globalConfig.SystemSave();
-            }
-
-            //Ensure we have base words for the language every time
-            globalConfig.BaseLanguage.SystemSave();
-
-            //Hoover up all the verbs from commands that someone might have coded
-            ProcessSystemVerbs(globalConfig.BaseLanguage);
-
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
             HttpApplication instance = HttpContext.Current.ApplicationInstance;
             Assembly asm = instance.GetType().BaseType.Assembly;
@@ -127,37 +96,6 @@ namespace NetMud
 
             //every 2 hours after 1 hour
             Processor.StartSingeltonChainedLoop("BackingDataFullBackup", 60 * 60, 120 * 60, -1, backingDataBackupFunction);
-        }
-
-        private static void ProcessSystemVerbs(ILanguage language)
-        {
-            Assembly commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
-            IEnumerable<Type> loadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
-
-            foreach (Type comm in loadedCommands)
-            {
-                IEnumerable<string> commandVerbs = comm.GetCustomAttributes<CommandKeywordAttribute>().Where(att => !att.PreventBecomingAVerb).Select(att => att.Keyword);
-
-                foreach (string verb in commandVerbs)
-                {
-                    Dictata newVerb = new Dictata()
-                    {
-                        Name = verb,
-                        Determinant = false,
-                        Feminine = false,
-                        Plural = false,
-                        Positional = LexicalPosition.None,
-                        Perspective = NarrativePerspective.None,
-                        Possessive = false,
-                        Tense = LexicalTense.Present,
-                        Semantics = new HashSet<string>() { "system_command" },
-                        WordType = LexicalType.Verb,
-                        Language = language
-                    };
-
-                    LexicalProcessor.VerifyLexeme(newVerb.GetLexeme());
-                }
-            }
         }
     }
 }

@@ -81,42 +81,6 @@ namespace NetMud.Data.System
         [DataType(DataType.Text)]
         public string MirriamThesaurusKey { get; set; }
 
-        /// <summary>
-        /// The base language for the system
-        /// </summary>
-        [JsonProperty("BaseLanguage")]
-        private ConfigDataCacheKey _baseLanguage { get; set; }
-
-        /// <summary>
-        /// The language this is derived from
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Base Language", Description = "The base language for the system.")]
-        [UIHint("LanguageList")]
-        [LanguageDataBinder]
-        public ILanguage BaseLanguage
-        {
-            get
-            {
-                if (_baseLanguage == null)
-                {
-                    return null;
-                }
-
-                return ConfigDataCache.Get<ILanguage>(_baseLanguage);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _baseLanguage = null;
-                    return;
-                }
-
-                _baseLanguage = new ConfigDataCacheKey(value);
-            }
-        }
 
         public GlobalConfig()
         {
@@ -124,8 +88,6 @@ namespace NetMud.Data.System
             WebsocketPortalActive = true;
             AdminsOnly = false;
             UserCreationActive = true;
-
-            BaseLanguage = ConfigDataCache.GetAll<ILanguage>().FirstOrDefault();
         }
 
         /// <summary>

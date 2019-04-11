@@ -11,7 +11,6 @@ using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Player;
-using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.Interp;
 using NetMud.Utility;
@@ -131,143 +130,29 @@ namespace NetMud.Websock
                 Body = new BodyStatus
                 {
                     Overall = OverallStatus.Excellent,
-                    Anatomy = new AnatomicalPart[] {
-                        new AnatomicalPart {
-                            Name = "Arm",
-                            Overall = OverallStatus.Good,
-                            Wounds = new string[] {
-                                "Light scrape"
-                            }
-                        },
-                        new AnatomicalPart {
-                            Name = "Leg",
-                            Overall = OverallStatus.Excellent,
-                            Wounds = new string[] {
-                            }
-
-                        }
-                    }
-                },
-                Mind = new MindStatus
-                {
-                    Overall = OverallStatus.Excellent,
-                    States = new string[]
-                    {
-                        "Fearful"
-                    }
+                    Health = _currentPlayer.CurrentHealth,
+                    Stamina = _currentPlayer.CurrentStamina
                 }
             };
 
             IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;
-            IContains currentContainer = currentLocation.CurrentLocation();
-            IZone currentZone = currentContainer.CurrentLocation.CurrentZone;
-            ILocale currentLocale = currentLocation.CurrentLocale;
-            IRoom currentRoom = currentLocation.CurrentRoom;
-            IGaia currentWorld = currentZone.GetWorld();
-
-            IEnumerable<string> pathways = Enumerable.Empty<string>();
-            IEnumerable<string> inventory = Enumerable.Empty<string>();
             IEnumerable<string> populace = Enumerable.Empty<string>();
             string locationDescription = string.Empty;
 
-            LexicalContext lexicalContext = new LexicalContext(_currentPlayer)
-            {
-                Language = _currentPlayer.Template<IPlayerTemplate>().Account.Config.UILanguage,
-                Perspective = NarrativePerspective.SecondPerson,
-                Position = LexicalPosition.Near
-            };
-
-            Message toCluster = new Message(currentContainer.RenderToVisible(_currentPlayer));
-
-            if (currentContainer != null)
-            {
-                pathways = ((ILocation)currentContainer).GetPathways().Select(data => data.GetDescribableName(_currentPlayer));
-                inventory = currentContainer.GetContents<IInanimate>().Select(data => data.GetDescribableName(_currentPlayer));
-                populace = currentContainer.GetContents<IMobile>().Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer));
-                locationDescription = toCluster.Unpack(TargetEntity.Actor, lexicalContext);
-            }
+            populace = currentLocation.GetContents(0).Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer));
+            locationDescription = string.Format("You are {0} to the door.", ulong.MaxValue / Math.Exp(currentLocation.CurrentSection));
 
             LocalStatus local = new LocalStatus
             {
-                ZoneName = currentZone?.TemplateName,
-                LocaleName = currentLocale?.TemplateName,
-                RoomName = currentRoom?.TemplateName,
-                Inventory = inventory.ToArray(),
                 Populace = populace.ToArray(),
-                Exits = pathways.ToArray(),
                 LocationDescriptive = locationDescription
-            };
-
-            //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
-            ExtendedStatus extended = new ExtendedStatus
-            {
-                Horizon = new string[]
-                {
-                     "A hillside",
-                     "A dense forest"
-                },
-                VisibleMap = currentLocation.CurrentRoom == null ? string.Empty : currentLocation.CurrentRoom.RenderCenteredMap(3, true)
-            };
-
-            string timeOfDayString = string.Format("The hour of {0} in the day of {1} in {2} in the year of {3}", currentWorld.CurrentTimeOfDay.Hour
-                                                                               , currentWorld.CurrentTimeOfDay.Day
-                                                                               , currentWorld.CurrentTimeOfDay.MonthName()
-                                                                               , currentWorld.CurrentTimeOfDay.Year);
-
-            string sun = "0";
-            string moon = "0";
-            string visibilityString = "5";
-            Tuple<string, string, string[]> weatherTuple = new Tuple<string, string, string[]>("", "", new string[] { });
-
-            if (currentZone != null)
-            {
-                Tuple<PrecipitationAmount, PrecipitationType, HashSet<WeatherType>> forecast = currentZone.CurrentForecast();
-                weatherTuple = new Tuple<string, string, string[]>(forecast.Item1.ToString(), forecast.Item2.ToString(), forecast.Item3.Select(wt => wt.ToString()).ToArray());
-
-                visibilityString = currentZone.GetCurrentLuminosity().ToString();
-
-                if (currentWorld != null)
-                {
-                    IEnumerable<ICelestial> bodies = currentZone.GetVisibileCelestials(_currentPlayer);
-                    ICelestial theSun = bodies.FirstOrDefault(cest => cest.Name.Equals("sun", StringComparison.InvariantCultureIgnoreCase));
-                    ICelestial theMoon = bodies.FirstOrDefault(cest => cest.Name.Equals("moon", StringComparison.InvariantCultureIgnoreCase));
-
-                    if (theSun != null)
-                    {
-                        ICelestialPosition celestialPosition = currentWorld.CelestialPositions.FirstOrDefault(celest => celest.CelestialObject == theSun);
-
-                        sun = AstronomicalUtilities.GetCelestialLuminosityModifier(celestialPosition.CelestialObject, celestialPosition.Position, currentWorld.PlanetaryRotation
-                            , currentWorld.OrbitalPosition, currentZone.Template<IZoneTemplate>().Hemisphere, currentWorld.Template<IGaiaTemplate>().RotationalAngle).ToString();
-                    }
-
-                    if (theMoon != null)
-                    {
-                        ICelestialPosition celestialPosition = currentWorld.CelestialPositions.FirstOrDefault(celest => celest.CelestialObject == theMoon);
-
-                        moon = AstronomicalUtilities.GetCelestialLuminosityModifier(celestialPosition.CelestialObject, celestialPosition.Position, currentWorld.PlanetaryRotation
-                            , currentWorld.OrbitalPosition, currentZone.Template<IZoneTemplate>().Hemisphere, currentWorld.Template<IGaiaTemplate>().RotationalAngle).ToString();
-                    }
-                }
-            }
-
-            EnvironmentStatus environment = new EnvironmentStatus
-            {
-                Sun = sun,
-                Moon = moon,
-                Visibility = visibilityString,
-                Weather = weatherTuple,
-                Temperature = currentZone.EffectiveTemperature().ToString(),
-                Humidity = currentZone.EffectiveHumidity().ToString(),
-                TimeOfDay = timeOfDayString
             };
 
             OutputStatus outputFormat = new OutputStatus
             {
                 Occurrence = EncapsulateOutput(strings),
                 Self = self,
-                Local = local,
-                Extended = extended,
-                Environment = environment
+                Local = local
             };
 
             Send(SerializationUtility.Serialize(outputFormat));

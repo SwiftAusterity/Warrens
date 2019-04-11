@@ -26,11 +26,9 @@ namespace NetMud.Commands.Comm
         {
             IEnumerable<IPlayer> whoList = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null);
 
-            ILexicalParagraph toActor = new LexicalParagraph(string.Join(",", whoList.Select(who => who.GetDescribableName(Actor))));
+            Message messagingObject = new Message(string.Join(",", whoList.Select(who => who.GetDescribableName(Actor))));
 
-            Message messagingObject = new Message(toActor);
-
-            messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()

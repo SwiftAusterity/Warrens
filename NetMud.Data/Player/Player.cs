@@ -58,28 +58,6 @@ namespace NetMud.Data.Players
         private TemplateCacheKey _gender { get; set; }
 
         /// <summary>
-        /// Gender data string for player characters
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [NonNullableDataIntegrity("Gender is required.")]
-        [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
-        [DataType("GenderList")]
-        [GenderDataBinder]
-        [Required]
-        public IGender Gender
-        {
-            get
-            {
-                return TemplateCache.Get<IGender>(_gender);
-            }
-            set
-            {
-                _gender = new TemplateCacheKey(value);
-            }
-        }
-
-        /// <summary>
         /// "family name" for player character
         /// </summary>
         public string SurName { get; set; }
@@ -164,25 +142,11 @@ namespace NetMud.Data.Players
         public string AccountHandle { get; set; }
 
         /// <summary>
-        /// Sensory overrides for staff member characters
-        /// </summary>
-        public HashSet<MessagingType> SuperSenses { get; set; }
-
-        /// <summary>
-        /// NPC's race data
-        /// </summary>
-        [Display(Name = "Race", Description = "Your genetic basis. Many races must be unlocked through specific means.")]
-        public IRace Race { get; set; }
-
-        /// <summary>
         /// News up an empty entity
         /// </summary>
         public Player()
         {
-            Inventory = new EntityContainer<IInanimate>();
             Qualities = new HashSet<IQuality>();
-            MobilesInside = new EntityContainer<IMobile>();
-            Inventory = new EntityContainer<IInanimate>();
         }
 
         /// <summary>
@@ -192,8 +156,6 @@ namespace NetMud.Data.Players
         public Player(IPlayerTemplate character)
         {
             Qualities = new HashSet<IQuality>();
-            MobilesInside = new EntityContainer<IMobile>();
-            Inventory = new EntityContainer<IInanimate>();
             TemplateId = character.Id;
             AccountHandle = character.AccountHandle;
             GetFromWorldOrSpawn();
@@ -255,343 +217,7 @@ namespace NetMud.Data.Players
             return this;
         }
 
-        #region sensory range checks
-        /// <summary>
-        /// Gets the actual vision modifier taking into account blindness and other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override ValueRange<float> GetVisualRange()
-        {
-            IPlayerTemplate dT = Template<IPlayerTemplate>();
-
-            if (dT.SuperSenses.Contains(MessagingType.Visible))
-            {
-                return new ValueRange<float>(-999999, 999999);
-            }
-
-            int returnTop = 1;
-            int returnBottom = 100;
-
-            //TODO: Check for blindess/magical type affects
-
-            return new ValueRange<float>(returnTop, returnBottom);
-        }
-
-        /// <summary>
-        /// Gets the actual modifier taking into account other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override ValueRange<float> GetAuditoryRange()
-        {
-            IPlayerTemplate dT = Template<IPlayerTemplate>();
-
-            if (dT.SuperSenses.Contains(MessagingType.Audible))
-            {
-                return new ValueRange<float>(-999999, 999999);
-            }
-
-            int returnTop = 1; //TODO: Add this to race or something
-            int returnBottom = 100;
-
-            //TODO: Check for magical type affects
-
-            return new ValueRange<float>(returnTop, returnBottom);
-        }
-
-        /// <summary>
-        /// Gets the actual modifier taking into account other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override ValueRange<float> GetPsychicRange()
-        {
-            IPlayerTemplate dT = Template<IPlayerTemplate>();
-
-            if (dT.SuperSenses.Contains(MessagingType.Psychic))
-            {
-                return new ValueRange<float>(-999999, 999999);
-            }
-
-            int returnTop = 0; //TODO: Add this to race or something
-            int returnBottom = 0;
-
-            //TODO: Check for magical type affects
-
-            return new ValueRange<float>(returnTop, returnBottom);
-        }
-
-        /// <summary>
-        /// Gets the actual modifier taking into account other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override ValueRange<float> GetTasteRange()
-        {
-            IPlayerTemplate dT = Template<IPlayerTemplate>();
-
-            if (dT.SuperSenses.Contains(MessagingType.Taste))
-            {
-                return new ValueRange<float>(-999999, 999999);
-            }
-
-            int returnTop = 1; //TODO: Add this to race or something
-            int returnBottom = 100;
-
-            //TODO: Check for magical type affects
-
-            return new ValueRange<float>(returnTop, returnBottom);
-        }
-
-        /// <summary>
-        /// Gets the actual modifier taking into account other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override ValueRange<float> GetTactileRange()
-        {
-            IPlayerTemplate dT = Template<IPlayerTemplate>();
-
-            if (dT.SuperSenses.Contains(MessagingType.Tactile))
-            {
-                return new ValueRange<float>(-999999, 999999);
-            }
-
-            int returnTop = 1; //TODO: Add this to race or something
-            int returnBottom = 100;
-
-            //TODO: Check for magical type affects
-
-            return new ValueRange<float>(returnTop, returnBottom);
-        }
-
-        /// <summary>
-        /// Gets the actual modifier taking into account other factors
-        /// </summary>
-        /// <returns>the working modifier</returns>
-        public override ValueRange<float> GetOlefactoryRange()
-        {
-            IPlayerTemplate dT = Template<IPlayerTemplate>();
-
-            if (dT.SuperSenses.Contains(MessagingType.Olefactory))
-            {
-                return new ValueRange<float>(-999999, 999999);
-            }
-
-            int returnTop = 1; //TODO: Add this to race or something
-            int returnBottom = 100;
-
-            //TODO: Check for magical type affects
-
-            return new ValueRange<float>(returnTop, returnBottom);
-        }
-
-        /// <summary>
-        /// Get the current luminosity rating of the place you're in
-        /// </summary>
-        /// <returns>The current Luminosity</returns>
-        public override float GetCurrentLuminosity()
-        {
-            float lumins = 0;
-
-            foreach (IInanimate dude in Inventory.EntitiesContained())
-            {
-                lumins += dude.GetCurrentLuminosity();
-            }
-
-            //TODO: Magical light, equipment, make inventory less bright depending on where it is
-
-            return lumins;
-        }
-        #endregion
-
         #region Rendering
-        #endregion
-
-        #region Container
-        /// <summary>
-        /// Inanimates contained in this
-        /// </summary>
-        public IEntityContainer<IInanimate> Inventory { get; set; }
-
-        /// <summary>
-        /// Any mobiles (players, npcs) contained in this
-        /// </summary>
-        public IEntityContainer<IMobile> MobilesInside { get; set; }
-
-        public int Capacity => 50;
-
-        /// <summary>
-        /// Get all of the entities matching a type inside this
-        /// </summary>
-        /// <typeparam name="T">the type</typeparam>
-        /// <returns>the contained entities</returns>
-        public IEnumerable<T> GetContents<T>()
-        {
-            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
-
-            List<T> contents = new List<T>();
-
-            if (implimentedTypes.Contains(typeof(IMobile)))
-            {
-                contents.AddRange(MobilesInside.EntitiesContained().Select(ent => (T)ent));
-            }
-
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                contents.AddRange(Inventory.EntitiesContained().Select(ent => (T)ent));
-            }
-
-            return contents;
-        }
-
-        /// <summary>
-        /// Get all of the entities matching a type inside this in a named container
-        /// </summary>
-        /// <typeparam name="T">the type</typeparam>
-        /// <returns>the contained entities</returns>
-        /// <param name="containerName">the name of the container</param>
-        public IEnumerable<T> GetContents<T>(string containerName)
-        {
-            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
-
-            List<T> contents = new List<T>();
-
-            if (implimentedTypes.Contains(typeof(IMobile)))
-            {
-                contents.AddRange(MobilesInside.EntitiesContained(containerName).Select(ent => (T)ent));
-            }
-
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                contents.AddRange(Inventory.EntitiesContained(containerName).Select(ent => (T)ent));
-            }
-
-            return contents;
-        }
-
-        /// <summary>
-        /// Move an entity into this
-        /// </summary>
-        /// <typeparam name="T">the type of the entity to add</typeparam>
-        /// <param name="thing">the entity to add</param>
-        /// <returns>errors</returns>
-        public string MoveInto<T>(T thing)
-        {
-            return MoveInto(thing, string.Empty);
-        }
-
-        /// <summary>
-        /// Move an entity into a named container in this
-        /// </summary>
-        /// <typeparam name="T">the type of the entity to add</typeparam>
-        /// <param name="thing">the entity to add</param>
-        /// <param name="containerName">the name of the container</param>
-        /// <returns>errors</returns>
-        public string MoveInto<T>(T thing, string containerName)
-        {
-            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
-
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                IInanimate obj = (IInanimate)thing;
-
-                if (Inventory.Contains(obj, containerName))
-                {
-                    return "That is already in the container";
-                }
-
-                string moveError = MoveInto(obj);
-                if (!string.IsNullOrWhiteSpace(moveError))
-                {
-                    return moveError;
-                }
-
-                Inventory.Add(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
-            if (implimentedTypes.Contains(typeof(IMobile)))
-            {
-                IMobile obj = (IMobile)thing;
-
-                if (MobilesInside.Contains(obj, containerName))
-                {
-                    return "That is already in the container";
-                }
-
-                string moveError = MoveInto(obj);
-                if (!string.IsNullOrWhiteSpace(moveError))
-                {
-                    return moveError;
-                }
-
-                MobilesInside.Add(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
-            return "Invalid type to move to container.";
-        }
-
-        /// <summary>
-        /// Move an entity out of this
-        /// </summary>
-        /// <typeparam name="T">the type of entity to remove</typeparam>
-        /// <param name="thing">the entity</param>
-        /// <returns>errors</returns>
-        public string MoveFrom<T>(T thing)
-        {
-            return MoveFrom(thing, string.Empty);
-        }
-
-        /// <summary>
-        /// Move an entity out of this' named container
-        /// </summary>
-        /// <typeparam name="T">the type of entity to remove</typeparam>
-        /// <param name="thing">the entity</param>
-        /// <param name="containerName">the name of the container</param>
-        /// <returns>errors</returns>
-        public string MoveFrom<T>(T thing, string containerName)
-        {
-            IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
-
-            if (implimentedTypes.Contains(typeof(IInanimate)))
-            {
-                IInanimate obj = (IInanimate)thing;
-
-                if (!Inventory.Contains(obj, containerName))
-                {
-                    return "That is not in the container";
-                }
-
-                Inventory.Remove(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
-            if (implimentedTypes.Contains(typeof(IMobile)))
-            {
-                IMobile obj = (IMobile)thing;
-
-                if (!MobilesInside.Contains(obj, containerName))
-                {
-                    return "That is not in the container";
-                }
-
-                MobilesInside.Remove(obj, containerName);
-                UpsertToLiveWorldCache();
-
-                return string.Empty;
-            }
-
-            return "Invalid type to move from container.";
-        }
-
-        public IGlobalPosition GetContainerAsLocation()
-        {
-            return new GlobalPosition(CurrentLocation.CurrentZone, CurrentLocation.CurrentLocale, CurrentLocation.CurrentRoom) { CurrentContainer = this };
-        }
         #endregion
 
         #region SpawnBehavior
@@ -614,7 +240,6 @@ namespace NetMud.Data.Players
                 BirthMark = me.BirthMark;
                 Birthdate = me.Birthdate;
                 TemplateId = ch.Id;
-                Inventory = me.Inventory;
                 Keywords = me.Keywords;
                 CurrentHealth = me.CurrentHealth;
                 CurrentStamina = me.CurrentStamina;
@@ -656,12 +281,7 @@ namespace NetMud.Data.Players
         {
             IPlayerTemplate ch = Template<IPlayerTemplate>();
 
-            if (ch.CurrentLocation?.CurrentZone == null)
-            {
-                ch.CurrentLocation = GetBaseSpawn();
-            }
-
-            SpawnNewInWorld(ch.CurrentLocation);
+            SpawnNewInWorld(new GlobalPosition(ch.CurrentSlice));
         }
 
         /// <summary>
@@ -681,8 +301,6 @@ namespace NetMud.Data.Players
                 Birthdate = DateTime.Now;
             }
 
-            Inventory = new EntityContainer<IInanimate>();
-
             Qualities = ch.Qualities;
             CurrentHealth = ch.TotalHealth;
             CurrentStamina = ch.TotalStamina;
@@ -695,7 +313,6 @@ namespace NetMud.Data.Players
             IGlobalPosition spawnTo = position ?? GetBaseSpawn();
 
             //Set the data context's stuff too so we don't have to do this over again
-            ch.CurrentLocation = spawnTo;
             ch.Save(ch.Account, StaffRank.Player); //characters/players dont actually need approval
 
             TryMoveTo(spawnTo);
@@ -710,30 +327,17 @@ namespace NetMud.Data.Players
         public override string TryMoveTo(IGlobalPosition newPosition)
         {
             string error = string.Empty;
-
-            if (CurrentLocation?.CurrentLocation() != null)
-            {
-                error = CurrentLocation.CurrentLocation().MoveFrom(this);
-            }
+            IPlayerTemplate ch = Template<IPlayerTemplate>();
 
             //validate position
-            if (newPosition != null && string.IsNullOrEmpty(error))
+            if (newPosition != null)
             {
-                if (newPosition.CurrentLocation() != null)
-                {
-                    error = newPosition.CurrentLocation().MoveInto(this);
-                }
+                CurrentLocation = newPosition;
+                UpsertToLiveWorldCache();
 
-                if (string.IsNullOrEmpty(error))
-                {
-                    CurrentLocation = newPosition;
-                    UpsertToLiveWorldCache();
-                    error = string.Empty;
-
-                    IPlayerTemplate dt = Template<IPlayerTemplate>();
-                    dt.CurrentLocation = newPosition;
-                    dt.SystemSave();
-                }
+                ch.CurrentSlice = newPosition.CurrentSection;
+                ch.SystemSave();
+                ch.PersistToCache();
             }
             else
             {
@@ -741,19 +345,6 @@ namespace NetMud.Data.Players
             }
 
             return error;
-        }
-
-        /// <summary>
-        /// Get's the entity's model dimensions
-        /// </summary>
-        /// <returns>height, length, width</returns>
-        public override Dimensions GetModelDimensions()
-        {
-            int height = Race.Head.Model.Height + Race.Torso.Model.Height + Race.Legs.Item.Model.Height;
-            int length = Race.Torso.Model.Length;
-            int width = Race.Torso.Model.Width;
-
-            return new Dimensions(height, length, width);
         }
 
         /// <summary>
@@ -781,10 +372,7 @@ namespace NetMud.Data.Players
         /// <returns>The emergency spawn location</returns>
         private IGlobalPosition GetBaseSpawn()
         {
-            //TODO
-            int zoneId = StillANoob ? 0 : 0;
-
-            return new GlobalPosition(LiveCache.Get<IZone>(zoneId));
+            return new GlobalPosition(0);
         }
 
         public override object Clone()
