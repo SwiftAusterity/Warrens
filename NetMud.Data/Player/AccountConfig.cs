@@ -3,6 +3,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
@@ -95,6 +96,11 @@ namespace NetMud.Data.Players
         /// </summary>
         public IEnumerable<IAcquaintence> Acquaintences { get; set; }
 
+        /// <summary>
+        /// Combos for a player
+        /// </summary>
+        public IEnumerable<IFightingArtCombination> Combos { get; set; }
+
         [JsonProperty("Notifications")]
         public HashSet<ConfigDataCacheKey> _notifications { get; set; }
 
@@ -159,6 +165,7 @@ namespace NetMud.Data.Players
             Acquaintences = new List<IAcquaintence>();
             Notifications = new List<IPlayerMessage>();
             Playlists = new HashSet<IPlaylist>();
+            Combos = Enumerable.Empty<IFightingArtCombination>();
             UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
         }
 
@@ -169,6 +176,7 @@ namespace NetMud.Data.Players
             Acquaintences = new List<IAcquaintence>();
             Notifications = new List<IPlayerMessage>();
             Playlists = new HashSet<IPlaylist>();
+            Combos = Enumerable.Empty<IFightingArtCombination>();
             UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
 
             if (string.IsNullOrWhiteSpace(Name))
@@ -283,6 +291,15 @@ namespace NetMud.Data.Players
                     UIModules = newConfig.UIModules;
                 }
 
+                if (newConfig.Combos == null)
+                {
+                    Combos = Enumerable.Empty<IFightingArtCombination>();
+                }
+                else
+                {
+                    Combos = newConfig.Combos;
+                }
+
                 ConfigDataCache.Add(this);
 
                 return true;
@@ -338,7 +355,8 @@ namespace NetMud.Data.Players
                 Notifications = Notifications,
                 Playlists = Playlists,
                 SoundMuted = SoundMuted,
-                UITutorialMode = UITutorialMode
+                UITutorialMode = UITutorialMode,
+                Combos = Combos
             };
         }
     }

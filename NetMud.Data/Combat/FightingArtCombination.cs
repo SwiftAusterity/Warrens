@@ -11,24 +11,29 @@ namespace NetMud.DataStructure.Combat
     [Serializable]
     public class FightingArtCombination : IFightingArtCombination
     {
+        /// <summary>
+        /// Mobile chosen fighting stance which causes FightingArtCombinations to become active or inactive
+        /// </summary>
+        public HashSet<string> FightingStances { get; set; }
+
         [JsonProperty("Arts")]
-        public HashSet<TemplateCacheKey> _arts { get; set; }
+        public SortedSet<TemplateCacheKey> _arts { get; set; }
 
         /// <summary>
         /// The available arts for this combo
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        public HashSet<IFightingArt> Arts
+        public SortedSet<IFightingArt> Arts
         {
             get
             {
                 if (_arts == null)
                 {
-                    _arts = new HashSet<TemplateCacheKey>();
+                    _arts = new SortedSet<TemplateCacheKey>();
                 }
 
-                return new HashSet<IFightingArt>(_arts.Select(k => TemplateCache.Get<IFightingArt>(k)));
+                return new SortedSet<IFightingArt>(_arts.Select(k => TemplateCache.Get<IFightingArt>(k)));
             }
             set
             {
@@ -37,8 +42,13 @@ namespace NetMud.DataStructure.Combat
                     return;
                 }
 
-                _arts = new HashSet<TemplateCacheKey>(value.Select(k => new TemplateCacheKey(k)));
+                _arts = new SortedSet<TemplateCacheKey>(value.Select(k => new TemplateCacheKey(k)));
             }
+        }
+
+        public FightingArtCombination()
+        {
+            FightingStances = new HashSet<string>();
         }
 
         /// <summary>

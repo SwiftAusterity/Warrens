@@ -3,12 +3,20 @@ using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Combat
 {
+    /// <summary>
+    /// Collection of fighting arts
+    /// </summary>
     public interface IFightingArtCombination
     {
         /// <summary>
+        /// Mobile chosen fighting stance which causes FightingArtCombinations to become active or inactive
+        /// </summary>
+        HashSet<string> FightingStances { get; set; }
+
+        /// <summary>
         /// The available arts for this combo
         /// </summary>
-        HashSet<IFightingArt> Arts { get; set; }
+        SortedSet<IFightingArt> Arts { get; set; }
 
         /// <summary>
         /// Get the next move to use

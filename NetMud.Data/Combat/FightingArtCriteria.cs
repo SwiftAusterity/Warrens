@@ -23,7 +23,7 @@ namespace NetMud.Data.Combat
         /// <summary>
         /// What stance does the target need to be in
         /// </summary>
-        public HashSet<MobilityState> ValidStances { get; set; }
+        public HashSet<MobilityState> ValidPositions { get; set; }
 
         /// <summary>
         /// The min and max distance this is usable
@@ -40,7 +40,7 @@ namespace NetMud.Data.Combat
         {
             return target.CurrentStamina.IsBetweenOrEqual(StaminaRange.Low, StaminaRange.High)
                 && target.CurrentHealth.IsBetweenOrEqual(HealthRange.Low, HealthRange.High)
-                && (ValidStances.Count() == 0 || ValidStances.Contains(target.StancePosition))
+                && (ValidPositions.Count() == 0 || ValidPositions.Contains(target.StancePosition))
                 && distance.IsBetweenOrEqual(DistanceRange.Low, DistanceRange.High);
         }
     }

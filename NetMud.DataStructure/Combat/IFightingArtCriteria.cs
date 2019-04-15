@@ -18,9 +18,9 @@ namespace NetMud.DataStructure.Combat
         ValueRange<int> HealthRange { get; set; }
 
         /// <summary>
-        /// What stance does the target need to be in
+        /// What position does the target need to be in
         /// </summary>
-        HashSet<MobilityState> ValidStances { get; set; }
+        HashSet<MobilityState> ValidPositions { get; set; }
 
         /// <summary>
         /// The min and max distance this is usable

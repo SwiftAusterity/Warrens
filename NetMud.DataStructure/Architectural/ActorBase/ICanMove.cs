@@ -6,9 +6,9 @@
     public interface ICanMove
     {
         /// <summary>
-        /// Current stance this is in
+        /// Current position this is in
         /// </summary>
-        MobilityState CurrentState { get; set; }
+        MobilityState CurrentPosition { get; set; }
 
         /// <summary>
         /// How stunned are you (for stun state resistance)

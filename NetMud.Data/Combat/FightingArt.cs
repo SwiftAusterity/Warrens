@@ -38,7 +38,7 @@ namespace NetMud.DataStructure.Combat
         /// <summary>
         /// Results in actor/victim stance change
         /// </summary>
-        public ValuePair<MobilityState> StanceResult { get; set; }
+        public ValuePair<MobilityState> PositionResult { get; set; }
 
         /// <summary>
         /// The min and max distance this is usable

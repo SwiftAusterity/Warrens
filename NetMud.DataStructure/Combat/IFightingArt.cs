@@ -22,9 +22,9 @@ namespace NetMud.DataStructure.Combat
         int Stagger { get; set; }
 
         /// <summary>
-        /// Results in actor/victim stance change
+        /// Results in actor/victim position change
         /// </summary>
-        ValuePair<MobilityState> StanceResult { get; set; }
+        ValuePair<MobilityState> PositionResult { get; set; }
 
         /// <summary>
         /// The min and max distance this is usable
