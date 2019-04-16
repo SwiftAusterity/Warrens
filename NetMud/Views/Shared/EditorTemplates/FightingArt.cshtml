@@ -1,0 +1,34 @@
+﻿@using NetMud.Data.Combat
+
+@model FightingArt
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Setup)
+    @Html.EditorFor(m => m.Recovery)
+    @Html.EditorFor(m => m.Impact)
+    @Html.EditorFor(m => m.Armor)
+</div>
+
+<h4>Requirments</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Aim)
+    @Html.EditorFor(m => m.DistanceRange)
+    @Html.EditorFor(m => m.RekkaKey)
+    @Html.EditorFor(m => m.RekkaPosition)
+</div>
+
+<h4>Costs/Results</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Stagger)
+    @Html.EditorFor(m => m.Health)
+    @Html.EditorFor(m => m.Stamina)
+    @Html.EditorFor(m => m.DistanceChange)
+    @Html.EditorFor(m => m.PositionResult)
+</div>
+
+<h4>Actor Criteria</h4>
+@Html.EditorFor(m => m.ActorCriteria)
+<h4>Victim Criteria</h4>
+@Html.EditorFor(m => m.VictimCriteria)

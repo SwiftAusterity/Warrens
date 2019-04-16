@@ -1,5 +1,6 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
@@ -8,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
-namespace NetMud.DataStructure.Combat
+namespace NetMud.Data.Combat
 {
     [Serializable]
     public class FightingArtCombination : IFightingArtCombination

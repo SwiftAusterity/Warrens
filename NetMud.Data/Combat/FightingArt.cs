@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
-namespace NetMud.DataStructure.Combat
+namespace NetMud.Data.Combat
 {
     [Serializable]
     public class FightingArt : LookupDataPartial, IFightingArt
