@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.Room;
+using NetMud.Data.Combat;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
-using NetMud.DataStructure.Room;
+using NetMud.DataStructure.Combat;
 using NetMud.Models.Admin;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
     [Authorize(Roles = "Admin,Builder")]
-    public class RoomController : Controller
+    public class FightingArtController : Controller
     {
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
@@ -29,18 +28,18 @@ namespace NetMud.Controllers.GameAdmin
             }
         }
 
-        public RoomController()
+        public FightingArtController()
         {
         }
 
-        public RoomController(ApplicationUserManager userManager)
+        public FightingArtController(ApplicationUserManager userManager)
         {
             UserManager = userManager;
         }
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageRoomTemplateViewModel vModel = new ManageRoomTemplateViewModel(TemplateCache.GetAll<IRoomTemplate>())
+            ManageFightingArtViewModel vModel = new ManageFightingArtViewModel(TemplateCache.GetAll<IFightingArt>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -54,7 +53,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"Room/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        [Route(@"FightingArt/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message;
@@ -62,7 +61,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(removeId);
+                IFightingArt obj = TemplateCache.Get<IFightingArt>(removeId);
 
                 if (obj == null)
                 {
@@ -82,7 +81,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(unapproveId);
+                IFightingArt obj = TemplateCache.Get<IFightingArt>(unapproveId);
 
                 if (obj == null)
                 {
@@ -109,24 +108,23 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
+            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRooms = TemplateCache.GetAll<IRoomTemplate>(),
-                DataObject = new RoomTemplate()
+                DataObject = new FightingArt()
             };
 
-            return View("~/Views/GameAdmin/Room/Add.cshtml", "_chromelessLayout", vModel);
+            return View("~/Views/GameAdmin/FightingArt/Add.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditRoomTemplateViewModel vModel)
+        public ActionResult Add(AddEditFightingArtViewModel vModel)
         {
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IRoomTemplate newObj = vModel.DataObject;
+            IFightingArt newObj = vModel.DataObject;
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
@@ -134,17 +132,17 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddRoomTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddFightingArt[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
 
-            return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+            return RedirectToRoute("Index", new { Message = message });
         }
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
             string message = string.Empty;
-            IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
+            IFightingArt obj = TemplateCache.Get<IFightingArt>(id);
 
             if (obj == null)
             {
@@ -152,43 +150,56 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
-            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
+            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
-                ValidRooms = TemplateCache.GetAll<IRoomTemplate>().Where(room => room.Id != obj.Id),
                 DataObject = obj,
             };
 
-            return View("~/Views/GameAdmin/Room/Edit.cshtml", "_chromelessLayout", vModel);
+            return View("~/Views/GameAdmin/FightingArt/Edit.cshtml", "_chromelessLayout", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AddEditRoomTemplateViewModel vModel)
+        public ActionResult Edit(int id, AddEditFightingArtViewModel vModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
+            IFightingArt obj = TemplateCache.Get<IFightingArt>(id);
             if (obj == null)
             {
                 string message = "That does not exist";
-                return RedirectToRoute("ModalErrorOrClose", new { Message = message });
+                return RedirectToRoute("Index", new { Message = message });
             }
 
             obj.Name = vModel.DataObject.Name;
-            obj.Qualities = vModel.DataObject.Qualities;
-            obj.Description = vModel.DataObject.Description;
+            obj.ActorCriteria = vModel.DataObject.ActorCriteria;
+            obj.Aim = vModel.DataObject.Aim;
+            obj.Armor = vModel.DataObject.Armor;
+            obj.DistanceChange = vModel.DataObject.DistanceChange;
+            obj.DistanceRange = vModel.DataObject.DistanceRange;
+            obj.Health = vModel.DataObject.Health;
+            obj.HelpText = vModel.DataObject.HelpText;
+            obj.Impact = vModel.DataObject.Impact;
+            obj.PositionResult = vModel.DataObject.PositionResult;
+            obj.Recovery = vModel.DataObject.Recovery;
+            obj.RekkaKey = vModel.DataObject.RekkaKey;
+            obj.RekkaPosition = vModel.DataObject.RekkaPosition;
+            obj.Stagger = vModel.DataObject.Stagger;
+            obj.Setup = vModel.DataObject.Setup;
+            obj.Stamina = vModel.DataObject.Stamina;
+            obj.VictimCriteria = vModel.DataObject.VictimCriteria;
 
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditRoomTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditFightingArt[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
             else
             {
             }
 
-            return RedirectToRoute("ModalErrorOrClose");
+            return RedirectToRoute("Index");
         }
     }
 }

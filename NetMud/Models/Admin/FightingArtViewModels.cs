@@ -1,20 +1,21 @@
 ﻿using NetMud.Authentication;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Room;
 using System;
 using System.Collections.Generic;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageRoomTemplateViewModel : PagedDataModel<IRoomTemplate>
+    public class ManageFightingArtViewModel : PagedDataModel<IFightingArt>
     {
-        public ManageRoomTemplateViewModel(IEnumerable<IRoomTemplate> items)
+        public ManageFightingArtViewModel(IEnumerable<IFightingArt> items)
             : base(items)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
         }
 
-        internal override Func<IRoomTemplate, bool> SearchFilter
+        internal override Func<IFightingArt, bool> SearchFilter
         {
             get
             {
@@ -22,7 +23,7 @@ namespace NetMud.Models.Admin
             }
         }
 
-        internal override Func<IRoomTemplate, object> OrderPrimary
+        internal override Func<IFightingArt, object> OrderPrimary
         {
             get
             {
@@ -30,7 +31,7 @@ namespace NetMud.Models.Admin
             }
         }
 
-        internal override Func<IRoomTemplate, object> OrderSecondary
+        internal override Func<IFightingArt, object> OrderSecondary
         {
             get
             {
@@ -39,16 +40,14 @@ namespace NetMud.Models.Admin
         }
     }
 
-    public class AddEditRoomTemplateViewModel : IBaseViewModel
+    public class AddEditFightingArtViewModel : IBaseViewModel
     {
         public ApplicationUser AuthedUser { get; set; }
 
-        public AddEditRoomTemplateViewModel()
+        public AddEditFightingArtViewModel()
         {
         }
 
-        public IEnumerable<IRoomTemplate> ValidRooms { get; set; }
-
-        public IRoomTemplate DataObject { get; set; }
+        public IFightingArt DataObject { get; set; }
     }
 }

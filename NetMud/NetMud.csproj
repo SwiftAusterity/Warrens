@@ -237,6 +237,7 @@
     <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
     <Compile Include="Controllers\GameAdmin\LiveAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
+    <Compile Include="Controllers\GameAdmin\FightingArtController.cs" />
     <Compile Include="Controllers\GameAdmin\UIModulesController.cs" />
     <Compile Include="Controllers\GameAdmin\RoomController.cs" />
     <Compile Include="Controllers\GameAdmin\PlayerController.cs" />
@@ -254,6 +255,7 @@
     <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
     <Compile Include="Models\Admin\LiveDataModels.cs" />
+    <Compile Include="Models\Admin\FightingArtViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
@@ -448,6 +450,9 @@
     <Content Include="Views\Shared\EditorTemplates\ValuePairMobilityState.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FightingArt.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FightingArtList.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Add.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
