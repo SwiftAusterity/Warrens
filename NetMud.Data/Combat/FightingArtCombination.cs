@@ -1,8 +1,10 @@
-﻿using NetMud.DataAccess.Cache;
+﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
 
@@ -24,6 +26,9 @@ namespace NetMud.DataStructure.Combat
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [Display(Name = "Fighting Arts", Description = "Which fighting arts are in this combo, in order.")]
+        [UIHint("FightingArtsCollection")]
+        [FightingArtCollectionDataBinder]
         public SortedSet<IFightingArt> Arts
         {
             get

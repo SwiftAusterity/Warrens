@@ -97,8 +97,10 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\FightingArtCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\HelpDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\FightingArtDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\RoomTemplateDataBinder.cs" />
     <Compile Include="Architectural\Serialization\CacheKeyDictionaryConverter.cs" />
     <Compile Include="Architectural\Serialization\ConcreteTypeConverter.cs" />

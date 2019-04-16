@@ -1,7 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Player;
-using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Combat
 {
@@ -20,12 +19,7 @@ namespace NetMud.DataStructure.Combat
         /// <summary>
         /// What position does the target need to be in
         /// </summary>
-        HashSet<MobilityState> ValidPositions { get; set; }
-
-        /// <summary>
-        /// The min and max distance this is usable
-        /// </summary>
-        ValueRange<ulong> DistanceRange { get; set; }
+        MobilityState ValidPosition { get; set; }
 
         /// <summary>
         /// Validate the criteria against the actor and victim
