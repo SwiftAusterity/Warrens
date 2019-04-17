@@ -1,0 +1,14 @@
+﻿@using NetMud.Data.Combat
+
+@model FightingArtCombination
+
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.IsSystem)
+</div>
+
+<h4>Stances</h4>
+@Html.EditorFor(m => m.FightingStances)
+
+<h4>Fighting Arts</h4>
+@Html.EditorFor(m => m.Arts, new { validItems = ViewData["ValidArts"] })

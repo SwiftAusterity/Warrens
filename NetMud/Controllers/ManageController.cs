@@ -2,11 +2,13 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
+using NetMud.Data.Combat;
 using NetMud.Data.Player;
 using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using NetMud.Models.Admin;
 using NetMud.Models.PlayerManagement;
@@ -70,6 +72,7 @@ namespace NetMud.Controllers
                 AuthedUser = user,
                 DataObject = account,
                 GlobalIdentityHandle = account.GlobalIdentityHandle,
+                ComboCount = account.Config.Combos.Count(),
                 UIModuleCount = TemplateCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
                 NotificationCount = ConfigDataCache.GetAll<IPlayerMessage>().Count(msg => msg.RecipientAccount == account),
                 UITutorialMode = account.Config.UITutorialMode,
@@ -167,7 +170,7 @@ namespace NetMud.Controllers
             IPlayerTemplate obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), user.GlobalIdentityHandle, id));
             AddEditCharacterViewModel model = new AddEditCharacterViewModel
             {
-                AuthedUser  = user,
+                AuthedUser = user,
                 DataObject = obj
             };
 
@@ -689,6 +692,165 @@ namespace NetMud.Controllers
         }
 
         #endregion
+
+        #region Combos
+        public ActionResult Combos(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            ManageCombosViewModel vModel = new ManageCombosViewModel(user.GameAccount.Config.Combos)
+            {
+                AuthedUser = user,
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
+
+            return View("Combos", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveCombo(string ID, string authorize)
+        {
+            string message;
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+            {
+                message = "You must check the proper authorize radio button first.";
+            }
+            else
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                IFightingArtCombination obj = authedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(ID));
+
+                if (obj == null)
+                {
+                    message = "That does not exist";
+                }
+                else
+                {
+                    authedUser.GameAccount.Config.Combos = authedUser.GameAccount.Config.Combos.Where(combo => !combo.Name.Equals(ID));
+
+                    if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveUIModule[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Delete Successful.";
+                    }
+                    else
+                    {
+                        message = "Error; Removal failed.";
+                    }
+                }
+            }
+
+            return RedirectToAction("UIModules", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddCombos()
+        {
+            AddEditCombosViewModel vModel = new AddEditCombosViewModel
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = new FightingArtCombination()
+            };
+
+            return View("AddCombos", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddCombos(AddEditCombosViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var combos = authedUser.GameAccount.Config.Combos.ToList();
+
+            if(combos.Any(combo => combo.Name.Equals(vModel.DataObject.Name)))
+            {
+                return RedirectToAction("Combos", new { Message = "Name already taken choose another." });
+            }
+
+            FightingArtCombination newObj = new FightingArtCombination
+            {
+                Name = vModel.DataObject.Name,
+                Arts = vModel.DataObject.Arts,
+                FightingStances = vModel.DataObject.FightingStances,
+                IsSystem = vModel.DataObject.IsSystem
+            };
+
+            combos.Add(newObj);
+
+            string message;
+            if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddCombos[" + newObj.Name.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+            else
+            {
+                message = "Error; Creation failed.";
+            }
+
+            return RedirectToAction("Combos", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditCombos(string id)
+        {
+            AddEditCombosViewModel vModel = new AddEditCombosViewModel
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
+
+            IFightingArtCombination obj = vModel.AuthedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(id));
+
+            if (obj == null)
+            {
+                string message = "That does not exist";
+                return RedirectToAction("Combos", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+
+            return View("EditCombos", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCombos(string id, AddEditCombosViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IFightingArtCombination obj = vModel.AuthedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(id));
+            string message;
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("Combos", new { Message = message });
+            }
+
+            obj.Name = vModel.DataObject.Name;
+            obj.Arts = vModel.DataObject.Arts;
+            obj.FightingStances = vModel.DataObject.FightingStances;
+            obj.IsSystem = vModel.DataObject.IsSystem;
+
+            if (vModel.AuthedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditCombos[" + obj.Name.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+            {
+                message = "Error; Edit failed.";
+            }
+
+            return RedirectToAction("Combos", new { Message = message });
+        }
+
+        #endregion
+
 
         #region Playlists
         [HttpGet]

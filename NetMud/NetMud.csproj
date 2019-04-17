@@ -256,6 +256,7 @@
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
     <Compile Include="Models\Admin\LiveDataModels.cs" />
     <Compile Include="Models\Admin\FightingArtViewModels.cs" />
+    <Compile Include="Models\Admin\CombosViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
@@ -454,6 +455,12 @@
     <Content Include="Views\GameAdmin\FightingArt\Edit.cshtml" />
     <Content Include="Views\GameAdmin\FightingArt\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FightingArtCriteria.cshtml" />
+    <Content Include="Views\Manage\Combos.cshtml" />
+    <Content Include="Views\Manage\AddCombos.cshtml" />
+    <Content Include="Views\Manage\EditCombos.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCombination.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtsCollection.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCollectionItem.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

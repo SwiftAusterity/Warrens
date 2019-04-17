@@ -15,8 +15,24 @@ namespace NetMud.Data.Combat
     public class FightingArtCombination : IFightingArtCombination
     {
         /// <summary>
+        /// The name of this combo
+        /// </summary>
+        [Display(Name = "Name", Description = "The name to reference this by.")]
+        [DataType(DataType.Text)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Is this a system based combo
+        /// </summary>
+        [Display(Name = "System", Description = "Is this a system combination. (so NPCs can use)")]
+        [UIHint("Boolean")]
+        public bool IsSystem { get; set; }
+
+        /// <summary>
         /// Mobile chosen fighting stance which causes FightingArtCombinations to become active or inactive
         /// </summary>
+        [Display(Name = "Stances", Description = "The stances this is a part of. Free text string for use in the Stance command.")]
+        [UIHint("TagContainer")]
         public HashSet<string> FightingStances { get; set; }
 
         [JsonProperty("Arts")]

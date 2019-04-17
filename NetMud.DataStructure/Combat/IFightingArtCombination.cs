@@ -9,6 +9,16 @@ namespace NetMud.DataStructure.Combat
     public interface IFightingArtCombination
     {
         /// <summary>
+        /// The name of this combo
+        /// </summary>
+        string Name { get; set; }
+
+        /// <summary>
+        /// Is this a system based combo
+        /// </summary>
+        bool IsSystem { get; set; }
+
+        /// <summary>
         /// Mobile chosen fighting stance which causes FightingArtCombinations to become active or inactive
         /// </summary>
         HashSet<string> FightingStances { get; set; }
