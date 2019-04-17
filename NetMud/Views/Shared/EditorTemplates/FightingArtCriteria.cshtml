@@ -1,0 +1,9 @@
+﻿@using NetMud.Data.Combat
+
+@model FightingArtCriteria
+
+<div class="form-group row">
+    @Html.EditorFor(m => m.ValidPosition)
+    @Html.EditorFor(m => m.HealthRange)
+    @Html.EditorFor(m => m.StaminaRange)
+</div>

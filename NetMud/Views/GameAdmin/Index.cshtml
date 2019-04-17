@@ -30,6 +30,20 @@
                         }
                     </dd>
                 </dl>
+                <dl class="dl-horizontal dashboardItem">
+                    <dt>fArts [@Html.ActionLink(Model.FightingArts.Count().ToString(), "Index", "FightingArt", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dd>
+                        @Html.ActionLink(" ", "Add", "FightingArt", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
+                        @if (Model.FightingArts.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.FightingArts.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                </dl>
             </div>
             <div>
                 <h4>Administrative</h4>

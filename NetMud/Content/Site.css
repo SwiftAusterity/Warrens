@@ -45,12 +45,17 @@ input[type=checkbox].form-control {
     min-width: 36% !important;
 }
 
+    .multiBox-2 .helpTip {
+        padding: 4px 1px 1px 18px;
+    }
+
 .multiBox > div {
     display: inline-flex;
     border: 1px solid dodgerblue;
     background: cornflowerblue;
     border-radius: 2px;
     width: 100%;
+    justify-content: center;
 }
 
 .multiBoxUnit {

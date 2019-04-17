@@ -1,6 +1,6 @@
 ﻿@using NetMud.Models;
 @{
-    var gameName = "Warrens: Prototype";
+    var gameName = "Zeno's Fight Club";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,9 +9,15 @@
 <div style="width: 100%;">
     <div class="descriptiveSection">
         <h2>@gameName</h2>
-        <h3>The prototype testbed for Warrens: White Sand</h3>
-        <h4>Current Phase: Aleph</h4>
-        <p>Play with Swords/</p>
+        <h3>The prototype testbed for Warrens: Vanta Isolation</h3>
+        <h4>Current Phase: GameJam</h4>
+        <p>
+            You're in a 20m long hallway. There is an exit. You must reach the exit to win but you can only cross half of the remaining distance at a time. Use the Forward command to move.
+        </p>
+        <p>
+            There's also other players trying to get to the exit and you can <span style="font-weight: 700">fight</span> them but you can only be hurt for half of your remaining life per hit.
+        </p>
+        <p>Can you reach the end? Can anyone be killed? Is there cake beyond the exit? It's all very <a href="https://www.iep.utm.edu/zeno-par/">philosophical</a>.</p>
     </div>
     @if (Model.LatestPatchNotes != null)
     {

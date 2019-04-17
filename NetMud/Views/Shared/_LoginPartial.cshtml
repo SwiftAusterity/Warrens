@@ -14,7 +14,7 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>@Html.ActionLink("Test Client", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
+            <li>@Html.ActionLink("Fight!", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
             <li id="currentCharacterSelector">
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {

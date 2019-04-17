@@ -7,6 +7,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
@@ -59,6 +60,7 @@ namespace NetMud.Controllers.GameAdmin
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 Rooms = TemplateCache.GetAll<IRoomTemplate>(),
+                FightingArts = TemplateCache.GetAll<IFightingArt>(),
 
                 HelpFiles = TemplateCache.GetAll<IHelp>(),
                 Journals = TemplateCache.GetAll<IJournalEntry>(),

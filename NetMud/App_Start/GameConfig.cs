@@ -45,7 +45,7 @@ namespace NetMud
             {
                 gossipConfig = new GossipConfig
                 {
-                    ClientName = "Warrens: White Sands"
+                    ClientName = "Warrens: Vanta Isolation"
                 };
             }
 
@@ -66,7 +66,7 @@ namespace NetMud
 
             if (gossipConfig.GossipActive)
             {
-                Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
+                Member[] playerList() => LiveCache.GetAll<IPlayer>()
                     .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
                     .Select(player => new Member()
                     {

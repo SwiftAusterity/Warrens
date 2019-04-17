@@ -1,5 +1,6 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
@@ -18,6 +19,7 @@ namespace NetMud.Models.Admin
         public DashboardViewModel()
         {
             Rooms = Enumerable.Empty<IRoomTemplate>();
+            FightingArts = Enumerable.Empty<IFightingArt>();
             HelpFiles = Enumerable.Empty<IHelp>();
             UIModules = Enumerable.Empty<IUIModule>();
             Journals = Enumerable.Empty<IJournalEntry>();
@@ -28,6 +30,7 @@ namespace NetMud.Models.Admin
 
         //Backing Data
         public IEnumerable<IRoomTemplate> Rooms { get; set; }
+        public IEnumerable<IFightingArt> FightingArts { get; set; }
         public IEnumerable<IHelp> HelpFiles { get; set; }
         public IEnumerable<IUIModule> UIModules { get; set; }
         public IEnumerable<IJournalEntry> Journals { get; set; }

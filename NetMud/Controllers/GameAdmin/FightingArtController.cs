@@ -48,7 +48,7 @@ namespace NetMud.Controllers.GameAdmin
                 SearchTerms = SearchTerms
             };
 
-            return View("~/Views/GameAdmin/Room/Index.cshtml", vModel);
+            return View("~/Views/GameAdmin/FightingArt/Index.cshtml", vModel);
         }
 
         [HttpPost]
@@ -114,7 +114,7 @@ namespace NetMud.Controllers.GameAdmin
                 DataObject = new FightingArt()
             };
 
-            return View("~/Views/GameAdmin/FightingArt/Add.cshtml", "_chromelessLayout", vModel);
+            return View("~/Views/GameAdmin/FightingArt/Add.cshtml", vModel);
         }
 
         [HttpPost]
@@ -156,7 +156,7 @@ namespace NetMud.Controllers.GameAdmin
                 DataObject = obj,
             };
 
-            return View("~/Views/GameAdmin/FightingArt/Edit.cshtml", "_chromelessLayout", vModel);
+            return View("~/Views/GameAdmin/FightingArt/Edit.cshtml", vModel);
         }
 
         [HttpPost]
