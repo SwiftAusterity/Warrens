@@ -28,7 +28,17 @@
     @Html.EditorFor(m => m.PositionResult)
 </div>
 
+<h4>Quality Changes</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.ResultQuality)
+    @Html.EditorFor(m => m.QualityValue)
+    @Html.EditorFor(m => m.AdditiveQuality)
+</div>
+
 <h4>Actor Criteria</h4>
 @Html.EditorFor(m => m.ActorCriteria)
 <h4>Victim Criteria</h4>
 @Html.EditorFor(m => m.VictimCriteria)
+
+<h4>Help Text</h4>
+@Html.EditorFor(m => m.HelpText)

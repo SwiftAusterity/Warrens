@@ -1,6 +1,5 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Combat;
-using NetMud.DataStructure.Room;
 using System;
 using System.Collections.Generic;
 

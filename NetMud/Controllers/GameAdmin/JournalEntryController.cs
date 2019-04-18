@@ -122,17 +122,8 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            JournalEntry newObj = new JournalEntry
-            {
-                Name = vModel.DataObject.Name,
-                Body = vModel.DataObject.Body,
-                Expired = vModel.DataObject.Expired,
-                ExpireDate = vModel.DataObject.ExpireDate,
-                MinimumReadLevel = vModel.DataObject.MinimumReadLevel,
-                Public = vModel.DataObject.Public,
-                PublishDate = vModel.DataObject.PublishDate,
-                Tags = vModel.DataObject.Tags
-            };
+            IJournalEntry newObj = vModel.DataObject;
+
             string message;
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {

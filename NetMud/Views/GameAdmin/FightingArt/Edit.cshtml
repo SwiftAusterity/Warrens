@@ -1,6 +1,6 @@
 ﻿@model NetMud.Models.Admin.AddEditFightingArtViewModel
 
-@{ 
+@{
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Fighting Art", new string[] { "Dashboard", "Fighting Arts" }, new string[] { "/GameAdmin", "/FightingArt" });
 }
 
@@ -13,7 +13,7 @@
 
         @Html.EditorFor(m => m.DataObject)
 
-        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ModalWindow = true })
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "FightingArt", IncludeCancel = true })
     }
 </section>
 

@@ -189,6 +189,9 @@ namespace NetMud.Controllers.GameAdmin
             obj.Setup = vModel.DataObject.Setup;
             obj.Stamina = vModel.DataObject.Stamina;
             obj.VictimCriteria = vModel.DataObject.VictimCriteria;
+            obj.ResultQuality = vModel.DataObject.ResultQuality;
+            obj.AdditiveQuality = vModel.DataObject.AdditiveQuality;
+            obj.QualityValue = vModel.DataObject.QualityValue;
 
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))

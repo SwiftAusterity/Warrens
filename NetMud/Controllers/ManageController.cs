@@ -772,20 +772,14 @@ namespace NetMud.Controllers
                 return RedirectToAction("Combos", new { Message = "Name already taken choose another." });
             }
 
-            FightingArtCombination newObj = new FightingArtCombination
-            {
-                Name = vModel.DataObject.Name,
-                Arts = vModel.DataObject.Arts,
-                FightingStances = vModel.DataObject.FightingStances,
-                IsSystem = vModel.DataObject.IsSystem
-            };
+            combos.Add(vModel.DataObject);
 
-            combos.Add(newObj);
+            authedUser.GameAccount.Config.Combos = combos;
 
             string message;
             if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddCombos[" + newObj.Name.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddCombos[" + vModel.DataObject.Name.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
             }
             else

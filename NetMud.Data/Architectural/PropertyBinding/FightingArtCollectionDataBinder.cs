@@ -2,6 +2,7 @@
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using NetMud.DataStructure.Combat;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.Data.Architectural.PropertyBinding
 {
@@ -9,21 +10,14 @@ namespace NetMud.Data.Architectural.PropertyBinding
     {
         public override object Convert(object input)
         {
-            string[] keys = (string[])input;
+            if (input == null)
+                return null;
 
-            SortedSet<IFightingArt> set = new SortedSet<IFightingArt>();
+            var valueCollection = input as IEnumerable<string>;
 
-            foreach(var key in keys)
-            {
-                var art = TemplateCache.Get<IFightingArt>(long.Parse(key));
+            var collective = new SortedSet<IFightingArt>(valueCollection.Select(str => TemplateCache.Get<IFightingArt>(long.Parse(str))));
 
-                if(art != null)
-                {
-                    set.Add(art);
-                }
-            }
-
-            return set;
+            return collective;
         }
     }
 }

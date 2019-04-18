@@ -12,7 +12,7 @@
 
         @Html.EditorFor(m => m.DataObject)
 
-        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ModalWindow = true })
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "FightingArt", IncludeCancel = true })
     }
 </section>
 

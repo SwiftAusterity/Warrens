@@ -7,7 +7,7 @@
     tableColumns.Add("Name", obj => linkText.Replace("99999999", obj.Name.ToString()));
 }
     
-@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { AddMethodName = "AddCombos", EntityTypeName = "FightingArtCombination", Name = "Combos", Columns = tableColumns, Values = Model.CurrentPageOfItems })
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { AddMethodName = "AddCombos", EntityTypeName = "FightingArtCombination", Name = "Combos", Columns = tableColumns, Values = Model.CurrentPageOfItems, IncludeDelete = false, IncludeUnapprove = false })
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

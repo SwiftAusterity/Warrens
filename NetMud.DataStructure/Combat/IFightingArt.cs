@@ -82,6 +82,21 @@ namespace NetMud.DataStructure.Combat
         IFightingArtCriteria VictimCriteria { get; set; }
 
         /// <summary>
+        /// The quality we're checking for
+        /// </summary>
+        string ResultQuality { get; set; }
+
+        /// <summary>
+        /// Is this quality additive or replace
+        /// </summary>
+        bool AdditiveQuality { get; set; }
+
+        /// <summary>
+        /// The value we're adding to the quality
+        /// </summary>
+        int QualityValue { get; set; }
+
+        /// <summary>
         /// Is this art valid to be used at the moment
         /// </summary>
         /// <param name="actor">who's doing the hitting</param>

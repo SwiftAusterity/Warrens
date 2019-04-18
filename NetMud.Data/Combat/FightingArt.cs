@@ -128,6 +128,45 @@ namespace NetMud.Data.Combat
         public IFightingArtCriteria VictimCriteria { get; set; }
 
         /// <summary>
+        /// The quality we're checking for
+        /// </summary>
+        [Display(Name = "Quality", Description = "Name of quality this adds to on use.")]
+        [DataType(DataType.Text)]
+        public string ResultQuality { get; set; }
+
+        /// <summary>
+        /// Is this quality additive or replace
+        /// </summary>
+        [Display(Name = "Additive", Description = "Does this quality add to an existing quality (true) or replace the value(false).")]
+        [UIHint("Boolean")]
+        public bool AdditiveQuality { get; set; }
+
+        /// <summary>
+        /// The value we're adding to the quality
+        /// </summary>
+        [Display(Name = "Amount", Description = "How much is added for the applied quality.")]
+        [DataType(DataType.Text)]
+        public int QualityValue { get; set; }
+
+        public FightingArt()
+        {
+            QualityValue = 0;
+            AdditiveQuality = true;
+            Aim = AnatomyAim.Mid;
+            PositionResult = new ValuePair<MobilityState>(MobilityState.None, MobilityState.None);
+            Stamina = new ValuePair<int>(1, 0);
+            Health = new ValuePair<int>(0, 1);
+            Stagger = 1;
+            Impact = 1;
+            Armor = 0;
+            Setup = 1;
+            Recovery = 1;
+            RekkaPosition = -1;
+            ActorCriteria = new FightingArtCriteria();
+            VictimCriteria = new FightingArtCriteria();
+        }
+
+        /// <summary>
         /// Is this art valid to be used at the moment
         /// </summary>
         /// <param name="actor">who's doing the hitting</param>
@@ -136,9 +175,9 @@ namespace NetMud.Data.Combat
         public bool IsValid(IPlayer actor, IPlayer victim, ulong distance, IFightingArt lastAttack = null)
         {
             return distance.IsBetweenOrEqual(DistanceRange.Low, DistanceRange.High)
-                && actor.CurrentHealth >= Health.Actor 
+                && actor.CurrentHealth >= Health.Actor
                 && actor.CurrentStamina >= Stamina.Actor
-                && (lastAttack == null || (lastAttack.RekkaKey.Equals(RekkaKey) && lastAttack.RekkaPosition == RekkaPosition -1));
+                && (lastAttack == null || (lastAttack.RekkaKey.Equals(RekkaKey) && lastAttack.RekkaPosition == RekkaPosition - 1));
         }
     }
 }

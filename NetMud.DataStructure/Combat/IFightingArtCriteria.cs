@@ -22,6 +22,16 @@ namespace NetMud.DataStructure.Combat
         MobilityState ValidPosition { get; set; }
 
         /// <summary>
+        /// The quality we're checking for
+        /// </summary>
+        string Quality { get; set; }
+
+        /// <summary>
+        /// The value range of the quality we're checking for
+        /// </summary>
+        ValueRange<int> QualityRange { get; set; }
+
+        /// <summary>
         /// Validate the criteria against the actor and victim
         /// </summary>
         /// <param name="actor">who's doing the hitting</param>
