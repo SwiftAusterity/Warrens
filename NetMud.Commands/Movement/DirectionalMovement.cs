@@ -12,8 +12,8 @@ namespace NetMud.Commands.Movement
     /// Handles mobile movement commands. All cardinal directions plus "enter <door>" type pathways
     /// </summary>
     [CommandSuppressName]
-    [CommandKeyword("forward", true, "ahead", true, false)]
-    [CommandKeyword("backward", true, "back", true, false)]
+    [CommandKeyword("forward", false, "ahead", true, false)]
+    [CommandKeyword("backward", false, "back", true, false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class DirectionalMovement : CommandPartial
@@ -31,7 +31,7 @@ namespace NetMud.Commands.Movement
         /// </summary>
         public override void Execute()
         {
-            string subject = Subject.ToString();
+            string subject = CommandWord.ToString();
             ulong newPosition = 0;
 
             switch (subject)

@@ -24,10 +24,6 @@
         <span>Up/Down Arrow</span>
         <span>Command History</span>
     </div>
-    <div>
-        <span>Numpad Arrows</span>
-        <span>Character Movement</span>
-    </div>
 </div>
 <div class="parserClientTop">
     <div class="statusIndicators">
@@ -42,9 +38,7 @@
     </div>
     <div style="width: 70%;">
         <div id="locationBreadcrumbs">
-            <span class="contentContainer" output-data-binding="Local.ZoneName"></span>
-            <span class="contentContainer" output-eval-key="Local.LocaleName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.LocaleName"></span></span>
-            <span class="contentContainer" output-eval-key="Local.RoomName" output-eval-code="if(data.length === 0) { element.css({'display': 'none'}); } else { element.css({'display' : 'block'}); }">&nbsp;>&nbsp;<span output-data-binding="Local.RoomName"></span></span>
+            <span class="contentContainer" output-data-binding="Local.ZoneName">A 20 meter by 20 meter room</span>
         </div>
         <div id="locationDescription">
             <div class="contentContainer" output-data-binding="Environment.TimeOfDay"></div>
@@ -204,10 +198,9 @@
             changeTrack($('.audioTrackSelector')[0]);
         }
 
-        Tutorial($('.statusIndicators'), "The current level of illumination in the area as well as weather conditions and sun/moon cycle indicators.", window.tutorialMode);
         Tutorial($('.inputContainer'), "This is where you type commands. The UP and DOWN arrow keys will cycle through prior input. Hit ENTER to submit commands.", window.tutorialMode);
         Tutorial($('#userControls'), "Music tracks (and muting controls) in addition to disconnect/reconnect can be found here.", window.tutorialMode);
-        Tutorial($('#locationBreadcrumbs'), "This is where you are in the world.", window.tutorialMode);
+        Tutorial($('#locationBreadcrumbs'), "This is where you are in the ROOM.", window.tutorialMode);
 
         $('#disconnect').click(function (e) {
             $('#input').val('');

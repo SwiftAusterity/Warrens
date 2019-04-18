@@ -137,13 +137,15 @@ namespace NetMud.Websock
             IEnumerable<string> populace = Enumerable.Empty<string>();
             string locationDescription = string.Empty;
 
+            decimal distance = currentLocation.CurrentSection == 0M ? 20M : 20M / (2M * currentLocation.CurrentSection);
+
             populace = currentLocation.GetContents(0).Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer));
-            locationDescription = string.Format("You are {0} to the door.", ulong.MaxValue / Math.Exp(currentLocation.CurrentSection));
+            locationDescription = string.Format("You are {0} meters from the exit.", distance);
 
             LocalStatus local = new LocalStatus
             {
                 Populace = populace.ToArray(),
-                LocationDescriptive = locationDescription
+                LocationDescriptive = locationDescription      
             };
 
             OutputStatus outputFormat = new OutputStatus
@@ -315,8 +317,8 @@ namespace NetMud.Websock
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
             List<string> welcomeMessage = new List<string>
             {
-                string.Format("Welcome to alpha phase Under the Eclipse, {0}", currentCharacter.FullName()),
-                "Please feel free to LOOK around."
+                string.Format("Welcome to Zeno's Fight Club, {0}", currentCharacter.FullName()),
+                "You're going to want to start moving FORWARD to get to that exit."
             };
 
             _currentPlayer.WriteTo(welcomeMessage);
