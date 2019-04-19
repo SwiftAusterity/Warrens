@@ -14,7 +14,6 @@ namespace NetMud.Combat
         /// </summary>
         /// <param name="actor">the person attacking</param>
         /// <param name="target">the person defending</param>
-        /// <param name="execute">is this a new attack or one thats waiting to trigger</param>
         public static bool ExecuteRound(IPlayer actor, IPlayer target)
         {
             if (actor.Stagger > 0)

@@ -37,7 +37,7 @@ namespace NetMud.Commands.Movement
             };
 
             //every 30 minutes after half an hour
-            Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound((IPlayer)Actor, null), 50, false);
+            Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound((IPlayer)Actor, null), 10, false);
 
             msg.ExecuteMessaging(Actor, null, null, Actor.CurrentLocation, null, 3);
         }
