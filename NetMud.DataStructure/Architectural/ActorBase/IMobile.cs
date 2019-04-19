@@ -3,7 +3,7 @@
     /// <summary>
     /// Midpoint entity interface for players/npcs
     /// </summary>
-    public interface IMobile : IActor, IGetTired, ICanBeHarmed
+    public interface IMobile : IActor, IGetTired, ICanBeHarmed, ICanFight
     {
         MobilityState StancePosition { get; set; }
     }

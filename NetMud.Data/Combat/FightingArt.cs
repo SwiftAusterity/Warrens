@@ -62,7 +62,7 @@ namespace NetMud.Data.Combat
         /// </summary>
         [Display(Name = "Distance Change", Description = "How should this alter the combatent distance.")]
         [DataType(DataType.Text)]
-        public ulong DistanceChange { get; set; }
+        public int DistanceChange { get; set; }
 
         /// <summary>
         /// How many action frames this takes to execute from init before the hit
@@ -175,7 +175,7 @@ namespace NetMud.Data.Combat
         public bool IsValid(IPlayer actor, IPlayer victim, ulong distance, IFightingArt lastAttack = null)
         {
             return distance.IsBetweenOrEqual(DistanceRange.Low, DistanceRange.High)
-                && actor.CurrentHealth >= Health.Actor
+                && actor.CurrentHealth >= (ulong)Health.Actor
                 && actor.CurrentStamina >= Stamina.Actor
                 && (lastAttack == null || (lastAttack.RekkaKey.Equals(RekkaKey) && lastAttack.RekkaPosition == RekkaPosition - 1));
         }

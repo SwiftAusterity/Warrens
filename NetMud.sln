@@ -25,11 +25,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Backup", "NetMud.Bac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.CentralControl", "NetMud.CentralControl\NetMud.CentralControl.csproj", "{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Physics", "NetMud.Physics\NetMud.Physics.csproj", "{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Communication", "NetMud.Communication\NetMud.Communication.csproj", "{7F19324F-1B9C-467D-816A-74A36EB74CDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Gossip", "NetMud.Gossip\NetMud.Gossip.csproj", "{D98549E9-9D8C-46A7-83B2-9A4D68504F31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Combat", "NetMud.Combat\NetMud.Combat.csproj", "{AD38F9BA-B856-472C-9292-0629A86CFCC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,10 +81,6 @@ Global
 		{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,6 +89,10 @@ Global
 		{D98549E9-9D8C-46A7-83B2-9A4D68504F31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D98549E9-9D8C-46A7-83B2-9A4D68504F31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D98549E9-9D8C-46A7-83B2-9A4D68504F31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

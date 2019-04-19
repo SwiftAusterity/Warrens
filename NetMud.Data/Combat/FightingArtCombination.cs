@@ -80,6 +80,11 @@ namespace NetMud.Data.Combat
         /// <returns>The next art to use</returns>
         public IFightingArt GetNext(IFightingArt lastAttack)
         {
+            if (lastAttack == null)
+            {
+                return Arts.FirstOrDefault();
+            }
+
             return lastAttack;
         }
 
@@ -91,7 +96,7 @@ namespace NetMud.Data.Combat
         /// <returns>yea or nay</returns>
         public bool IsValid(IPlayer actor, IPlayer victim, ulong distance)
         {
-            return Arts.All(art => art.IsValid(actor, victim, distance));
+            return Arts.All(art => art.IsValid(actor, victim, distance)) && (FightingStances.Count == 0 || FightingStances.Contains(actor.Stance));
         }
     }
 }

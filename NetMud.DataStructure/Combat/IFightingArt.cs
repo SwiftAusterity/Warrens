@@ -34,7 +34,7 @@ namespace NetMud.DataStructure.Combat
         /// <summary>
         /// How should this alter the combatent distance
         /// </summary>
-        ulong DistanceChange { get; set; }
+        int DistanceChange { get; set; }
 
         /// <summary>
         /// How many action frames this takes to execute from init before the hit

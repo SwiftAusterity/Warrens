@@ -128,7 +128,7 @@ namespace NetMud.Websock
                 Body = new BodyStatus
                 {
                     Overall = OverallStatus.Excellent,
-                    Health = _currentPlayer.CurrentHealth,
+                    Health = _currentPlayer.CurrentHealth == 0 ? 100 : 100 / (2M * _currentPlayer.CurrentHealth),
                     Stamina = _currentPlayer.CurrentStamina
                 }
             };

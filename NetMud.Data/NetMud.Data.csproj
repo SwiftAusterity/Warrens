@@ -145,10 +145,6 @@
       <Project>{D98549E9-9D8C-46A7-83B2-9A4D68504F31}</Project>
       <Name>NetMud.Gossip</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Physics\NetMud.Physics.csproj">
-      <Project>{28AABDF5-250E-40CE-88DE-BE3B9D23D95F}</Project>
-      <Name>NetMud.Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
       <Name>NetMud.Utility</Name>

@@ -8,6 +8,6 @@
         /// <summary>
         /// How much total health one has
         /// </summary>
-        int TotalHealth { get; set; }
+        ulong TotalHealth { get; set; }
     }
 }

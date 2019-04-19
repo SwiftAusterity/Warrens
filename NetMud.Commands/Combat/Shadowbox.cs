@@ -1,9 +1,11 @@
-﻿using NetMud.Commands.Attributes;
+﻿using NetMud.CentralControl;
+using NetMud.Combat;
+using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.Utility;
+using NetMud.DataStructure.Player;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Movement
@@ -27,9 +29,15 @@ namespace NetMud.Commands.Movement
         /// </summary>
         public override void Execute()
         {
-            var msg = new Message("You begin to shadowbox.");
+            IEnumerable<string> toOrigin = new string[] { string.Format("$A$ starts to fight with himself.") };
 
-            //TODO: Start combat loop
+            var msg = new Message("You begin to shadowbox.")
+            {
+                ToOrigin = toOrigin
+            };
+
+            //every 30 minutes after half an hour
+            Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound((IPlayer)Actor, null), 50, false);
 
             msg.ExecuteMessaging(Actor, null, null, Actor.CurrentLocation, null, 3);
         }

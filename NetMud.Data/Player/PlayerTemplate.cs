@@ -123,7 +123,7 @@ namespace NetMud.Data.Players
             }
         }
 
-        public int TotalHealth { get; set; }
+        public ulong TotalHealth { get; set; }
         public int TotalStamina { get; set; }
 
         /// <summary>

@@ -57,6 +57,7 @@
     <Compile Include="Administrative\StaffRank.cs" />
     <Compile Include="Architectural\ActorBase\IActor.cs" />
     <Compile Include="Architectural\ActorBase\ICanBeHarmed.cs" />
+    <Compile Include="Architectural\ActorBase\ICanFight.cs" />
     <Compile Include="Architectural\ActorBase\ICanHold.cs" />
     <Compile Include="Architectural\ActorBase\ICanMove.cs" />
     <Compile Include="Architectural\ActorBase\ICanSee.cs" />

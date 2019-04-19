@@ -9,7 +9,7 @@ namespace NetMud.Websock.OutputFormatting
     {
         [JsonConverter(typeof(DescriptiveEnumConverter<OverallStatus>))]
         public OverallStatus Overall { get; set; }
-        public int Health { get; set; }
+        public decimal Health { get; set; }
         public int Stamina { get; set; }
     }
 }

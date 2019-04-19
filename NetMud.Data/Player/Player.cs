@@ -70,26 +70,6 @@ namespace NetMud.Data.Players
         /// </summary>
         public StaffRank GamePermissionsRank { get; set; }
 
-        /// <summary>
-        /// Max stamina
-        /// </summary>
-        public int TotalStamina { get; set; }
-
-        /// <summary>
-        /// Max Health
-        /// </summary>
-        public int TotalHealth { get; set; }
-
-        /// <summary>
-        /// Current stamina for this
-        /// </summary>
-        public int CurrentStamina { get; set; }
-
-        /// <summary>
-        /// Current health for this
-        /// </summary>
-        public int CurrentHealth { get; set; }
-
         public MobilityState StancePosition { get; set; }
 
         #endregion
@@ -184,6 +164,68 @@ namespace NetMud.Data.Players
             return Descriptor.SendOutput(strings);
         }
 
+        #region health and combat
+        /// <summary>
+        /// Max stamina
+        /// </summary>
+        public int TotalStamina { get; set; }
+
+        /// <summary>
+        /// Max Health
+        /// </summary>
+        public ulong TotalHealth { get; set; }
+
+        /// <summary>
+        /// Current stamina for this
+        /// </summary>
+        public int CurrentStamina { get; set; }
+
+        /// <summary>
+        /// Current health for this
+        /// </summary>
+        public ulong CurrentHealth { get; set; }
+
+        /// <summary>
+        /// How much stagger this currently has
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Stagger { get; set; }
+
+        /// <summary>
+        /// How much stagger resistance this currently has
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Sturdy { get; set; }
+
+        /// <summary>
+        /// How off balance this is. Positive is forward leaning, negative is backward leaning, 0 is in balance
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Balance { get; set; }
+
+        /// <summary>
+        /// What stance this is currently in (for fighting art combo choosing)
+        /// </summary>
+        public string Stance { get; set; }
+
+        /// <summary>
+        /// Is the current attack executing
+        /// </summary>
+        public bool Executing { get; set; }
+
+        /// <summary>
+        /// Last attack executed
+        /// </summary>
+        public IFightingArt LastAttack { get; set; }
+
+        /// <summary>
+        /// Last combo used for attacking
+        /// </summary>
+        public IFightingArtCombination LastCombo { get; set; }
+
         public int Exhaust(int exhaustionAmount)
         {
             int stam = Sleep(-1 * exhaustionAmount);
@@ -193,16 +235,16 @@ namespace NetMud.Data.Players
             return stam;
         }
 
-        public int Harm(int damage)
+        public ulong Harm(ulong damage)
         {
-            int health = Recover(-1 * damage);
+            CurrentHealth = Math.Max(0, TotalHealth - damage);
 
             //TODO: Check for DEATH
 
-            return health;
+            return CurrentHealth;
         }
 
-        public int Recover(int recovery)
+        public ulong Recover(ulong recovery)
         {
             CurrentHealth = Math.Max(0, Math.Min(TotalHealth, TotalHealth + recovery));
 
@@ -215,6 +257,7 @@ namespace NetMud.Data.Players
 
             return CurrentStamina;
         }
+        #endregion
 
         /// <summary>
         /// Get the live version of this in the world
@@ -318,7 +361,7 @@ namespace NetMud.Data.Players
             SurName = ch.SurName;
             StillANoob = ch.StillANoob;
             GamePermissionsRank = ch.GamePermissionsRank;
-            Combos = ch.Combos;
+            Combos = new HashSet<IFightingArtCombination>(ch.Account.Config.Combos);
 
             IGlobalPosition spawnTo = position ?? GetBaseSpawn();
 

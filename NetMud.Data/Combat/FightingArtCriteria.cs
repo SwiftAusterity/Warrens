@@ -60,8 +60,13 @@ namespace NetMud.Data.Combat
         /// <returns></returns>
         public bool Validate(IPlayer target, ulong distance)
         {
-            return target.CurrentStamina.IsBetweenOrEqual(StaminaRange.Low, StaminaRange.High)
-                && target.CurrentHealth.IsBetweenOrEqual(HealthRange.Low, HealthRange.High)
+            var stamLow = StaminaRange.Low == -1 ? 0 : StaminaRange.Low;
+            var stamHigh = StaminaRange.High == -1 ? int.MaxValue : StaminaRange.High;
+            ulong healthLow = HealthRange.Low == -1 ? 0 : (ulong)HealthRange.Low;
+            ulong healthHigh = HealthRange.High == -1 ? ulong.MaxValue : (ulong)HealthRange.High;
+
+            return target.CurrentStamina.IsBetweenOrEqual(stamLow, stamHigh)
+                && target.CurrentHealth.IsBetweenOrEqual(healthLow, healthHigh)
                 && target.StancePosition == ValidPosition;
         }
     }
