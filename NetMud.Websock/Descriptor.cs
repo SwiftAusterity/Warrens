@@ -317,7 +317,7 @@ namespace NetMud.Websock
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
             List<string> welcomeMessage = new List<string>
             {
-                string.Format("Welcome to Zeno's Fight Club, {0}", currentCharacter.FullName()),
+                string.Format("Welcome to Zeno's Fight Club, {0}.", currentCharacter.FullName()),
                 "You're going to want to start moving FORWARD to get to that exit."
             };
 

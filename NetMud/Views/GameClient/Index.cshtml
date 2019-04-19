@@ -27,14 +27,6 @@
 </div>
 <div class="parserClientTop">
     <div class="statusIndicators">
-        <div output-binding="Environment.Sun" title="Sun">
-        </div>
-        <div output-binding="Environment.Moon" title="Moon">
-        </div>
-        <div output-binding="Environment.Weather">
-        </div>
-        <div output-binding="Environment.Visibility" title="Brightness">
-        </div>
     </div>
     <div style="width: 70%;">
         <div id="locationBreadcrumbs">
@@ -51,15 +43,6 @@
             <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
                 <li class="dropdown-header" style="color: mediumvioletred;">Client</li>
                 <li><a href="#" id="keyMap" class="moduleMenuItem"><span class="glyphicon glyphicon-new-window"></span>Key Legend</a></li>
-                <li><a href="#" id="clientReload" class="moduleMenuItem"><span class="glyphicon glyphicon-refresh"></span>Reload UI</a></li>
-                <li>
-                    <a href="#" class="openModulePopup moduleMenuItem" data-origin-quadrant="@Model"><span class="glyphicon glyphicon-open"></span>Popup Module</a>
-                    <input id="loadModulePopupName" title="Module Name?" class="moduleNameFinder" />
-                </li>
-                <li class="divider"></li>
-                <li><a href="#" id="saveAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-upload"></span>Save All Modules</a></li>
-                <li><a href="#" id="reloadAllModules" class="moduleMenuItem"><span class="glyphicon glyphicon-download"></span>Load UI From Config</a></li>
-                <li><a href="#" id="wipeUI" class="moduleMenuItem"><span class="glyphicon glyphicon-remove"></span>Wipe UI</a></li>
                 <li class="divider"></li>
                 <li><a href="#" id="disconnect" class="moduleMenuItem"><span class="glyphicon glyphicon-remove-sign"></span>Disconnect From Server</a></li>
                 <li class="dropdown-header" style="color: mediumvioletred;">Account Config</li>
@@ -109,10 +92,10 @@
 <div class="parserClient">
     <div class="parserClientLeft sidebar">
         <div id="quadrant-1" data-module-name="" quadrant-number="1" class="quadrant">
-            @Html.Partial("DockerSettings", 1)
+            <!--health status-->
         </div>
         <div id="quadrant-2" data-module-name="" quadrant-number="2" class="quadrant">
-            @Html.Partial("DockerSettings", 2)
+            <!--victim health status-->
         </div>
     </div>
     <div class="textParserClient">
@@ -120,10 +103,10 @@
     </div>
     <div class="parserClientRight sidebar">
         <div id="quadrant-3" data-module-name="" quadrant-number="3" class="quadrant">
-            @Html.Partial("DockerSettings", 3)
+            <!--population of the area-->
         </div>
         <div id="quadrant-4" data-module-name="" quadrant-number="4" class="quadrant">
-            @Html.Partial("DockerSettings", 4)
+            <!--???-->
         </div>
     </div>
 </div>
@@ -158,8 +141,6 @@
         window.commandArray = ['look'];
         window.commandPointer = 0;
         window.lastOutput = '';
-        window.openedWindows = [];
-        window.UILoading = true;
         window.BatmanMode = false;
 
         window.playlists = [
@@ -173,7 +154,6 @@
         $('input#loadModuleName').hide();
         $('input#loadModulePopupName').hide();
 
-        LoadUIModules();
         submitCharacter();
 
         if (window.soundMuted) {
@@ -214,178 +194,6 @@
 
             $('disconnect').off('click');
             return false;
-        });
-
-        $(".quadrantDocker[data-destination-quadrant!='-1']").click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-            var originName = $origin.attr('data-module-name');
-
-            var destinationNumber = $this.attr('data-destination-quadrant');
-            var $destination = $('div#quadrant-' + destinationNumber + '.quadrant');
-            var destinationName = $destination.attr('data-module-name');
-
-            var myContent = $origin.children('.contentContainer');
-            var theirContent = $destination.children('.contentContainer');
-
-            myContent.detach();
-            theirContent.detach();
-
-            myContent.appendTo($destination);
-            theirContent.appendTo($origin);
-
-            $origin.attr('data-module-name', destinationName);
-            $destination.attr('data-module-name', originName);
-
-            $origin.children('ul').children('li#quadrantName').text(destinationName);
-            $destination.children('ul').children('li#quadrantName').text(originName);
-            return false;
-       });
-
-        $(".quadrantDocker[data-destination-quadrant='-1']").click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-            var originName = $origin.attr('data-module-name');
-
-            var myContent = $origin.children('.contentContainer');
-
-            myContent.detach();
-            $origin.attr('data-module-name', 'Quadrant ' + originNumber);
-            $origin.children('ul').children('li#quadrantName').text('Quadrant ' + originNumber);
-
-            openModularUI(500, 500, originName, myContent);
-            return false;
-        });
-
-        $(".quadrantLoad").click(function (e) {
-            $('input#loadModuleName').show().focus();
-            $(this).hide();
-
-            $('input#loadModuleName').keydown(function (e) {
-                var moduleName = $(this).val();
-                var originNumber = $(this).prev().attr('data-origin-quadrant');
-
-                switch (e.keyCode) {
-                    case 13: //enter
-                        GetModuleUI(originNumber, moduleName);
-                        break;
-                    default:
-                        return true;
-                }
-
-                $('input#loadModuleName').off('keydown');
-                $('input#loadModuleName').hide();
-                $(".quadrantLoad").show();
-            });
-
-            return false;
-        });
-
-        $(".openModulePopup").click(function (e) {
-            $('input#loadModulePopupName').show().focus();
-            $(this).hide();
-
-            $('input#loadModulePopupName').keydown(function (e) {
-                var moduleName = $(this).val();
-
-                switch (e.keyCode) {
-                    case 13: //enter
-                        $.get('/api/ClientDataApi/GetUIModuleContent/' + moduleName, function (data) {
-                            var newContent = data.BodyHtml;
-
-                            if (newContent != '') {
-                                openModularUI(500, 500, moduleName, newContent);
-
-                                ReloadUI();
-                            }
-                        });
-                        break;
-                    default:
-                        return true;
-                }
-
-                $('input#loadModulePopupName').off('keydown');
-                $('input#loadModulePopupName').hide();
-                $(".openModulePopup").show();
-            });
-
-            return false;
-        });
-
-        $(".quadrantSave").click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-            SaveUIModule(originNumber);
-            return false;
-        });
-
-        $('.quadrantWipe').click(function (e) {
-            var $this = $(this);
-
-            var originNumber = $this.attr('data-origin-quadrant');
-
-            var $origin = $('div#quadrant-' + originNumber + '.quadrant');
-            $origin.attr('data-module-name', '');
-            $origin.children('ul').children('li#quadrantName').text('');
-
-            var myContent = $origin.children('.contentContainer');
-
-            myContent.detach();
-
-            return false;
-        });
-
-        $("#reloadAllModules").click(function (e) {
-            LoadUIModules();
-            return false;
-       });
-
-        $('#wipeUI').click(function (e) {
-            WipeUI();
-            return false;
-        });
-
-        $("#saveAllModules").click(function (e) {
-            SaveUIModule(1, function () {
-                SaveUIModule(2, function () {
-                    SaveUIModule(3, function () {
-                        SaveUIModule(4, null)
-                    })
-                })
-            });
-
-            window.openedWindows.forEach(function (win) {
-                var wTest = window.open("", win.Window.name);
-
-                if (wTest.document.querySelector('#contentArea') != undefined) {
-                    var contentArea = win.Window.document.querySelector('#contentArea');
-
-                    var moduleName = $(contentArea).attr('data-module-name');
-                    $.post('/api/ClientDataApi/SaveUIModuleContent/' + moduleName + '/-1');
-                } else {
-                    //remove it
-                    $.post('/api/ClientDataApi/RemoveUIModuleContent/' + win.name + '/-1');
-                }
-            });
-
-            return false;
-        });
-
-        $(".moduleNameFinder").autocomplete({
-            source: "/api/ClientDataApi/GetUIModuleNames",
-            minLength: 3,
-            select: function (event, ui) {
-                var originNumber = $(this).prev().attr('data-origin-quadrant');
-                GetModuleUI(originNumber, ui.item.value);
-
-                $('input#loadModuleName').hide();
-                $(".quadrantLoad").show();
-            }
         });
 
         $('#disconnect').click(function (e) {

@@ -53,6 +53,7 @@
     <Compile Include="Attributes\CommandPermissionAttribute.cs" />
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
     <Compile Include="Attributes\CommandUsage.cs" />
+    <Compile Include="Combat\Stance.cs" />
     <Compile Include="Combat\Shadowbox.cs" />
     <Compile Include="GossipServer\Gossip.cs" />
     <Compile Include="Comm\Shout.cs" />

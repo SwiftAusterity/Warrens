@@ -374,8 +374,6 @@
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\tooltip.js" />
     <Content Include="Scripts\ClientHelpers.js" />
-    <Content Include="Views\GameClient\DockerSettings.cshtml" />
-    <Content Include="Views\GameClient\ModularWindow.cshtml" />
     <Content Include="Views\Shared\ReportBug.cshtml" />
     <Content Include="Views\Manage\LogSubscriptions.cshtml" />
     <Content Include="Views\GameAdmin\UIModules\Index.cshtml" />

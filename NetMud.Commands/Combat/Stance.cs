@@ -9,15 +9,16 @@ using System.Collections.Generic;
 
 namespace NetMud.Commands.Movement
 {
-    [CommandKeyword("shadowbox", false)]
+    [CommandKeyword("stance", false)]
+    [CommandParameter(CommandUsage.Subject, typeof(string), CacheReferenceType.Greedy, false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Shadowbox : CommandPartial
+    public class Stance : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public Shadowbox()
+        public Stance()
         {
             //Generic constructor for all IHelpfuls is needed
         }
@@ -27,15 +28,12 @@ namespace NetMud.Commands.Movement
         /// </summary>
         public override void Execute()
         {
-            IEnumerable<string> toOrigin = new string[] { string.Format("$A$ starts to fight with himself.") };
+            var newStance = Subject.ToString();
+            var player = (IPlayer)Actor;
 
-            var msg = new Message("You begin to shadowbox.")
-            {
-                ToOrigin = toOrigin
-            };
+            player.Stance = newStance;
 
-            //every 30 minutes after half an hour
-            Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound((IPlayer)Actor, null), 10, false);
+            var msg = new Message(string.Format("You change your stance to {0}.", newStance));
 
             msg.ExecuteMessaging(Actor, null, null, Actor.CurrentLocation, null, 3);
         }
@@ -48,7 +46,7 @@ namespace NetMud.Commands.Movement
         {
             List<string> sb = new List<string>
             {
-                string.Format("Valid Syntax: shadowbox")
+                string.Format("Valid Syntax: stance &lt;new stance&gt;")
             };
 
             return sb;
@@ -61,7 +59,7 @@ namespace NetMud.Commands.Movement
         {
             get
             {
-                return @"Shadowbox is a way to fight yourself. You can't use shadowbox if you're already in combat and someone attacking you will cancel it.";
+                return @"Stance allows you to change your fighting stance. It is free-text and is tied to what stance you set for your Fighting Art Combos.";
             }
             set { }
         }
