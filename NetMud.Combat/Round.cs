@@ -1,4 +1,5 @@
 ﻿using NetMud.Communication.Messaging;
+using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using System;
@@ -16,10 +17,27 @@ namespace NetMud.Combat
         /// <param name="target">the person defending</param>
         public static bool ExecuteRound(IPlayer actor, IPlayer target)
         {
+            //Stagger clearance comes before ending a fight
             if (actor.Stagger > 0)
             {
                 actor.Stagger -= 1;
                 return true;
+            }
+
+            if (actor == target)
+            {
+                target = null;
+            }
+            else
+            {
+                if (!actor.IsFighting() && target == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    actor.StartFighting(target);
+                }
             }
 
             IFightingArt attack = actor.LastAttack;

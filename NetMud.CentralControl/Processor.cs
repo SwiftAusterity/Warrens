@@ -47,7 +47,11 @@ namespace NetMud.CentralControl
 
                         foreach (Tuple<Func<bool>, int> pulsar in subList)
                         {
-                            pulsar.Item1.Invoke();
+                            //false return means it wants to be removed
+                            if(!pulsar.Item1.Invoke())
+                            {
+                                RemoveSubscriber(designator, pulsar);
+                            }
                         }
 
                         subArgs.CurrentPulse++;
@@ -363,6 +367,29 @@ namespace NetMud.CentralControl
             }
 
             return null;
+        }
+
+        private static void RemoveSubscriber(string designator, Tuple<Func<bool>, int> memberPulser)
+        {
+            string taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
+
+            try
+            {
+                if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> subscriberList))
+                {
+                    subscriberList = new List<Tuple<Func<bool>, int>>();
+                }
+
+                subscriberList.Remove(memberPulser);
+
+                globalCache.Remove(taskKey);
+
+                globalCache.Add(taskKey, subscriberList, globalPolicy);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, false);
+            }
         }
 
         /// <summary>

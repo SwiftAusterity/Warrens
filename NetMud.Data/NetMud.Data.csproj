@@ -128,6 +128,10 @@
       <Project>{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}</Project>
       <Name>NetMud.CentralControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Combat\NetMud.Combat.csproj">
+      <Project>{AD38F9BA-B856-472C-9292-0629A86CFCC6}</Project>
+      <Name>NetMud.Combat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>
       <Name>NetMud.Communication</Name>

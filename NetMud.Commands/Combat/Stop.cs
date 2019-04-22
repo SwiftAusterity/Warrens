@@ -4,20 +4,22 @@ using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Player;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Movement
 {
-    [CommandKeyword("shadowbox", false)]
+    [CommandKeyword("stop", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Shadowbox : CommandPartial
+    public class Stop : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public Shadowbox()
+        public Stop()
         {
             //Generic constructor for all IHelpfuls is needed
         }
@@ -27,16 +29,24 @@ namespace NetMud.Commands.Movement
         /// </summary>
         public override void Execute()
         {
-            IEnumerable<string> toOrigin = new string[] { string.Format("$A$ starts to fight with himself.") };
+            IEnumerable<string> toOrigin = new string[] { string.Format("$A$ stops fighting.") };
 
-            var msg = new Message("You begin to shadowbox.")
+            var msg = new Message("You stop fighting.")
             {
                 ToOrigin = toOrigin
             };
 
             var player = (IPlayer)Actor;
 
-            player.StartFighting(null);
+            if (player.IsFighting())
+            {
+                player.StopFighting();
+            }
+            else
+            {
+                msg.ToActor = new string[] { string.Format("You weren't fighting anyone.") };
+                msg.ToOrigin = new string[0];
+            }
 
             msg.ExecuteMessaging(Actor, null, null, Actor.CurrentLocation, null, 3);
         }
@@ -49,7 +59,7 @@ namespace NetMud.Commands.Movement
         {
             List<string> sb = new List<string>
             {
-                string.Format("Valid Syntax: shadowbox")
+                string.Format("Valid Syntax: stop")
             };
 
             return sb;
@@ -62,7 +72,7 @@ namespace NetMud.Commands.Movement
         {
             get
             {
-                return @"Shadowbox is a way to fight yourself. You can't use shadowbox if you're already in combat and someone attacking you will cancel it.";
+                return @"Stop will cancel all fighting intent. It wont stop someone else from attacking you, though.";
             }
             set { }
         }

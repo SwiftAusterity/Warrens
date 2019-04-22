@@ -1,4 +1,6 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.CentralControl;
+using NetMud.Combat;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess.Cache;
@@ -134,6 +136,8 @@ namespace NetMud.Data.Players
         {
             Qualities = new HashSet<IQuality>();
             Combos = new HashSet<IFightingArtCombination>();
+            EnemyGroup = new HashSet<Tuple<IPlayer, int>>();
+            AllianceGroup = new HashSet<IPlayer>();
         }
 
         /// <summary>
@@ -146,6 +150,8 @@ namespace NetMud.Data.Players
             TemplateId = character.Id;
             AccountHandle = character.AccountHandle;
             Combos = new HashSet<IFightingArtCombination>();
+            EnemyGroup = new HashSet<Tuple<IPlayer, int>>();
+            AllianceGroup = new HashSet<IPlayer>();
             GetFromWorldOrSpawn();
         }
 
@@ -214,17 +220,121 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Is the current attack executing
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public bool Executing { get; set; }
 
         /// <summary>
         /// Last attack executed
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public IFightingArt LastAttack { get; set; }
 
         /// <summary>
         /// Last combo used for attacking
         /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
         public IFightingArtCombination LastCombo { get; set; }
+
+        /// <summary>
+        /// Who you're primarily attacking
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IPlayer PrimaryTarget { get; set; }
+
+        /// <summary>
+        /// Who you're fighting in general
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<Tuple<IPlayer, int>> EnemyGroup { get; set; }
+
+        /// <summary>
+        /// Who you're support/tank focus is
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IPlayer PrimaryDefending { get; set; }
+
+        /// <summary>
+        /// Who is in your group
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<IPlayer> AllianceGroup { get; set; }
+
+
+        /// <summary>
+        /// Stop all aggression
+        /// </summary>
+        public void StopFighting()
+        {
+            LastCombo = null;
+            LastAttack = null;
+            Executing = false;
+            PrimaryTarget = null;
+            EnemyGroup = new HashSet<Tuple<IPlayer, int>>();
+        }
+
+        /// <summary>
+        /// Start a fight or switch targets forcibly
+        /// </summary>
+        /// <param name="victim"></param>
+        public void StartFighting(IPlayer victim)
+        {
+            var wasFighting = IsFighting();
+
+            if(victim == null)
+            {
+                victim = this;
+            }
+
+            if(victim != GetTarget())
+            {
+                PrimaryTarget = victim;
+            }
+
+            if(!EnemyGroup.Any(enemy => enemy.Item1 == PrimaryTarget))
+            {
+                EnemyGroup.Add(new Tuple<IPlayer, int>(PrimaryTarget, 0));
+            }
+
+            if (!wasFighting)
+            {
+                //every 30 minutes after half an hour
+                Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound(this, victim), 1, false);
+            }
+        }
+
+        /// <summary>
+        /// Get the target to attack
+        /// </summary>
+        /// <returns>A target or self if shadowboxing</returns>
+        public IPlayer GetTarget()
+        {
+            var target = PrimaryTarget;
+
+            //TODO: AI for NPCs for other branches
+            if(PrimaryTarget == null || (PrimaryTarget.BirthMark.Equals(BirthMark) && EnemyGroup.Count() > 0))
+            {
+                PrimaryTarget = EnemyGroup.OrderByDescending(enemy => enemy.Item2).FirstOrDefault()?.Item1;
+                target = PrimaryTarget;
+            }
+
+            return target;
+        }
+
+        /// <summary>
+        /// Is this actor in combat
+        /// </summary>
+        /// <returns>yes or no</returns>
+        public bool IsFighting()
+        {
+            return GetTarget() != null;
+        }
 
         public int Exhaust(int exhaustionAmount)
         {
