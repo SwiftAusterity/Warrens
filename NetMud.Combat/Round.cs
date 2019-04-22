@@ -62,7 +62,12 @@ namespace NetMud.Combat
                 actor.LastAttack = attack;
                 actor.Executing = true;
 
-                return true;
+                if (actor.Stagger > 0)
+                {
+                    actor.Stagger -= 1;
+                    return true;
+                }
+                //else we just run right into the combo if there's no setup
             }
 
             //execute the attack

@@ -36,11 +36,6 @@ namespace NetMud.DataStructure.Player
         bool GossipSubscriber { get; set; }
 
         /// <summary>
-        /// The modules to load. Module, quadrant
-        /// </summary>
-        IEnumerable<Tuple<IUIModule, int>> UIModules { get; set; }
-
-        /// <summary>
         /// Background music playlists
         /// </summary>
         HashSet<IPlaylist> Playlists { get; set; }

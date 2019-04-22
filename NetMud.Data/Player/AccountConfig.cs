@@ -129,36 +129,6 @@ namespace NetMud.Data.Players
             }
         }
 
-        [JsonProperty("UIModules")]
-        public IList<Tuple<TemplateCacheKey, int>> _UIModules { get; set; }
-
-        /// <summary>
-        /// The modules to load. Module, quadrant
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public IEnumerable<Tuple<IUIModule, int>> UIModules
-        {
-            get
-            {
-                if (_UIModules == null)
-                {
-                    _UIModules = new List<Tuple<TemplateCacheKey, int>>();
-                }
-
-                return _UIModules.Select(k => new Tuple<IUIModule, int>(TemplateCache.Get<IUIModule>(k.Item1), k.Item2));
-            }
-            set
-            {
-                if (value == null)
-                {
-                    return;
-                }
-
-                _UIModules = value.Select(k => new Tuple<TemplateCacheKey, int>(new TemplateCacheKey(k.Item1), k.Item2)).ToList();
-            }
-        }
-
         [JsonConstructor]
         public AccountConfig()
         {
@@ -166,7 +136,6 @@ namespace NetMud.Data.Players
             Notifications = new List<IPlayerMessage>();
             Playlists = new HashSet<IPlaylist>();
             Combos = Enumerable.Empty<IFightingArtCombination>();
-            UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
         }
 
         public AccountConfig(IAccount account)
@@ -177,7 +146,6 @@ namespace NetMud.Data.Players
             Notifications = new List<IPlayerMessage>();
             Playlists = new HashSet<IPlaylist>();
             Combos = Enumerable.Empty<IFightingArtCombination>();
-            UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
 
             if (string.IsNullOrWhiteSpace(Name))
             {
@@ -280,15 +248,6 @@ namespace NetMud.Data.Players
                 else
                 {
                     Acquaintences = newConfig.Acquaintences;
-                }
-
-                if (newConfig.UIModules == null)
-                {
-                    UIModules = Enumerable.Empty<Tuple<IUIModule, int>>();
-                }
-                else
-                {
-                    UIModules = newConfig.UIModules;
                 }
 
                 if (newConfig.Combos == null)

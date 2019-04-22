@@ -64,7 +64,6 @@ namespace NetMud.Controllers.GameAdmin
 
                 HelpFiles = TemplateCache.GetAll<IHelp>(),
                 Journals = TemplateCache.GetAll<IJournalEntry>(),
-                UIModules = ConfigDataCache.GetAll<IUIModule>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),

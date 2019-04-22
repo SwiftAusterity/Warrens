@@ -135,7 +135,7 @@ namespace NetMud.Controllers.GameAdmin
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddFightingArt[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
             }
 
-            return RedirectToRoute("Index", new { Message = message });
+            return RedirectToAction("Index", new { Message = message });
         }
 
         [HttpGet]
@@ -202,7 +202,7 @@ namespace NetMud.Controllers.GameAdmin
             {
             }
 
-            return RedirectToRoute("Index");
+            return RedirectToAction("Index");
         }
     }
 }

@@ -365,16 +365,9 @@ namespace NetMud.Data.Players
 
             IGlobalPosition spawnTo = position ?? GetBaseSpawn();
 
-            //Set the data context's stuff too so we don't have to do this over again
-            ch.Save(ch.Account, StaffRank.Player); //characters/players dont actually need approval
-
             TryMoveTo(spawnTo);
 
-            UpsertToLiveWorldCache(true);
-
             KickoffProcesses();
-
-            Save();
         }
 
         public override string TryMoveTo(IGlobalPosition newPosition)
@@ -391,6 +384,8 @@ namespace NetMud.Data.Players
                 ch.CurrentSlice = newPosition.CurrentSection;
                 ch.SystemSave();
                 ch.PersistToCache();
+                Save();
+                UpsertToLiveWorldCache(true);
             }
             else
             {

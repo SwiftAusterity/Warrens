@@ -42,7 +42,7 @@ namespace NetMud.Data.Architectural
         /// </summary>
         [StringDataIntegrity("Name is blank")]
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Given Name", Description = "First Name.")]
+        [Display(Name = "Name", Description = "Primary name this is known by.")]
         [DataType(DataType.Text)]
         [Required]
         public string Name { get; set; }
@@ -571,30 +571,22 @@ namespace NetMud.Data.Architectural
 
         #region Equality Functions
         /// <summary>
-        /// -99 = null input
-        /// -1 = wrong type
-        /// 0 = same type, wrong id
-        /// 1 = same reference (same id, same type)
+        /// Checks ordering
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="other"></param>
         /// <returns></returns>
         public int CompareTo(IKeyedData other)
         {
-            if (other != null)
+            if (other != null && other.GetType() == GetType())
             {
                 try
                 {
-                    if (other.GetType() != GetType())
-                    {
-                        return -1;
-                    }
-
                     if (other.Id.Equals(Id))
                     {
-                        return 1;
+                        return 0;
                     }
 
-                    return 0;
+                    return (int)(other.Id - Id);
                 }
                 catch (Exception ex)
                 {

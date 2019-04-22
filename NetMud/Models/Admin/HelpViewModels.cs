@@ -68,10 +68,10 @@ namespace NetMud.Models.Admin
 
         public AddEditHelpDataViewModel(string archivePath, IHelp item) : base(archivePath, item)
         {
-            DataObject = item;
+            DataObject = (Help)item;
         }
 
         [UIHint("Help")]
-        public IHelp DataObject { get; set; }
+        public Help DataObject { get; set; }
     }
 }

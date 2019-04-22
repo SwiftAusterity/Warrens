@@ -36,7 +36,7 @@ namespace NetMud.Data.Combat
         public HashSet<string> FightingStances { get; set; }
 
         [JsonProperty("Arts")]
-        public SortedSet<TemplateCacheKey> _arts { get; set; }
+        public HashSet<TemplateCacheKey> _arts { get; set; }
 
         /// <summary>
         /// The available arts for this combo
@@ -46,16 +46,16 @@ namespace NetMud.Data.Combat
         [Display(Name = "Fighting Arts", Description = "Which fighting arts are in this combo, in order.")]
         [UIHint("FightingArtsCollection")]
         [FightingArtCollectionDataBinder]
-        public SortedSet<IFightingArt> Arts
+        public HashSet<IFightingArt> Arts
         {
             get
             {
                 if (_arts == null)
                 {
-                    _arts = new SortedSet<TemplateCacheKey>();
+                    _arts = new HashSet<TemplateCacheKey>();
                 }
 
-                return new SortedSet<IFightingArt>(_arts.Select(k => TemplateCache.Get<IFightingArt>(k)));
+                return new HashSet<IFightingArt>(_arts.Select(k => TemplateCache.Get<IFightingArt>(k)));
             }
             set
             {
@@ -64,7 +64,7 @@ namespace NetMud.Data.Combat
                     return;
                 }
 
-                _arts = new SortedSet<TemplateCacheKey>(value.Select(k => new TemplateCacheKey(k)));
+                _arts = new HashSet<TemplateCacheKey>(value.Select(k => new TemplateCacheKey(k)));
             }
         }
 
@@ -80,12 +80,34 @@ namespace NetMud.Data.Combat
         /// <returns>The next art to use</returns>
         public IFightingArt GetNext(IFightingArt lastAttack)
         {
-            if (lastAttack == null)
+            var nextAttack = Arts.FirstOrDefault();
+            try
             {
-                return Arts.FirstOrDefault();
+                if (lastAttack != null)
+                {
+                    if (string.IsNullOrWhiteSpace(lastAttack.RekkaKey) || lastAttack.RekkaPosition < 0)
+                    {
+                        var myIndex = Arts.ToList().IndexOf(lastAttack);
+                        nextAttack = Arts.Skip(myIndex + 1).FirstOrDefault();
+                    }
+                    else
+                    {
+                        nextAttack = Arts.FirstOrDefault(art => art.RekkaKey.Equals(lastAttack.RekkaKey) && art.RekkaPosition == lastAttack.RekkaPosition + 1);
+                    }
+
+                    if (nextAttack == null)
+                    {
+                        //just throwing to redefault
+                        throw new Exception();
+                    }
+                }
+            }
+            catch
+            {
+                nextAttack = Arts.FirstOrDefault();
             }
 
-            return lastAttack;
+            return nextAttack;
         }
 
         /// <summary>

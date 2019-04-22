@@ -118,7 +118,6 @@
     <Compile Include="Player\PlayerMessage.cs" />
     <Compile Include="Player\PlayerTemplate.cs" />
     <Compile Include="Player\Playlist.cs" />
-    <Compile Include="Player\UIModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room\Room.cs" />
     <Compile Include="Room\RoomTemplate.cs" />

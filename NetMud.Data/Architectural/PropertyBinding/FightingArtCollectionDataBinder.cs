@@ -15,7 +15,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
 
             var valueCollection = input as IEnumerable<string>;
 
-            var collective = new SortedSet<IFightingArt>(valueCollection.Select(str => TemplateCache.Get<IFightingArt>(long.Parse(str))));
+            var collective = new HashSet<IFightingArt>(valueCollection.Select(str => TemplateCache.Get<IFightingArt>(long.Parse(str))));
 
             return collective;
         }

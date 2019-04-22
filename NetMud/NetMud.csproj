@@ -238,7 +238,6 @@
     <Compile Include="Controllers\GameAdmin\LiveAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\FightingArtController.cs" />
-    <Compile Include="Controllers\GameAdmin\UIModulesController.cs" />
     <Compile Include="Controllers\GameAdmin\RoomController.cs" />
     <Compile Include="Controllers\GameAdmin\PlayerController.cs" />
     <Compile Include="Controllers\GameAdmin\HelpController.cs" />
@@ -257,7 +256,6 @@
     <Compile Include="Models\Admin\LiveDataModels.cs" />
     <Compile Include="Models\Admin\FightingArtViewModels.cs" />
     <Compile Include="Models\Admin\CombosViewModels.cs" />
-    <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\ReferenceDataDropdownModel.cs" />
     <Compile Include="Models\Admin\PlayerViewModels.cs" />
     <Compile Include="Models\Admin\RoomViewModels.cs" />
@@ -376,12 +374,6 @@
     <Content Include="Scripts\ClientHelpers.js" />
     <Content Include="Views\Shared\ReportBug.cshtml" />
     <Content Include="Views\Manage\LogSubscriptions.cshtml" />
-    <Content Include="Views\GameAdmin\UIModules\Index.cshtml" />
-    <Content Include="Views\GameAdmin\UIModules\Edit.cshtml" />
-    <Content Include="Views\GameAdmin\UIModules\Add.cshtml" />
-    <Content Include="Views\Manage\AddUIModule.cshtml" />
-    <Content Include="Views\Manage\EditUIModule.cshtml" />
-    <Content Include="Views\Manage\UIModules.cshtml" />
     <Content Include="Views\GameAdmin\ContentApproval\Index.cshtml" />
     <Content Include="Views\Shared\UnapproveDataItem.cshtml" />
     <Content Include="Views\Manage\Notifications.cshtml" />

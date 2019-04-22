@@ -57,7 +57,7 @@ namespace NetMud.CentralControl
                             subArgs.CurrentPulse = 0;
                         }
 
-                        await Task.Delay(10000);
+                        await Task.Delay(1000);
                     }
                 }
 
@@ -336,7 +336,7 @@ namespace NetMud.CentralControl
                 return new List<Tuple<Func<bool>, int>>();
             }
 
-            return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
+            return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || pulseCount % ls.Item2 == 0).ToList();
         }
 
         /// <summary>

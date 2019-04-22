@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
 using NetMud.Data.Combat;
-using NetMud.Data.Player;
 using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -73,7 +72,6 @@ namespace NetMud.Controllers
                 DataObject = account,
                 GlobalIdentityHandle = account.GlobalIdentityHandle,
                 ComboCount = account.Config.Combos.Count(),
-                UIModuleCount = TemplateCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
                 NotificationCount = ConfigDataCache.GetAll<IPlayerMessage>().Count(msg => msg.RecipientAccount == account),
                 UITutorialMode = account.Config.UITutorialMode,
                 GossipSubscriber = account.Config.GossipSubscriber,
@@ -544,155 +542,6 @@ namespace NetMud.Controllers
         }
         #endregion
 
-        #region UIModules
-        public ActionResult UIModules(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
-        {
-            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
-
-            ManageUIModulesViewModel vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
-            {
-                AuthedUser = user,
-                CurrentPageNumber = CurrentPageNumber,
-                ItemsPerPage = ItemsPerPage,
-                SearchTerms = SearchTerms
-            };
-
-            return View("UIModules", vModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RemoveUIModule(long ID, string authorize)
-        {
-            string message;
-            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
-            {
-                message = "You must check the proper authorize radio button first.";
-            }
-            else
-            {
-                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-                IUIModule obj = TemplateCache.Get<IUIModule>(ID);
-
-                if (obj == null)
-                {
-                    message = "That does not exist";
-                }
-                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-                {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveUIModule[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Delete Successful.";
-                }
-                else
-                {
-                    message = "Error; Removal failed.";
-                }
-            }
-
-            return RedirectToAction("UIModules", new { Message = message });
-        }
-
-        [HttpGet]
-        public ActionResult AddUIModule()
-        {
-            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
-            {
-                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
-            };
-
-            return View("AddUIModule", vModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddUIModule(AddEditUIModuleViewModel vModel)
-        {
-            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            UIModule newObj = new UIModule
-            {
-                Name = vModel.Name,
-                BodyHtml = vModel.BodyHtml,
-                Height = vModel.Height,
-                Width = vModel.Width,
-                HelpText = vModel.HelpText
-            };
-            string message;
-            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
-            {
-                message = "Error; Creation failed.";
-            }
-            else
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddUIModule[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
-            }
-
-            return RedirectToAction("UIModules", new { Message = message });
-        }
-
-        [HttpGet]
-        public ActionResult EditUIModule(long id)
-        {
-            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
-            {
-                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
-            };
-
-            IUIModule obj = TemplateCache.Get<IUIModule>(id);
-
-            if (obj == null)
-            {
-                string message = "That does not exist";
-                return RedirectToAction("UIModules", new { Message = message });
-            }
-
-            vModel.DataObject = obj;
-            vModel.Name = obj.Name;
-            vModel.BodyHtml = obj.BodyHtml;
-            vModel.Height = obj.Height;
-            vModel.Width = obj.Width;
-            vModel.HelpText = obj.HelpText;
-
-            return View("EditUIModule", vModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditUIModule(long id, AddEditUIModuleViewModel vModel)
-        {
-            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            IUIModule obj = TemplateCache.Get<IUIModule>(id);
-            string message;
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("UIModules", new { Message = message });
-            }
-
-            obj.Name = vModel.Name;
-            obj.BodyHtml = vModel.BodyHtml;
-            obj.Height = vModel.Height;
-            obj.Width = vModel.Width;
-            obj.HelpText = vModel.HelpText;
-
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditUIModule[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-            {
-                message = "Error; Edit failed.";
-            }
-
-            return RedirectToAction("UIModules", new { Message = message });
-        }
-
-        #endregion
-
         #region Combos
         public ActionResult Combos(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
@@ -817,7 +666,7 @@ namespace NetMud.Controllers
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IFightingArtCombination obj = vModel.AuthedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(id));
+            IFightingArtCombination obj = authedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(id));
             string message;
             if (obj == null)
             {
@@ -830,7 +679,7 @@ namespace NetMud.Controllers
             obj.FightingStances = vModel.DataObject.FightingStances;
             obj.IsSystem = vModel.DataObject.IsSystem;
 
-            if (vModel.AuthedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditCombos[" + obj.Name.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";

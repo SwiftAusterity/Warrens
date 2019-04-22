@@ -126,7 +126,6 @@
     <Compile Include="Player\IPlayerMessage.cs" />
     <Compile Include="Player\IPlayerTemplate.cs" />
     <Compile Include="Player\IPlaylist.cs" />
-    <Compile Include="Player\IUIModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room\IRoom.cs" />
     <Compile Include="Room\IRoomFramework.cs" />

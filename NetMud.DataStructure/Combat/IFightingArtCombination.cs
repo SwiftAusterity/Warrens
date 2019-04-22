@@ -26,7 +26,7 @@ namespace NetMud.DataStructure.Combat
         /// <summary>
         /// The available arts for this combo
         /// </summary>
-        SortedSet<IFightingArt> Arts { get; set; }
+        HashSet<IFightingArt> Arts { get; set; }
 
         /// <summary>
         /// Get the next move to use
