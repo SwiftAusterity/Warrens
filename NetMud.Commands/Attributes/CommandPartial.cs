@@ -53,6 +53,16 @@ namespace NetMud.Commands.Attributes
         public virtual int CooldownDelay => 0;
 
         /// <summary>
+        /// A message to send the user when the command starts up
+        /// </summary>
+        public virtual string StartupMessage => string.Empty;
+
+        /// <summary>
+        /// A message to send the user when cooldown finishes
+        /// </summary>
+        public virtual string CooldownMessage => string.Empty;
+
+        /// <summary>
         /// Container the Actor is in when the command is invoked
         /// </summary>
         public IGlobalPosition OriginLocation { get; set; }
@@ -67,9 +77,13 @@ namespace NetMud.Commands.Attributes
         /// </summary>
         public abstract MarkdownString HelpText { get; set; }
 
+        /// <summary>
+        /// Execute the command
+        /// </summary>
+        /// <param name="nextAction">A shim for executing a subsequent command</param>
         public virtual void Execute(Func<string, IActor, bool> nextAction)
         {
-            if (ExecutionDelay + CooldownDelay == 0 || GetType().GetCustomAttributes(true).Any(attr => attr.GetType() == typeof(CommandQueueSkip)))
+            if (GetType().GetCustomAttributes(true).Any(attr => attr.GetType() == typeof(CommandQueueSkip)))
             {
                 //No delay, no queues just do it
                 ExecutionBody();
@@ -93,22 +107,43 @@ namespace NetMud.Commands.Attributes
                 Actor.InputBuffer = Actor.InputBuffer.Skip(1).ToList();
             }
 
-            if (Actor.InputBuffer.Count() == 0)
+            if (ExecutionDelay + CooldownDelay == 0)
             {
-                Processor.StartSingeltonLoop(string.Format("CommandExecution_{0}_{1}", Actor.TemplateName, CommandWord)
-                    , ExecutionDelay, CooldownDelay, (ExecutionDelay + CooldownDelay) * 10, () => ExecutionBody());
+                ExecutionBody();
+                ExecutionCleanup(Actor, nextAction);
             }
             else
             {
-                Func<bool> next = () => nextAction(Actor.InputBuffer.FirstOrDefault(), Actor);
+                if (!string.IsNullOrWhiteSpace(StartupMessage) && ExecutionDelay > 0)
+                {
+                    var msg = new Message(StartupMessage);
+                    msg.ExecuteMessaging(Actor, null, null, null, null, 0);
+                }
 
                 Processor.StartSingeltonLoop(string.Format("CommandExecution_{0}_{1}", Actor.TemplateName, CommandWord)
-                    , ExecutionDelay, CooldownDelay, (ExecutionDelay + CooldownDelay) * 10, () => ExecutionBody(), next, next);
-
+                   , ExecutionDelay, CooldownDelay, ExecutionDelay + CooldownDelay, () => ExecutionBody(), () => ExecutionCleanup(Actor, nextAction), () => ExecutionCleanup(Actor, nextAction));
             }
         }
 
         internal abstract bool ExecutionBody();
+
+        internal bool ExecutionCleanup(IActor actor, Func<string, IActor, bool> nextAction = null)
+        {
+            actor.HaltInput();
+
+            if (!string.IsNullOrWhiteSpace(CooldownMessage) && CooldownDelay > 0)
+            {
+                var msg = new Message(CooldownMessage);
+                msg.ExecuteMessaging(actor, null, null, null, null, 0);
+            }
+
+            if (actor.InputBuffer.Count() == 0)
+            {
+                nextAction = null;
+            }
+
+            return nextAction == null || nextAction(actor.InputBuffer.FirstOrDefault(), actor);
+        }
 
         public abstract IEnumerable<string> RenderSyntaxHelp();
 

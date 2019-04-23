@@ -24,20 +24,14 @@ namespace NetMud.Combat
                 return true;
             }
 
+            if (!actor.IsFighting())
+            {
+                return false;
+            }
+
             if (actor == target)
             {
                 target = null;
-            }
-            else
-            {
-                if (!actor.IsFighting() && target == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    actor.StartFighting(target);
-                }
             }
 
             IFightingArt attack = actor.LastAttack;

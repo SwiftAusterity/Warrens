@@ -11,7 +11,7 @@ namespace NetMud.DataStructure.System
     public interface ICommand
     {
         /* 
-         * Syntax:
+         * Syntax ordering:
          *      command <subject> <target> <supporting>
          *  Location is derived from context
          *  Surroundings is derived from location
@@ -61,6 +61,16 @@ namespace NetMud.DataStructure.System
         /// The delay this invokes after being executed
         /// </summary>
         int CooldownDelay { get; }
+
+        /// <summary>
+        /// A message to send the user when the command starts up
+        /// </summary>
+        string StartupMessage { get; }
+
+        /// <summary>
+        /// A message to send the user when cooldown finishes
+        /// </summary>
+        string CooldownMessage { get; }
 
         /// <summary>
         /// Send some sort of error to the client
