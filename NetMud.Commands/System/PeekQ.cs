@@ -1,23 +1,24 @@
-﻿using NetMud.CentralControl;
-using NetMud.Combat;
-using NetMud.Commands.Attributes;
+﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Player;
 using System.Collections.Generic;
 
-namespace NetMud.Commands.Movement
+namespace NetMud.Commands.System
 {
-    [CommandKeyword("shadowbox", false)]
+    /// <summary>
+    /// Invokes the current container's RenderToVisible
+    /// </summary>
+    [CommandQueueSkip]
+    [CommandKeyword("peek", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Shadowbox : CommandPartial
+    public class PeekQ : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public Shadowbox()
+        public PeekQ()
         {
             //Generic constructor for all IHelpfuls is needed
         }
@@ -27,18 +28,9 @@ namespace NetMud.Commands.Movement
         /// </summary>
         internal override bool ExecutionBody()
         {
-            IEnumerable<string> toOrigin = new string[] { string.Format("$A$ starts to fight with himself.") };
+            Message messagingObject = new Message(Actor.PeekInput());
 
-            var msg = new Message("You begin to shadowbox.")
-            {
-                ToOrigin = toOrigin
-            };
-
-            var player = (IPlayer)Actor;
-
-            player.StartFighting(null);
-
-            msg.ExecuteMessaging(Actor, null, null, Actor.CurrentLocation, null, 3);
+            messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
 
             return true;
         }
@@ -51,7 +43,7 @@ namespace NetMud.Commands.Movement
         {
             List<string> sb = new List<string>
             {
-                string.Format("Valid Syntax: shadowbox")
+                "Valid Syntax: peek"
             };
 
             return sb;
@@ -64,9 +56,9 @@ namespace NetMud.Commands.Movement
         {
             get
             {
-                return @"Shadowbox is a way to fight yourself. You can't use shadowbox if you're already in combat and someone attacking you will cancel it.";
+                return string.Format("Peek displays your currently executing action and your pending command queue.");
             }
-            set { }
+            set {  }
         }
     }
 }

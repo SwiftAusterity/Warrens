@@ -163,9 +163,9 @@ namespace NetMud.Data.Players
             Descriptor.Disconnect(string.Empty);
         }
 
-        public override bool WriteTo(IEnumerable<string> input)
+        public override bool WriteTo(IEnumerable<string> output)
         {
-            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(input.ToArray(), this);
+            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(output.ToArray(), this);
 
             return Descriptor.SendOutput(strings);
         }

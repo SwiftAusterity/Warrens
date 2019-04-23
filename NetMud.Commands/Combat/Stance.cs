@@ -26,7 +26,7 @@ namespace NetMud.Commands.Movement
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             var newStance = Subject.ToString();
             var player = (IPlayer)Actor;
@@ -36,6 +36,8 @@ namespace NetMud.Commands.Movement
             var msg = new Message(string.Format("You change your stance to {0}.", newStance));
 
             msg.ExecuteMessaging(Actor, null, null, Actor.CurrentLocation, null, 3);
+
+            return true;
         }
 
         /// <summary>

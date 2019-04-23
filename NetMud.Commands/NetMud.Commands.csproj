@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Administrative\GotoSlice.cs" />
     <Compile Include="Attributes\CacheReferenceType.cs" />
+    <Compile Include="Attributes\CommandQueueSkip.cs" />
     <Compile Include="Attributes\CommandSuppressName.cs" />
     <Compile Include="Attributes\CommandKeywordAttribute.cs" />
     <Compile Include="Attributes\CommandParameterAttribute.cs" />
@@ -53,7 +54,7 @@
     <Compile Include="Attributes\CommandPermissionAttribute.cs" />
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
     <Compile Include="Attributes\CommandUsage.cs" />
-    <Compile Include="Combat\Stop.cs" />
+    <Compile Include="Combat\Peace.cs" />
     <Compile Include="Combat\Stance.cs" />
     <Compile Include="Combat\Shadowbox.cs" />
     <Compile Include="GossipServer\Gossip.cs" />
@@ -64,6 +65,10 @@
     <Compile Include="Comm\Who.cs" />
     <Compile Include="Social\Laid.cs" />
     <Compile Include="System\Commands.cs" />
+    <Compile Include="System\FlushQ.cs" />
+    <Compile Include="System\StopQ.cs" />
+    <Compile Include="System\HaltQ.cs" />
+    <Compile Include="System\PeekQ.cs" />
     <Compile Include="System\Save.cs" />
     <Compile Include="System\Quit.cs" />
     <Compile Include="Rendering\Look.cs" />

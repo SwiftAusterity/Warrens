@@ -19,11 +19,13 @@ namespace NetMud.Commands.Social
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             Message messagingObject = new Message("You get laid, fucked, fapfapfap.");
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
+
+            return true;
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()

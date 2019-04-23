@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.System
@@ -9,17 +10,6 @@ namespace NetMud.DataStructure.System
     /// </summary>
     public interface ICommand
     {
-        /// <summary>
-        /// Execute the command's actions
-        /// </summary>
-        void Execute();
-
-        /// <summary>
-        /// Renders syntactical help for command parsing
-        /// </summary>
-        /// <returns>help output</returns>
-        IEnumerable<string> RenderSyntaxHelp();
-
         /* 
          * Syntax:
          *      command <subject> <target> <supporting>
@@ -31,6 +21,11 @@ namespace NetMud.DataStructure.System
         /// The command word originally used to find this command
         /// </summary>
         string CommandWord { get; set; }
+
+        /// <summary>
+        /// The original input that spawned this
+        /// </summary>
+        string OriginalInput { get; set; }
 
         /// <summary>
         /// Acting entity that issued this command
@@ -58,9 +53,30 @@ namespace NetMud.DataStructure.System
         IGlobalPosition OriginLocation { get; set; }
 
         /// <summary>
+        /// The delay this invokes when executing. Initially is "begun" and actually takes affect at the end.
+        /// </summary>
+        int ExecutionDelay { get; }
+
+        /// <summary>
+        /// The delay this invokes after being executed
+        /// </summary>
+        int CooldownDelay { get; }
+
+        /// <summary>
         /// Send some sort of error to the client
         /// </summary>
         /// <param name="error">The error</param>
         void RenderError(string error);
+
+        /// <summary>
+        /// Execute the command's actions
+        /// </summary>
+        void Execute(Func<string, IActor, bool> nextAction);
+
+        /// <summary>
+        /// Renders syntactical help for command parsing
+        /// </summary>
+        /// <returns>help output</returns>
+        IEnumerable<string> RenderSyntaxHelp();
     }
 }

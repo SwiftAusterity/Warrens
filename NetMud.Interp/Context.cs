@@ -197,6 +197,7 @@ namespace NetMud.Interp
                         }
                     }
 
+                    command.OriginalInput = fullCommand;
                     command.CommandWord = currentCommand.CommandPhrase;
                     command.Actor = Actor;
                     command.OriginLocation = Position;

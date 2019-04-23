@@ -1,25 +1,22 @@
-﻿using NetMud.CentralControl;
-using NetMud.Combat;
-using NetMud.Commands.Attributes;
+﻿using NetMud.Commands.Attributes;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Player;
-using System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Movement
 {
-    [CommandKeyword("stop", false)]
+    [CommandQueueSkip]
+    [CommandKeyword("peace", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
-    public class Stop : CommandPartial
+    public class Peace : CommandPartial
     {
         /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
-        public Stop()
+        public Peace()
         {
             //Generic constructor for all IHelpfuls is needed
         }
@@ -27,7 +24,7 @@ namespace NetMud.Commands.Movement
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IEnumerable<string> toOrigin = new string[] { string.Format("$A$ stops fighting.") };
 
@@ -49,6 +46,8 @@ namespace NetMud.Commands.Movement
             }
 
             msg.ExecuteMessaging(Actor, null, null, Actor.CurrentLocation, null, 3);
+
+            return true;
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace NetMud.Commands.Movement
         {
             List<string> sb = new List<string>
             {
-                string.Format("Valid Syntax: stop")
+                string.Format("Valid Syntax: peace")
             };
 
             return sb;
@@ -72,7 +71,7 @@ namespace NetMud.Commands.Movement
         {
             get
             {
-                return @"Stop will cancel all fighting intent. It wont stop someone else from attacking you, though.";
+                return @"Peace will cancel all fighting intent. It wont stop someone else from attacking you, though.";
             }
             set { }
         }
