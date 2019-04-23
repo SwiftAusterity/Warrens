@@ -155,6 +155,7 @@ namespace NetMud.Data.Players
             GetFromWorldOrSpawn();
         }
 
+        #region Connectivity Details
         /// <summary>
         /// Function used to close this connection
         /// </summary>
@@ -163,12 +164,44 @@ namespace NetMud.Data.Players
             Descriptor.Disconnect(string.Empty);
         }
 
-        public override bool WriteTo(IEnumerable<string> output)
+        public override bool WriteTo(IEnumerable<string> output, bool delayed = false)
         {
             IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(output.ToArray(), this);
 
-            return Descriptor.SendOutput(strings);
+            if (delayed)
+            {
+                var working = OutputBuffer.Any();
+
+                //enforce the output buffer
+                OutputBuffer.Add(strings);
+
+                if (!working)
+                {
+                    Processor.StartSingeltonLoop(string.Format("PlayerOutputWriter_{0}", TemplateName), 1, 0, 2, () => SendOutput());
+                }
+            }
+            else
+            {
+                return Descriptor.SendOutput(strings);
+            }
+
+            return true;
         }
+
+        private bool SendOutput()
+        {
+            var success = false;
+
+            foreach(var stringCluster in OutputBuffer)
+            {
+                success = Descriptor.SendOutput(stringCluster) && success;
+            }
+
+            OutputBuffer.Clear();
+
+            return success;
+        }
+        #endregion
 
         #region health and combat
         /// <summary>

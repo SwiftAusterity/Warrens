@@ -111,7 +111,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
-        public virtual bool WriteTo(IEnumerable<string> output)
+        public virtual bool WriteTo(IEnumerable<string> output, bool delayed = false)
         {
             return true;
         }

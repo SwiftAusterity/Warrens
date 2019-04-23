@@ -137,7 +137,7 @@ namespace NetMud.Commands.Attributes
                 msg.ExecuteMessaging(actor, null, null, null, null, 0);
             }
 
-            if (actor.InputBuffer.Count() == 0)
+            if (!actor.InputBuffer.Any())
             {
                 nextAction = null;
             }

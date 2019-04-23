@@ -148,7 +148,7 @@ namespace NetMud.Combat
                 }
             }
 
-            msg.ExecuteMessaging(actor, null, target, actor.CurrentLocation, null, 3);
+            msg.ExecuteMessaging(actor, null, target, actor.CurrentLocation, null, 3, true);
 
             return true;
         }

@@ -48,7 +48,7 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
-        bool WriteTo(IEnumerable<string> output);
+        bool WriteTo(IEnumerable<string> output, bool delayed = false);
 
         /// <summary>
         /// Buffer of output to send to clients via WriteTo
