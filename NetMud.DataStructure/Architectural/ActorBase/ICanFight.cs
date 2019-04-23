@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.ActorBase
 {
+    /// <summary>
+    /// Needed for any entities that can fight
+    /// </summary>
     public interface ICanFight
     {
         /// <summary>
