@@ -57,6 +57,11 @@ namespace NetMud.DataStructure.Combat
         int Armor { get; set; }
 
         /// <summary>
+        /// State of readiness this art puts the user in during its duration
+        /// </summary>
+        ReadinessState Readiness { get; set; }
+
+        /// <summary>
         /// Is this a part of a multipart attack
         /// </summary>
         string RekkaKey { get; set; }

@@ -93,6 +93,13 @@ namespace NetMud.Data.Combat
         public int Armor { get; set; }
 
         /// <summary>
+        /// State of readiness this art puts the user in during its duration
+        /// </summary>
+        [Display(Name = "Readiness", Description = "State of readiness this art puts the user in during its duration.")]
+        [UIHint("EnumDropDownList")]
+        public ReadinessState Readiness { get; set; }
+
+        /// <summary>
         /// Is this a part of a multipart attack
         /// </summary>
         [Display(Name = "Rekka", Description = "Name of multipart attack.")]
@@ -164,6 +171,7 @@ namespace NetMud.Data.Combat
             RekkaPosition = -1;
             ActorCriteria = new FightingArtCriteria();
             VictimCriteria = new FightingArtCriteria();
+            Readiness = ReadinessState.Offensive;
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Combat;
-using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Player

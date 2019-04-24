@@ -112,9 +112,11 @@
     <Compile Include="Architectural\ValuePair.cs" />
     <Compile Include="Architectural\ValueRange.cs" />
     <Compile Include="Combat\AnatomyAim.cs" />
+    <Compile Include="Combat\FightingArtComboUsage.cs" />
     <Compile Include="Combat\IFightingArtCriteria.cs" />
     <Compile Include="Combat\IFightingArt.cs" />
     <Compile Include="Combat\IFightingArtCombination.cs" />
+    <Compile Include="Combat\ReadinessState.cs" />
     <Compile Include="Gossip\IGossipClient.cs" />
     <Compile Include="Gossip\IGossipConfig.cs" />
     <Compile Include="Player\AcquaintenceNotifications.cs" />

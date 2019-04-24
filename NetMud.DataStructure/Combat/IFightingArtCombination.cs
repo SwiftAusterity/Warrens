@@ -19,6 +19,11 @@ namespace NetMud.DataStructure.Combat
         bool IsSystem { get; set; }
 
         /// <summary>
+        /// Is this used situationally
+        /// </summary>
+        FightingArtComboUsage SituationalUsage { get; set; }
+
+        /// <summary>
         /// Mobile chosen fighting stance which causes FightingArtCombinations to become active or inactive
         /// </summary>
         HashSet<string> FightingStances { get; set; }

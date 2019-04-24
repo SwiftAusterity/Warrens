@@ -1,5 +1,4 @@
 ﻿using NetMud.Communication.Messaging;
-using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using System;
@@ -97,7 +96,6 @@ namespace NetMud.Combat
                 actor.Harm((ulong)attack.Health.Actor);
             }
 
-
             if (attack.Stamina.Actor > 0)
             {
                 actor.Exhaust(attack.Stamina.Actor);
@@ -105,48 +103,113 @@ namespace NetMud.Combat
 
             var targetGlyph = target == null ? "a shadow" : "$T$";
 
-            IEnumerable<string> toOrigin = new string[] { string.Format("$A$ {0} {1}.", attack.Name, targetGlyph) };
+            string toOrigin = string.Format("$A$ {0}s {1}.", attack.Name, targetGlyph);
+            string toActor = string.Format("You {0} {1}.", attack.Name, targetGlyph);
+            string toTarget = "";
 
             targetGlyph = target == null ? "your shadow" : "$T$";
 
             //messaging
-            var msg = new Message(string.Format("You {0} {1}.", attack.Name, targetGlyph))
-            {
-                ToOrigin = toOrigin
-            };
 
             if (target != null)
             {
+                var rand = new Random();
                 target.Balance = -1 * attack.DistanceChange;
 
-                msg.ToTarget = new string[] { string.Format("$A$ {0} you.", attack.Name) };
+                toTarget = string.Format("$A$ {0}s you.", attack.Name);
 
-                //Affect the victim
-                if (target.Sturdy > 0)
+                var targetReadiness = ReadinessState.Offensive;
+                if (target.LastAttack != null)
                 {
-                    target.Sturdy = Math.Max(0, target.Sturdy - attack.Impact);
-                }
-                else
-                {
-                    target.Stagger += attack.Impact;
+                    targetReadiness = target.LastAttack.Readiness;
                 }
 
-                if (attack.Health.Victim > 0)
+                //TODO: for now we're just doing flat chances for avoidance states since we have no stats to base anything on
+                var avoided = false;
+                double impact = attack.Impact;
+                double damage = attack.Health.Victim;
+                double staminaDrain = attack.Stamina.Victim;
+
+                switch (targetReadiness)
                 {
-                    target.Harm((ulong)attack.Health.Victim);
+                    case ReadinessState.Circle: //circle is dodge essentially
+                        avoided = rand.Next(0, 100) >= Math.Abs(target.Balance) / 4 * 100;
+
+                        if(avoided)
+                        {
+                            toActor = string.Format("{0} dodges your attack!", targetGlyph);
+                            toTarget = string.Format("You dodge $A$s {0}.", attack.Name);
+                            toOrigin = string.Format("$A$ {0}s {1} but they dodge!.", attack.Name, targetGlyph);
+                        }
+                        break;
+                    case ReadinessState.Block:
+                        if (rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100)
+                        {
+                            impact *= .25;
+                            damage *= .50;
+                            staminaDrain *= .50;
+
+                            toOrigin = string.Format("$A$ {0}s {1} but they block.", attack.Name, targetGlyph);
+                            toActor = string.Format("You {0} {1} but they block!", attack.Name, targetGlyph);
+                            toTarget = string.Format("$A$ {0}s you but you block it.", attack.Name);
+                        };
+                        break;
+                    case ReadinessState.Deflect:
+                        if (rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100)
+                        {
+                            impact *= .50;
+                            damage *= .25;
+                            staminaDrain *= .25;
+
+                            toOrigin = string.Format("$A$ {0}s {1} but they deflect the blow.", attack.Name, targetGlyph);
+                            toActor = string.Format("You {0} {1} but they deflect it!", attack.Name, targetGlyph);
+                            toTarget = string.Format("$A$ {0}s you but you deflect it.", attack.Name);
+                        }
+                        break;
+                    case ReadinessState.Redirect:
+                        avoided = rand.Next(0, 100) >= Math.Abs(target.Balance) / 20 * 100;
+
+                        if (avoided)
+                        {
+                            toActor = string.Format("{0} redirects your attack back to you!", targetGlyph);
+                            toTarget = string.Format("You redirect $A$s {0} back at them.", attack.Name);
+                            toOrigin = string.Format("$A$ {0}s {1} but they redirect the attack back at them!.", attack.Name, targetGlyph);
+                        }
+                        break;
                 }
 
-                if (attack.Stamina.Victim > 0)
+                if (!avoided)
                 {
-                    target.Exhaust(attack.Stamina.Victim);
-                }
+                    var victStagger = target.Sturdy - (int)Math.Truncate(impact);
 
-                //affect qualities
-                if (attack.QualityValue != 0 && !string.IsNullOrWhiteSpace(attack.ResultQuality))
-                {
-                    target.SetQuality(attack.QualityValue, attack.ResultQuality, attack.AdditiveQuality);
+                    //Affect the victim, sturdy/armor absorbs stagger impact and the remainder gets added to victim stagger
+                    target.Sturdy = Math.Max(0, victStagger);
+                    target.Stagger += Math.Abs(Math.Min(0, victStagger));
+
+                    if (damage > 0)
+                    {
+                        target.Harm((ulong)Math.Truncate(damage));
+                    }
+
+                    if (staminaDrain > 0)
+                    {
+                        target.Exhaust((int)Math.Truncate(staminaDrain));
+                    }
+
+                    //affect qualities
+                    if (attack.QualityValue != 0 && !string.IsNullOrWhiteSpace(attack.ResultQuality))
+                    {
+                        target.SetQuality(attack.QualityValue, attack.ResultQuality, attack.AdditiveQuality);
+                    }
                 }
             }
+
+            var msg = new Message(toActor)
+            {
+                ToOrigin = new string[] { toOrigin },
+                ToTarget = new string[] { toTarget }
+            };
+
 
             msg.ExecuteMessaging(actor, null, target, actor.CurrentLocation, null, 3, true);
 

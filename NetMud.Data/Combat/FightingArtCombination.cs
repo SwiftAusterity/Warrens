@@ -29,6 +29,13 @@ namespace NetMud.Data.Combat
         public bool IsSystem { get; set; }
 
         /// <summary>
+        /// Is this used situationally
+        /// </summary>
+        [Display(Name = "Situational Type", Description = "Is this used situationally?")]
+        [UIHint("EnumDropDownList")]
+        public FightingArtComboUsage SituationalUsage { get; set; }
+
+        /// <summary>
         /// Mobile chosen fighting stance which causes FightingArtCombinations to become active or inactive
         /// </summary>
         [Display(Name = "Stances", Description = "The stances this is a part of. Free text string for use in the Stance command.")]
@@ -71,6 +78,7 @@ namespace NetMud.Data.Combat
         public FightingArtCombination()
         {
             FightingStances = new HashSet<string>();
+            SituationalUsage = FightingArtComboUsage.None;
         }
 
         /// <summary>
