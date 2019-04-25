@@ -192,6 +192,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.ResultQuality = vModel.DataObject.ResultQuality;
             obj.AdditiveQuality = vModel.DataObject.AdditiveQuality;
             obj.QualityValue = vModel.DataObject.QualityValue;
+            obj.Readiness = vModel.DataObject.Readiness;
 
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))

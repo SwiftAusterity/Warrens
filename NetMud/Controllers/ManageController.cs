@@ -678,6 +678,7 @@ namespace NetMud.Controllers
             obj.Arts = vModel.DataObject.Arts;
             obj.FightingStances = vModel.DataObject.FightingStances;
             obj.IsSystem = vModel.DataObject.IsSystem;
+            obj.SituationalUsage = vModel.DataObject.SituationalUsage;
 
             if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
