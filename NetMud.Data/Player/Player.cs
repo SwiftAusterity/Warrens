@@ -190,7 +190,11 @@ namespace NetMud.Data.Players
 
         private bool SendOutput()
         {
-            return Descriptor.SendOutput(string.Join(" ", OutputBuffer.Select(cluster => string.Join(" ", cluster))));
+            var sent = Descriptor.SendOutput(string.Join(" ", OutputBuffer.Select(cluster => string.Join(" ", cluster))));
+
+            OutputBuffer.Clear();
+
+            return sent;
         }
         #endregion
 
