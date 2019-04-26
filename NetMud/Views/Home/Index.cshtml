@@ -6,35 +6,49 @@
 
 @model HomeViewModel
 
-<div style="width: 100%;">
-    <div class="descriptiveSection">
-        <h2>@gameName</h2>
-        <h3>The prototype testbed for Warrens: Vanta Isolation</h3>
-        <h4>Current Phase: GameJam</h4>
-        <p>
-            You're in a 20m long hallway. There is an exit. You must reach the exit to win but you can only cross half of the remaining distance at a time. Use the Forward command to move.
-        </p>
-        <p>
-            There's also other players trying to get to the exit and you can <span style="font-weight: 700">fight</span> them but you can only be hurt for half of your remaining life per hit.
-        </p>
-        <p>Can you reach the end? Can anyone be killed? Is there cake beyond the exit? It's all very <a href="https://www.iep.utm.edu/zeno-par/">philosophical</a>.</p>
-    </div>
-    @if (Model.LatestPatchNotes != null)
-    {
-        <div class="descriptiveContainer">
-            <h2>Latest Patch Notes</h2>
-            <hr />
-            @Html.DisplayFor(m => m.LatestPatchNotes)
+    <div style="width: 100%;">
+        <div class="descriptiveSection">
+            <h2>@gameName</h2>
+            <h3>The prototype testbed for Warrens: Vanta Isolation</h3>
+            <h4>Current Phase: GameJam</h4>
+            <p>
+                You're in a 20m long hallway. There is an exit. You must reach the exit to win but you can only cross half of the remaining distance at a time.
+                There's also other players trying to get to the exit and you can <span style="font-weight: 700">fight</span> them but you can only be hurt for half of your remaining life per hit.
+                Can you reach the end? Can anyone be killed? Is there cake beyond the exit? It's all very <a href="https://www.iep.utm.edu/zeno-par/">philosophical</a>.
+            </p>
         </div>
-    }
+        <div class="descriptiveSection">
+            <h4>Newbie Primer</h4>
+            <p>
+                Firstly, register a new account and make a character. You can have unlimited characters on one account.
+                You and everyone else are in a 20mx20m room. You can talk (say, shout), move (forward, backward) and FIGHT. (fight, shadowbox)
+            </p>
+            <p>
+                All combat is done automatically by the system. Fighting is done via <a href="/Features/FightingArts">Fighting Arts</a>, Combos, and Stances.
+                Go into your Dashboard and create Combos. You can change your Stance (stance [name]) at any time in or out of combat. 
+                Each Combo can be keyed to multiple Stances in the combo editor. Changing your Stance makes the Combos that you have keyed to them available for use immediately.
+            </p>
+            <p>
+                Fighting Arts can be literally anything from basic punches and kicks to elaborate acrobatic attacks, magic spells, energy beams, summoning massive ghost trains, anything.
+                Arts can also be dodges, parries, attack redirects and blocks. Zeno's has no NPCs or Items so everything is up to the imagination.
+            </p>
+        </div>
+        @if (Model.LatestPatchNotes != null)
+        {
+            <div class="descriptiveContainer">
+                <h2>Latest Patch Notes</h2>
+                <hr />
+                @Html.DisplayFor(m => m.LatestPatchNotes)
+            </div>
+        }
 
-    @if (Model.LatestNews.Count() > 0)
-    {
-        <div class="descriptiveContainer">
-            <h2>Latest News</h2>
-            <hr />
-            @Html.DisplayFor(m => m.LatestNews)
-        </div>
-    }
-</div>
+        @if (Model.LatestNews.Count() > 0)
+        {
+            <div class="descriptiveContainer">
+                <h2>Latest News</h2>
+                <hr />
+                @Html.DisplayFor(m => m.LatestNews)
+            </div>
+        }
+    </div>
 

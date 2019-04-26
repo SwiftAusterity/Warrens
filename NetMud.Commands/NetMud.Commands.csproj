@@ -55,6 +55,7 @@
     <Compile Include="Attributes\CommandRangeAttribute.cs" />
     <Compile Include="Attributes\CommandUsage.cs" />
     <Compile Include="Combat\Peace.cs" />
+    <Compile Include="Combat\Fight.cs" />
     <Compile Include="Combat\Stance.cs" />
     <Compile Include="Combat\Shadowbox.cs" />
     <Compile Include="GossipServer\Gossip.cs" />

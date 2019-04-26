@@ -5,6 +5,7 @@ using NetMud.Commands.Attributes;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.System;
 using NetMud.Models.Features;
 using NetMud.Utility;
@@ -83,12 +84,28 @@ namespace NetMud.Controllers
             return View(vModel);
         }
 
-        #region NonDataViews
-        public ActionResult Skills()
+        public ActionResult FightingArts(string SearchTerm = "")
         {
-            return View();
+            List<IFightingArt> validEntries = TemplateCache.GetAll<IFightingArt>(true).ToList();
+            ApplicationUser user = null;
+            string searcher = SearchTerm.Trim().ToLower();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user = UserManager.FindById(User.Identity.GetUserId());
+                StaffRank userRank = user.GetStaffRank(User);
+            }
+
+            FightingArtsViewModel vModel = new FightingArtsViewModel(validEntries.Where(help => help.Name.ToLower().Contains(searcher)))
+            {
+                AuthedUser = user,
+                SearchTerm = SearchTerm
+            };
+
+            return View(vModel);
         }
 
+        #region NonDataViews
         public ActionResult Lore()
         {
             return View();

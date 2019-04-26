@@ -520,6 +520,10 @@ div.roomAsciiMap {
     margin: 15px auto 15px auto;
 }
 
+    .descriptiveSection p {
+        text-align: left;
+    }
+
 .descriptiveContainer {
     background-color: lightgrey;
     color: black;
