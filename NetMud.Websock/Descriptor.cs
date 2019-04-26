@@ -65,7 +65,7 @@ namespace NetMud.Websock
         /// Creates an instance of the command negotiator with a specified user manager
         /// </summary>
         /// <param name="userManager">the authentication manager from the web</param>
-        public Descriptor(ApplicationUserManager userManager) 
+        public Descriptor(ApplicationUserManager userManager)
         {
             UserManager = userManager;
 
@@ -127,10 +127,22 @@ namespace NetMud.Websock
             {
                 Body = new BodyStatus
                 {
-                    Overall = OverallStatus.Excellent,
                     Health = _currentPlayer.CurrentHealth == 0 ? 100 : 100 / (2M * _currentPlayer.CurrentHealth),
                     Stamina = _currentPlayer.CurrentStamina
-                }
+                },
+                CurrentActivity = _currentPlayer.CurrentAction,
+                Balance = _currentPlayer.Balance.ToString(),
+                CurrentArt = _currentPlayer.LastAttack?.Name ?? "",
+                CurrentCombo = _currentPlayer.LastCombo?.Name ?? "",
+                CurrentTarget = _currentPlayer.GetTarget() == null ? "" 
+                                                                   : _currentPlayer.GetTarget() == _currentPlayer 
+                                                                        ? "Your shadow" 
+                                                                        : _currentPlayer.GetTarget().GetDescribableName(_currentPlayer),
+                CurrentTargetHealth = _currentPlayer.GetTarget() == null || _currentPlayer.GetTarget() == _currentPlayer ? double.PositiveInfinity
+                                                                        : _currentPlayer.GetTarget().CurrentHealth == 0 ? 100 : 100 / (2 * _currentPlayer.CurrentHealth),
+                Position = _currentPlayer.StancePosition.ToString(),
+                Stance = _currentPlayer.Stance,
+                Stagger = _currentPlayer.Stagger.ToString()
             };
 
             IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;
@@ -145,12 +157,12 @@ namespace NetMud.Websock
             LocalStatus local = new LocalStatus
             {
                 Populace = populace.ToArray(),
-                LocationDescriptive = locationDescription      
+                LocationDescriptive = locationDescription
             };
 
             OutputStatus outputFormat = new OutputStatus
             {
-                Occurrence = EncapsulateOutput(strings),
+                Occurrence = strings.Count() > 0 ? EncapsulateOutput(strings) : "",
                 Self = self,
                 Local = local
             };
@@ -158,6 +170,14 @@ namespace NetMud.Websock
             Send(SerializationUtility.Serialize(outputFormat));
 
             return true;
+        }
+
+        /// <summary>
+        /// Wraps sending UI Updates to the connected descriptor
+        /// </summary>
+        public bool SendWrapper()
+        {
+            return SendOutput(new string[0]);
         }
 
         /// <summary>

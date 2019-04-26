@@ -19,6 +19,8 @@ namespace NetMud.Combat
             if (actor.Stagger > 0)
             {
                 actor.Stagger -= 1;
+                //Send a ui update
+                actor.Descriptor.SendWrapper();
                 return true;
             }
 
@@ -75,6 +77,9 @@ namespace NetMud.Combat
                 if (actor.Stagger > 0)
                 {
                     actor.Stagger -= 1;
+
+                    //Send a ui update
+                    actor.Descriptor.SendWrapper();
                     return true;
                 }
                 //else we just run right into the combo if there's no setup

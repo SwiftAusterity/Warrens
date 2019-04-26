@@ -91,7 +91,6 @@
     <Compile Include="OutputFormatting\BodyStatus.cs" />
     <Compile Include="OutputFormatting\LocalStatus.cs" />
     <Compile Include="OutputFormatting\OutputStatus.cs" />
-    <Compile Include="OutputFormatting\OverallStatus.cs" />
     <Compile Include="OutputFormatting\SelfStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
