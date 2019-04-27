@@ -10,6 +10,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
+using NetMud.Gossip;
 using NetMud.Interp;
 using NetMud.Utility;
 using NetMud.Websock.OutputFormatting;
@@ -110,7 +111,7 @@ namespace NetMud.Websock
                 SoundToPlay = soundUri
             };
 
-            Send(SerializationUtility.Serialize(outputFormat));
+            Send(Utility.SerializationUtility.Serialize(outputFormat));
 
             return true;
         }
@@ -167,7 +168,7 @@ namespace NetMud.Websock
                 Local = local
             };
 
-            Send(SerializationUtility.Serialize(outputFormat));
+            Send(Utility.SerializationUtility.Serialize(outputFormat));
 
             return true;
         }
@@ -223,11 +224,11 @@ namespace NetMud.Websock
 
             if (_currentPlayer != null && _currentPlayer.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
             {
-                IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                GossipClient gossipClient = LiveCache.Get<GossipClient>("GossipWebClient");
 
                 if (gossipClient != null)
                 {
-                    gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
+                    gossipClient.SendNotification(_currentPlayer.AccountHandle, Notifications.LeaveGame);
                 }
             }
 
@@ -358,11 +359,11 @@ namespace NetMud.Websock
 
                 if (authedUser.GameAccount.Config.GossipSubscriber)
                 {
-                    IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                    GossipClient gossipClient = LiveCache.Get<GossipClient>("GossipWebClient");
 
                     if (gossipClient != null)
                     {
-                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, AcquaintenceNotifications.EnterGame);
+                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, Notifications.EnterGame);
                     }
                 }
             }

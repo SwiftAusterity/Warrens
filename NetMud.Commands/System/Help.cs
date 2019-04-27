@@ -43,7 +43,7 @@ namespace NetMud.Commands.System
                 sb = sb.Concat(subject.RenderSyntaxHelp()).ToList();
             }
 
-            Message messagingObject = new Message(sb.ToString());
+            Message messagingObject = new Message(sb);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
 

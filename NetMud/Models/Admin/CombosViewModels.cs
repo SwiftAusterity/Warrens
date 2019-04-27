@@ -48,7 +48,7 @@ namespace NetMud.Models.Admin
 
         public AddEditCombosViewModel()
         {
-            ValidArts = TemplateCache.GetAll<IFightingArt>();
+            ValidArts = TemplateCache.GetAll<IFightingArt>(true);
         }
 
         public IEnumerable<IFightingArt> ValidArts { get; set; }

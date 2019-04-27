@@ -30,8 +30,6 @@ namespace NutMud.Commands.Rendering
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
-
             //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
             {

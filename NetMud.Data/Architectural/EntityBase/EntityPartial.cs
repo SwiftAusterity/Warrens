@@ -221,7 +221,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The description
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// List of live qualities of this entity

@@ -54,9 +54,6 @@ namespace NetMud.Data.Players
             return (T)PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), AccountHandle, TemplateId));
         }
 
-        [JsonProperty("Gender")]
-        private TemplateCacheKey _gender { get; set; }
-
         /// <summary>
         /// "family name" for player character
         /// </summary>
@@ -123,6 +120,21 @@ namespace NetMud.Data.Players
         /// The account this character belongs to
         /// </summary>
         public string AccountHandle { get; set; }
+
+        /// <summary>
+        /// The description
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                return string.Format("{0} is here.", TemplateName);
+            }
+            set
+            {
+                //none
+            }
+        }
 
         /// <summary>
         /// fArt Combos
