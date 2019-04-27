@@ -168,7 +168,7 @@ namespace NetMud.Data.Players
         {
             HashSet<IPlayerTemplate> systemChars = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAll());
 
-            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase) && newChar.SurName.Equals(newChar.SurName, StringComparison.InvariantCultureIgnoreCase)))
+            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return "A character with that name already exists, please choose another.";
             }

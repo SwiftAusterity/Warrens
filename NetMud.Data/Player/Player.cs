@@ -496,7 +496,7 @@ namespace NetMud.Data.Players
             CurrentStamina = ch.TotalStamina;
             TotalHealth = ch.TotalHealth;
             TotalStamina = ch.TotalStamina;
-            SurName = ch.SurName;
+            SurName = ch.SurName ?? "";
             StillANoob = ch.StillANoob;
             GamePermissionsRank = ch.GamePermissionsRank;
             Combos = new HashSet<IFightingArtCombination>(ch.Account.Config.Combos);

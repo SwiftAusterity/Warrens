@@ -335,6 +335,14 @@
     <Content Include="Content\jquery.gridster.min.css" />
     <Content Include="Content\popper.css" />
     <Content Include="Content\pretty-checkbox.min.css" />
+    <Content Include="Content\Sounds\BkgMusic\blueSurprise.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\champsElysees.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\CheeryPiano.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\dreams.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\essence.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\fancyCakes.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\hypnotic.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\insideDreams.mp3" />
     <Content Include="Content\Sounds\floop.wav" />
     <Content Include="Content\spectrum.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -625,9 +633,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Sounds\BkgMusic\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
