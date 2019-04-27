@@ -116,6 +116,7 @@ namespace NetMud.Controllers.GameAdmin
             return View("~/Views/GameAdmin/JournalEntry/Add.cshtml", vModel);
         }
 
+        [ValidateInput(false)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditJournalEntryViewModel vModel)
@@ -159,6 +160,7 @@ namespace NetMud.Controllers.GameAdmin
             return View("~/Views/GameAdmin/JournalEntry/Edit.cshtml", vModel);
         }
 
+        [ValidateInput(false)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(long id, AddEditJournalEntryViewModel vModel)

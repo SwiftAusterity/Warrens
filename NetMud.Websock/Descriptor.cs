@@ -151,8 +151,7 @@ namespace NetMud.Websock
             string locationDescription = string.Empty;
 
             decimal distance = currentLocation.CurrentSection == 0M ? 20M : 20M / (2M * currentLocation.CurrentSection);
-
-            populace = currentLocation.GetContents(0).Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer));
+            populace = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null && player != _currentPlayer).Select(data => data.GetDescribableName(_currentPlayer));
             locationDescription = string.Format("You are {0} meters from the exit.", distance);
 
             LocalStatus local = new LocalStatus
