@@ -578,6 +578,37 @@ div.roomAsciiMap {
         display: flex;
     }
 
+.leaderboardTable {
+    background-color: white;
+    color: black;
+    border-radius: 9px;
+    padding: 5px;
+    flex: 0 1 auto;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 4px 2px lightgrey;
+    width: 50%;
+    margin: auto;
+}
+
+    .leaderboardTable div {
+        margin: auto;
+        min-width: 50%;
+        width: fit-content;
+    }
+
+        .leaderboardTable div:nth-child(even) {
+            background-color: lightgray;
+        }
+
+    .leaderboardTable span:first-of-type {
+        font-weight: 600;
+    }
+
+    .leaderboardTable span:last-of-type {
+        float: right;
+    }
+
+
 .entityDataInfoCard {
     background-color: white;
     color: black;

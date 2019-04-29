@@ -105,6 +105,28 @@ namespace NetMud.Controllers
             return View(vModel);
         }
 
+        public ActionResult Leaderboard()
+        {
+            var players = PlayerDataCache.GetAll();
+            IEnumerable<Tuple<string, double>> distance = players.Select(player => new Tuple<string, double>(player.FullName(), player.CurrentSlice)).OrderByDescending(pair => pair.Item2);
+            IEnumerable<Tuple<string, double>> health = players.Select(player => new Tuple<string, double>(player.FullName(), player.TotalHealth)).OrderBy(pair => pair.Item2); ;
+
+            ApplicationUser user = null;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user = UserManager.FindById(User.Identity.GetUserId());
+                StaffRank userRank = user.GetStaffRank(User);
+            }
+
+            LeaderboardViewModel vModel = new LeaderboardViewModel(distance, health)
+            { 
+                AuthedUser = user,
+            };
+
+            return View(vModel);
+        }
+
         #region NonDataViews
         public ActionResult Lore()
         {

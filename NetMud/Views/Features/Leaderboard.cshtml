@@ -1,0 +1,30 @@
+﻿@model NetMud.Models.Features.LeaderboardViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Leaderboards", new string[] { "Home" }, new string[] { "/" });
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Distance Travelled</h4>
+<hr />
+<div class="leaderboardTable">
+    @foreach (var distancePair in Model.DistanceBoard)
+    {
+        <div style="min-width: 100%;">
+            <span>@distancePair.Item1</span>
+            <span>@distancePair.Item2</span>
+        </div>
+    }
+</div>
+
+<h4>Most Dead</h4>
+<hr />
+<div class="leaderboardTable">
+    @foreach (var healthPair in Model.HealthBoard)
+    {
+        <div style="min-width: 100%;">
+            <span>@healthPair.Item1</span>
+            <span>@healthPair.Item2</span>
+        </div>
+    }
+</div>
