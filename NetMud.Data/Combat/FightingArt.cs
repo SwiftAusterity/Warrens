@@ -208,19 +208,19 @@ namespace NetMud.Data.Combat
         /// <returns></returns>
         public double CalculateCostRatio()
         {
-            double cost = (Setup * 3)
-                + (Recovery * 2.5)
-                + (RekkaPosition >= 0 ? 10 : 0)
-                + (Stamina.Actor * 5)
-                + (Health.Actor * 2.5)
-                - ((short)Readiness * 10)
-                - (Stagger * 5)
-                - (Impact * 3)
-                - (Health.Victim * 10)
-                - (Stamina.Victim * 5)
-                - ((short)PositionResult.Victim * 10)
-                - (QualityValue * 2)
-                - (Armor * 4);
+            double cost = ((short)Readiness * 10)
+                + (Stagger * 5)
+                + (Impact * 3)
+                + (Health.Victim * 10)
+                + (Stamina.Victim * 5)
+                + ((short)PositionResult.Victim * 10)
+                + (QualityValue * 2)
+                + (Armor * 4)
+                + (Setup * 3)
+                - (Recovery * 2.5)
+                - (RekkaPosition >= 0 ? 10 : 0)
+                - (Stamina.Actor * 5)
+                - (Health.Actor * 2.5);
 
             return cost;
         }

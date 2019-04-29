@@ -633,9 +633,10 @@ namespace NetMud.Controllers
 
             IFightingArt newObj = vModel.DataObject;
 
-            if(newObj.CalculateCostRatio() < 0)
+            if(newObj.CalculateCostRatio() > 0)
             {
-                return View("The Calculated Cost must be equal to or above zero.");
+                ViewData.Add("Message", "The Calculated Cost must be equal to or below zero.");
+                return View("~/Views/Manage/FightingArtAdd.cshtml", vModel);
             }
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
@@ -684,9 +685,9 @@ namespace NetMud.Controllers
                 return RedirectToRoute("Index", new { StatusMessage = message });
             }
 
-            if (vModel.DataObject.CalculateCostRatio() < 0)
+            if (vModel.DataObject.CalculateCostRatio() > 0)
             {
-                ViewData.Add("Message", "The Calculated Cost must be equal to or above zero.");
+                ViewData.Add("Message", "The Calculated Cost must be equal to or below zero.");
                 return View("~/Views/Manage/FightingArtEdit.cshtml", vModel);
             }
 
