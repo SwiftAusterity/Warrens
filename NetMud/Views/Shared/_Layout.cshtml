@@ -1,6 +1,11 @@
 ﻿<!DOCTYPE html>
 <html>
 @{
+    if(string.IsNullOrWhiteSpace(ViewBag.StatusMessage) && !string.IsNullOrWhiteSpace(ViewData["Message"]?.ToString()))
+    {
+        ViewBag.StatusMessage = ViewData["Message"].ToString();
+    }
+
     var instance = HttpContext.Current.ApplicationInstance;
     System.Reflection.Assembly asm = instance.GetType().BaseType.Assembly;
     System.Version v = asm.GetName().Version;
@@ -64,7 +69,7 @@
         <span class="glyphicon glyphicon-chevron-up"></span>
     </div>
     <div class="container body-content">
-        <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
+        <h2 id="statusMessage" name="statusMessage" class="text-warning">@ViewData["StatusMessage"]</h2>
         @if (ViewBag.Breadcrumbs != null)
         {
             @Html.Partial("TitleAndBreadcrumbs", ViewBag.Breadcrumbs as Tuple<string, string[], string[]>)

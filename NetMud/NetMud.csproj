@@ -462,6 +462,10 @@
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Views\Manage\FightingArtAdd.cshtml" />
+    <Content Include="Views\Manage\FightingArtEdit.cshtml" />
+    <Content Include="Views\Manage\FightingArts.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtRated.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

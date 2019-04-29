@@ -33,6 +33,7 @@ namespace NetMud.Models.PlayerManagement
         [DataType(DataType.Text)]
         public string GlobalIdentityHandle { get; set; }
 
+        public int FightingArtCount { get; set; }
         public int ComboCount { get; set; }
         public int UIModuleCount { get; set; }
         public int NotificationCount { get; set; }

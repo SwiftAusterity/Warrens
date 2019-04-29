@@ -1,4 +1,5 @@
 ﻿using NetMud.Communication.Messaging;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using System;
@@ -60,13 +61,17 @@ namespace NetMud.Combat
                     }
                 }
 
-                //uhh k
+                //uhh k we need to use a fake combo logic to get a random attack
                 if (myCombo == null)
                 {
-                    return false;
-                }
+                    var attacks = TemplateCache.GetAll<IFightingArt>(true);
 
-                attack = myCombo.GetNext(actor.LastAttack);
+                    attack = attacks.FirstOrDefault(atk => atk.IsValid(actor, target, (ulong)Math.Abs(actor.Balance)));
+                }
+                else
+                {
+                    attack = myCombo.GetNext(actor.LastAttack);
+                }
 
                 actor.Stagger = attack.Setup;
                 actor.Sturdy = attack.Armor;

@@ -118,5 +118,12 @@ namespace NetMud.DataStructure.Combat
         /// <param name="victim">who's being hit</param>
         /// <returns>yea or nay</returns>
         bool IsValid(IPlayer actor, IPlayer victim, ulong distance, IFightingArt lastAttack = null);
+
+        /// <summary>
+        /// Calculate the cost ratio of this art
+        /// </summary>
+        /// <returns></returns>
+        double CalculateCostRatio();
+
     }
 }
