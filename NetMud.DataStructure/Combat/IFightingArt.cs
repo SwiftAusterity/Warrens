@@ -102,6 +102,16 @@ namespace NetMud.DataStructure.Combat
         int QualityValue { get; set; }
 
         /// <summary>
+        /// The verb of the sentence for output building
+        /// </summary>
+        string ActionVerb { get; set; }
+
+        /// <summary>
+        /// The object of the sentence for output building
+        /// </summary>
+        string ActionObject { get; set; }
+
+        /// <summary>
         /// Is this art valid to be used at the moment
         /// </summary>
         /// <param name="actor">who's doing the hitting</param>

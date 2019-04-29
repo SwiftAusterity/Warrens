@@ -105,22 +105,12 @@ namespace NetMud.Combat
                 actor.Exhaust(attack.Stamina.Actor);
             }
 
-            var targetGlyph = target == null ? "a shadow" : "$T$";
-
-            string toOrigin = string.Format("$A$ {0}s {1}.", attack.Name, targetGlyph);
-            string toActor = string.Format("You {0} {1}.", attack.Name, targetGlyph);
-            string toTarget = "";
-
-            targetGlyph = target == null ? "your shadow" : "$T$";
-
-            //messaging
+            Tuple<string, string, string> messaging = null;
 
             if (target != null)
             {
                 var rand = new Random();
                 target.Balance = -1 * attack.DistanceChange;
-
-                toTarget = string.Format("$A$ {0}s you.", attack.Name);
 
                 var targetReadiness = ReadinessState.Offensive;
                 if (target.LastAttack != null)
@@ -130,6 +120,7 @@ namespace NetMud.Combat
 
                 //TODO: for now we're just doing flat chances for avoidance states since we have no stats to base anything on
                 var avoided = false;
+                var blocked = false;
                 double impact = attack.Impact;
                 double damage = attack.Health.Victim;
                 double staminaDrain = attack.Stamina.Victim;
@@ -138,49 +129,33 @@ namespace NetMud.Combat
                 {
                     case ReadinessState.Circle: //circle is dodge essentially
                         avoided = rand.Next(0, 100) >= Math.Abs(target.Balance) / 4 * 100;
-
-                        if(avoided)
-                        {
-                            toActor = string.Format("{0} dodges your attack!", targetGlyph);
-                            toTarget = string.Format("You dodge $A$s {0}.", attack.Name);
-                            toOrigin = string.Format("$A$ {0}s {1} but they dodge!.", attack.Name, targetGlyph);
-                        }
                         break;
                     case ReadinessState.Block:
-                        if (rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100)
+                        blocked = rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100;
+
+                        if(blocked)
                         {
                             impact *= .25;
                             damage *= .50;
                             staminaDrain *= .50;
-
-                            toOrigin = string.Format("$A$ {0}s {1} but they block.", attack.Name, targetGlyph);
-                            toActor = string.Format("You {0} {1} but they block!", attack.Name, targetGlyph);
-                            toTarget = string.Format("$A$ {0}s you but you block it.", attack.Name);
                         };
                         break;
                     case ReadinessState.Deflect:
-                        if (rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100)
+                        blocked = rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100;
+
+                        if(blocked)
                         {
                             impact *= .50;
                             damage *= .25;
                             staminaDrain *= .25;
-
-                            toOrigin = string.Format("$A$ {0}s {1} but they deflect the blow.", attack.Name, targetGlyph);
-                            toActor = string.Format("You {0} {1} but they deflect it!", attack.Name, targetGlyph);
-                            toTarget = string.Format("$A$ {0}s you but you deflect it.", attack.Name);
                         }
                         break;
                     case ReadinessState.Redirect:
                         avoided = rand.Next(0, 100) >= Math.Abs(target.Balance) / 20 * 100;
-
-                        if (avoided)
-                        {
-                            toActor = string.Format("{0} redirects your attack back to you!", targetGlyph);
-                            toTarget = string.Format("You redirect $A$s {0} back at them.", attack.Name);
-                            toOrigin = string.Format("$A$ {0}s {1} but they redirect the attack back at them!.", attack.Name, targetGlyph);
-                        }
                         break;
                 }
+
+                messaging = GetOutputStrings(attack, target, avoided || blocked, targetReadiness);
 
                 if (!avoided)
                 {
@@ -207,17 +182,72 @@ namespace NetMud.Combat
                     }
                 }
             }
-
-            var msg = new Message(toActor)
+            else
             {
-                ToOrigin = new string[] { toOrigin },
-                ToTarget = new string[] { toTarget }
+                messaging = GetOutputStrings(attack, target, false, ReadinessState.Offensive);
+            }
+
+            var msg = new Message(messaging.Item1)
+            {
+                ToTarget = new string[] { messaging.Item2 },
+                ToOrigin = new string[] { messaging.Item3 }
             };
 
 
             msg.ExecuteMessaging(actor, null, target, actor.CurrentLocation, null, 3, true);
 
             return true;
+        }
+
+        /// <summary>
+        /// Make the output messaging
+        /// </summary>
+        /// <returns>actor, target, room</returns>
+        private static Tuple<string, string, string> GetOutputStrings(IFightingArt attack, IPlayer target, bool blocked, ReadinessState avoidanceType)
+        {
+            var targetGlyph = target == null ? "a shadow" : "$T$";
+            var actorTargetGlyph = target == null ? "your shadow" : "$T$";
+
+            var verb = !string.IsNullOrWhiteSpace(attack.ActionVerb) ? attack.ActionVerb : attack.Name;
+            var obj = !string.IsNullOrWhiteSpace(attack.ActionObject) ? "and " + attack.ActionObject + " " : string.Empty;
+
+            string toOrigin = string.Format("$A$ {0}s {2}{1}.", verb, targetGlyph, obj);
+            string toActor = string.Format("You {0} {2}{1}.", verb, actorTargetGlyph, obj);
+            string toTarget = "";
+
+            if (target != null)
+            {
+                toTarget = string.Format("$A$ {0}s you.", attack.Name);
+
+                if (blocked)
+                {
+                    switch (avoidanceType)
+                    {
+                        case ReadinessState.Circle: //circle is dodge essentially
+                            toActor = string.Format("{0} dodges your attack!", actorTargetGlyph);
+                            toTarget = string.Format("You dodge $A$s {0}.", verb);
+                            toOrigin = string.Format("$A$ {0}s {1} but they dodge!.", verb, targetGlyph);
+                            break;
+                        case ReadinessState.Block:
+                            toActor = string.Format("You {0} {1} but they block!", verb, actorTargetGlyph);
+                            toTarget = string.Format("$A$ {0}s you but you block it.", verb);
+                            toOrigin = string.Format("$A$ {0}s {1} but they block.", verb, targetGlyph);
+                            break;
+                        case ReadinessState.Deflect:
+                            toActor = string.Format("You {0} {1} but they deflect it!", verb, actorTargetGlyph);
+                            toTarget = string.Format("$A$ {0}s you but you deflect it.", verb);
+                            toOrigin = string.Format("$A$ {0}s {1} but they deflect the blow.", verb, targetGlyph);
+                            break;
+                        case ReadinessState.Redirect:
+                            toActor = string.Format("{0} redirects your attack back to you!", actorTargetGlyph);
+                            toTarget = string.Format("You redirect $A$s {0} back at them.", verb);
+                            toOrigin = string.Format("$A$ {0}s {1} but they redirect the attack back at them!.", verb, targetGlyph);
+                            break;
+                    }
+                }
+            }
+
+            return new Tuple<string, string, string>(toActor, toTarget, toOrigin);
         }
     }
 }

@@ -29,6 +29,12 @@
     @Html.EditorFor(m => m.PositionResult)
 </div>
 
+<h4>Action Text</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.ActionVerb)
+    @Html.EditorFor(m => m.ActionObject)
+</div>
+
 <h4>Quality Changes</h4>
 <div class="form-group row">
     @Html.EditorFor(m => m.ResultQuality)
