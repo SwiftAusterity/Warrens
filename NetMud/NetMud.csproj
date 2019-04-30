@@ -122,7 +122,7 @@
       <HintPath>..\packages\Microsoft.WebSockets.0.2.3.1\lib\net45\Microsoft.WebSockets.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -402,10 +402,6 @@
     <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
     <Content Include="Views\Blog\Index.cshtml" />
     <Content Include="Views\Manage\EditCharacter.cshtml" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Views\Shared\ApplyTemplate.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Help.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\JournalEntry.cshtml" />
@@ -443,6 +439,10 @@
     <Content Include="Views\LiveAdmin\Rooms.cshtml" />
     <Content Include="Views\LiveAdmin\Room.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Room.cshtml" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -568,14 +568,6 @@
       <Project>{1e404cfb-4ced-42ad-b28e-bfee270c88f9}</Project>
       <Name>NetMud.CentralControl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Commands\NetMud.Commands.csproj">
-      <Project>{39B7F303-CF48-41DF-B56B-325987E7F7E6}</Project>
-      <Name>NetMud.Commands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
-      <Project>{7F19324F-1B9C-467D-816A-74A36EB74CDE}</Project>
-      <Name>NetMud.Communication</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
       <Project>{25b53ef7-e51c-4ee5-a04c-dd8797cff58f}</Project>
       <Name>NetMud.DataAccess</Name>
@@ -592,25 +584,13 @@
       <Project>{d98549e9-9d8c-46a7-83b2-9a4d68504f31}</Project>
       <Name>NetMud.Gossip</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Interp\NetMud.Interp.csproj">
-      <Project>{0c46dab6-27fd-4117-acf6-0b8440614aa0}</Project>
-      <Name>NetMud.Interp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Backup\NetMud.Backup.csproj">
       <Project>{d16eb03b-8da6-49c3-8922-cd05af30fd20}</Project>
       <Name>NetMud.Backup</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetMud.Physics\NetMud.Physics.csproj">
-      <Project>{28aabdf5-250e-40ce-88de-be3b9d23d95f}</Project>
-      <Name>NetMud.Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
       <Name>NetMud.Utility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Websock\NetMud.Websock.csproj">
-      <Project>{afcde9d8-2e19-4cd0-95b7-fe40e3575149}</Project>
-      <Name>NetMud.Websock</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

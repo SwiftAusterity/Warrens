@@ -8,11 +8,6 @@ namespace NetMud.DataStructure.System
     public interface IGlobalConfig : IConfigData
     {
         /// <summary>
-        /// Is the websockets portal allowing new connections
-        /// </summary>
-        bool WebsocketPortalActive { get; set; }
-
-        /// <summary>
         /// Are new users allowed to register
         /// </summary>
         bool UserCreationActive { get; set; }
