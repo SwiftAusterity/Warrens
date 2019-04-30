@@ -9,7 +9,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Player;
-using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.Gossip;
 using NetMud.Models.Admin;
@@ -58,23 +57,14 @@ namespace NetMud.Controllers.GameAdmin
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
-                Rooms = TemplateCache.GetAll<IRoomTemplate>(),
-
-                HelpFiles = TemplateCache.GetAll<IHelp>(),
                 Journals = TemplateCache.GetAll<IJournalEntry>(),
-                UIModules = ConfigDataCache.GetAll<IUIModule>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),
-                LiveRooms = LiveCache.GetAll<IRoom>().Count(),
 
                 ConfigDataObject = globalConfig,
-                WebsocketPortalActive = globalConfig.WebsocketPortalActive,
                 AdminsOnly = globalConfig.AdminsOnly,
                 UserCreationActive = globalConfig.UserCreationActive,
-
-                QualityChange = new string[0],
-                QualityChangeValue = new int[0],
 
                 GossipConfigDataObject = gossipConfig,
                 GossipActive = gossipConfig.GossipActive,
@@ -101,7 +91,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Processor.ShutdownLoop(processName, 600, "{0} seconds before " + processName + " is shutdown.", 60);
+            Processor.ShutdownLoop(processName, 600);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningProcess[" + processName + "]", authedUser.GameAccount.GlobalIdentityHandle);
             string message = "Cancel signal sent.";
@@ -114,7 +104,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Processor.ShutdownAll(600, "{0} seconds before TOTAL WORLD SHUTDOWN.", 60);
+            Processor.ShutdownAll(600);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningALLPROCESSES", authedUser.GameAccount.GlobalIdentityHandle);
             string message = "Cancel signal sent for entire world.";
@@ -164,13 +154,11 @@ namespace NetMud.Controllers.GameAdmin
 
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
             Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
-                .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
+                .Where(player => player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
                 .Select(player => new Member()
                 {
                     Name = player.AccountHandle,
-                    WriteTo = (message) => player.WriteTo(new string[] { message }),
-                    BlockedMembers = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => !acq.IsFriend).Select(acq => acq.PersonHandle),
-                    Friends = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => acq.IsFriend).Select(acq => acq.PersonHandle)
+                    WriteTo = (message) => player.WriteTo(new string[] { message })
                 }).ToArray();
 
             void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);
@@ -194,7 +182,6 @@ namespace NetMud.Controllers.GameAdmin
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
-            globalConfig.WebsocketPortalActive = vModel.WebsocketPortalActive;
             globalConfig.AdminsOnly = vModel.AdminsOnly;
             globalConfig.UserCreationActive = vModel.UserCreationActive;
 

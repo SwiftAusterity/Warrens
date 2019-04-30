@@ -1,16 +1,13 @@
 ﻿using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Architectural.Serialization;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Script.Serialization;
 
@@ -41,58 +38,11 @@ namespace NetMud.Data.Players
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.None; } }
 
         /// <summary>
-        /// keywords this entity is referrable by in the world by the parser
-        /// </summary>
-        [JsonIgnore]
-        [ScriptIgnore]
-        public override string[] Keywords
-        {
-            get
-            {
-                if (_keywords == null || _keywords.Length == 0)
-                {
-                    _keywords = new string[] { FullName().ToLower(), Name.ToLower(), SurName.ToLower() };
-                }
-
-                return _keywords;
-            }
-            set { _keywords = value; }
-        }
-
-
-        /// <summary>
-        /// Last known location Id for character in live world
-        /// </summary>
-        public ulong CurrentSlice { get; set; }
-
-        /// <summary>
-        /// "family name" for player character
-        /// </summary>
-        [StringDataIntegrity("Surname is required.")]
-        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
-        [Display(Name = "Family Name", Description = "Last Name for you in-game.")]
-        [DataType(DataType.Text)]
-        public string SurName { get; set; }
-
-        /// <summary>
-        /// Has this character "graduated" from the tutorial yet
-        /// </summary>
-        public bool StillANoob { get; set; }
-
-        /// <summary>
         /// The "user" level for commands and accessibility
         /// </summary>
         [Display(Name = "Chosen Role", Description = "The administrative role.")]
         [UIHint("EnumDropDownList")]
         public StaffRank GamePermissionsRank { get; set; }
-
-
-        /// <summary>
-        /// The last known location Id this character was seen in by system (for restore/backup purposes)
-        /// </summary>
-        [JsonConverter(typeof(ConcreteTypeConverter<GlobalPosition>))]
-        [NonNullableDataIntegrity("Missing location data.")]
-        public IGlobalPosition CurrentLocation { get; set; }
 
         /// <summary>
         /// Account handle (user) this belongs to
@@ -122,35 +72,11 @@ namespace NetMud.Data.Players
             }
         }
 
-        public int TotalHealth { get; set; }
-        public int TotalStamina { get; set; }
-
         /// <summary>
         /// Empty constructor
         /// </summary>
         public PlayerTemplate()
         {
-            TotalHealth = 100;
-            TotalStamina = 100;
-            Qualities = new HashSet<IQuality>();
-        }
-
-        [JsonConstructor]
-        public PlayerTemplate(GlobalPosition currentLocation)
-        {
-            CurrentLocation = currentLocation;
-            TotalHealth = 100;
-            TotalStamina = 100;
-            Qualities = new HashSet<IQuality>();
-        }
-
-        /// <summary>
-        /// Full name to refer to this NPC with
-        /// </summary>
-        /// <returns>the full name string</returns>
-        public string FullName()
-        {
-            return string.Format("{0} {1}", Name, SurName);
         }
 
         #region Caching
@@ -356,12 +282,7 @@ namespace NetMud.Data.Players
             {
                 Name = Name,
                 AccountHandle = AccountHandle,
-                GamePermissionsRank = GamePermissionsRank,
-                Qualities = Qualities,
-                SurName = SurName,
-                StillANoob = StillANoob,
-                TotalHealth = TotalHealth,
-                TotalStamina = TotalStamina
+                GamePermissionsRank = GamePermissionsRank
             };
         }
         #endregion

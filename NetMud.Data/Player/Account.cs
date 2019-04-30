@@ -133,10 +133,7 @@ namespace NetMud.Data.Players
                     if (!returnValue.RestoreConfig(this))
                     {
                         //Just make it new and save it
-                        returnValue = new AccountConfig(this)
-                        {
-                            UITutorialMode = true
-                        };
+                        returnValue = new AccountConfig(this);
 
                         returnValue.Save(this, StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
                     }
@@ -168,7 +165,7 @@ namespace NetMud.Data.Players
         {
             HashSet<IPlayerTemplate> systemChars = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAll());
 
-            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase) && newChar.SurName.Equals(newChar.SurName, StringComparison.InvariantCultureIgnoreCase)))
+            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return "A character with that name already exists, please choose another.";
             }

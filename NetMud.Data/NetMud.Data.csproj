@@ -79,7 +79,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Administrative\Help.cs" />
     <Compile Include="Administrative\JournalEntry.cs" />
     <Compile Include="Architectural\ConfigData.cs" />
     <Compile Include="Architectural\DataHelpers.cs" />
@@ -92,15 +91,8 @@
     <Compile Include="Architectural\DataIntegrity\StringDataIntegrityAttribute.cs" />
     <Compile Include="Architectural\EntityBase\EntityPartial.cs" />
     <Compile Include="Architectural\EntityBase\EntityTemplatePartial.cs" />
-    <Compile Include="Architectural\EntityBase\LocationTemplateEntityPartial.cs" />
-    <Compile Include="Architectural\EntityBase\LocationEntityPartial.cs" />
-    <Compile Include="Architectural\EntityBase\Quality.cs" />
-    <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
-    <Compile Include="Architectural\PropertyBinding\HelpDataBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\AffectPatternDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />
-    <Compile Include="Architectural\PropertyBinding\RoomTemplateDataBinder.cs" />
     <Compile Include="Architectural\Serialization\CacheKeyDictionaryConverter.cs" />
     <Compile Include="Architectural\Serialization\ConcreteTypeConverter.cs" />
     <Compile Include="Architectural\Serialization\DescriptiveEnumConverter.cs" />
@@ -109,12 +101,8 @@
     <Compile Include="Gossip\GossipConfig.cs" />
     <Compile Include="Player\Account.cs" />
     <Compile Include="Player\AccountConfig.cs" />
-    <Compile Include="Player\Acquaintence.cs" />
     <Compile Include="Player\Player.cs" />
-    <Compile Include="Player\PlayerMessage.cs" />
     <Compile Include="Player\PlayerTemplate.cs" />
-    <Compile Include="Player\Playlist.cs" />
-    <Compile Include="Player\UIModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System\GlobalConfig.cs" />
   </ItemGroup>

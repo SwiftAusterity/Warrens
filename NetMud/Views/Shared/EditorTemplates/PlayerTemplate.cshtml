@@ -5,7 +5,6 @@
 <h4>Details</h4>
 <div class="form-group row">
     @Html.EditorFor(m => m.Name)
-    @Html.EditorFor(m => m.SurName)
     @if (User.IsInRole("Admin"))
     {
         @Html.EditorFor(m => m.GamePermissionsRank)

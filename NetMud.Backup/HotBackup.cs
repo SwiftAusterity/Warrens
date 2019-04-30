@@ -1,12 +1,10 @@
 ﻿using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Room;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Player;
-using NetMud.DataStructure.Room;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,13 +47,6 @@ namespace NetMud.Backup
                 }
             }
 
-            foreach (IRoomTemplate thing in TemplateCache.GetAll<IRoomTemplate>())
-            {
-                IRoom entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
-
-                entityThing.GetFromWorldOrSpawn();
-            }
-
             LoggingUtility.Log("World restored from data fallback.", LogChannels.Backup, true);
 
             return true;
@@ -78,14 +69,7 @@ namespace NetMud.Backup
                 {
                     IEntity entityThing = Activator.CreateInstance(implimentingEntityClass, new object[] { (T)thing }) as IEntity;
 
-                    if(typeof(T).GetInterfaces().Contains(typeof(ISpawnAsMultiple)))
-                    {
-                        entityThing.SpawnNewInWorld();
-                    }
-                    else
-                    {
-                        ((ISpawnAsSingleton<T>)entityThing).GetFromWorldOrSpawn();
-                    }
+                    ((ISpawnAsSingleton<T>)entityThing).GetFromWorldOrSpawn();
                 }
                 catch (Exception ex)
                 {
@@ -188,39 +172,11 @@ namespace NetMud.Backup
                                                                                                 && !ty.IsAbstract
                                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-                foreach (Type type in implimentedTypes.OrderByDescending(type => type == typeof(Room) ? 3 : 0))
-                {
-                    if (!Directory.Exists(currentBackupDirectory + type.Name))
-                    {
-                        continue;
-                    }
-
-                    DirectoryInfo entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
-
-                    foreach (FileInfo file in entityFilesDirectory.EnumerateFiles())
-                    {
-                        entitiesToLoad.Add(liveDataAccessor.ReadEntity(file, type));
-                    }
-                }
-
-                //Check we found actual data
-                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Room)))
-                {
-                    throw new Exception("No Room found, failover.");
-                }
-
                 //Shove them all into the live system first
                 foreach (IEntity entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
                 {
                     entity.UpsertToLiveWorldCache();
                     entity.KickoffProcesses();
-                }
-
-                foreach (IRoomTemplate thing in TemplateCache.GetAll<IRoomTemplate>().Where(dt => !entitiesToLoad.Any(ent => ent.TemplateId.Equals(dt.Id) && ent.Birthdate >= dt.LastRevised)))
-                {
-                    IRoom entityThing = Activator.CreateInstance(thing.EntityClass, new object[] { thing }) as IRoom;
-
-                    entityThing.SpawnNewInWorld();
                 }
 
                 LoggingUtility.Log("World restored from current live.", LogChannels.Backup, false);

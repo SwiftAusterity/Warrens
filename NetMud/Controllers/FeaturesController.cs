@@ -1,18 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Commands.Attributes;
-using NetMud.DataAccess;
-using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Administrative;
-using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.System;
-using NetMud.Models.Features;
-using NetMud.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 
@@ -42,59 +29,7 @@ namespace NetMud.Controllers
             UserManager = userManager;
         }
 
-        public ActionResult Help(string SearchTerm = "", bool IncludeInGame = true)
-        {
-            List<IHelp> validEntries = TemplateCache.GetAll<IHelp>(true).ToList();
-            ApplicationUser user = null;
-            string searcher = SearchTerm.Trim().ToLower();
-
-            if (User.Identity.IsAuthenticated)
-            {
-                user = UserManager.FindById(User.Identity.GetUserId());
-                StaffRank userRank = user.GetStaffRank(User);
-            }
-
-            if (IncludeInGame)
-            {
-                //All the entities with helps
-                IEnumerable<ILookupData> entityHelps = TemplateCache.GetAll<ILookupData>(true).Where(data => !data.ImplementsType<IHelp>());
-                validEntries.AddRange(entityHelps.Select(helpful => new Data.Administrative.Help() { Name = helpful.Name, HelpText = helpful.HelpText }));
-
-                //All the commands
-                Assembly commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
-                IEnumerable<Type> validTargetTypes = commandsAssembly.GetTypes().Where(t => !t.IsAbstract && t.ImplementsType<IHelpful>());
-
-                foreach (Type command in validTargetTypes)
-                {
-                    IHelpful instance = (IHelpful)Activator.CreateInstance(command);
-                    MarkdownString body = instance.HelpText;
-                    string subject = command.Name;
-
-                    validEntries.Add(new Data.Administrative.Help() { Name = subject, HelpText = body });
-                }
-            }
-
-            HelpViewModel vModel = new HelpViewModel(validEntries.Where(help => help.HelpText.ToLower().Contains(searcher) || help.Name.ToLower().Contains(searcher)))
-            {
-                AuthedUser = user,
-                SearchTerm = SearchTerm,
-                IncludeInGame = IncludeInGame
-            };
-
-            return View(vModel);
-        }
-
         #region NonDataViews
-        public ActionResult Skills()
-        {
-            return View();
-        }
-
-        public ActionResult Lore()
-        {
-            return View();
-        }
-
         public ActionResult TheWorld()
         {
             return View();

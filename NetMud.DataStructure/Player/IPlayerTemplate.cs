@@ -11,16 +11,5 @@ namespace NetMud.DataStructure.Player
         /// What account owns this character
         /// </summary>
         IAccount Account { get; }
-
-        /// <summary>
-        /// Last known location Id for character in live world
-        /// </summary>
-        ulong CurrentSlice { get; set; }
-
-        /// <summary>
-        /// Given name + surname
-        /// </summary>
-        /// <returns></returns>
-        string FullName();
     }
 }

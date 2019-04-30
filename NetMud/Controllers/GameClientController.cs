@@ -40,8 +40,6 @@ namespace Controllers
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            model.MusicTracks = ContentUtility.GetMusicTracks();
-            model.MusicPlaylists = model.AuthedUser.GameAccount.Config.Playlists;
             return View(model);
         }
 

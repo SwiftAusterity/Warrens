@@ -1,6 +1,5 @@
 ﻿using NetMud.Backup;
 using NetMud.CentralControl;
-using NetMud.Commands.Attributes;
 using NetMud.Data.Gossip;
 using NetMud.Data.System;
 using NetMud.DataAccess;
@@ -11,7 +10,6 @@ using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Gossip;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -69,13 +67,11 @@ namespace NetMud
             if (gossipConfig.GossipActive)
             {
                 Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
-                    .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
+                    .Where(player => player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
                     .Select(player => new Member()
                     {
                         Name = player.AccountHandle,
-                        WriteTo = (message) => player.WriteTo(new string[] { message }),
-                        BlockedMembers = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => !acq.IsFriend).Select(acq => acq.PersonHandle),
-                        Friends = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => acq.IsFriend).Select(acq => acq.PersonHandle)
+                        WriteTo = (message) => player.WriteTo(new string[] { message })
                     }).ToArray();
 
                 void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);

@@ -16,20 +16,6 @@
         <div class="adminDashboard">
             <div>
                 <h4>Templates</h4>
-                <dl class="dl-horizontal dashboardItem">
-                    <dt>Rooms [@Model.Rooms.Count().ToString()]</dt>
-                    <dd>
-                        @Html.ActionLink(" ", "Add", "Room", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: white; pointer-events: none", @title = "Add New", @enabled = "false" })
-                        @if (Model.Rooms.Any(r => r.FitnessProblems))
-                        {
-                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                        }
-                        @if (Model.Rooms.Any(r => r.State != ApprovalState.Approved))
-                        {
-                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                        }
-                    </dd>
-                </dl>
             </div>
             <div>
                 <h4>Administrative</h4>
@@ -46,30 +32,6 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Help Files [@Html.ActionLink(Model.HelpFiles.Count().ToString(), "Index", "Help", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
-                    <dd>
-                        @Html.ActionLink(" ", "Add", "Help", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
-                        @if (Model.HelpFiles.Any(r => r.FitnessProblems))
-                        {
-                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                        }
-                        @if (Model.HelpFiles.Any(r => r.State != ApprovalState.Approved))
-                        {
-                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                        }
-                    </dd>
-                    <dt>UI Modules [@Html.ActionLink(Model.UIModules.Count().ToString(), "Index", "UIModules", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
-                    <dd>
-                        @Html.ActionLink(" ", "Add", "UIModules", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
-                        @if (Model.UIModules.Any(r => r.FitnessProblems))
-                        {
-                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
-                        }
-                        @if (Model.UIModules.Any(r => r.State != ApprovalState.Approved))
-                        {
-                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                        }
-                    </dd>
                 </dl>
             </div>
         </div>
@@ -81,10 +43,6 @@
                 <dt>Players:</dt>
                 <dd>
                     @Model.LivePlayers [ @Html.ActionLink("Manage", "Index", "Player", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
-                </dd>
-                <dt>Rooms:</dt>
-                <dd>
-                    @Model.LiveRooms [ @Html.ActionLink("Manage", "Rooms", "LiveAdmin", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" }) ]
                 </dd>
             </dl>
         </div>
@@ -164,7 +122,6 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                 <div class="form-group row">
-                    @Html.EditorFor(m => m.WebsocketPortalActive)
                     @Html.EditorFor(m => m.UserCreationActive)
                     @Html.EditorFor(m => m.AdminsOnly)
                 </div>

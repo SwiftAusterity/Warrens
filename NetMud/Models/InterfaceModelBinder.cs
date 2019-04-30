@@ -1,6 +1,4 @@
 ﻿using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Room;
-using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using System;
 using System.Collections;
@@ -20,19 +18,7 @@ namespace NetMud.Models
                 //Convert the interface to the concrete class by finding a concrete class that impls this interface
                 if (!modelType.IsGenericType)
                 {
-                    Type type = null;
-
-                    if (modelType == typeof(ILocationData))
-                    {
-                        if (bindingContext.ModelName.Contains("Room"))
-                        {
-                            type = typeof(RoomTemplate);
-                        }
-                    }
-                    else
-                    {
-                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
-                    }
+                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
 
                     if (type == null)
                     {
@@ -191,16 +177,7 @@ namespace NetMud.Models
                             //Interface shenanigans again
                             if (propertyDescriptor.PropertyType.IsInterface)
                             {
-                                Type type = null;
-
-                                if (propertyDescriptor.PropertyType == typeof(ILocationData))
-                                {
-                                    type = typeof(RoomTemplate);
-                                }
-                                else
-                                {
-                                    type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
-                                }
+                                Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
 
                                 if (type == null)
                                 {
@@ -284,16 +261,7 @@ namespace NetMud.Models
 
                     if (containedType.IsInterface)
                     {
-                        Type type = null;
-
-                        if (containedType == typeof(ILocationData))
-                        {
-                            type = typeof(RoomTemplate);
-                        }
-                        else
-                        {
-                            type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
-                        }
+                        Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
 
                         containedType = type ?? throw new Exception("Invalid Binding Interface");
                     }
@@ -351,16 +319,7 @@ namespace NetMud.Models
 
                                     if (innerContainedType.IsInterface)
                                     {
-                                        Type type = null;
-
-                                        if (innerContainedType == typeof(ILocationData))
-                                        {
-                                            type = typeof(RoomTemplate);
-                                        }
-                                        else
-                                        {
-                                            type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
-                                        }
+                                        Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
 
                                         innerContainedType = type ?? throw new Exception("Invalid Binding Interface");
                                     }
@@ -545,19 +504,7 @@ namespace NetMud.Models
                 //Convert the interface to the concrete class by finding a concrete class that impls this interface
                 if (!componentType.IsGenericType)
                 {
-                    Type type = null;
-
-                    if (componentType == typeof(ILocationData))
-                    {
-                        if (componentType.Name.Contains("Room"))
-                        {
-                            type = typeof(RoomTemplate);
-                        }
-                    }
-                    else
-                    {
-                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
-                    }
+                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
 
                     if (type == null)
                     {

@@ -1,5 +1,4 @@
 ﻿using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Room;
 using NetMud.DataAccess;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Architectural;
@@ -60,8 +59,7 @@ namespace NetMud.Backup
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(RoomTemplate) ? 3 :
-                                                                            type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
+            foreach (Type t in implimentedTypes.OrderByDescending(type => type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
             {
                 LoadAllToCache(t);
             }

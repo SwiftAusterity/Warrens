@@ -56,6 +56,8 @@
     <Compile Include="Administrative\StaffRank.cs" />
     <Compile Include="Architectural\CacheType.cs" />
     <Compile Include="Architectural\ConfigDataType.cs" />
+    <Compile Include="Architectural\EntityBase\IEntity.cs" />
+    <Compile Include="Architectural\EntityBase\ITemplate.cs" />
     <Compile Include="Architectural\ISingleton.cs" />
     <Compile Include="Architectural\PropertyValidation\MarkdownStringLengthValidator.cs" />
     <Compile Include="Architectural\IAmOwned.cs" />
@@ -79,16 +81,11 @@
     <Compile Include="Architectural\ValueRange.cs" />
     <Compile Include="Gossip\IGossipClient.cs" />
     <Compile Include="Gossip\IGossipConfig.cs" />
-    <Compile Include="Player\AcquaintenceNotifications.cs" />
     <Compile Include="Player\IAccount.cs" />
     <Compile Include="Player\IAccountConfig.cs" />
-    <Compile Include="Player\IAcquaintence.cs" />
     <Compile Include="Player\IPlayer.cs" />
     <Compile Include="Player\IPlayerFramework.cs" />
-    <Compile Include="Player\IPlayerMessage.cs" />
     <Compile Include="Player\IPlayerTemplate.cs" />
-    <Compile Include="Player\IPlaylist.cs" />
-    <Compile Include="Player\IUIModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System\IGlobalConfig.cs" />
     <Compile Include="System\IHelpful.cs" />

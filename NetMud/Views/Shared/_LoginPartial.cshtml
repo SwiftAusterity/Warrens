@@ -19,7 +19,7 @@
                 @if (authUser.GameAccount.Characters.Count() > 0)
                 {
                     @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
-                     new SelectListItem() { Text = ch.FullName()
+                     new SelectListItem() { Text = ch.Name
                                      , Value = ch.Id.ToString()
                                      , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
                                      , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
@@ -38,7 +38,6 @@
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                         <li class="dropdown-header" style="color: mediumvioletred">Management</li>
                         <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
-                        <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
                         <li><a href="#" id="bugReport">Report A Bug</a></li>
                         @if (User.IsInRole("Admin") || User.IsInRole("Builder"))
                         {
