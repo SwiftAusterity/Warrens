@@ -107,7 +107,9 @@ namespace NetMud.Controllers
 
         public ActionResult Leaderboard()
         {
-            var players = PlayerDataCache.GetAll();
+            var accounts = UserManager.Users.ToList();
+
+            var players = accounts.SelectMany(acct => acct.GameAccount.Characters);
             IEnumerable<Tuple<string, double>> distance = players.Select(player => new Tuple<string, double>(player.FullName(), player.CurrentSlice)).OrderByDescending(pair => pair.Item2);
             IEnumerable<Tuple<string, double>> health = players.Select(player => new Tuple<string, double>(player.FullName(), player.TotalHealth)).OrderBy(pair => pair.Item2); ;
 
