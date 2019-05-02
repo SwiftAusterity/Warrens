@@ -37,7 +37,7 @@
       <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -79,6 +79,9 @@
     <Compile Include="Architectural\PropertyValidation\ShortValueRangeValidator.cs" />
     <Compile Include="Architectural\PropertyValidation\UnicodeStringValidator.cs" />
     <Compile Include="Architectural\ValueRange.cs" />
+    <Compile Include="Game\IGame.cs" />
+    <Compile Include="Game\IGameContext.cs" />
+    <Compile Include="Game\ITurn.cs" />
     <Compile Include="Gossip\IGossipClient.cs" />
     <Compile Include="Gossip\IGossipConfig.cs" />
     <Compile Include="Player\IAccount.cs" />
