@@ -110,8 +110,8 @@ namespace NetMud.Controllers
             var accounts = UserManager.Users.ToList();
 
             var players = accounts.SelectMany(acct => acct.GameAccount.Characters);
-            IEnumerable<Tuple<string, double>> distance = players.Select(player => new Tuple<string, double>(player.FullName(), player.CurrentSlice)).OrderByDescending(pair => pair.Item2);
-            IEnumerable<Tuple<string, double>> health = players.Select(player => new Tuple<string, double>(player.FullName(), player.TotalHealth)).OrderBy(pair => pair.Item2); ;
+            IEnumerable<Tuple<string, double>> distance = players.Select(player => new Tuple<string, double>(player.FullName(), player.CurrentSlice == 0D ? 0D : 20D - (20D / (2D * player.CurrentSlice)))).OrderByDescending(pair => pair.Item2);
+            IEnumerable<Tuple<string, double>> health = players.Select(player => new Tuple<string, double>(player.FullName(), player.TotalHealth == 100 ? 100 : 100 / (2 * player.TotalHealth))).OrderBy(pair => pair.Item2); ;
 
             ApplicationUser user = null;
 
@@ -122,7 +122,7 @@ namespace NetMud.Controllers
             }
 
             LeaderboardViewModel vModel = new LeaderboardViewModel(distance, health)
-            { 
+            {
                 AuthedUser = user,
             };
 
