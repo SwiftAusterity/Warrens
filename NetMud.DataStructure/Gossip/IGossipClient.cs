@@ -1,6 +1,4 @@
-﻿using NetMud.DataStructure.Player;
-
-namespace NetMud.DataStructure.Gossip
+﻿namespace NetMud.DataStructure.Gossip
 {
     public interface IGossipClient
     {
