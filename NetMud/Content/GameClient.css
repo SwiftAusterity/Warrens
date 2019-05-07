@@ -341,3 +341,9 @@ ul.animated-list {
 .contentContainer pre {
     color: white;
 }
+
+.volumePip {
+    color: inherit;
+    font-family: monospace;
+    font-size: 13px;
+}

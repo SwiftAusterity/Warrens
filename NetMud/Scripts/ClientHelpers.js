@@ -301,10 +301,12 @@ function changeLoopTrackMode(me) {
     if (window.loopTrack) {
         $me.children().attr('style', 'color: green;');
         audioPlayer.removeEventListener('ended', nextTrackLoop);
-    } else {
+        AppendTextToOutput("Music looping toggled ON.");
+   } else {
         $me.children().attr('style', 'color: red;');
         changePlaylist($('.audioTrackSelector')[window.currentTrack]);
-    }
+        AppendTextToOutput("Music looping toggled OFF.");
+   }
 
     return false;
 }
@@ -335,9 +337,15 @@ function changeGossipMode(me) {
 
     if (window.gossipMode) {
         $me.children().attr('style', 'color: green;');
-    } else {
+        AppendTextToOutput("Gossip network toggled ON.");
+   } else {
         $me.children().attr('style', 'color: red;');
-    }
+        AppendTextToOutput("Gossip network toggled OFF.");
+   }
 
     return false;
+}
+
+function bindClientCommand(name, funct) {
+    window.clientCommands[name] = funct;
 }
