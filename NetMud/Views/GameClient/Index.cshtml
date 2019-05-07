@@ -286,7 +286,7 @@
                     case 'vol':
                     case 'volume':
                         if (arguments[1] !== undefined) {
-                            var volume = parseInt(args[1]);
+                            var volume = parseInt(arguments[1]);
                             window.musicVolume = volume;
                             setVolume();
                             AppendTextToOutput("Music volume set to " + volume);
@@ -336,7 +336,7 @@
                     case 'vol':
                     case 'volume':
                         if (arguments[1] !== undefined) {
-                            var volume = parseInt(args[1]);
+                            var volume = parseInt(arguments[1]);
                             window.soundVolume = volume;
                             setVolume();
                             AppendTextToOutput("Sound volume set to " + volume);
@@ -449,20 +449,6 @@
                 window.musicVolume = volumeNumber;
             }
 
-            var style = 'color: green; float: right; cursor: pointer;';
-
-            if (volumeNumber < 4) {
-                style = 'color: red; float: right; cursor: pointer;';
-            } else if (volumeNumber < 7) {
-                style = 'color: orange; float: right; cursor: pointer;';
-            }
-
-            $(this).parent().attr("style", style);
-
-            $(this).html('=');
-            $(this).prevAll().html('=');
-            $(this).nextAll().html('-');
-
             setVolume();
             return false;
         });
@@ -473,6 +459,7 @@
     function setVolume() {
         var $sound = $('#soundEffects');
         var $music = $('#backgroundMusic');
+
 
         if (window.soundMuted) {
             $sound.attr('volume', 0);
@@ -485,6 +472,21 @@
             $("#muteSounds").children().attr('style', 'color: green;');
         }
 
+        var $soundPip = $("a.volumePip[data-level='" + window.soundVolume + "'][data-type='sound']");
+        var soundStyle = 'color: green; float: right; cursor: pointer;';
+
+        if (window.soundVolume < 4) {
+            soundStyle = 'color: red; float: right; cursor: pointer;';
+        } else if (window.soundVolume < 7) {
+            soundStyle = 'color: orange; float: right; cursor: pointer;';
+        }
+
+        $soundPip.parent().attr("style", soundStyle);
+
+        $soundPip.html('=');
+        $soundPip.prevAll().html('=');
+        $soundPip.nextAll().html('-');
+
         if (window.musicMuted) {
             $music.attr('volume', 0);
             $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-off');
@@ -495,6 +497,21 @@
             $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-up');
             $("#muteMusic").children().attr('style', 'color: green;');
         }
+
+        var $musicPip = $("a.volumePip[data-level='" + window.musicVolume + "'][data-type='music']");
+        var musicStyle = 'color: green; float: right; cursor: pointer;';
+
+        if (window.musicVolume < 4) {
+            musicStyle = 'color: red; float: right; cursor: pointer;';
+        } else if (window.musicVolume < 7) {
+            musicStyle = 'color: orange; float: right; cursor: pointer;';
+        }
+
+        $musicPip.parent().attr("style", musicStyle);
+
+        $musicPip.html('=');
+        $musicPip.prevAll().html('=');
+        $musicPip.nextAll().html('-');
     }
     </script>
 }

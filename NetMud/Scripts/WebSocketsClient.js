@@ -22,7 +22,7 @@ function submitCommand(overrideCommand) {
         var argsIndex = commandText.indexOf(' ');
 
         if (argsIndex <= 0) {
-            argsIndex = commandText.length - 1;
+            argsIndex = commandText.length;
         }
 
         var clientCommand = commandText.substr(1, argsIndex - 1);
