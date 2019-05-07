@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMud.DataStructure.Architectural.ActorBase;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
@@ -18,6 +19,6 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// </summary>
         /// <param name="radius">radius to search within</param>
         /// <returns>the list of entities</returns>
-        IEnumerable<IEntity> GetContents(ulong radius);
+        IEnumerable<IActor> GetContents(ulong radius);
     }
 }

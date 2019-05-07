@@ -534,7 +534,7 @@ namespace NetMud.Interp
                         validObjects.Add((T)Actor);
                         break;
                     case CommandRangeType.Touch:
-                        validObjects.AddRange((IEnumerable<T>)Position.GetContents(0).Where(ent => ent.Keywords.Any(key => key.Contains(currentParmString))));
+                        validObjects.AddRange((IEnumerable<T>)Position.GetContents(1000).Where(ent => ent.Keywords.Any(key => key.Contains(currentParmString))));
                         break;
                     case CommandRangeType.Local: //requires Range to be working
                         break;

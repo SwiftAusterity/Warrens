@@ -41,7 +41,7 @@ namespace NetMud.Commands.Movement
 
             player.StartFighting(victim);
 
-            msg.ExecuteMessaging(player, victim, null, Actor.CurrentLocation, null, 3);
+            msg.ExecuteMessaging(player, null, victim, Actor.CurrentLocation, null, 3);
 
             return true;
         }

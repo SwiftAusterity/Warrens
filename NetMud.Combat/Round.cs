@@ -199,7 +199,7 @@ namespace NetMud.Combat
             };
 
 
-            msg.ExecuteMessaging(actor, null, target, actor.CurrentLocation, null, 3, true);
+            msg.ExecuteMessaging(actor, null, target, actor.CurrentLocation, null, 1000, true);
 
             return true;
         }

@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Player;
 using NetMud.Utility;
@@ -45,10 +46,25 @@ namespace NetMud.Data.Architectural
         /// </summary>
         /// <param name="radius">radius to search within</param>
         /// <returns>the list of entities</returns>
-        public IEnumerable<IEntity> GetContents(ulong radius)
+        public IEnumerable<IActor> GetContents(ulong radius)
         {
-            return LiveCache.GetAll<IPlayer>().Where(player => player.CurrentLocation.CurrentSection.IsBetweenOrEqual(
-                                                    Math.Max(ulong.MinValue, CurrentSection - radius), Math.Min(ulong.MaxValue, CurrentSection + radius)));
+            var players = LiveCache.GetAll<IPlayer>();
+
+            if (radius > 0)
+            {
+                var min = Math.Max(ulong.MinValue, CurrentSection - radius);
+                var max = Math.Min(ulong.MaxValue, CurrentSection + radius);
+
+                //ulong madness
+                if (radius > CurrentSection)
+                {
+                    min = 0;
+                }
+
+                players = LiveCache.GetAll<IPlayer>().Where(player => player.CurrentLocation.CurrentSection.IsBetweenOrEqual(min, max));
+            }
+
+            return players;
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ namespace NetMud.Commands.Comm
                 ToOrigin = toOrigin
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null, 0);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null, 1000);
 
             return true;
         }
