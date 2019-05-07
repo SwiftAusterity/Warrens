@@ -222,7 +222,7 @@ namespace NetMud.Combat
 
             if (target != null)
             {
-                toTarget = string.Format("$A$ {0}s you.", attack.Name);
+                toTarget = string.Format("$A$ {0}s {1}you.", verb, obj);
 
                 if (blocked)
                 {
