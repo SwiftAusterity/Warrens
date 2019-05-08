@@ -37,13 +37,6 @@ namespace NetMud.Data.Combat
         public ValuePair<int> Health { get; set; }
 
         /// <summary>
-        /// How much stagger this has when it hits
-        /// </summary>
-        [Display(Name = "Stagger", Description = "How much stagger this has when it hits.")]
-        [DataType(DataType.Text)]
-        public int Stagger { get; set; }
-
-        /// <summary>
         /// Results in actor/victim position change
         /// </summary>
         [Display(Name = "Position Result", Description = "esults in actor/victim position change.")]
@@ -81,7 +74,7 @@ namespace NetMud.Data.Combat
         /// <summary>
         /// How many frames this adds to the recovery of the Actor when blocked and how much additional stagger it does when blocked
         /// </summary>
-        [Display(Name = "Impact", Description = "How many frames this adds to the recovery of the Actor when blocked and how much additional stagger it does when blocked.")]
+        [Display(Name = "Impact", Description = "How many frames this adds to the recovery of the Actor when blocked and how much additional stagger it does to the victim on hit or block.")]
         [DataType(DataType.Text)]
         public int Impact { get; set; }
 
@@ -175,9 +168,9 @@ namespace NetMud.Data.Combat
             AdditiveQuality = true;
             Aim = AnatomyAim.Mid;
             PositionResult = new ValuePair<MobilityState>(MobilityState.None, MobilityState.None);
+            DistanceRange = new ValueRange<ulong>(0, 1);
             Stamina = new ValuePair<int>(1, 0);
             Health = new ValuePair<int>(0, 1);
-            Stagger = 1;
             Impact = 1;
             Armor = 0;
             Setup = 1;
@@ -209,7 +202,6 @@ namespace NetMud.Data.Combat
         public double CalculateCostRatio()
         {
             double cost = ((short)Readiness * 10)
-                + (Stagger * 5)
                 + (Impact * 3)
                 + (Health.Victim * 10)
                 + (Stamina.Victim * 5)

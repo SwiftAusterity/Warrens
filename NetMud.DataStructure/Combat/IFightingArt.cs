@@ -17,11 +17,6 @@ namespace NetMud.DataStructure.Combat
         ValuePair<int> Health { get; set; }
 
         /// <summary>
-        /// How much stagger this has when it hits
-        /// </summary>
-        int Stagger { get; set; }
-
-        /// <summary>
         /// Results in actor/victim position change
         /// </summary>
         ValuePair<MobilityState> PositionResult { get; set; }

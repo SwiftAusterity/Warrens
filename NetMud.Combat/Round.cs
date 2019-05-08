@@ -73,6 +73,15 @@ namespace NetMud.Combat
                     attack = myCombo.GetNext(actor.LastAttack);
                 }
 
+                if(attack == null)
+                {
+                    //we have no valid attacks, so we're tired
+                    actor.Stagger += 10;
+                    actor.Sleep(1); //recover stamina
+                    actor.Descriptor.SendWrapper();
+                    return true;
+                }
+
                 actor.Stagger = attack.Setup;
                 actor.Sturdy = attack.Armor;
                 actor.LastCombo = myCombo;
@@ -169,7 +178,7 @@ namespace NetMud.Combat
                             //Clash mechanics, only works if the target is mid-execution
                             if (target.LastAttack != null && aimDifferential == 0 && target.Executing)
                             {
-                                var impactDifference = target.LastAttack.Impact + target.LastAttack.Armor - attack.Impact - attack.Stagger;
+                                var impactDifference = target.LastAttack.Impact + target.LastAttack.Armor - attack.Impact;
 
                                 if (impactDifference > 0)
                                 {

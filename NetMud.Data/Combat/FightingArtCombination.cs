@@ -1,4 +1,5 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
@@ -114,6 +115,7 @@ namespace NetMud.Data.Combat
             }
             catch(Exception ex)
             {
+                LoggingUtility.LogError(ex);
                 nextAttack = Arts.FirstOrDefault();
             }
 

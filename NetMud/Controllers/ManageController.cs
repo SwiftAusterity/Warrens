@@ -704,7 +704,6 @@ namespace NetMud.Controllers
             obj.Recovery = vModel.DataObject.Recovery;
             obj.RekkaKey = vModel.DataObject.RekkaKey;
             obj.RekkaPosition = vModel.DataObject.RekkaPosition;
-            obj.Stagger = vModel.DataObject.Stagger;
             obj.Setup = vModel.DataObject.Setup;
             obj.Stamina = vModel.DataObject.Stamina;
             obj.VictimCriteria = vModel.DataObject.VictimCriteria;
