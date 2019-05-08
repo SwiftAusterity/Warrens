@@ -189,8 +189,8 @@
 <div class="inputContainer">
     <input type="text" id="input" name="input" class="parserInput" />
 </div>
-<audio id="backgroundMusic" name="backgroundMusic" volume="0.5"></audio>
-<audio id="soundEffects" name="soundEffects" volume="0.5"></audio>
+<audio id="backgroundMusic" name="backgroundMusic"></audio>
+<audio id="soundEffects" name="soundEffects"></audio>
 
 @section styles {
     @Styles.Render("~/Content/GameClient.css")
@@ -462,12 +462,12 @@
 
 
         if (window.soundMuted) {
-            $sound.attr('volume', 0);
+            $sound[0].volume = 0;
             $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-off');
             $("#muteSounds").children().attr('style', 'color: red;');
         }
         else {
-            $sound.attr('volume', '0.' + window.soundVolume);
+            $sound[0].volume = window.soundVolume / 10;
             $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-up');
             $("#muteSounds").children().attr('style', 'color: green;');
         }
@@ -488,12 +488,12 @@
         $soundPip.nextAll().html('-');
 
         if (window.musicMuted) {
-            $music.attr('volume', 0);
+            $music[0].volume = 0;
             $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-off');
             $("#muteMusic").children().attr('style', 'color: red;');
         }
         else {
-            $music.attr('volume', '0.' + window.musicVolume);
+            $music[0].volume = window.musicVolume / 10;
             $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-up');
             $("#muteMusic").children().attr('style', 'color: green;');
         }
