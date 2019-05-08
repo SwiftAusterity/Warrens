@@ -61,7 +61,7 @@ namespace NetMud.CentralControl
                             subArgs.CurrentPulse = 0;
                         }
 
-                        await Task.Delay(1000);
+                        await Task.Delay(10);
                     }
                 }
 

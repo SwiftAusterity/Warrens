@@ -100,7 +100,9 @@ namespace NetMud.Data.Combat
                     }
                     else
                     {
-                        nextAttack = Arts.FirstOrDefault(art => art.RekkaKey.Equals(lastAttack.RekkaKey) && art.RekkaPosition == lastAttack.RekkaPosition + 1);
+                        nextAttack = Arts.FirstOrDefault(art => !string.IsNullOrWhiteSpace(art.RekkaKey) 
+                                                                && art.RekkaKey.Equals(lastAttack.RekkaKey) 
+                                                                && art.RekkaPosition == lastAttack.RekkaPosition + 1);
                     }
 
                     if (nextAttack == null)
@@ -110,7 +112,7 @@ namespace NetMud.Data.Combat
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 nextAttack = Arts.FirstOrDefault();
             }
@@ -126,7 +128,7 @@ namespace NetMud.Data.Combat
         /// <returns>yea or nay</returns>
         public bool IsValid(IPlayer actor, IPlayer victim, ulong distance)
         {
-            return Arts.All(art => art.IsValid(actor, victim, distance)) && (FightingStances.Count == 0 || FightingStances.Contains(actor.Stance));
+            return FightingStances.Count == 0 || FightingStances.Contains(actor.Stance);
         }
     }
 }

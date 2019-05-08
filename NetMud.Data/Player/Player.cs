@@ -344,8 +344,7 @@ namespace NetMud.Data.Players
 
             if (!wasFighting)
             {
-                //every 30 minutes after half an hour
-                Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound(this, victim), 1, false);
+                Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound(this, victim), 20, false);
             }
         }
 

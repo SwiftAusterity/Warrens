@@ -53,11 +53,11 @@ namespace NetMud.Combat
 
                     if (validCombos.Count() == 0)
                     {
-                        myCombo = actor.Combos.FirstOrDefault();
+                        myCombo = actor.Combos.OrderBy(combo => Guid.NewGuid()).FirstOrDefault();
                     }
                     else
                     {
-                        myCombo = validCombos.FirstOrDefault();
+                        myCombo = validCombos.OrderBy(combo => Guid.NewGuid()).FirstOrDefault();
                     }
                 }
 
@@ -66,7 +66,7 @@ namespace NetMud.Combat
                 {
                     var attacks = TemplateCache.GetAll<IFightingArt>(true);
 
-                    attack = attacks.FirstOrDefault(atk => atk.IsValid(actor, target, (ulong)Math.Abs(actor.Balance)));
+                    attack = attacks.Where(atk => atk.IsValid(actor, target, (ulong)Math.Abs(actor.Balance))).OrderBy(atk => Guid.NewGuid()).FirstOrDefault();
                 }
                 else
                 {
@@ -117,10 +117,13 @@ namespace NetMud.Combat
                 var rand = new Random();
                 target.Balance = -1 * attack.DistanceChange;
 
-                var targetReadiness = ReadinessState.Offensive;
+                var targetReadiness = ReadinessState.Offensive; //attacking is default
+                var targetDirection = AnatomyAim.Mid; //mid is default
+
                 if (target.LastAttack != null)
                 {
                     targetReadiness = target.LastAttack.Readiness;
+                    targetDirection = target.LastAttack.Aim;
                 }
 
                 //TODO: for now we're just doing flat chances for avoidance states since we have no stats to base anything on
@@ -129,35 +132,55 @@ namespace NetMud.Combat
                 double impact = attack.Impact;
                 double damage = attack.Health.Victim;
                 double staminaDrain = attack.Stamina.Victim;
+                var aimDifferential = Math.Abs(attack.Aim - targetDirection);
 
-                switch (targetReadiness)
+                //no blocking if it's not an attack
+                if (attack.Readiness != ReadinessState.Offensive || attack.Health.Victim > 0)
                 {
-                    case ReadinessState.Circle: //circle is dodge essentially
-                        avoided = rand.Next(0, 100) >= Math.Abs(target.Balance) / 4 * 100;
-                        break;
-                    case ReadinessState.Block:
-                        blocked = rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100;
+                    switch (targetReadiness)
+                    {
+                        case ReadinessState.Circle: //circle is dodge essentially
+                            avoided = rand.Next(0, 100) <= Math.Max(1, Math.Abs(target.Balance)) / (Math.Max(1, aimDifferential + target.Stagger) * 4) * 100;
+                            break;
+                        case ReadinessState.Block:
+                            blocked = rand.Next(0, 100) <= Math.Max(1, Math.Abs(target.Balance)) / (Math.Max(1, aimDifferential + target.Stagger) * 2) * 100;
 
-                        if(blocked)
-                        {
-                            impact *= .25;
-                            damage *= .50;
-                            staminaDrain *= .50;
-                        };
-                        break;
-                    case ReadinessState.Deflect:
-                        blocked = rand.Next(0, 100) >= Math.Abs(target.Balance) / 2 * 100;
+                            if (blocked)
+                            {
+                                impact *= .25;
+                                damage *= .50;
+                                staminaDrain *= .50;
+                            };
+                            break;
+                        case ReadinessState.Deflect:
+                            blocked = rand.Next(0, 100) <= Math.Max(1, Math.Abs(target.Balance)) / (Math.Max(1, aimDifferential + target.Stagger) * 2) * 100;
 
-                        if(blocked)
-                        {
-                            impact *= .50;
-                            damage *= .25;
-                            staminaDrain *= .25;
-                        }
-                        break;
-                    case ReadinessState.Redirect:
-                        avoided = rand.Next(0, 100) >= Math.Abs(target.Balance) / 20 * 100;
-                        break;
+                            if (blocked)
+                            {
+                                impact *= .50;
+                                damage *= .25;
+                                staminaDrain *= .25;
+                            }
+                            break;
+                        case ReadinessState.Redirect:
+                            avoided = rand.Next(0, 100) <= Math.Max(1, Math.Abs(target.Balance)) / (Math.Max(1, aimDifferential + target.Stagger) * 20) * 100;
+                            break;
+                        case ReadinessState.Offensive:
+                            //Clash mechanics, only works if the target is mid-execution
+                            if (target.LastAttack != null && aimDifferential == 0 && target.Executing)
+                            {
+                                var impactDifference = target.LastAttack.Impact + target.LastAttack.Armor - attack.Impact - attack.Stagger;
+
+                                if (impactDifference > 0)
+                                {
+                                    blocked = true;
+                                    impact = 0;
+                                    damage /= impactDifference;
+                                    staminaDrain *= .75;
+                                }
+                            }
+                            break;
+                    }
                 }
 
                 messaging = GetOutputStrings(attack, target, avoided || blocked, targetReadiness);
@@ -230,8 +253,8 @@ namespace NetMud.Combat
                     {
                         case ReadinessState.Circle: //circle is dodge essentially
                             toActor = string.Format("{0} dodges your attack!", actorTargetGlyph);
-                            toTarget = string.Format("You dodge $A$s {0}.", verb);
-                            toOrigin = string.Format("$A$ {0}s {1} but they dodge!.", verb, targetGlyph);
+                            toTarget = string.Format("You dodge $A$'s {0}.", verb);
+                            toOrigin = string.Format("$A$ {0}s {1} but they dodge.", verb, targetGlyph);
                             break;
                         case ReadinessState.Block:
                             toActor = string.Format("You {0} {1} but they block!", verb, actorTargetGlyph);
@@ -246,7 +269,13 @@ namespace NetMud.Combat
                         case ReadinessState.Redirect:
                             toActor = string.Format("{0} redirects your attack back to you!", actorTargetGlyph);
                             toTarget = string.Format("You redirect $A$s {0} back at them.", verb);
-                            toOrigin = string.Format("$A$ {0}s {1} but they redirect the attack back at them!.", verb, targetGlyph);
+                            toOrigin = string.Format("$A$ {0}s {1} but they redirect the attack back at them.", verb, targetGlyph);
+                            break;
+                        case ReadinessState.Offensive:
+                            //successful clash
+                            toActor = string.Format("{0}'s attack clashes with yours!", actorTargetGlyph);
+                            toTarget = string.Format("Your attack clashes with $A$'s.", verb);
+                            toOrigin = string.Format("$A$'s {0} clashes with {1}'s attack.", verb, targetGlyph);
                             break;
                     }
                 }
