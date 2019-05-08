@@ -3,6 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NetMud.Combat
@@ -37,13 +38,16 @@ namespace NetMud.Combat
 
             IFightingArt attack = actor.LastAttack;
 
+            var rand = new Random();
             //If we lack an attack or we're on the tail end of the attack just find a new one and start it
             if (attack == null || !actor.Executing)
             {
                 IFightingArtCombination myCombo = actor.LastCombo;
                 if (myCombo == null)
                 {
+                    var weights = GetUsageWeights(actor, target);
                     ulong distance = 0;
+
                     if (target != null)
                     {
                         distance = (ulong)Math.Abs((double)(actor.CurrentLocation.CurrentSection - target.CurrentLocation.CurrentSection));
@@ -53,11 +57,11 @@ namespace NetMud.Combat
 
                     if (validCombos.Count() == 0)
                     {
-                        myCombo = actor.Combos.OrderBy(combo => Guid.NewGuid()).FirstOrDefault();
+                        myCombo = actor.Combos.OrderByDescending(combo => weights[combo.SituationalUsage] * rand.NextDouble()).FirstOrDefault();
                     }
                     else
                     {
-                        myCombo = validCombos.OrderBy(combo => Guid.NewGuid()).FirstOrDefault();
+                        myCombo = validCombos.OrderByDescending(combo => weights[combo.SituationalUsage] * rand.NextDouble()).FirstOrDefault();
                     }
                 }
 
@@ -123,7 +127,6 @@ namespace NetMud.Combat
 
             if (target != null)
             {
-                var rand = new Random();
                 target.Balance = -1 * attack.DistanceChange;
 
                 var targetReadiness = ReadinessState.Offensive; //attacking is default
@@ -291,6 +294,116 @@ namespace NetMud.Combat
             }
 
             return new Tuple<string, string, string>(toActor, toTarget, toOrigin);
+        }
+
+        private static Dictionary<FightingArtComboUsage, double> GetUsageWeights(IPlayer actor, IPlayer target)
+        {
+            //we need to determine the situation to weight combos by
+            /*
+                    None, //Used when no conditions apply or as a fallback.
+                    Opener, // Used to start a round of combat. Wont be used if you are attacked first.
+                    Surprise, //Used from stealth or when you catch victims offguard.
+                    Punisher, //Used if the opponent whiffs an attack.
+                    Breaker, //Used if the opponent blocks an attack and is staggered.
+                    Riposte, //Used if you parry an attack and get a stagger.
+                    Recovery, //Used if you whiff an attack but still have initiative (are not staggered)
+                    Finisher //Used if opp is low on hp
+            */
+
+            var weights = new Dictionary<FightingArtComboUsage, double>
+            {
+                //none is always neutral
+                { FightingArtComboUsage.None, 1 }
+            };
+
+            if (target != null)
+            {
+                //opener
+                if (actor.LastAttack == null && target.LastAttack == null)
+                {
+                    weights.Add(FightingArtComboUsage.Opener, 1.5);
+                }
+                else
+                {
+                    weights.Add(FightingArtComboUsage.Opener, .5);
+                }
+
+                //surprise
+                if (!target.IsFighting() && actor.LastAttack == null)
+                {
+                    weights.Add(FightingArtComboUsage.Surprise, 2);
+                }
+                else
+                {
+                    weights.Add(FightingArtComboUsage.Surprise, .1);
+                }
+
+                //Punisher
+                if (target.LastAttack != null && target.Stagger > 0)
+                {
+                    weights.Add(FightingArtComboUsage.Punisher, 1.5);
+                }
+                else
+                {
+                    weights.Add(FightingArtComboUsage.Punisher, .1);
+                }
+
+
+                //Breaker
+                if (actor.LastAttack != null && target.LastAttack != null && target.LastAttack.Readiness == ReadinessState.Block && target.Stagger > 0)
+                {
+                    weights.Add(FightingArtComboUsage.Breaker, 1.5);
+                }
+                else
+                {
+                    weights.Add(FightingArtComboUsage.Breaker, .1);
+                }
+
+
+                //Riposte
+                if (actor.LastAttack != null && actor.LastAttack.Readiness == ReadinessState.Deflect
+                    && target.LastAttack != null && target.LastAttack.Readiness == ReadinessState.Offensive && target.Stagger > 0)
+                {
+                    weights.Add(FightingArtComboUsage.Riposte, 2);
+                }
+                else
+                {
+                    weights.Add(FightingArtComboUsage.Riposte, .5);
+                }
+
+
+                //Recovery
+                if (actor.LastAttack != null && actor.LastAttack.Readiness == ReadinessState.Offensive && actor.Balance != 0 && actor.Stagger == 0)
+                {
+                    weights.Add(FightingArtComboUsage.Recovery, 1.5);
+                }
+                else
+                {
+                    weights.Add(FightingArtComboUsage.Recovery, .5);
+                }
+
+                //Finisher
+                if (target.CurrentHealth / target.TotalHealth < .25)
+                {
+                    weights.Add(FightingArtComboUsage.Finisher, 1.5);
+                }
+                else
+                {
+                    weights.Add(FightingArtComboUsage.Finisher, .5);
+                }
+            }
+            else
+            {
+                weights.Add(FightingArtComboUsage.Breaker, 1);
+                weights.Add(FightingArtComboUsage.Finisher, 1);
+                weights.Add(FightingArtComboUsage.Opener, 1);
+                weights.Add(FightingArtComboUsage.Punisher, 1);
+                weights.Add(FightingArtComboUsage.Recovery, 1);
+                weights.Add(FightingArtComboUsage.Riposte, 1);
+                weights.Add(FightingArtComboUsage.Surprise, 1);
+            }
+
+            return weights;
         }
     }
 }
