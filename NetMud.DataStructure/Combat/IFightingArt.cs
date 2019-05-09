@@ -102,9 +102,14 @@ namespace NetMud.DataStructure.Combat
         string ActionVerb { get; set; }
 
         /// <summary>
-        /// The object of the sentence for output building
+        /// The subject of the sentence for output building
         /// </summary>
-        string ActionObject { get; set; }
+        string ActionSubject { get; set; }
+
+        /// <summary>
+        /// The predicate of the sentence for output building
+        /// </summary>
+        string ActionPredicate { get; set; }
 
         /// <summary>
         /// Is this art valid to be used at the moment

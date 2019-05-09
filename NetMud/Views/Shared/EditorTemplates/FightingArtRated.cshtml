@@ -33,13 +33,24 @@
 </div>
 
 <h4>Action Text</h4>
-<span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">Neither:</span> You {art name} {victim}.</span>
-<span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">Both:</span> You {verb} and {object} {victim}.</span>
-<span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">Verb:</span> You {verb} {victim}.</span>
-<span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">Object:</span> You {art name} and {object} {victim}.</span>
+<div>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">None:</span> You {art name} {victim}.</span>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">All:</span> You {verb} {subject} and {predicate} {victim}.</span>
+</div>
+<div>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">Verb:</span> You {verb} {victim}.</span>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">Subject:</span> You {art name} {subject} {victim}.</span>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">Predicate:</span> You {art name} and {predicate} {victim}.</span>
+</div>
+<div>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">V & S:</span> You {verb} {subject} {victim}.</span>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">V & P:</span> You {verb} and {predicate} {victim}.</span>
+    <span style="font-style: italic; margin: 5px;"><span style="font-weight: 700;">S & P:</span> You {art name} {subject} and {predicate} {victim}.</span>
+</div>
 <div class="form-group row">
     @Html.EditorFor(m => m.ActionVerb)
-    @Html.EditorFor(m => m.ActionObject)
+    @Html.EditorFor(m => m.ActionSubject)
+    @Html.EditorFor(m => m.ActionPredicate)
 </div>
 
 <h4>Quality Changes</h4>

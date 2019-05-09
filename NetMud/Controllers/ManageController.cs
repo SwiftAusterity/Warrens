@@ -712,7 +712,7 @@ namespace NetMud.Controllers
             obj.QualityValue = vModel.DataObject.QualityValue;
             obj.Readiness = vModel.DataObject.Readiness;
             obj.ActionVerb = vModel.DataObject.ActionVerb;
-            obj.ActionObject = vModel.DataObject.ActionObject;
+            obj.ActionPredicate = vModel.DataObject.ActionPredicate;
 
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))

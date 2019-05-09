@@ -249,10 +249,11 @@ namespace NetMud.Combat
             var actorTargetGlyph = target == null ? "your shadow" : "$T$";
 
             var verb = !string.IsNullOrWhiteSpace(attack.ActionVerb) ? attack.ActionVerb : attack.Name;
-            var obj = !string.IsNullOrWhiteSpace(attack.ActionObject) ? "and " + attack.ActionObject + " " : string.Empty;
+            var subject = !string.IsNullOrWhiteSpace(attack.ActionSubject) ? attack.ActionSubject + " " : string.Empty;
+            var obj = !string.IsNullOrWhiteSpace(attack.ActionPredicate) ? "and " + attack.ActionPredicate + " " : string.Empty;
 
-            string toOrigin = string.Format("$A$ {0}s {2}{1}.", verb, targetGlyph, obj);
-            string toActor = string.Format("You {0} {2}{1}.", verb, actorTargetGlyph, obj);
+            string toOrigin = string.Format("$A$ {0}s {3}{2}{1}.", verb, targetGlyph, obj, subject);
+            string toActor = string.Format("You {0} {3}{2}{1}.", verb, actorTargetGlyph, obj, subject);
             string toTarget = "";
 
             if (target != null)
@@ -266,22 +267,22 @@ namespace NetMud.Combat
                         case ReadinessState.Circle: //circle is dodge essentially
                             toActor = string.Format("{0} dodges your attack!", actorTargetGlyph);
                             toTarget = string.Format("You dodge $A$'s {0}.", verb);
-                            toOrigin = string.Format("$A$ {0}s {1} but they dodge.", verb, targetGlyph);
+                            toOrigin = string.Format("$A$ {0}s {2}{1} but they dodge.", verb, targetGlyph, subject);
                             break;
                         case ReadinessState.Block:
-                            toActor = string.Format("You {0} {1} but they block!", verb, actorTargetGlyph);
-                            toTarget = string.Format("$A$ {0}s you but you block it.", verb);
-                            toOrigin = string.Format("$A$ {0}s {1} but they block.", verb, targetGlyph);
+                            toActor = string.Format("You {0} {2}{1} but they block!", verb, actorTargetGlyph, subject);
+                            toTarget = string.Format("$A$ {0}s {1}you but you block it.", verb, subject);
+                            toOrigin = string.Format("$A$ {0}s {2}{1} but they block.", verb, targetGlyph, subject);
                             break;
                         case ReadinessState.Deflect:
-                            toActor = string.Format("You {0} {1} but they deflect it!", verb, actorTargetGlyph);
-                            toTarget = string.Format("$A$ {0}s you but you deflect it.", verb);
-                            toOrigin = string.Format("$A$ {0}s {1} but they deflect the blow.", verb, targetGlyph);
+                            toActor = string.Format("You {0} {2}{1} but they deflect it!", verb, actorTargetGlyph, subject);
+                            toTarget = string.Format("$A$ {0}s {1}you but you deflect it.", verb, subject);
+                            toOrigin = string.Format("$A$ {0}s {2}{1} but they deflect the blow.", verb, targetGlyph, subject);
                             break;
                         case ReadinessState.Redirect:
                             toActor = string.Format("{0} redirects your attack back to you!", actorTargetGlyph);
                             toTarget = string.Format("You redirect $A$s {0} back at them.", verb);
-                            toOrigin = string.Format("$A$ {0}s {1} but they redirect the attack back at them.", verb, targetGlyph);
+                            toOrigin = string.Format("$A$ {0}s {2}{1} but they redirect the attack back at them.", verb, targetGlyph, subject);
                             break;
                         case ReadinessState.Offensive:
                             //successful clash

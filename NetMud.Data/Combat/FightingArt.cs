@@ -148,6 +148,7 @@ namespace NetMud.Data.Combat
         [DataType(DataType.Text)]
         public int QualityValue { get; set; }
 
+
         /// <summary>
         /// The verb of the sentence for output building
         /// </summary>
@@ -156,11 +157,18 @@ namespace NetMud.Data.Combat
         public string ActionVerb { get; set; }
 
         /// <summary>
-        /// The object of the sentence for output building
+        /// The subject of the sentence for output building
         /// </summary>
-        [Display(Name = "Object", Description = "The object of the sentence for output building (see examples).")]
+        [Display(Name = "Subject", Description = "The subject of the sentence for output building (see examples).")]
         [DataType(DataType.Text)]
-        public string ActionObject { get; set; }
+        public string ActionSubject { get; set; }
+
+        /// <summary>
+        /// The predicate of the sentence for output building
+        /// </summary>
+        [Display(Name = "Predicate", Description = "The predicate of the sentence for output building (see examples).")]
+        [DataType(DataType.Text)]
+        public string ActionPredicate { get; set; }
 
         public FightingArt()
         {
