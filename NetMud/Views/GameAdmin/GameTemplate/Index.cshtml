@@ -1,0 +1,18 @@
+﻿@model NetMud.Models.Admin.ManageGameViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Game Types", new string[] { "Dashboard" }, new string[] { "/GameAdmin" });
+
+    var linkText = Html.ActionLink("99999999", "Edit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Name", obj => obj.Name);
+    tableColumns.Add("Players", obj => string.Format("{0} to {1}", obj.NumberOfPlayers.Low, obj.NumberOfPlayers.High));
+    tableColumns.Add("Game Duration", obj => obj.AverageDuration.ToString());
+    tableColumns.Add("Turn Length", obj => obj.TurnDuration.ToString());
+}
+
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { Columns = tableColumns, Values = Model.CurrentPageOfItems, PagingModel = Model, EntityTypeName = "GameTemplate" })
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

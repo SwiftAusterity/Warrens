@@ -12,12 +12,12 @@ namespace NetMud.Data.Game
     {
         public override T Template<T>()
         {
-            return (T)Template<IGame>();
+            return (T)Template<IGameTemplate>();
         }
 
-        public override string TemplateName => Template<IGame>().Name;
+        public override string TemplateName => Template<IGameTemplate>().Name;
 
-        public IGame Game { get; set; }
+        public IGameTemplate Game { get; set; }
 
         public IGameContext Context { get; set; }
 
@@ -30,7 +30,7 @@ namespace NetMud.Data.Game
             Context = new GameContext();
         }
 
-        public RunningGame(IGame game)
+        public RunningGame(IGameTemplate game)
         {
             Context = new GameContext();
             Game = game;

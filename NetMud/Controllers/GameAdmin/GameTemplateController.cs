@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
-using NetMud.Data.Administrative;
+using NetMud.Data;
+using NetMud.Data.Game;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Game;
 using NetMud.Models.Admin;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
     [Authorize(Roles = "Admin,Builder")]
-    public class JournalEntryController : Controller
+    public class GameTemplateController : Controller
     {
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
@@ -27,18 +30,18 @@ namespace NetMud.Controllers.GameAdmin
             }
         }
 
-        public JournalEntryController()
+        public GameTemplateController()
         {
         }
 
-        public JournalEntryController(ApplicationUserManager userManager)
+        public GameTemplateController(ApplicationUserManager userManager)
         {
             UserManager = userManager;
         }
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageJournalEntriesViewModel vModel = new ManageJournalEntriesViewModel(TemplateCache.GetAll<IJournalEntry>())
+            ManageGameViewModel vModel = new ManageGameViewModel(TemplateCache.GetAll<IGameTemplate>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -47,12 +50,12 @@ namespace NetMud.Controllers.GameAdmin
                 SearchTerms = SearchTerms
             };
 
-            return View("~/Views/GameAdmin/JournalEntry/Index.cshtml", vModel);
+            return View("~/Views/GameAdmin/GameTemplate/Index.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route(@"JournalEntry/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        [Route(@"GameTemplate/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
             string message;
@@ -60,7 +63,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                IJournalEntry obj = TemplateCache.Get<IJournalEntry>(removeId);
+                IGameTemplate obj = TemplateCache.Get<IGameTemplate>(removeId);
 
                 if (obj == null)
                 {
@@ -68,7 +71,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveJournalEntry[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveGameTemplate[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Delete Successful.";
                 }
                 else
@@ -80,7 +83,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                IJournalEntry obj = TemplateCache.Get<IJournalEntry>(unapproveId);
+                IGameTemplate obj = TemplateCache.Get<IGameTemplate>(unapproveId);
 
                 if (obj == null)
                 {
@@ -88,7 +91,7 @@ namespace NetMud.Controllers.GameAdmin
                 }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Unapproved))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveJournalEntry[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveGameTemplate[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
                     message = "Unapproval Successful.";
                 }
                 else
@@ -107,32 +110,47 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
+            AddEditGameTemplateViewModel vModel = new AddEditGameTemplateViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
-                DataObject = new JournalEntry()
+                DataObject = new GameTemplate()
             };
 
-            return View("~/Views/GameAdmin/JournalEntry/Add.cshtml", vModel);
+            return View("~/Views/GameAdmin/GameTemplate/Add.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(AddEditJournalEntryViewModel vModel)
+        public ActionResult Add(AddEditGameTemplateViewModel vModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             var newObj = vModel.DataObject;
 
-            string message;
-            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+            string luaCode = string.Empty;
+            using (StreamReader reader = new StreamReader(vModel.LuaEngine.FileContent))
             {
-                message = "Error; Creation failed.";
+                luaCode = reader.ReadToEnd();
+            }
+
+            string message;
+            if (!LuaUtility.Validate(luaCode))
+            {
+                message = "Invalid LUA game code file. See Game Submission page for more details on how to construct game logic.";
             }
             else
             {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - AddJournalEntry[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Creation Successful.";
+                if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+                {
+                    message = "Error; Creation failed.";
+                }
+                else
+                {
+                    //TODO: Save the lua code to a file
+
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - AddGameTemplate[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Creation Successful.";
+                }
             }
 
             return RedirectToAction("Index", new { Message = message });
@@ -141,12 +159,12 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
+            AddEditGameTemplateViewModel vModel = new AddEditGameTemplateViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            IJournalEntry obj = TemplateCache.Get<IJournalEntry>(id);
+            IGameTemplate obj = TemplateCache.Get<IGameTemplate>(id);
 
             if (obj == null)
             {
@@ -156,16 +174,16 @@ namespace NetMud.Controllers.GameAdmin
 
             vModel.DataObject = obj;
 
-            return View("~/Views/GameAdmin/JournalEntry/Edit.cshtml", vModel);
+            return View("~/Views/GameAdmin/GameTemplate/Edit.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(long id, AddEditJournalEntryViewModel vModel)
+        public ActionResult Edit(long id, AddEditGameTemplateViewModel vModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IJournalEntry obj = TemplateCache.Get<IJournalEntry>(id);
+            IGameTemplate obj = TemplateCache.Get<IGameTemplate>(id);
             string message;
             if (obj == null)
             {
@@ -175,23 +193,37 @@ namespace NetMud.Controllers.GameAdmin
 
             try
             {
-                obj.Name = vModel.DataObject.Name;
-                obj.Body = vModel.DataObject.Body;
-                obj.Expired = vModel.DataObject.Expired;
-                obj.ExpireDate =vModel.DataObject.ExpireDate;
-                obj.MinimumReadLevel = vModel.DataObject.MinimumReadLevel;
-                obj.Public = vModel.DataObject.Public;
-                obj.PublishDate = vModel.DataObject.PublishDate;
-                obj.Tags = vModel.DataObject.Tags;
-
-                if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                string luaCode = string.Empty;
+                using (StreamReader reader = new StreamReader(vModel.LuaEngine.FileContent))
                 {
-                    LoggingUtility.LogAdminCommandUsage("*WEB* - EditJournalEntry[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Edit Successful.";
+                    luaCode = reader.ReadToEnd();
+                }
+
+                obj.Name = vModel.DataObject.Name;
+                obj.AverageDuration = vModel.DataObject.AverageDuration;
+                obj.Description = vModel.DataObject.Description;
+                obj.HighScoreboard = vModel.DataObject.HighScoreboard;
+                obj.NumberOfPlayers =vModel.DataObject.NumberOfPlayers;
+                obj.PublicReplay = vModel.DataObject.PublicReplay;
+                obj.TurnDuration = vModel.DataObject.TurnDuration;
+
+                if (!LuaUtility.Validate(luaCode))
+                {
+                    message = "Invalid LUA game code file. See Game Submission page for more details on how to construct game logic.";
                 }
                 else
                 {
-                    message = "Error; Edit failed.";
+                    if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    {
+                        //TODO: Save the lua code to a file
+
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - EditGameTemplate[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Edit Successful.";
+                    }
+                    else
+                    {
+                        message = "Error; Edit failed.";
+                    }
                 }
             }
             catch

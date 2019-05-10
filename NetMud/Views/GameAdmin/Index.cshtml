@@ -16,6 +16,20 @@
         <div class="adminDashboard">
             <div>
                 <h4>Templates</h4>
+                <dl class="dl-horizontal dashboardItem">
+                    <dt>Game Types [@Html.ActionLink(Model.GameTemplates.Count().ToString(), "Index", "GameTemplate", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
+                    <dd>
+                        @Html.ActionLink(" ", "Add", "GameTemplate", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
+                        @if (Model.GameTemplates.Any(r => r.FitnessProblems))
+                        {
+                            <span style="color:red;" class="glyphicon-exclamation-sign glyphicon" title="DATA PROBLEMS"></span>
+                        }
+                        @if (Model.GameTemplates.Any(r => r.State != ApprovalState.Approved))
+                        {
+                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
+                        }
+                    </dd>
+                </dl>
             </div>
             <div>
                 <h4>Administrative</h4>

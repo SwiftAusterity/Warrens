@@ -5,7 +5,7 @@ namespace NetMud.DataStructure.Game
 {
     public interface IRunningGame : IEntity
     {
-        IGame Game { get; set; }
+        IGameTemplate Game { get; set; }
 
         IGameContext Context { get; set; }
 

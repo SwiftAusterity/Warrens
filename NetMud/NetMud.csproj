@@ -233,6 +233,7 @@
     <Compile Include="Controllers\AdminDataApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
+    <Compile Include="Controllers\GameAdmin\GameTemplateController.cs" />
     <Compile Include="Controllers\GameAdmin\JournalEntryController.cs" />
     <Compile Include="Controllers\GameAdmin\ContentApprovalController.cs" />
     <Compile Include="Controllers\GameAdmin\LiveAdminController.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddEditConfigDataModel.cs" />
     <Compile Include="Models\AddEditTemplateModel.cs" />
+    <Compile Include="Models\Admin\GameViewModels.cs" />
     <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
     <Compile Include="Models\Admin\ContentApprovalViewModels.cs" />
     <Compile Include="Models\Admin\LiveDataModels.cs" />
@@ -387,6 +389,10 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+    <Content Include="Views\GameAdmin\GameTemplate\Add.cshtml" />
+    <Content Include="Views\GameAdmin\GameTemplate\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\GameTemplate\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GameTemplate.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

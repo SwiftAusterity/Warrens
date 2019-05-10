@@ -7,6 +7,7 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Game;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
@@ -58,6 +59,7 @@ namespace NetMud.Controllers.GameAdmin
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
                 Journals = TemplateCache.GetAll<IJournalEntry>(),
+                GameTemplates = TemplateCache.GetAll<IGameTemplate>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),

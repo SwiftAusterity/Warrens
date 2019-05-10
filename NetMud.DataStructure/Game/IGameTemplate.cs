@@ -4,11 +4,11 @@ using NLua;
 
 namespace NetMud.DataStructure.Game
 {
-    public interface IGame : ITemplate
+    public interface IGameTemplate : ITemplate
     {
         ValueRange<short> NumberOfPlayers { get; set; }
 
-        string Description { get; set; }
+        MarkdownString Description { get; set; }
 
         int AverageDuration { get; set; }
 

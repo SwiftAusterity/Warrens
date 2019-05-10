@@ -1,0 +1,23 @@
+﻿@model NetMud.Models.Admin.AddEditGameTemplateViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("New Entry", new string[] { "Dashboard", "Game Types" }, new string[] { "/GameAdmin", "/GameTemplate" });
+}
+
+<section id="newEntryForm">
+    @using (Html.BeginForm("Add", "GameTemplate", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.EditorFor(m => m.DataObject)
+
+        @Html.EditorFor(m => m.LuaEngine)
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "GameTemplate", IncludeCancel = true })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

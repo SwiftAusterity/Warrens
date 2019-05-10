@@ -1,5 +1,6 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Game;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace NetMud.Models.Admin
 
         //Backing Data
         public IEnumerable<IJournalEntry> Journals { get; set; }
+        public IEnumerable<IGameTemplate> GameTemplates { get; set; }
 
         //Running Data
         public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }

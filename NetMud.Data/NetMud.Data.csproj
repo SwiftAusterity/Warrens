@@ -106,11 +106,12 @@
     <Compile Include="Architectural\Serialization\DescriptiveEnumConverter.cs" />
     <Compile Include="Architectural\Serialization\SerializableDataPartial.cs" />
     <Compile Include="Architectural\TemplatePartial.cs" />
-    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\GameTemplate.cs" />
     <Compile Include="Game\GameContext.cs" />
     <Compile Include="Game\RunningGame.cs" />
     <Compile Include="Game\Turn.cs" />
     <Compile Include="Gossip\GossipConfig.cs" />
+    <Compile Include="LuaUtility.cs" />
     <Compile Include="Player\Account.cs" />
     <Compile Include="Player\AccountConfig.cs" />
     <Compile Include="Player\Player.cs" />

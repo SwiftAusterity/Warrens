@@ -1,0 +1,22 @@
+﻿@using NetMud.Data.Game
+
+@model GameTemplate
+
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.NumberOfPlayers)
+    @Html.EditorFor(m => m.AverageDuration)
+    @Html.EditorFor(m => m.TurnDuration)
+</div>
+
+<h4>Options</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.PublicReplay)
+    @Html.EditorFor(m => m.HighScoreboard)
+</div>
+
+<h4>Description</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Description)
+</div>
