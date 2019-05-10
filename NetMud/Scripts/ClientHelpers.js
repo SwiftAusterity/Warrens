@@ -31,7 +31,15 @@ function AppendOutput(output, UIOnly) {
         var dataToAppend = getObjects(output, sourceKey, 0);
 
         if (dataToAppend !== undefined && dataToAppend.length > 0) {
-            $this.html(dataToAppend);
+
+            if (dataToAppend.length === 1 && dataToAppend[0] !== $this.html()) {
+                $this.html(dataToAppend);
+
+                //blink?
+                $this.fadeOut(50, function () {
+                    $this.fadeIn(100);
+                });
+            }
         }
     });
 

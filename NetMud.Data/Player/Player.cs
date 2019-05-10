@@ -327,17 +327,17 @@ namespace NetMud.Data.Players
         {
             var wasFighting = IsFighting();
 
-            if(victim == null)
+            if (victim == null)
             {
                 victim = this;
             }
 
-            if(victim != GetTarget())
+            if (victim != GetTarget())
             {
                 PrimaryTarget = victim;
             }
 
-            if(!EnemyGroup.Any(enemy => enemy.Item1 == PrimaryTarget))
+            if (!EnemyGroup.Any(enemy => enemy.Item1 == PrimaryTarget))
             {
                 EnemyGroup.Add(new Tuple<IPlayer, int>(PrimaryTarget, 0));
             }
@@ -357,7 +357,7 @@ namespace NetMud.Data.Players
             var target = PrimaryTarget;
 
             //TODO: AI for NPCs for other branches
-            if(PrimaryTarget == null || (PrimaryTarget.BirthMark.Equals(BirthMark) && EnemyGroup.Count() > 0))
+            if (PrimaryTarget == null || (PrimaryTarget.BirthMark.Equals(BirthMark) && EnemyGroup.Count() > 0))
             {
                 PrimaryTarget = EnemyGroup.OrderByDescending(enemy => enemy.Item2).FirstOrDefault()?.Item1;
                 target = PrimaryTarget;
@@ -415,6 +415,38 @@ namespace NetMud.Data.Players
         public IPlayer GetLiveInstance()
         {
             return this;
+        }
+
+        public override void KickoffProcesses()
+        {
+            //quality degredation and stam/health regen
+            Processor.StartSubscriptionLoop("Regeneration", Regen, 250, false);
+            Processor.StartSubscriptionLoop("QualityDecay", QualityTimer, 500, false);
+        }
+
+        public bool Regen()
+        {
+            if(!IsFighting())
+            {
+                Recover(TotalHealth / 100);
+            }
+
+            Sleep(1);
+
+            Descriptor.SendWrapper();
+            return true;
+        }
+
+        public bool QualityTimer()
+        {
+            foreach (var quality in Qualities.Where(qual => qual.Value > 0))
+            {
+                SetQuality(-1, quality.Name, true);
+            }
+
+            Descriptor.SendWrapper();
+
+            return true;
         }
 
         #region Rendering
