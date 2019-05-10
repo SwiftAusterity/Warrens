@@ -628,7 +628,6 @@ div.roomAsciiMap {
     .entityDataInfoCard div {
         margin: auto;
         min-width: 200px;
-        width: fit-content;
     }
 
     .entityDataInfoCard span:first-of-type {

@@ -143,7 +143,10 @@ namespace NetMud.Websock
                                                                         : _currentPlayer.GetTarget().CurrentHealth == 0 ? 100 : 100 / (2 * _currentPlayer.CurrentHealth),
                 Position = _currentPlayer.StancePosition.ToString(),
                 Stance = _currentPlayer.Stance,
-                Stagger = _currentPlayer.Stagger.ToString()
+                Stagger = _currentPlayer.Stagger.ToString(),
+                Qualities = string.Join("", _currentPlayer.Qualities.Where(quality => quality.Visible).Select(quality => string.Format("<div class='qualityRow'><span>{0}</span><span>{1}</span></div>", quality.Name, quality.Value))),
+                CurrentTargetQualities = _currentPlayer.GetTarget() == null || _currentPlayer.GetTarget() == _currentPlayer ? "" 
+                                                                            : string.Join("", _currentPlayer.GetTarget().Qualities.Where(quality => quality.Visible).Select(quality => string.Format("<div class='qualityRow'><span>{0}</span><span>{1}</span></div>", quality.Name, quality.Value)))
             };
 
             IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;

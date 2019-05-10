@@ -104,7 +104,7 @@
                 </li>
                 <li><a href="#" id="muteSounds" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Sound</a></li>
                 <li><a href="#" id="muteMusic" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Music</a></li>
-                <li><a href="#" id="loopTracks" class="moduleMenuItem"><span class="glyphicon glyphicon-repeat" style="color: red;"></span>: Loop Track</a></li>
+                <li><a href="#" id="loopTracks" class="moduleMenuItem"><span class="glyphicon glyphicon-repeat" style="color: red;"></span>: Loop</a></li>
                 @if (Model.MusicPlaylists?.Count() > 0)
                 {
                     <li class="dropdown-header" style="color: mediumvioletred">Your Playlists</li>
@@ -125,6 +125,7 @@
 </div>
 <div class="parserClient">
     <div class="parserClientLeft sidebar">
+        <h5>Self</h5>
         <div id="quadrant-1" data-module-name="" quadrant-number="1" class="quadrant">
             <div>
                 <span>Health</span>
@@ -142,16 +143,21 @@
                 <span>Doing</span>
                 <span class="contentContainer" output-data-binding="Self.CurrentActivity"></span>
             </div>
+            <div>Qualities:</div>
+            <div class="contentContainer" output-data-binding="Self.Qualities"></div>
         </div>
         <div id="quadrant-2" data-module-name="" quadrant-number="2" class="quadrant">
+            <h5>Current Target</h5>
             <div>
-                <span>Target</span>
+                <span>Name</span>
                 <span class="contentContainer" output-data-binding="Self.CurrentTarget"></span>
             </div>
             <div>
                 <span>Health</span>
                 <span class="contentContainer" output-data-binding="Self.CurrentTargetHealth"></span>
             </div>
+            <div>Qualities:</div>
+            <div class="contentContainer" output-data-binding="Self.CurrentTargetQualities"></div>
         </div>
     </div>
     <div class="textParserClient">
@@ -159,6 +165,7 @@
     </div>
     <div class="parserClientRight sidebar">
         <div id="quadrant-3" data-module-name="" quadrant-number="3" class="quadrant">
+            <h5>Fight Readiness</h5>
             <div>
                 <span>Balance</span>
                 <span class="contentContainer" output-data-binding="Self.Balance"></span>
@@ -181,7 +188,7 @@
             </div>
         </div>
         <div id="quadrant-4" data-module-name="" quadrant-number="4" class="quadrant">
-            <div>Players:</div>
+            <h5>Who's Online</h5>
             <div class="contentContainer" output-data-binding="Local.Populace"></div>
         </div>
     </div>

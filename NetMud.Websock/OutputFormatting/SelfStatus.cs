@@ -15,5 +15,7 @@ namespace NetMud.Websock.OutputFormatting
         public string CurrentCombo { get; set; }
         public string CurrentTarget { get; set; }
         public double CurrentTargetHealth { get; set; }
+        public string CurrentTargetQualities { get; set; }
+        public string Qualities { get; set; }
     }
 }

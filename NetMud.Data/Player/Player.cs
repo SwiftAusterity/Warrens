@@ -344,7 +344,7 @@ namespace NetMud.Data.Players
 
             if (!wasFighting)
             {
-                Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound(this, victim), 20, false);
+                Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound(this, victim), 50, false);
             }
         }
 

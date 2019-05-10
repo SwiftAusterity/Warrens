@@ -119,6 +119,10 @@
         max-height: 755px;
         flex: 1 1 15%;
     }
+        .parserClient .sidebar h5 {
+            color: cornsilk;
+            font-weight: 700;
+        }
 
     .parserClient .parserClientLeft {
         float: left;
@@ -347,3 +351,12 @@ ul.animated-list {
     font-family: monospace;
     font-size: 11px;
 }
+
+.contentContainer {
+    flex-wrap: wrap;
+}
+
+    .contentContainer .qualityRow {
+        flex: 1 0 auto;
+        width: 100%;
+    }
