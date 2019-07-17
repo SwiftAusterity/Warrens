@@ -111,7 +111,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
-        public virtual bool WriteTo(IEnumerable<string> input)
+        public virtual bool WriteTo(IEnumerable<string> output, bool delayed = false)
         {
             return true;
         }
@@ -155,6 +155,67 @@ namespace NetMud.Data.Architectural.EntityBase
         [JsonIgnore]
         [ScriptIgnore]
         public StaffRank CreatorRank { get { return Template<ITemplate>().CreatorRank; } }
+        #endregion
+
+        #region Command Queue
+        /// <summary>
+        /// Buffer of output to send to clients via WriteTo
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IList<IEnumerable<string>> OutputBuffer { get; set; }
+
+        /// <summary>
+        /// Buffer of command string input sent from the client
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IList<string> InputBuffer { get; set; }
+
+        /// <summary>
+        /// What is currently being executed
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public string CurrentAction { get; set; }
+
+        /// <summary>
+        /// Stops whatever is being executed and clears the input buffer
+        /// </summary>
+        public void StopInput()
+        {
+            HaltInput();
+            FlushInput();
+        }
+
+        /// <summary>
+        /// Stops whatever is being executed, does not clear the input buffer
+        /// </summary>
+        public void HaltInput()
+        {
+            CurrentAction = string.Empty;
+        }
+
+        /// <summary>
+        /// Clears the input buffer
+        /// </summary>
+        public void FlushInput()
+        {
+            InputBuffer = new List<string>();
+        }
+
+        /// <summary>
+        /// Returns whats in the input buffer
+        /// </summary>
+        /// <returns>Any strings still in the input buffer</returns>
+        public IEnumerable<string> PeekInput()
+        {
+            var newList = new List<string>() { string.Format("Acting: {0}", CurrentAction) };
+
+            newList.AddRange(InputBuffer);
+
+            return newList;
+        }
         #endregion
 
         /// <summary>
@@ -226,6 +287,12 @@ namespace NetMud.Data.Architectural.EntityBase
             return value;
         }
 
+        public EntityPartial()
+        {
+            OutputBuffer = new List<IEnumerable<string>>();
+            InputBuffer = new List<string>();
+        }
+
         #region Movement
         /// <summary>
         /// Change the position of this without physical movement
@@ -295,6 +362,7 @@ namespace NetMud.Data.Architectural.EntityBase
         }
         #endregion
 
+        #region Data Management
         /// <summary>
         /// Save this to the filesystem in Current
         /// </summary>
@@ -334,6 +402,7 @@ namespace NetMud.Data.Architectural.EntityBase
 
             return true;
         }
+        #endregion
 
         #region Generic Rendering
         /// <summary>

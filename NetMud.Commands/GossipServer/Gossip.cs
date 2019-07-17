@@ -8,9 +8,11 @@ using NetMud.Gossip;
 using NetMud.Utility;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace NetMud.Commands.GossipServer
 {
+    [CommandQueueSkip]
     [CommandKeyword("gossip", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(string), CacheReferenceType.String, "[a-zA-Z]+@[a-zA-Z]+$", true)]
@@ -30,14 +32,14 @@ namespace NetMud.Commands.GossipServer
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            StringBuilder sb = new StringBuilder();
             IPlayer playerActor = Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)) ? Actor as IPlayer : null;
 
             if (playerActor != null && !playerActor.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
             {
-                sb.Add(string.Format("You have disabled the Gossip network.", Subject));
+                sb.AppendFormat("You have disabled the Gossip network.", Subject);
             }
             else
             {
@@ -71,19 +73,19 @@ namespace NetMud.Commands.GossipServer
                 if (!string.IsNullOrWhiteSpace(directTarget) && !string.IsNullOrWhiteSpace(directTargetGame))
                 {
                     gossipClient.SendDirectMessage(userName, directTargetGame, directTarget, Target.ToString());
-                    sb.Add(string.Format("You tell {1}@{2} '{0}'", Target, directTarget, directTargetGame));
+                    sb.AppendFormat("You tell {1}@{2} '{0}'", Target, directTarget, directTargetGame);
                 }
                 else
                 {
                     if (string.IsNullOrWhiteSpace(directTarget))
                     {
                         gossipClient.SendMessage(userName, Target.ToString());
-                        sb.Add(string.Format("You gossip '{0}'", Target));
+                        sb.AppendFormat("You gossip '{0}'", Target);
                     }
                     else
                     {
                         gossipClient.SendMessage(userName, Target.ToString(), directTarget);
-                        sb.Add(string.Format("You {1} '{0}'", Target, directTarget));
+                        sb.AppendFormat("You {1} '{0}'", Target, directTarget);
                     }
                 }
             }
@@ -92,6 +94,8 @@ namespace NetMud.Commands.GossipServer
             Message messagingObject = new Message(sb.ToString());
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
+
+            return true;
         }
 
         /// <summary>

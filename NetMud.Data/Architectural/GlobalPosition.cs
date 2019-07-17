@@ -48,8 +48,23 @@ namespace NetMud.Data.Architectural
         /// <returns>the list of entities</returns>
         public IEnumerable<IEntity> GetContents(ulong radius)
         {
-            return LiveCache.GetAll<IPlayer>().Where(player => player.CurrentLocation.CurrentSection.IsBetweenOrEqual(
-                                                    Math.Max(ulong.MinValue, CurrentSection - radius), Math.Min(ulong.MaxValue, CurrentSection + radius)));
+            var players = LiveCache.GetAll<IPlayer>();
+
+            if (radius > 0)
+            {
+                var min = Math.Max(ulong.MinValue, CurrentSection - radius);
+                var max = Math.Min(ulong.MaxValue, CurrentSection + radius);
+
+                //ulong madness
+                if (radius > CurrentSection)
+                {
+                    min = 0;
+                }
+
+                players = LiveCache.GetAll<IPlayer>().Where(player => player.CurrentLocation.CurrentSection.IsBetweenOrEqual(min, max));
+            }
+
+            return players;
         }
 
         /// <summary>

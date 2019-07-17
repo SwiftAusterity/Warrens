@@ -24,7 +24,7 @@ namespace NetMud.Commands.Comm
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IEnumerable<string> toOrigin = new string[] { string.Format("$A$ says '{0}'", Subject) };
 
@@ -33,7 +33,9 @@ namespace NetMud.Commands.Comm
                 ToOrigin = toOrigin
             };
 
-            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null, 0);
+            messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation, null, 1000);
+
+            return true;
         }
 
         /// <summary>

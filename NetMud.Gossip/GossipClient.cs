@@ -307,33 +307,36 @@ namespace NetMud.Gossip
 
         public void SendNotification(string userName, Notifications type)
         {
-            TransportMessage message = new TransportMessage();
-
-            switch (type)
+            if (MyClient != null)
             {
-                case Notifications.LogIn:
-                case Notifications.EnterGame:
-                    SignIn loginNotify = new SignIn()
-                    {
-                        PlayerName = userName
-                    };
+                TransportMessage message = new TransportMessage();
 
-                    message.Event = loginNotify.Type;
-                    message.Payload = loginNotify;
-                    break;
-                case Notifications.LogOff:
-                case Notifications.LeaveGame:
-                    SignOut logoutNotify = new SignOut()
-                    {
-                        PlayerName = userName
-                    };
+                switch (type)
+                {
+                    case Notifications.LogIn:
+                    case Notifications.EnterGame:
+                        SignIn loginNotify = new SignIn()
+                        {
+                            PlayerName = userName
+                        };
 
-                    message.Event = logoutNotify.Type;
-                    message.Payload = logoutNotify;
-                    break;
+                        message.Event = loginNotify.Type;
+                        message.Payload = loginNotify;
+                        break;
+                    case Notifications.LogOff:
+                    case Notifications.LeaveGame:
+                        SignOut logoutNotify = new SignOut()
+                        {
+                            PlayerName = userName
+                        };
+
+                        message.Event = logoutNotify.Type;
+                        message.Payload = logoutNotify;
+                        break;
+                }
+
+                MyClient.Send(Serialize(message));
             }
-
-            MyClient.Send(Serialize(message));
         }
 
         public void Shutdown()

@@ -2,6 +2,7 @@
 {
     public enum MobilityState
     {
+        None,
         Standing,
         Sitting,
         Prone

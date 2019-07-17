@@ -94,6 +94,8 @@ namespace NetMud.Interp
         /// <param name="actor">the entity issuing the command</param>
         public Context(string fullCommand, IActor actor)
         {
+            AccessErrors = new List<string>();
+
             //Dummy check empty strings
             if (string.IsNullOrWhiteSpace(fullCommand))
             {
@@ -108,8 +110,6 @@ namespace NetMud.Interp
             Actor = actor;
 
             Position = (IGlobalPosition)Actor.CurrentLocation.Clone();
-
-            AccessErrors = new List<string>();
 
             LoadedCommands = commandsAssembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommand)));
 
@@ -198,6 +198,7 @@ namespace NetMud.Interp
                         }
                     }
 
+                    command.OriginalInput = fullCommand;
                     command.CommandWord = currentCommand.CommandPhrase;
                     command.Actor = Actor;
                     command.OriginLocation = Position;

@@ -99,7 +99,7 @@ namespace NetMud.Communication.Messaging
         /// <param name="Target">The command's target entity</param>
         /// <param name="OriginLocation">The location the acting entity acted in</param>
         /// <param name="DestinationLocation">The location the command is targetting</param>
-        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IGlobalPosition OriginLocation, IGlobalPosition DestinationLocation, ulong radius)
+        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IGlobalPosition OriginLocation, IGlobalPosition DestinationLocation, ulong radius, bool coallate = false)
         {
             Dictionary<MessagingTargetType, IEntity[]> entities = new Dictionary<MessagingTargetType, IEntity[]>
             {
@@ -110,17 +110,17 @@ namespace NetMud.Communication.Messaging
 
             if (Actor != null && ToActor.Any())
             {
-                Actor.WriteTo(TranslateOutput(ToActor, entities));
+                Actor.WriteTo(TranslateOutput(ToActor, entities), coallate);
             }
 
             if (Subject != null && ToSubject.Any())
             {
-                Subject.WriteTo(TranslateOutput(ToSubject, entities));
+                Subject.WriteTo(TranslateOutput(ToSubject, entities), coallate);
             }
 
             if (Target != null && ToTarget.Any())
             {
-                Target.WriteTo(TranslateOutput(ToTarget, entities));
+                Target.WriteTo(TranslateOutput(ToTarget, entities), coallate);
             }
 
             //TODO: origin and destination are areas of effect on their surrounding areas
@@ -131,7 +131,7 @@ namespace NetMud.Communication.Messaging
                 //Message dudes in the location, including non-person entities since they might have triggers
                 foreach (IEntity dude in validContents)
                 {
-                    dude.WriteTo(TranslateOutput(ToOrigin, entities));
+                    dude.WriteTo(TranslateOutput(ToOrigin, entities), coallate);
                 }
             }
 
@@ -142,7 +142,7 @@ namespace NetMud.Communication.Messaging
                 //Message dudes in the location, including non-person entities since they might have triggers
                 foreach (IEntity dude in validContents)
                 {
-                    dude.WriteTo(TranslateOutput(ToDestination, entities));
+                    dude.WriteTo(TranslateOutput(ToDestination, entities), coallate);
                 }
             }
         }

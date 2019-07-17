@@ -51,7 +51,8 @@ namespace NetMud.Data.Players
             {
                 if (_keywords == null || _keywords.Length == 0)
                 {
-                    _keywords = new string[] { FullName().ToLower(), Name.ToLower(), SurName.ToLower() };
+                    var surName = string.IsNullOrWhiteSpace(SurName) ? "" : SurName.ToLower();
+                    _keywords = new string[] { FullName().ToLower(), Name.ToLower(), surName };
                 }
 
                 return _keywords;

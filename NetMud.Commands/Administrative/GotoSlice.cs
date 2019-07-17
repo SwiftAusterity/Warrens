@@ -28,7 +28,7 @@ namespace NetMud.Commands.Administrative
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             ulong moveTo = (ulong)Subject;
 
@@ -40,6 +40,8 @@ namespace NetMud.Commands.Administrative
             var msg = new Message(string.Format("You teleport to {0}.", moveTo));
 
             msg.ExecuteMessaging(Actor, null, null, null, null, 0);
+
+            return true;
         }
 
         /// <summary>

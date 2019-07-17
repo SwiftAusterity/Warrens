@@ -22,6 +22,11 @@ namespace NetMud.Interp
         {
             try
             {
+                if(actor == null)
+                {
+                    throw new AccessViolationException("Bad user.");
+                }
+
                 IContext commandContext = new Context(commandString, actor);
 
                 //Derp, we had an error with accessing the command somehow, usually to do with parameter collection or access permissions
@@ -30,7 +35,7 @@ namespace NetMud.Interp
                     return commandContext.AccessErrors;
                 }
 
-                commandContext.Command.Execute();
+                commandContext.Command.Execute((nextInput, nextActor) => Render(nextInput, nextActor).Count() == 0);
             }
             catch(Exception ex)
             {

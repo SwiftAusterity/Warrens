@@ -12,6 +12,7 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
+using NetMud.Gossip;
 using NetMud.Interp;
 using NetMud.Utility;
 using NetMud.Websock.OutputFormatting;
@@ -67,7 +68,7 @@ namespace NetMud.Websock
         /// Creates an instance of the command negotiator with a specified user manager
         /// </summary>
         /// <param name="userManager">the authentication manager from the web</param>
-        public Descriptor(ApplicationUserManager userManager) 
+        public Descriptor(ApplicationUserManager userManager)
         {
             UserManager = userManager;
 
@@ -112,7 +113,7 @@ namespace NetMud.Websock
                 SoundToPlay = soundUri
             };
 
-            Send(SerializationUtility.Serialize(outputFormat));
+            Send(Utility.SerializationUtility.Serialize(outputFormat));
 
             return true;
         }
@@ -132,15 +133,18 @@ namespace NetMud.Websock
                     Overall = OverallStatus.Excellent,
                     Health = _currentPlayer.CurrentHealth,
                     Stamina = _currentPlayer.CurrentStamina
-                }
+                },
+                CurrentActivity = _currentPlayer.CurrentAction,
+                Qualities = string.Join("", _currentPlayer.Qualities.Where(quality => quality.Visible).Select(quality => string.Format("<div class='qualityRow'><span>{0}</span><span>{1}</span></div>", quality.Name, quality.Value))),
             };
 
             IGlobalPosition currentLocation = _currentPlayer.CurrentLocation;
             IEnumerable<string> populace = Enumerable.Empty<string>();
             string locationDescription = string.Empty;
 
-            populace = currentLocation.GetContents(0).Where(player => !player.Equals(_currentPlayer)).Select(data => data.GetDescribableName(_currentPlayer));
-            locationDescription = string.Format("You are {0} to the door.", ulong.MaxValue / Math.Exp(currentLocation.CurrentSection));
+            decimal distance = currentLocation.CurrentSection == 0M ? 20M : 20M / (2M * currentLocation.CurrentSection);
+            populace = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null && player != _currentPlayer).Select(data => data.GetDescribableName(_currentPlayer));
+            locationDescription = string.Format("You are {0} meters from the exit.", distance);
 
             LocalStatus local = new LocalStatus
             {
@@ -150,14 +154,22 @@ namespace NetMud.Websock
 
             OutputStatus outputFormat = new OutputStatus
             {
-                Occurrence = EncapsulateOutput(strings),
+                Occurrence = strings.Count() > 0 ? EncapsulateOutput(strings) : "",
                 Self = self,
                 Local = local
             };
 
-            Send(SerializationUtility.Serialize(outputFormat));
+            Send(Utility.SerializationUtility.Serialize(outputFormat));
 
             return true;
+        }
+
+        /// <summary>
+        /// Wraps sending UI Updates to the connected descriptor
+        /// </summary>
+        public bool SendWrapper()
+        {
+            return SendOutput(new string[0]);
         }
 
         /// <summary>
@@ -203,11 +215,11 @@ namespace NetMud.Websock
 
             if (_currentPlayer != null && _currentPlayer.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
             {
-                IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                GossipClient gossipClient = LiveCache.Get<GossipClient>("GossipWebClient");
 
                 if (gossipClient != null)
                 {
-                    gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
+                    gossipClient.SendNotification(_currentPlayer.AccountHandle, Notifications.LeaveGame);
                 }
             }
 
@@ -338,11 +350,11 @@ namespace NetMud.Websock
 
                 if (authedUser.GameAccount.Config.GossipSubscriber)
                 {
-                    IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                    GossipClient gossipClient = LiveCache.Get<GossipClient>("GossipWebClient");
 
                     if (gossipClient != null)
                     {
-                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, AcquaintenceNotifications.EnterGame);
+                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, Notifications.EnterGame);
                     }
                 }
             }

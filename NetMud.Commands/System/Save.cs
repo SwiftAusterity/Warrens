@@ -11,6 +11,7 @@ namespace NetMud.Commands.System
     /// <summary>
     /// Invokes the current container's RenderToVisible
     /// </summary>
+    [CommandQueueSkip]
     [CommandKeyword("save", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
@@ -27,7 +28,7 @@ namespace NetMud.Commands.System
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IPlayer player = (IPlayer)Actor;
 
@@ -39,6 +40,8 @@ namespace NetMud.Commands.System
 
             //Save the player out
             playerDataWrapper.WriteOnePlayer(player);
+
+            return true;
         }
 
         /// <summary>

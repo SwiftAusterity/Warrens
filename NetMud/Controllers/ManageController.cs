@@ -167,7 +167,7 @@ namespace NetMud.Controllers
             IPlayerTemplate obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), user.GlobalIdentityHandle, id));
             AddEditCharacterViewModel model = new AddEditCharacterViewModel
             {
-                AuthedUser  = user,
+                AuthedUser = user,
                 DataObject = obj
             };
 

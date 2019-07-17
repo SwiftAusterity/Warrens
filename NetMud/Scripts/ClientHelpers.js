@@ -31,7 +31,14 @@ function AppendOutput(output, UIOnly) {
         var dataToAppend = getObjects(output, sourceKey, 0);
 
         if (dataToAppend !== undefined && dataToAppend.length > 0) {
-            $this.html(dataToAppend);
+            if (dataToAppend.length === 1 && dataToAppend[0] !== $this.html()) {
+                $this.html(dataToAppend);
+
+                //blink?
+                $this.fadeOut(50, function () {
+                    $this.fadeIn(100);
+                });
+            }
         }
     });
 
@@ -531,10 +538,12 @@ function changeLoopTrackMode(me) {
     if (window.loopTrack) {
         $me.children().attr('style', 'color: green;');
         audioPlayer.removeEventListener('ended', nextTrackLoop);
-    } else {
+        AppendTextToOutput("Music looping toggled ON.");
+   } else {
         $me.children().attr('style', 'color: red;');
         changePlaylist($('.audioTrackSelector')[window.currentTrack]);
-    }
+        AppendTextToOutput("Music looping toggled OFF.");
+   }
 
     return false;
 }
@@ -565,9 +574,15 @@ function changeGossipMode(me) {
 
     if (window.gossipMode) {
         $me.children().attr('style', 'color: green;');
-    } else {
+        AppendTextToOutput("Gossip network toggled ON.");
+   } else {
         $me.children().attr('style', 'color: red;');
-    }
+        AppendTextToOutput("Gossip network toggled OFF.");
+   }
 
     return false;
+}
+
+function bindClientCommand(name, funct) {
+    window.clientCommands[name] = funct;
 }

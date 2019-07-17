@@ -12,6 +12,7 @@ namespace NetMud.Commands.System
     /// <summary>
     /// Invokes the current container's RenderToVisible
     /// </summary>
+    [CommandQueueSkip]
     [CommandKeyword("quit", false)]
     [CommandKeyword("exit", false)]
     [CommandPermission(StaffRank.Player)]
@@ -29,7 +30,7 @@ namespace NetMud.Commands.System
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IPlayer player = (IPlayer)Actor;
 
@@ -47,6 +48,8 @@ namespace NetMud.Commands.System
             //Save the player out
             playerDataWrapper.WriteOnePlayer(player);
             player.CloseConnection();
+
+            return true;
         }
 
         /// <summary>

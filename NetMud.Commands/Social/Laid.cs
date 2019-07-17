@@ -12,6 +12,26 @@ namespace NetMud.Commands.Social
     public class Laid : CommandPartial
     {
         /// <summary>
+        /// The delay this invokes when executing. Initially is "begun" and actually takes affect at the end.
+        /// </summary>
+        public override int ExecutionDelay => 10;
+
+        /// <summary>
+        /// The delay this invokes after being executed
+        /// </summary>
+        public override int CooldownDelay => 20;
+
+        /// <summary>
+        /// A message to send the user when the command starts up
+        /// </summary>
+        public override string StartupMessage => "You begin to fap.";
+
+        /// <summary>
+        /// A message to send the user when cooldown finishes
+        /// </summary>
+        public override string CooldownMessage => "You finish fapping.";
+
+        /// <summary>
         /// All Commands require a generic constructor
         /// </summary>
         public Laid()
@@ -19,11 +39,13 @@ namespace NetMud.Commands.Social
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             Message messagingObject = new Message("You get laid, fucked, fapfapfap.");
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null, 0);
+
+            return true;
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()

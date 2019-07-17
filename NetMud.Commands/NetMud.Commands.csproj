@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Administrative\GotoSlice.cs" />
     <Compile Include="Attributes\CacheReferenceType.cs" />
+    <Compile Include="Attributes\CommandQueueSkip.cs" />
     <Compile Include="Attributes\CommandSuppressName.cs" />
     <Compile Include="Attributes\CommandKeywordAttribute.cs" />
     <Compile Include="Attributes\CommandParameterAttribute.cs" />
@@ -61,12 +62,20 @@
     <Compile Include="Comm\Who.cs" />
     <Compile Include="Social\Laid.cs" />
     <Compile Include="System\Commands.cs" />
+    <Compile Include="System\FlushQ.cs" />
+    <Compile Include="System\StopQ.cs" />
+    <Compile Include="System\HaltQ.cs" />
+    <Compile Include="System\PeekQ.cs" />
     <Compile Include="System\Save.cs" />
     <Compile Include="System\Quit.cs" />
     <Compile Include="Rendering\Look.cs" />
     <Compile Include="System\Help.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetMud.CentralControl\NetMud.CentralControl.csproj">
+      <Project>{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}</Project>
+      <Name>NetMud.CentralControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7F19324F-1B9C-467D-816A-74A36EB74CDE}</Project>
       <Name>NetMud.Communication</Name>

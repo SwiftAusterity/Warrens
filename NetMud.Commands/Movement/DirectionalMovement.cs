@@ -4,8 +4,6 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.Utility;
-using NutMud.Commands.Rendering;
-using System;
 using System.Collections.Generic;
 
 namespace NetMud.Commands.Movement
@@ -14,8 +12,8 @@ namespace NetMud.Commands.Movement
     /// Handles mobile movement commands. All cardinal directions plus "enter <door>" type pathways
     /// </summary>
     [CommandSuppressName]
-    [CommandKeyword("forward", true, "ahead", true, false)]
-    [CommandKeyword("backward", true, "back", true, false)]
+    [CommandKeyword("forward", false, "ahead", true, false)]
+    [CommandKeyword("backward", false, "back", true, false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
     public class DirectionalMovement : CommandPartial
@@ -31,9 +29,9 @@ namespace NetMud.Commands.Movement
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
-            string subject = Subject.ToString();
+            string subject = CommandWord.ToString();
             ulong newPosition = 0;
 
             switch (subject)
@@ -42,7 +40,7 @@ namespace NetMud.Commands.Movement
                     if (Actor.CurrentLocation.CurrentSection >= ulong.MaxValue)
                     {
                         RenderError("You're already as close to the door as you can be.");
-                        return;
+                        return false;
                     }
 
                     newPosition = Actor.CurrentLocation.CurrentSection + 1;
@@ -51,7 +49,7 @@ namespace NetMud.Commands.Movement
                     if (Actor.CurrentLocation.CurrentSection <= 0)
                     {
                         RenderError("You're already as far away from the door as you can be.");
-                        return;
+                        return false;
                     }
 
                     newPosition = Actor.CurrentLocation.CurrentSection - 1;
@@ -66,6 +64,8 @@ namespace NetMud.Commands.Movement
             var msg = new Message(string.Format("You move half the distance {0}.", subject));
 
             msg.ExecuteMessaging(Actor, null, null, newPos, null, 3);
+
+            return true;
         }
 
         /// <summary>

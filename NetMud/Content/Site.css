@@ -45,12 +45,17 @@ input[type=checkbox].form-control {
     min-width: 36% !important;
 }
 
+    .multiBox-2 .helpTip {
+        padding: 4px 1px 1px 18px;
+    }
+
 .multiBox > div {
     display: inline-flex;
     border: 1px solid dodgerblue;
     background: cornflowerblue;
     border-radius: 2px;
     width: 100%;
+    justify-content: center;
 }
 
 .multiBoxUnit {
@@ -484,7 +489,7 @@ div.roomAsciiMap {
         background-color: inherit;
         float: left;
         position: relative;
-        top: -15px;
+        top: -7px;
         left: 5px;
         margin: 0 -5px 0 0;
     }
@@ -514,6 +519,10 @@ div.roomAsciiMap {
     text-align: center;
     margin: 15px auto 15px auto;
 }
+
+    .descriptiveSection p {
+        text-align: left;
+    }
 
 .descriptiveContainer {
     background-color: lightgrey;
@@ -569,6 +578,37 @@ div.roomAsciiMap {
         display: flex;
     }
 
+.leaderboardTable {
+    background-color: white;
+    color: black;
+    border-radius: 9px;
+    padding: 5px;
+    flex: 0 1 auto;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 4px 2px lightgrey;
+    width: 50%;
+    margin: auto;
+}
+
+    .leaderboardTable div {
+        margin: auto;
+        min-width: 50%;
+        width: fit-content;
+    }
+
+        .leaderboardTable div:nth-child(even) {
+            background-color: lightgray;
+        }
+
+    .leaderboardTable span:first-of-type {
+        font-weight: 600;
+    }
+
+    .leaderboardTable span:last-of-type {
+        float: right;
+    }
+
+
 .entityDataInfoCard {
     background-color: white;
     color: black;
@@ -588,7 +628,6 @@ div.roomAsciiMap {
     .entityDataInfoCard div {
         margin: auto;
         min-width: 200px;
-        width: fit-content;
     }
 
     .entityDataInfoCard span:first-of-type {

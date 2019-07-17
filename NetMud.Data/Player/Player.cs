@@ -1,4 +1,5 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.CentralControl;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
@@ -161,6 +162,7 @@ namespace NetMud.Data.Players
             GetFromWorldOrSpawn();
         }
 
+        #region Connectivity Details
         /// <summary>
         /// Function used to close this connection
         /// </summary>
@@ -169,13 +171,39 @@ namespace NetMud.Data.Players
             Descriptor.Disconnect(string.Empty);
         }
 
-        public override bool WriteTo(IEnumerable<string> input)
+        public override bool WriteTo(IEnumerable<string> output, bool delayed = false)
         {
-            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(input.ToArray(), this);
+            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(output.ToArray(), this);
 
-            return Descriptor.SendOutput(strings);
+            if (delayed)
+            {
+                var working = OutputBuffer.Any();
+
+                //enforce the output buffer
+                OutputBuffer.Add(strings);
+
+                if (!working)
+                {
+                    Processor.StartSingeltonLoop(string.Format("PlayerOutputWriter_{0}", TemplateName), 1, 0, 2, () => SendOutput());
+                }
+            }
+            else
+            {
+                return Descriptor.SendOutput(strings);
+            }
+
+            return true;
         }
 
+        private bool SendOutput()
+        {
+            var sent = Descriptor.SendOutput(string.Join(" ", OutputBuffer.Select(cluster => string.Join(" ", cluster))));
+
+            OutputBuffer.Clear();
+
+            return sent;
+        }
+        #endregion
         public int Exhaust(int exhaustionAmount)
         {
             int stam = Sleep(-1 * exhaustionAmount);
@@ -215,6 +243,38 @@ namespace NetMud.Data.Players
         public IPlayer GetLiveInstance()
         {
             return this;
+        }
+
+        public override void KickoffProcesses()
+        {
+            //quality degredation and stam/health regen
+            Processor.StartSubscriptionLoop("Regeneration", Regen, 250, false);
+            Processor.StartSubscriptionLoop("QualityDecay", QualityTimer, 500, false);
+        }
+
+        public bool Regen()
+        {
+            //if(!IsFighting())
+            //{
+                Recover(TotalHealth / 100);
+            //}
+
+            Sleep(1);
+
+            Descriptor.SendWrapper();
+            return true;
+        }
+
+        public bool QualityTimer()
+        {
+            foreach (var quality in Qualities.Where(qual => qual.Value > 0))
+            {
+                SetQuality(-1, quality.Name, true);
+            }
+
+            Descriptor.SendWrapper();
+
+            return true;
         }
 
         #region Rendering
@@ -306,7 +366,7 @@ namespace NetMud.Data.Players
             CurrentStamina = ch.TotalStamina;
             TotalHealth = ch.TotalHealth;
             TotalStamina = ch.TotalStamina;
-            SurName = ch.SurName;
+            SurName = ch.SurName ?? "";
             StillANoob = ch.StillANoob;
             GamePermissionsRank = ch.GamePermissionsRank;
 
@@ -338,6 +398,8 @@ namespace NetMud.Data.Players
                 ch.CurrentSlice = newPosition.CurrentSection;
                 ch.SystemSave();
                 ch.PersistToCache();
+                Save();
+                UpsertToLiveWorldCache(true);
             }
             else
             {
