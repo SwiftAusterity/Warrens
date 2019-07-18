@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;
 

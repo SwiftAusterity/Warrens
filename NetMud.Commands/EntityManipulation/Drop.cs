@@ -26,7 +26,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IEntity thing = (IEntity)Subject;
             IContains actor = (IContains)Actor;
@@ -45,6 +45,8 @@ namespace NetMud.Commands.EntityManipulation
             };
 
             messagingObject.ExecuteMessaging(Actor, thing, null, OriginLocation.CurrentRoom, null);
+
+            return true;
         }
 
         /// <summary>

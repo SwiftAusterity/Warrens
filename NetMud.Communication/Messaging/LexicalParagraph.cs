@@ -36,6 +36,14 @@ namespace NetMud.Communication.Messaging
             Sentences = new List<ILexicalSentence>();
         }
 
+        public LexicalParagraph(IEnumerable<string> overRide)
+        {
+            Override = string.Join(Environment.NewLine, overRide);
+            Events = new List<ISensoryEvent>();
+            Sentences = new List<ILexicalSentence>();
+        }
+
+
         public LexicalParagraph(ISensoryEvent newEvent)
         {
             Events = new List<ISensoryEvent>() { newEvent };

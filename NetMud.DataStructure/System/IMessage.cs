@@ -39,7 +39,7 @@ namespace NetMud.DataStructure.System
         /// <param name="Target">The command's target entity</param>
         /// <param name="OriginLocation">The location the acting entity acted in</param>
         /// <param name="DestinationLocation">The location the command is targetting</param>
-        void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation);
+        void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation, bool coallate = false);
 
         /// <summary>
         /// Get the string version of all the contained messages

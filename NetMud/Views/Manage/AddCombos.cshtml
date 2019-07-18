@@ -1,0 +1,21 @@
+﻿@model NetMud.Models.Admin.AddEditCombosViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Combo", new string[] { "Dashboard", "Combos" }, new string[] { "/Manage", "/Manage/Combos" });
+}
+
+    <section id="newConstantsForm">
+        @using (Html.BeginForm("AddCombos", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.EditorFor(m => m.DataObject, new { ValidArts = Model.ValidArts })
+
+            @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Combos", ReturnController = "Manage", IncludeCancel = true })
+        }
+    </section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

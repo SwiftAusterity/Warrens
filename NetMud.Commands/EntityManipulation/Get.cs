@@ -28,7 +28,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             List<string> sb = new List<string>();
             IEntity thing = (IEntity)Subject;
@@ -62,6 +62,8 @@ namespace NetMud.Commands.EntityManipulation
             };
 
             messagingObject.ExecuteMessaging(Actor, thing, (IEntity)Target, OriginLocation.CurrentRoom, null);
+
+            return true;
         }
 
         /// <summary>
@@ -77,6 +79,7 @@ namespace NetMud.Commands.EntityManipulation
                 "get &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true),
                 "take &lt;object&gt; &lt;container&gt;".PadWithString(14, "&nbsp;", true)
             };
+
             return sb;
         }
 

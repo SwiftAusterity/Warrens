@@ -29,7 +29,7 @@ namespace NutMud.Commands.Rendering
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             List<string> sb = new List<string>();
 
@@ -42,7 +42,7 @@ namespace NutMud.Commands.Rendering
                 Message blankMessenger = new Message(new LexicalParagraph("You observe your surroundings."));
 
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
-                return;
+                return true;
             }
 
             ILookable lookTarget = (ILookable)Subject;
@@ -58,6 +58,8 @@ namespace NutMud.Commands.Rendering
             };
 
             messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
+
+            return true;
         }
 
         /// <summary>

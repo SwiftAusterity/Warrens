@@ -9,6 +9,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using Newtonsoft.Json;
@@ -54,6 +55,7 @@ namespace NetMud.Data.Players
             {
                 if (_keywords == null || _keywords.Length == 0)
                 {
+                    var surName = string.IsNullOrWhiteSpace(SurName) ? "" : SurName.ToLower();
                     _keywords = new string[] { FullName().ToLower(), Name.ToLower(), SurName.ToLower() };
                 }
 
@@ -178,6 +180,11 @@ namespace NetMud.Data.Players
         public int TotalStamina { get; set; }
 
         /// <summary>
+        /// fArt Combos
+        /// </summary>
+        public HashSet<IFightingArtCombination> Combos { get; set; }
+
+        /// <summary>
         /// Empty constructor
         /// </summary>
         public PlayerTemplate()
@@ -185,6 +192,7 @@ namespace NetMud.Data.Players
             TotalHealth = 100;
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
+            Combos = new HashSet<IFightingArtCombination>();
             SuperSenses = new HashSet<MessagingType>();
         }
 
@@ -196,6 +204,7 @@ namespace NetMud.Data.Players
             TotalStamina = 100;
             Qualities = new HashSet<IQuality>();
             SuperSenses = new HashSet<MessagingType>();
+            Combos = new HashSet<IFightingArtCombination>();
         }
 
         /// <summary>

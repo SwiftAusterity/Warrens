@@ -114,6 +114,10 @@ namespace NetMud.Communication.Messaging
                 {
                     case MessagingTargetType.Actor:
                         message = message.Replace("$A$", thing.TemplateName);
+                        message = message.Replace("$@A$", "it");
+                        message = message.Replace("$V@A$", "its");
+                        message = message.Replace("$P@A$", "them"); //TODO: gender construct, not in this version
+                        message = message.Replace("$VP@A$", "their");
                         break;
                     case MessagingTargetType.DestinationLocation:
                         message = message.Replace("$D$", thing.TemplateName);
@@ -123,9 +127,17 @@ namespace NetMud.Communication.Messaging
                         break;
                     case MessagingTargetType.Subject:
                         message = message.Replace("$S$", thing.TemplateName);
+                        message = message.Replace("$@S$", "it");
+                        message = message.Replace("$V@S$", "its");
+                        message = message.Replace("$P@S$", "them");
+                        message = message.Replace("$VP@S$", "their");
                         break;
                     case MessagingTargetType.Target:
                         message = message.Replace("$T$", thing.TemplateName);
+                        message = message.Replace("$@T$", "it");
+                        message = message.Replace("$V@T$", "its");
+                        message = message.Replace("$P@T$", "them");
+                        message = message.Replace("$VP@T$", "their");
                         break;
                     case MessagingTargetType.GenderPronoun:
                         if (thing.GetType() != typeof(IGender))

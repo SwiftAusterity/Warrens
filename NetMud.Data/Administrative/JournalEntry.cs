@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Administrative
@@ -16,6 +17,7 @@ namespace NetMud.Data.Administrative
     /// <summary>
     /// Blog/PatchNotes/etc
     /// </summary>
+    [ValidateInput(false)]
     [Serializable]
     public class JournalEntry : TemplatePartial, IJournalEntry
     {
@@ -29,6 +31,7 @@ namespace NetMud.Data.Administrative
         /// <summary>
         /// The body of the post
         /// </summary>
+        [AllowHtml]
         [StringDataIntegrity("Body must be between 20 and 2000 characters", 20, 2000)]
         [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body", Description = "The body content of the entry.")]

@@ -54,19 +54,17 @@ namespace NetMud.Commands.Movement
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
             IPathway targetPath = (IPathway)Subject;
 
             Actor.TryMoveTo(targetPath.Destination.GetContainerAsLocation());
 
             targetPath.Enter.ExecuteMessaging(Actor, targetPath, null, targetPath.Origin, targetPath.Destination);
 
-            //Render the next room to them
-            Look lookCommand = new Look() { Actor = Actor, Subject = null, OriginLocation = Actor.CurrentLocation };
+            Actor.WriteTo(null);
 
-            lookCommand.Execute();
+            return true;
         }
 
         /// <summary>

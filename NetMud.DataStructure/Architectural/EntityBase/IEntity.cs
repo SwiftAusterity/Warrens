@@ -69,9 +69,43 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
-        bool WriteTo(IEnumerable<string> input);
+        bool WriteTo(IEnumerable<string> output, bool delayed = false);
 
         /// <summary>
+        /// Buffer of output to send to clients via WriteTo
+        /// </summary>
+        IList<IEnumerable<string>> OutputBuffer { get; set; }
+
+        /// <summary>
+        /// Buffer of command string input sent from the client
+        /// </summary>
+        IList<string> InputBuffer { get; set; }
+
+        /// <summary>
+        /// What is currently being executed
+        /// </summary>
+        string CurrentAction { get; set; }
+
+        /// <summary>
+        /// Stops whatever is being executed and clears the input buffer
+        /// </summary>
+        void StopInput();
+
+        /// <summary>
+        /// Stops whatever is being executed, does not clear the input buffer
+        /// </summary>
+        void HaltInput();
+
+        /// <summary>
+        /// Clears the input buffer
+        /// </summary>
+        void FlushInput();
+
+        /// <summary>
+        /// Returns whats in the input buffer
+        /// </summary>
+        /// <returns>Any strings still in the input buffer</returns>
+        IEnumerable<string> PeekInput();
         /// Update this entry by the system
         /// </summary>
         /// <returns>success status</returns>

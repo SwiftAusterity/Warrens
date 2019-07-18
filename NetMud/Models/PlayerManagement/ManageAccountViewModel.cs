@@ -39,7 +39,8 @@ namespace NetMud.Models.PlayerManagement
         [UIHint("LanguageList")]
         [LanguageDataBinder]
         public ILanguage UILanguage { get; set; }
-
+        public int FightingArtCount { get; set; }
+        public int ComboCount { get; set; }
         public int UIModuleCount { get; set; }
         public int NotificationCount { get; set; }
 

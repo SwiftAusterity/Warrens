@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using System;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.System
@@ -9,19 +10,8 @@ namespace NetMud.DataStructure.System
     /// </summary>
     public interface ICommand
     {
-        /// <summary>
-        /// Execute the command's actions
-        /// </summary>
-        void Execute();
-
-        /// <summary>
-        /// Renders syntactical help for command parsing
-        /// </summary>
-        /// <returns>help output</returns>
-        IEnumerable<string> RenderSyntaxHelp();
-
         /* 
-         * Syntax:
+         * Syntax ordering:
          *      command <subject> <target> <supporting>
          *  Location is derived from context
          *  Surroundings is derived from location
@@ -31,6 +21,11 @@ namespace NetMud.DataStructure.System
         /// The command word originally used to find this command
         /// </summary>
         string CommandWord { get; set; }
+
+        /// <summary>
+        /// The original input that spawned this
+        /// </summary>
+        string OriginalInput { get; set; }
 
         /// <summary>
         /// Acting entity that issued this command
@@ -58,9 +53,40 @@ namespace NetMud.DataStructure.System
         IGlobalPosition OriginLocation { get; set; }
 
         /// <summary>
+        /// The delay this invokes when executing. Initially is "begun" and actually takes affect at the end.
+        /// </summary>
+        int ExecutionDelay { get; }
+
+        /// <summary>
+        /// The delay this invokes after being executed
+        /// </summary>
+        int CooldownDelay { get; }
+
+        /// <summary>
+        /// A message to send the user when the command starts up
+        /// </summary>
+        string StartupMessage { get; }
+
+        /// <summary>
+        /// A message to send the user when cooldown finishes
+        /// </summary>
+        string CooldownMessage { get; }
+
+        /// <summary>
         /// Send some sort of error to the client
         /// </summary>
         /// <param name="error">The error</param>
         void RenderError(string error);
+
+        /// <summary>
+        /// Execute the command's actions
+        /// </summary>
+        void Execute(Func<string, IActor, bool> nextAction);
+
+        /// <summary>
+        /// Renders syntactical help for command parsing
+        /// </summary>
+        /// <returns>help output</returns>
+        IEnumerable<string> RenderSyntaxHelp();
     }
 }

@@ -27,14 +27,14 @@ namespace NetMud.Commands.EntityManipulation
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IInanimate thing = (IInanimate)Subject;
 
             if (Target == null)
             {
                 RenderError("There is no merchant in that direction.");
-                return;
+                return false;
             }
 
             INonPlayerCharacter merchant = (INonPlayerCharacter)Target;
@@ -42,7 +42,7 @@ namespace NetMud.Commands.EntityManipulation
             if (merchant == null || (!merchant.DoIBuyThings()))
             {
                 RenderError("There is no merchant that buys items in that direction.");
-                return;
+                return false;
             }
 
             int price = merchant.HaggleCheck(thing);
@@ -50,7 +50,7 @@ namespace NetMud.Commands.EntityManipulation
             if(price <= 0)
             {
                 RenderError("The merchant will not buy that item.");
-                return;
+                return false;
             }
 
             ILexicalParagraph toActor = new LexicalParagraph(string.Format("The merchant appraises your {0} at {1}blz.", thing.GetDescribableName(Actor), price));
@@ -65,6 +65,7 @@ namespace NetMud.Commands.EntityManipulation
 
             messagingObject.ExecuteMessaging(Actor, thing, merchant, OriginLocation.CurrentZone, null);
 
+            return true;
         }
 
         /// <summary>

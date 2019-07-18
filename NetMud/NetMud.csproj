@@ -122,7 +122,7 @@
       <HintPath>..\packages\Microsoft.WebSockets.0.2.3.1\lib\net45\Microsoft.WebSockets.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -244,6 +244,7 @@
     <Compile Include="Controllers\GameAdmin\LiveAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\MineralsController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
+    <Compile Include="Controllers\GameAdmin\FightingArtController.cs" />
     <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
     <Compile Include="Controllers\GameAdmin\LocaleController.cs" />
     <Compile Include="Controllers\GameAdmin\GenderController.cs" />
@@ -276,9 +277,11 @@
     <Compile Include="Models\Admin\CelestialViewModels.cs" />
     <Compile Include="Models\Admin\GaiaViewModels.cs" />
     <Compile Include="Models\Admin\LiveDataModels.cs" />
+    <Compile Include="Models\Admin\FightingArtViewModels.cs" />
     <Compile Include="Models\Admin\GenderViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
+    <Compile Include="Models\Admin\CombosViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
     <Compile Include="Models\Admin\MineralsViewModels.cs" />
     <Compile Include="Models\Admin\FaunaViewModels.cs" />
@@ -301,6 +304,7 @@
     <Compile Include="Models\BlogViewModel.cs" />
     <Compile Include="Models\Features\CelestialsViewModel.cs" />
     <Compile Include="Models\Features\DimensionalModelsViewData.cs" />
+    <Compile Include="Models\Features\FightingArtsViewModel.cs" />
     <Compile Include="Models\Features\FaunaViewModel.cs" />
     <Compile Include="Models\Features\FloraViewModel.cs" />
     <Compile Include="Models\Features\HelpViewModel.cs" />
@@ -382,12 +386,25 @@
     <Content Include="Content\jquery.gridster.min.css" />
     <Content Include="Content\popper.css" />
     <Content Include="Content\pretty-checkbox.min.css" />
+    <Content Include="Content\Sounds\BkgMusic\blueSurprise.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\champsElysees.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\CheeryPiano.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\dreams.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\essence.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\fancyCakes.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\hypnotic.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\insideDreams.mp3" />
     <Content Include="Content\Sounds\floop.wav" />
     <Content Include="Content\spectrum.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
@@ -465,10 +482,6 @@
     <Content Include="Views\GameAdmin\Gaia\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Gaia\Index.cshtml" />
     <Content Include="Views\Manage\EditCharacter.cshtml" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Views\Shared\ApplyTemplate.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Help.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\InanimateTemplate.cshtml" />
@@ -665,6 +678,34 @@
     <Content Include="Views\Shared\EditorTemplates\EconomicBasisCollection.cshtml" />
     <Content Include="Views\Shared\LiveAsciiMap.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Room.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValuePairInt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValuePairShort.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValueRangeULong.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValuePairMobilityState.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtList.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Add.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCriteria.cshtml" />
+    <Content Include="Views\Manage\Combos.cshtml" />
+    <Content Include="Views\Manage\AddCombos.cshtml" />
+    <Content Include="Views\Manage\EditCombos.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCombination.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtsCollection.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCollectionItem.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\FightingArt.cshtml" />
+    <Content Include="Views\Features\FightingArts.cshtml" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Views\Manage\FightingArtAdd.cshtml" />
+    <Content Include="Views\Manage\FightingArtEdit.cshtml" />
+    <Content Include="Views\Manage\FightingArts.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtRated.cshtml" />
+    <Content Include="Views\GameClient\Naked.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Room.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Inanimate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Locale.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DictataTransformationRules.cshtml" />
@@ -700,6 +741,8 @@
     <Content Include="Views\GameAdmin\Dictionary\DictataList.cshtml" />
     <Content Include="Views\GameAdmin\Dictionary\AddDictata.cshtml" />
     <Content Include="Views\GameAdmin\Dictionary\EditDictata.cshtml" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -718,14 +761,7 @@
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\HtmlUtilities.js" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\jquery.gridster.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -921,9 +957,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Sounds\BkgMusic\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

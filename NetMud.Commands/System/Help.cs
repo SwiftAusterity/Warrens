@@ -12,6 +12,7 @@ namespace NetMud.Commands.System
     /// <summary>
     /// Displays help text for a help file (data) or command (RenderHelpBody)
     /// </summary>
+    [CommandQueueSkip]
     [CommandKeyword("Help", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(IHelpful), new CacheReferenceType[] { CacheReferenceType.Help, CacheReferenceType.Code }, false)]
@@ -28,7 +29,7 @@ namespace NetMud.Commands.System
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IHelpful topic = (IHelpful)Subject;
             IList<string> sb = GetHelpHeader(topic);
@@ -48,6 +49,8 @@ namespace NetMud.Commands.System
             Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+
+            return true;
         }
 
         /// <summary>

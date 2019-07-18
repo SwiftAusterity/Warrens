@@ -18,6 +18,7 @@ using NetMud.DataStructure.Player;
 using NetMud.DataStructure.Room;
 using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
+using NetMud.Gossip;
 using NetMud.Gaia.Geographical;
 using NetMud.Interp;
 using NetMud.Utility;
@@ -119,7 +120,7 @@ namespace NetMud.Websock
                 SoundToPlay = soundUri
             };
 
-            Send(SerializationUtility.Serialize(outputFormat));
+            Send(Utility.SerializationUtility.Serialize(outputFormat));
 
             return true;
         }
@@ -136,6 +137,8 @@ namespace NetMud.Websock
             {
                 Body = new BodyStatus
                 {
+                    Health = _currentPlayer.CurrentHealth == 0 ? 100 : 100 / (2M * _currentPlayer.CurrentHealth),
+                    Stamina = _currentPlayer.CurrentStamina,
                     Overall = OverallStatus.Excellent,
                     Anatomy = new AnatomicalPart[] {
                         new AnatomicalPart {
@@ -154,6 +157,22 @@ namespace NetMud.Websock
                         }
                     }
                 },
+                CurrentActivity = _currentPlayer.CurrentAction,
+                Balance = _currentPlayer.Balance.ToString(),
+                CurrentArt = _currentPlayer.LastAttack?.Name ?? "",
+                CurrentCombo = _currentPlayer.LastCombo?.Name ?? "",
+                CurrentTarget = _currentPlayer.GetTarget() == null ? "" 
+                                                                   : _currentPlayer.GetTarget() == _currentPlayer 
+                                                                        ? "Your shadow" 
+                                                                        : _currentPlayer.GetTarget().GetDescribableName(_currentPlayer),
+                CurrentTargetHealth = _currentPlayer.GetTarget() == null || _currentPlayer.GetTarget() == _currentPlayer ? double.PositiveInfinity
+                                                                        : _currentPlayer.GetTarget().CurrentHealth == 0 ? 100 : 100 / (2 * _currentPlayer.CurrentHealth),
+                Position = _currentPlayer.StancePosition.ToString(),
+                Stance = _currentPlayer.Stance,
+                Stagger = _currentPlayer.Stagger.ToString(),
+                Qualities = string.Join("", _currentPlayer.Qualities.Where(quality => quality.Visible).Select(quality => string.Format("<div class='qualityRow'><span>{0}</span><span>{1}</span></div>", quality.Name, quality.Value))),
+                CurrentTargetQualities = _currentPlayer.GetTarget() == null || _currentPlayer.GetTarget() == _currentPlayer ? "" 
+                                                                            : string.Join("", _currentPlayer.GetTarget().Qualities.Where(quality => quality.Visible).Select(quality => string.Format("<div class='qualityRow'><span>{0}</span><span>{1}</span></div>", quality.Name, quality.Value))),
                 Mind = new MindStatus
                 {
                     Overall = OverallStatus.Excellent,
@@ -276,9 +295,17 @@ namespace NetMud.Websock
                 Environment = environment
             };
 
-            Send(SerializationUtility.Serialize(outputFormat));
+            Send(Utility.SerializationUtility.Serialize(outputFormat));
 
             return true;
+        }
+
+        /// <summary>
+        /// Wraps sending UI Updates to the connected descriptor
+        /// </summary>
+        public bool SendWrapper()
+        {
+            return SendOutput(new string[0]);
         }
 
         /// <summary>
@@ -324,11 +351,11 @@ namespace NetMud.Websock
 
             if (_currentPlayer != null && _currentPlayer.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
             {
-                IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                GossipClient gossipClient = LiveCache.Get<GossipClient>("GossipWebClient");
 
                 if (gossipClient != null)
                 {
-                    gossipClient.SendNotification(_currentPlayer.AccountHandle, AcquaintenceNotifications.LeaveGame);
+                    gossipClient.SendNotification(_currentPlayer.AccountHandle, Notifications.LeaveGame);
                 }
             }
 
@@ -459,11 +486,11 @@ namespace NetMud.Websock
 
                 if (authedUser.GameAccount.Config.GossipSubscriber)
                 {
-                    IGossipClient gossipClient = LiveCache.Get<IGossipClient>("GossipWebClient");
+                    GossipClient gossipClient = LiveCache.Get<GossipClient>("GossipWebClient");
 
                     if (gossipClient != null)
                     {
-                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, AcquaintenceNotifications.EnterGame);
+                        gossipClient.SendNotification(authedUser.GlobalIdentityHandle, Notifications.EnterGame);
                     }
                 }
             }

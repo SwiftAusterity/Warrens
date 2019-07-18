@@ -1,0 +1,21 @@
+﻿@model NetMud.Models.Admin.AddEditFightingArtViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Fighting Art", new string[] { "Dashboard", "Fighting Arts" }, new string[] { "/Manage", "/Manage/FightingArts" });
+}
+
+<section id="newFightingArtForm">
+    @using (Html.BeginForm("FightingArtAdd", "Manage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.EditorFor(m => m.DataObject, "FightingArtRated")
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "FightingArts", ReturnController = "Manage", IncludeCancel = true })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

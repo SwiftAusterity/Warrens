@@ -28,7 +28,7 @@ namespace NetMud.Commands.Rendering
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             List<string> sb = new List<string>();
             IMobile chr = (IMobile)Actor;
@@ -50,6 +50,8 @@ namespace NetMud.Commands.Rendering
             };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentRoom, null);
+
+            return true;
         }
 
         /// <summary>
