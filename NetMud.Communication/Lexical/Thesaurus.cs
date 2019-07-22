@@ -94,9 +94,9 @@ namespace NetMud.Communication.Lexical
                 word.Language = globalConfig.BaseLanguage;
             }
 
-            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.GetLexeme().SuitableForUse 
+            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<ILexeme>().Where(dict => dict.SuitableForUse 
                                                                                 && dict.Language == word.Language 
-                                                                                && dict.WordType == word.WordType);
+                                                                                && dict.GetForm(word.WordType) != null).Select(lex => lex.GetForm(word.WordType));
 
             return GetObscuredWord(word, possibleWords, obscureStrength);
         }
@@ -110,7 +110,8 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.Language == context.Language && dict.WordType == type && dict.GetLexeme().SuitableForUse);
+            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<ILexeme>()
+                .Where(dict => dict.Language == context.Language && dict.GetForm(type) != null && dict.SuitableForUse).Select(lex => lex.GetForm(type));
 
             return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
         }
