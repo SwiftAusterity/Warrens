@@ -14,9 +14,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
-using WordNet.Net;
-using WordNet.Net.Searching;
-using WordNet.Net.WordNet;
 
 namespace NetMud.Data.Linguistic
 {
