@@ -596,8 +596,13 @@ namespace NetMud.Data.Linguistic
 
             if (removalState)
             {
-                IEnumerable<IDictata> synonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
-                IEnumerable<IDictata> antonyms = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
+                IEnumerable<IDictata> synonyms = Synonyms.SelectMany(dict =>
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
+                                && lex.GetForm(dict.WordType).PhraseSynonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                IEnumerable<IDictata> antonyms = Antonyms.SelectMany(dict =>
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
+                                && lex.GetForm(dict.WordType).PhraseAntonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+
                 IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseSynonyms.Any(syn => syn.Equals(this)));
                 IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.PhraseAntonyms.Any(ant => ant.Equals(this)));
 
