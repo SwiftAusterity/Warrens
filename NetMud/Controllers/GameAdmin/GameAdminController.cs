@@ -9,6 +9,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Inanimate;
@@ -88,6 +89,7 @@ namespace NetMud.Controllers.GameAdmin
                 Languages = ConfigDataCache.GetAll<ILanguage>(),
                 Genders = TemplateCache.GetAll<IGender>(),
                 UIModules = ConfigDataCache.GetAll<IUIModule>(),
+                FightingArts = TemplateCache.GetAll<IFightingArt>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
                 LivePlayers = LiveCache.GetAll<IPlayer>().Count(),
