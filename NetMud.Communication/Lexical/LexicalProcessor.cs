@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using WordNet.Net;
 using WordNet.Net.Searching;
