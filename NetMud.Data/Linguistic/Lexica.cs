@@ -277,17 +277,17 @@ namespace NetMud.Data.Linguistic
 
             ILexica newLex = Mutate(sensoryType, strength);
 
-            foreach (IWordRule wordRule in newLex.Context.Language.WordRules.Where(rul => rul.Matches(newLex))
+            foreach (IWordRule wordRule in Context.Language.WordRules.Where(rul => rul.Matches(newLex))
                                                     .OrderByDescending(rul => rul.RuleSpecificity()))
             {
-                if (wordRule.NeedsArticle && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None)
+                if (wordRule.NeedsArticle && (!wordRule.WhenPositional || Context.Position != LexicalPosition.None)
                  && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None)
                                               || (mod.Type == LexicalType.Preposition && wordRule.WhenPositional && mod.Context.Position != LexicalPosition.None)))
                 {
-                    LexicalContext articleContext = newLex.Context.Clone();
+                    LexicalContext articleContext = Context.Clone();
 
                     //Make it determinant if the word is plural
-                    articleContext.Determinant = newLex.Context.Plural || articleContext.Determinant;
+                    articleContext.Determinant = Context.Plural || articleContext.Determinant;
 
                     IDictata article = null;
                     if (wordRule.SpecificAddition != null)
@@ -336,18 +336,18 @@ namespace NetMud.Data.Linguistic
             List<ILexica> currentModifiers = new List<ILexica>(newLex.Modifiers);
             foreach (ILexica modifier in currentModifiers)
             {
-                foreach (IWordPairRule wordRule in newLex.Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
+                foreach (IWordPairRule wordRule in Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
                                                                .OrderByDescending(rul => rul.RuleSpecificity()))
                 {
 
-                    if (wordRule.NeedsArticle && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None)
+                    if (wordRule.NeedsArticle && (!wordRule.WhenPositional || Context.Position != LexicalPosition.None)
                      && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None)
                                                   || (mod.Type == LexicalType.Preposition && wordRule.WhenPositional && mod.Context.Position != LexicalPosition.None)))
                     {
-                        LexicalContext articleContext = newLex.Context.Clone();
+                        LexicalContext articleContext = Context.Clone();
 
                         //Make it determinant if the word is plural
-                        articleContext.Determinant = newLex.Context.Plural || articleContext.Determinant;
+                        articleContext.Determinant = Context.Plural || articleContext.Determinant;
 
                         IDictata article = null;
                         if (wordRule.SpecificAddition != null)
@@ -394,12 +394,12 @@ namespace NetMud.Data.Linguistic
                 List<ILexica> phraseLexes = new List<ILexica>() { newLex };
                 phraseLexes.AddRange(newLex.Modifiers);
 
-                ParsePhrase(phraseLexes, newLex.Context.Language);
+                ParsePhrase(phraseLexes, Context.Language);
             }
 
             foreach (ILexica modifier in newLex.Modifiers)
             {
-                IWordPairRule rule = newLex.Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
+                IWordPairRule rule = Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
                                                  .FirstOrDefault(rul => rul.Matches(newLex, modifier));
 
                 if (rule != null)

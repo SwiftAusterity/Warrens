@@ -34,7 +34,7 @@ namespace NetMud.Commands.System
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IInanimateTemplate newObject = (IInanimateTemplate)Subject;
             IMobile initator = (IMobile)Actor;
@@ -72,6 +72,8 @@ namespace NetMud.Commands.System
             };
 
             messagingObject.ExecuteMessaging(Actor, entityObject, OriginLocation.CurrentZone, OriginLocation.CurrentZone, null);
+
+            return true;
         }
 
         /// <summary>

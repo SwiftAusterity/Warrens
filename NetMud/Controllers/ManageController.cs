@@ -2,12 +2,14 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NetMud.Authentication;
+using NetMud.Data.Combat;
 using NetMud.Data.Player;
 using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
 using NetMud.Models.Admin;
@@ -72,6 +74,8 @@ namespace NetMud.Controllers
                 AuthedUser = user,
                 DataObject = account,
                 GlobalIdentityHandle = account.GlobalIdentityHandle,
+                ComboCount = account.Config.Combos.Count(),
+                FightingArtCount = TemplateCache.GetAll<IFightingArt>().Count(art => art.CreatorHandle == user.GlobalIdentityHandle),
                 UIModuleCount = TemplateCache.GetAll<IUIModule>(true).Count(uimod => uimod.CreatorHandle.Equals(account.GlobalIdentityHandle)),
                 NotificationCount = ConfigDataCache.GetAll<IPlayerMessage>().Count(msg => msg.RecipientAccount == account),
                 UITutorialMode = account.Config.UITutorialMode,
@@ -558,6 +562,343 @@ namespace NetMud.Controllers
         }
         #endregion
 
+        #region Fighting Arts
+        public ActionResult FightingArts(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            var authedUser = UserManager.FindById(User.Identity.GetUserId());
+            ManageFightingArtViewModel vModel = new ManageFightingArtViewModel(TemplateCache.GetAll<IFightingArt>().Where(art => art.CreatorHandle == authedUser.GlobalIdentityHandle))
+            {
+                AuthedUser = authedUser,
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
+
+            return View("~/Views/Manage/FightingArts.cshtml", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route(@"Manage/FightingArtRemove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
+        public ActionResult FightingArtRemove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
+        {
+            string message;
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                IFightingArt obj = TemplateCache.Get<IFightingArt>(removeId);
+
+                if (obj == null)
+                {
+                    message = "That does not exist";
+                }
+                else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveRoom[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+                else
+                {
+                    message = "Error; Removal failed.";
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                IFightingArt obj = TemplateCache.Get<IFightingArt>(unapproveId);
+
+                if (obj == null)
+                {
+                    message = "That does not exist";
+                }
+                else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
+                {
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - UnapproveRoom[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Unapproval Successful.";
+                }
+                else
+                {
+                    message = "Error; Unapproval failed.";
+                }
+            }
+            else
+            {
+                message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult FightingArtAdd()
+        {
+            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = new FightingArt()
+            };
+
+            return View("~/Views/Manage/FightingArtAdd.cshtml", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FightingArtAdd(AddEditFightingArtViewModel vModel)
+        {
+            string message = string.Empty;
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IFightingArt newObj = vModel.DataObject;
+
+            if(newObj.CalculateCostRatio() > 0)
+            {
+                ViewData.Add("Message", "The Calculated Cost must be equal to or below zero.");
+                return View("~/Views/Manage/FightingArtAdd.cshtml", vModel);
+            }
+
+            if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
+            {
+                message = "Error; Creation failed.";
+            }
+            else
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddFightingArt[" + newObj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            }
+
+            return RedirectToAction("FightingArts", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult FightingArtEdit(int id)
+        {
+            string message = string.Empty;
+            IFightingArt obj = TemplateCache.Get<IFightingArt>(id);
+
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToRoute("ErrorOrClose", new { Message = message });
+            }
+
+            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = obj,
+            };
+
+            return View("~/Views/Manage/FightingArtEdit.cshtml", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FightingArtEdit(int id, AddEditFightingArtViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IFightingArt obj = TemplateCache.Get<IFightingArt>(id);
+            if (obj == null)
+            {
+                string message = "That does not exist";
+                return RedirectToRoute("Index", new { StatusMessage = message });
+            }
+
+            if (vModel.DataObject.CalculateCostRatio() > 0)
+            {
+                ViewData.Add("Message", "The Calculated Cost must be equal to or below zero.");
+                return View("~/Views/Manage/FightingArtEdit.cshtml", vModel);
+            }
+
+            obj.Name = vModel.DataObject.Name;
+            obj.ActorCriteria = vModel.DataObject.ActorCriteria;
+            obj.Aim = vModel.DataObject.Aim;
+            obj.Armor = vModel.DataObject.Armor;
+            obj.DistanceChange = vModel.DataObject.DistanceChange;
+            obj.DistanceRange = vModel.DataObject.DistanceRange;
+            obj.Health = vModel.DataObject.Health;
+            obj.HelpText = vModel.DataObject.HelpText;
+            obj.Impact = vModel.DataObject.Impact;
+            obj.PositionResult = vModel.DataObject.PositionResult;
+            obj.Recovery = vModel.DataObject.Recovery;
+            obj.RekkaKey = vModel.DataObject.RekkaKey;
+            obj.RekkaPosition = vModel.DataObject.RekkaPosition;
+            obj.Setup = vModel.DataObject.Setup;
+            obj.Stamina = vModel.DataObject.Stamina;
+            obj.VictimCriteria = vModel.DataObject.VictimCriteria;
+            obj.ResultQuality = vModel.DataObject.ResultQuality;
+            obj.AdditiveQuality = vModel.DataObject.AdditiveQuality;
+            obj.QualityValue = vModel.DataObject.QualityValue;
+            obj.Readiness = vModel.DataObject.Readiness;
+            obj.ActionVerb = vModel.DataObject.ActionVerb;
+            obj.ActionPredicate = vModel.DataObject.ActionPredicate;
+
+
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditFightingArt[" + obj.Id.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            }
+            else
+            {
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        #endregion
+
+        #region Combos
+        public ActionResult Combos(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        {
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+
+            ManageCombosViewModel vModel = new ManageCombosViewModel(user.GameAccount.Config.Combos)
+            {
+                AuthedUser = user,
+                CurrentPageNumber = CurrentPageNumber,
+                ItemsPerPage = ItemsPerPage,
+                SearchTerms = SearchTerms
+            };
+
+            return View("Combos", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveCombo(string ID, string authorize)
+        {
+            string message;
+            if (string.IsNullOrWhiteSpace(authorize) || !ID.ToString().Equals(authorize))
+            {
+                message = "You must check the proper authorize radio button first.";
+            }
+            else
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                IFightingArtCombination obj = authedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(ID));
+
+                if (obj == null)
+                {
+                    message = "That does not exist";
+                }
+                else
+                {
+                    authedUser.GameAccount.Config.Combos = authedUser.GameAccount.Config.Combos.Where(combo => !combo.Name.Equals(ID));
+
+                    if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+                    {
+                        LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveUIModule[" + ID.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                        message = "Delete Successful.";
+                    }
+                    else
+                    {
+                        message = "Error; Removal failed.";
+                    }
+                }
+            }
+
+            return RedirectToAction("UIModules", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddCombos()
+        {
+            AddEditCombosViewModel vModel = new AddEditCombosViewModel
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = new FightingArtCombination()
+            };
+
+            return View("AddCombos", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddCombos(AddEditCombosViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            var combos = authedUser.GameAccount.Config.Combos.ToList();
+
+            if(combos.Any(combo => combo.Name.Equals(vModel.DataObject.Name)))
+            {
+                return RedirectToAction("Combos", new { Message = "Name already taken choose another." });
+            }
+
+            combos.Add(vModel.DataObject);
+
+            authedUser.GameAccount.Config.Combos = combos;
+
+            string message;
+            if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddCombos[" + vModel.DataObject.Name.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+            else
+            {
+                message = "Error; Creation failed.";
+            }
+
+            return RedirectToAction("Combos", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult EditCombos(string id)
+        {
+            AddEditCombosViewModel vModel = new AddEditCombosViewModel
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
+
+            IFightingArtCombination obj = vModel.AuthedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(id));
+
+            if (obj == null)
+            {
+                string message = "That does not exist";
+                return RedirectToAction("Combos", new { Message = message });
+            }
+
+            vModel.DataObject = obj;
+
+            return View("EditCombos", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditCombos(string id, AddEditCombosViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            IFightingArtCombination obj = authedUser.GameAccount.Config.Combos.FirstOrDefault(combo => combo.Name.Equals(id));
+            string message;
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("Combos", new { Message = message });
+            }
+
+            obj.Name = vModel.DataObject.Name;
+            obj.Arts = vModel.DataObject.Arts;
+            obj.FightingStances = vModel.DataObject.FightingStances;
+            obj.IsSystem = vModel.DataObject.IsSystem;
+            obj.SituationalUsage = vModel.DataObject.SituationalUsage;
+
+            if (authedUser.GameAccount.Config.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditCombos[" + obj.Name.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+            {
+                message = "Error; Edit failed.";
+            }
+
+            return RedirectToAction("Combos", new { Message = message });
+        }
+
+        #endregion
         #region UIModules
         public ActionResult UIModules(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {

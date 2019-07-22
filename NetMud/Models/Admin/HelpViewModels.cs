@@ -4,7 +4,7 @@ using NetMud.DataStructure.Administrative;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Web.Mvc;
 
 namespace NetMud.Models.Admin
 {
@@ -68,10 +68,11 @@ namespace NetMud.Models.Admin
 
         public AddEditHelpDataViewModel(string archivePath, IHelp item) : base(archivePath, item)
         {
-            DataObject = item;
+            DataObject = (Help)item;
         }
 
+        [AllowHtml]
         [UIHint("Help")]
-        public IHelp DataObject { get; set; }
+        public Help DataObject { get; set; }
     }
 }

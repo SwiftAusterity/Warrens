@@ -43,6 +43,18 @@
         <dl class="dl-horizontal dashboardItem">
             <dt>&nbsp;</dt>
             <dd>
+                My Fighting Arts: [@Html.ActionLink(Model.FightingArtCount.ToString(), "FightingArts", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
+            </dd>
+        </dl>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
+            <dd>
+                Fighting Combos: [@Html.ActionLink(Model.ComboCount.ToString(), "Combos", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
+            </dd>
+        </dl>
+        <dl class="dl-horizontal dashboardItem">
+            <dt>&nbsp;</dt>
+            <dd>
                 Music Playlists: [@Html.ActionLink(Model.AuthedUser.GameAccount.Config.Playlists.Count().ToString(), "Playlists", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Music Playlists" })]
             </dd>
         </dl>

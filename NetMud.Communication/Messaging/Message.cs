@@ -101,7 +101,7 @@ namespace NetMud.Communication.Messaging
         /// <param name="Target">The command's target entity</param>
         /// <param name="OriginLocation">The location the acting entity acted in</param>
         /// <param name="DestinationLocation">The location the command is targetting</param>
-        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation)
+        public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation, bool coallate = false)
         {
             Dictionary<MessagingTargetType, IEntity[]> entities = new Dictionary<MessagingTargetType, IEntity[]>
             {
@@ -116,11 +116,11 @@ namespace NetMud.Communication.Messaging
             {
                 if (ToActor.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                 {
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Override), entities));
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Override), entities), coallate);
                 }
                 else
                 {
-                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Describe()), entities));
+                    Actor.WriteTo(TranslateOutput(ToActor.Select(msg => msg.Describe()), entities), coallate);
                 }
             }
 
@@ -128,11 +128,11 @@ namespace NetMud.Communication.Messaging
             {
                 if (ToSubject.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                 {
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Override), entities));
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Override), entities), coallate);
                 }
                 else
                 {
-                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Describe()), entities));
+                    Subject.WriteTo(TranslateOutput(ToSubject.Select(msg => msg.Describe()), entities), coallate);
                 }
             }
 
@@ -141,11 +141,11 @@ namespace NetMud.Communication.Messaging
                 ILanguage language = Target.IsPlayer() ? ((IPlayer)Target).Template<IPlayerTemplate>().Account.Config.UILanguage : null;
                 if (ToTarget.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                 {
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Override), entities));
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Override), entities), coallate);
                 }
                 else
                 {
-                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Describe()), entities));
+                    Target.WriteTo(TranslateOutput(ToTarget.Select(msg => msg.Describe()), entities), coallate);
                 }
             }
 
@@ -160,11 +160,11 @@ namespace NetMud.Communication.Messaging
                 {
                     if (ToOrigin.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                     {
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Override), entities));
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Override), entities), coallate);
                     }
                     else
                     {
-                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Describe()), entities));
+                        dude.WriteTo(TranslateOutput(ToOrigin.Select(msg => msg.Describe()), entities), coallate);
                     }
                 }
             }
@@ -178,11 +178,11 @@ namespace NetMud.Communication.Messaging
                 {
                     if (ToDestination.Select(msg => msg.Override).Any(str => !string.IsNullOrEmpty(str)))
                     {
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Override), entities));
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Override), entities), coallate);
                     }
                     else
                     {
-                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Describe()), entities));
+                        dude.WriteTo(TranslateOutput(ToDestination.Select(msg => msg.Describe()), entities), coallate);
                     }
                 }
             }

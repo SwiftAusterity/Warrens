@@ -3,6 +3,7 @@ using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Inanimate;
@@ -33,7 +34,7 @@ namespace NetMud.Models.Admin
             Zones = Enumerable.Empty<IZoneTemplate>();
             Locales = Enumerable.Empty<ILocaleTemplate>();
             Worlds = Enumerable.Empty<IGaiaTemplate>();
-
+            FightingArts = Enumerable.Empty<IFightingArt>();
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<IHelp>();
             Materials = Enumerable.Empty<IMaterial>();
@@ -75,6 +76,7 @@ namespace NetMud.Models.Admin
         public IEnumerable<IRace> Races { get; set; }
         public IEnumerable<IFlora> Flora { get; set; }
         public IEnumerable<IFauna> Fauna { get; set; }
+        public IEnumerable<IFightingArt> FightingArts { get; set; }
         public IEnumerable<IMineral> Minerals { get; set; }
         public IEnumerable<IUIModule> UIModules { get; set; }
         public IEnumerable<ICelestial> Celestials { get; set; }

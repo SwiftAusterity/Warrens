@@ -12,6 +12,7 @@ using System.Text;
 
 namespace NetMud.Commands.System
 {
+    [CommandQueueSkip]
     [CommandKeyword("commands", false, false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
@@ -25,12 +26,12 @@ namespace NetMud.Commands.System
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             //NPCs dont need to use this
             if (!Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)))
             {
-                return;
+                return false;
             }
 
             List<string> returnStrings = new List<string>();
@@ -75,6 +76,8 @@ namespace NetMud.Commands.System
             Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+
+            return true;
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()

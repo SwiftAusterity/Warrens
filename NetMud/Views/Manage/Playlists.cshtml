@@ -18,7 +18,7 @@
 @using (Html.BeginForm("RemovePlaylist", "Manage"))
 {
     @Html.AntiForgeryToken()
-    @Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.CurrentPageOfItems, IncludeUnapprove = false, IncludeDelete = true })
+    @Html.Partial("ConfigListTable", new NetMud.Models.ListTableViewModel() { Name = "", Columns = tableColumns, Values = Model.CurrentPageOfItems, IncludeUnapprove = false, IncludeDelete = true, IncludeAddLink = false })
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

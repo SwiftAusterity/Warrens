@@ -31,7 +31,7 @@ namespace NetMud.Commands.Administrative
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IEntity moveToPerson = (IEntity)Subject;
 
@@ -66,6 +66,8 @@ namespace NetMud.Commands.Administrative
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 
             Actor.TryTeleport(moveTo);
+
+            return true;
         }
 
         /// <summary>

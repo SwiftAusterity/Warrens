@@ -31,14 +31,14 @@ namespace NetMud.Commands.EntityManipulation
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             List<string> sb = new List<string>();
 
             if (!(Actor is IContains actorContainer))
             {
                 RenderError("You can't craft if you don't have an inventory.");
-                return;
+                return false;
             }
 
             //We're after a list, not the actual command here
@@ -75,7 +75,7 @@ namespace NetMud.Commands.EntityManipulation
 
                 messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
-                return;
+                return true;
             }
 
             IInanimateTemplate itemToMake = (IInanimateTemplate)Target;
@@ -104,7 +104,7 @@ namespace NetMud.Commands.EntityManipulation
                 Actor.Save();
             }
 
-            return;
+            return true;
         }
 
         /// <summary>

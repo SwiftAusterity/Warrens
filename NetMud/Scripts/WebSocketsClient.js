@@ -18,6 +18,24 @@ function submitCommand(overrideCommand) {
         wipe = true;
     }
 
+    if (commandText.startsWith('/')) {
+        var argsIndex = commandText.indexOf(' ');
+
+        if (argsIndex <= 0) {
+            argsIndex = commandText.length;
+        }
+
+        var clientCommand = commandText.substr(1, argsIndex - 1);
+
+        if (window.clientCommands[clientCommand] !== undefined) {
+            window.clientCommands[clientCommand](commandText.substr(argsIndex + 1));
+        } else {
+            AppendTextToOutput('Unknown client command. Use /commands to see all valid client commands.');
+        }
+
+        return;
+    }
+
     window.connection.send(commandText);
 
     if (wipe) {
@@ -114,7 +132,7 @@ function TestBrowser() {
     var cscVal = $('#currentCharacter').val();
 
     if (cscVal === undefined || cscVal === null || cscVal === '-1' || cscVal === '') {
-        AppendTextToOutput('Please create a character first and select it above.');
+        AppendTextToOutput('Please create a character first and select it above (in the top nav).');
 
         return;
     }

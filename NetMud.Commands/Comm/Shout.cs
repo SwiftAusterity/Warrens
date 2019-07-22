@@ -25,7 +25,7 @@ namespace NetMud.Commands.Comm
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             ILexicalParagraph toActor = new LexicalParagraph(string.Format("You shout '{0}'", Subject));
 
@@ -38,6 +38,8 @@ namespace NetMud.Commands.Comm
             };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
+
+            return true;
         }
 
         /// <summary>

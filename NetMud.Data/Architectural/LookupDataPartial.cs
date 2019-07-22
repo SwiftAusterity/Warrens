@@ -5,6 +5,7 @@ using NetMud.DataStructure.Architectural.PropertyValidation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace NetMud.Data.Architectural
 {
@@ -16,6 +17,7 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// Extra text for the help command to display
         /// </summary>
+        [AllowHtml]
         [StringDataIntegrity("Help text empty.", warning: true)]
         [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [DataType("Markdown")]

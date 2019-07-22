@@ -37,7 +37,7 @@
       <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -59,6 +59,7 @@
     <Compile Include="Architectural\ActorBase\IActor.cs" />
     <Compile Include="Architectural\ActorBase\ICanBeHarmed.cs" />
     <Compile Include="Architectural\ActorBase\ICanBeWounded.cs" />
+    <Compile Include="Architectural\ActorBase\ICanFight.cs" />
     <Compile Include="Architectural\ActorBase\ICanBreathe.cs" />
     <Compile Include="Architectural\ActorBase\ICanConsume.cs" />
     <Compile Include="Architectural\ActorBase\ICanHear.cs" />
@@ -154,17 +155,24 @@
     <Compile Include="Architectural\PropertyValidation\ShortValueRangeValidator.cs" />
     <Compile Include="Architectural\PropertyValidation\UnicodeStringValidator.cs" />
     <Compile Include="Architectural\QualityValue.cs" />
+    <Compile Include="Architectural\ValuePair.cs" />
     <Compile Include="Architectural\ValueRange.cs" />
+    <Compile Include="Combat\AnatomyAim.cs" />
+    <Compile Include="Combat\FightingArtComboUsage.cs" />
+    <Compile Include="Combat\IFightingArtCriteria.cs" />
+    <Compile Include="Combat\IFightingArt.cs" />
     <Compile Include="Gaia\CelestialOrientation.cs" />
     <Compile Include="Gaia\ICelestial.cs" />
     <Compile Include="Gaia\ICelestialPosition.cs" />
     <Compile Include="Gaia\IChronology.cs" />
     <Compile Include="Gaia\IEconomicBasis.cs" />
+    <Compile Include="Combat\IFightingArtCombination.cs" />
     <Compile Include="Gaia\IEconomicTrend.cs" />
     <Compile Include="Gaia\IEconomy.cs" />
     <Compile Include="Gaia\IGaia.cs" />
     <Compile Include="Gaia\IGaiaFramework.cs" />
     <Compile Include="Gaia\IGaiaTemplate.cs" />
+    <Compile Include="Combat\ReadinessState.cs" />
     <Compile Include="Gaia\IPressureSystem.cs" />
     <Compile Include="Gaia\ITimeOfDay.cs" />
     <Compile Include="Gaia\MeterologicalFront.cs" />

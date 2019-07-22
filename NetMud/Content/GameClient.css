@@ -119,6 +119,10 @@
         max-height: 755px;
         flex: 1 1 15%;
     }
+        .parserClient .sidebar h5 {
+            color: cornsilk;
+            font-weight: 700;
+        }
 
     .parserClient .parserClientLeft {
         float: left;
@@ -138,6 +142,30 @@
         .parserClient .sidebar .quadrant:first-child {
             border-bottom: 4px cornflowerblue groove;
         }
+
+div.quadrant {
+}
+
+    div.quadrant div {
+        display: flex;
+        background-color: lightsteelblue;
+        color: black;
+    }
+
+    div.quadrant div:nth-of-type(odd) {
+        background-color: lightblue;
+    }
+
+        div.quadrant div span {
+            flex: auto;
+            text-align: right;
+            margin: 5px;
+        }
+
+        div.quadrant div span:first-child {
+            text-align: left;
+        }
+
 
 .text-output {
     position: absolute;
@@ -317,3 +345,18 @@ ul.animated-list {
 .contentContainer pre {
     color: white;
 }
+
+.volumePip {
+    color: inherit;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.contentContainer {
+    flex-wrap: wrap;
+}
+
+    .contentContainer .qualityRow {
+        flex: 1 0 auto;
+        width: 100%;
+    }

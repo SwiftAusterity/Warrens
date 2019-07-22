@@ -1,4 +1,6 @@
-﻿using NetMud.Communication.Messaging;
+﻿using NetMud.CentralControl;
+using NetMud.Combat;
+using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
@@ -9,6 +11,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
@@ -97,25 +100,8 @@ namespace NetMud.Data.Players
         /// </summary>
         public StaffRank GamePermissionsRank { get; set; }
 
-        /// <summary>
-        /// Max stamina
-        /// </summary>
-        public int TotalStamina { get; set; }
+        public MobilityState StancePosition { get; set; }
 
-        /// <summary>
-        /// Max Health
-        /// </summary>
-        public int TotalHealth { get; set; }
-
-        /// <summary>
-        /// Current stamina for this
-        /// </summary>
-        public int CurrentStamina { get; set; }
-
-        /// <summary>
-        /// Current health for this
-        /// </summary>
-        public int CurrentHealth { get; set; }
         #endregion
 
         [ScriptIgnore]
@@ -172,6 +158,11 @@ namespace NetMud.Data.Players
         public HashSet<MessagingType> SuperSenses { get; set; }
 
         /// <summary>
+        /// fArt Combos
+        /// </summary>
+        public HashSet<IFightingArtCombination> Combos { get; set; }
+
+        /// <summary>
         /// NPC's race data
         /// </summary>
         [Display(Name = "Race", Description = "Your genetic basis. Many races must be unlocked through specific means.")]
@@ -184,6 +175,9 @@ namespace NetMud.Data.Players
         {
             Inventory = new EntityContainer<IInanimate>();
             Qualities = new HashSet<IQuality>();
+            Combos = new HashSet<IFightingArtCombination>();
+            EnemyGroup = new HashSet<Tuple<IMobile, int>>();
+            AllianceGroup = new HashSet<IMobile>();
             MobilesInside = new EntityContainer<IMobile>();
             Inventory = new EntityContainer<IInanimate>();
         }
@@ -199,9 +193,13 @@ namespace NetMud.Data.Players
             Inventory = new EntityContainer<IInanimate>();
             TemplateId = character.Id;
             AccountHandle = character.AccountHandle;
+            Combos = new HashSet<IFightingArtCombination>();
+            EnemyGroup = new HashSet<Tuple<IMobile, int>>();
+            AllianceGroup = new HashSet<IMobile>();
             GetFromWorldOrSpawn();
         }
 
+        #region Connectivity Details
         /// <summary>
         /// Function used to close this connection
         /// </summary>
@@ -210,11 +208,203 @@ namespace NetMud.Data.Players
             Descriptor.Disconnect(string.Empty);
         }
 
-        public override bool WriteTo(IEnumerable<string> input)
+        public override bool WriteTo(IEnumerable<string> output, bool delayed = false)
         {
-            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(input.ToArray(), this);
+            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(output.ToArray(), this);
 
-            return Descriptor.SendOutput(strings);
+            if (delayed)
+            {
+                var working = OutputBuffer.Any();
+
+                //enforce the output buffer
+                OutputBuffer.Add(strings);
+
+                if (!working)
+                {
+                    Processor.StartSingeltonLoop(string.Format("PlayerOutputWriter_{0}", TemplateName), 1, 0, 2, () => SendOutput());
+                }
+            }
+            else
+            {
+                return Descriptor.SendOutput(strings);
+            }
+
+            return true;
+        }
+
+        private bool SendOutput()
+        {
+            var sent = Descriptor.SendOutput(string.Join(" ", OutputBuffer.Select(cluster => string.Join(" ", cluster))));
+
+            OutputBuffer.Clear();
+
+            return sent;
+        }
+        #endregion
+		
+        #region health and combat
+        /// <summary>
+        /// Max stamina
+        /// </summary>
+        public int TotalStamina { get; set; }
+
+        /// <summary>
+        /// Max Health
+        /// </summary>
+        public int TotalHealth { get; set; }
+
+        /// <summary>
+        /// Current stamina for this
+        /// </summary>
+        public int CurrentStamina { get; set; }
+
+        /// <summary>
+        /// Current health for this
+        /// </summary>
+        public int CurrentHealth { get; set; }
+
+        /// <summary>
+        /// How much stagger this currently has
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Stagger { get; set; }
+
+        /// <summary>
+        /// How much stagger resistance this currently has
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Sturdy { get; set; }
+
+        /// <summary>
+        /// How off balance this is. Positive is forward leaning, negative is backward leaning, 0 is in balance
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Balance { get; set; }
+
+        /// <summary>
+        /// What stance this is currently in (for fighting art combo choosing)
+        /// </summary>
+        public string Stance { get; set; }
+
+        /// <summary>
+        /// Is the current attack executing
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public bool Executing { get; set; }
+
+        /// <summary>
+        /// Last attack executed
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IFightingArt LastAttack { get; set; }
+
+        /// <summary>
+        /// Last combo used for attacking
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IFightingArtCombination LastCombo { get; set; }
+
+        /// <summary>
+        /// Who you're primarily attacking
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IMobile PrimaryTarget { get; set; }
+
+        /// <summary>
+        /// Who you're fighting in general
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<Tuple<IMobile, int>> EnemyGroup { get; set; }
+
+        /// <summary>
+        /// Who you're support/tank focus is
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IMobile PrimaryDefending { get; set; }
+
+        /// <summary>
+        /// Who is in your group
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<IMobile> AllianceGroup { get; set; }
+
+
+        /// <summary>
+        /// Stop all aggression
+        /// </summary>
+        public void StopFighting()
+        {
+            LastCombo = null;
+            LastAttack = null;
+            Executing = false;
+            PrimaryTarget = null;
+            EnemyGroup = new HashSet<Tuple<IMobile, int>>();
+        }
+
+        /// <summary>
+        /// Start a fight or switch targets forcibly
+        /// </summary>
+        /// <param name="victim"></param>
+        public void StartFighting(IMobile victim)
+        {
+            var wasFighting = IsFighting();
+
+            if (victim == null)
+            {
+                victim = this;
+            }
+
+            if (victim != GetTarget())
+            {
+                PrimaryTarget = victim;
+            }
+
+            if (!EnemyGroup.Any(enemy => enemy.Item1 == PrimaryTarget))
+            {
+                EnemyGroup.Add(new Tuple<IMobile, int>(PrimaryTarget, 0));
+            }
+
+            if (!wasFighting)
+            {
+                Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound(this, victim), 50, false);
+            }
+        }
+
+        /// <summary>
+        /// Get the target to attack
+        /// </summary>
+        /// <returns>A target or self if shadowboxing</returns>
+        public IMobile GetTarget()
+        {
+            var target = PrimaryTarget;
+
+            //TODO: AI for NPCs for other branches
+            if (PrimaryTarget == null || (PrimaryTarget.BirthMark.Equals(BirthMark) && EnemyGroup.Count() > 0))
+            {
+                PrimaryTarget = EnemyGroup.OrderByDescending(enemy => enemy.Item2).FirstOrDefault()?.Item1;
+                target = PrimaryTarget;
+            }
+
+            return target;
+        }
+
+        /// <summary>
+        /// Is this actor in combat
+        /// </summary>
+        /// <returns>yes or no</returns>
+        public bool IsFighting()
+        {
+            return GetTarget() != null;
         }
 
         public int Exhaust(int exhaustionAmount)
@@ -228,11 +418,11 @@ namespace NetMud.Data.Players
 
         public int Harm(int damage)
         {
-            int health = Recover(-1 * damage);
+            CurrentHealth = Math.Max(0, TotalHealth - damage);
 
             //TODO: Check for DEATH
 
-            return health;
+            return CurrentHealth;
         }
 
         public int Recover(int recovery)
@@ -248,6 +438,7 @@ namespace NetMud.Data.Players
 
             return CurrentStamina;
         }
+        #endregion
 
         /// <summary>
         /// Get the live version of this in the world
@@ -258,6 +449,38 @@ namespace NetMud.Data.Players
             return this;
         }
 
+        public override void KickoffProcesses()
+        {
+            //quality degredation and stam/health regen
+            Processor.StartSubscriptionLoop("Regeneration", Regen, 250, false);
+            Processor.StartSubscriptionLoop("QualityDecay", QualityTimer, 500, false);
+        }
+
+        public bool Regen()
+        {
+            if(!IsFighting())
+            {
+                Recover(TotalHealth / 100);
+            }
+
+            Sleep(1);
+
+            Descriptor.SendWrapper();
+            return true;
+        }
+
+        public bool QualityTimer()
+        {
+            foreach (var quality in Qualities.Where(qual => qual.Value > 0))
+            {
+                SetQuality(-1, quality.Name, true);
+            }
+
+            Descriptor.SendWrapper();
+
+            return true;
+        }
+		
         #region sensory range checks
         /// <summary>
         /// Gets the actual vision modifier taking into account blindness and other factors
@@ -629,6 +852,7 @@ namespace NetMud.Data.Players
                 SurName = me.SurName;
                 StillANoob = me.StillANoob;
                 GamePermissionsRank = me.GamePermissionsRank;
+                Combos = me.Combos;
 
                 if (CurrentHealth == 0)
                 {
@@ -691,9 +915,10 @@ namespace NetMud.Data.Players
             CurrentStamina = ch.TotalStamina;
             TotalHealth = ch.TotalHealth;
             TotalStamina = ch.TotalStamina;
-            SurName = ch.SurName;
+            SurName = ch.SurName ?? "";
             StillANoob = ch.StillANoob;
             GamePermissionsRank = ch.GamePermissionsRank;
+            Combos = new HashSet<IFightingArtCombination>(ch.Account.Config.Combos);
 
             IGlobalPosition spawnTo = position ?? GetBaseSpawn();
 
@@ -736,6 +961,9 @@ namespace NetMud.Data.Players
                     IPlayerTemplate dt = Template<IPlayerTemplate>();
                     dt.CurrentLocation = newPosition;
                     dt.SystemSave();
+	                dt.PersistToCache();
+	                Save();
+	                UpsertToLiveWorldCache(true);
                 }
             }
             else

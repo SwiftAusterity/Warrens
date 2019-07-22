@@ -1,4 +1,4 @@
-﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Lexical;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
@@ -18,7 +18,7 @@ namespace NetMud.Interp
     /// </summary>
     public class LexicalInterpretationEngine
     {
-        private IEnumerable<IDictata> _currentDictionary => ConfigDataCache.GetAll<IDictata>();
+        private IEnumerable<ILexeme> _currentDictionary => ConfigDataCache.GetAll<ILexeme>();
         private ILocation _currentPlace;
         private IEntity _actor;
 
@@ -417,7 +417,7 @@ namespace NetMud.Interp
             return brandedWords;
         }
 
-        private IDictata GetExistingMeaning(string word)
+        private IDictata GetExistingMeaning(string word, LexicalType wordType = LexicalType.Noun)
         {
             List<string> allContext = new List<string>();
 
@@ -439,7 +439,7 @@ namespace NetMud.Interp
                 //TODO: We need to discriminate based on lexical type as well, we could have multiple of the same word with different types
                 if (_currentDictionary.Any(dict => dict.Name.Equals(word, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    existingMeaning = _currentDictionary.FirstOrDefault(dict => dict.Name.Equals(word, StringComparison.InvariantCultureIgnoreCase));
+                    existingMeaning = _currentDictionary.FirstOrDefault(dict => dict.Name.Equals(word, StringComparison.InvariantCultureIgnoreCase))?.GetForm(wordType);
                 }
             }
 

@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,11 @@ namespace NetMud.DataStructure.Player
         /// Messages to this account
         /// </summary>
         IEnumerable<IPlayerMessage> Notifications { get; set; }
+
+        /// <summary>
+        /// Combos for a player
+        /// </summary>
+        IEnumerable<IFightingArtCombination> Combos { get; set; }
 
         /// <summary>
         /// Attempt to restore the config from file

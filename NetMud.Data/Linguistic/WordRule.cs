@@ -1,4 +1,4 @@
-﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
@@ -78,7 +78,7 @@ namespace NetMud.Data.Linguistic
         {
             get
             {
-                if (_specificAddition == null)
+                if (_specificAddition?.LexemeKey == null)
                 {
                     return null;
                 }
