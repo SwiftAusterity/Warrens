@@ -84,17 +84,16 @@
         var staminaCost = parseInt($('input[name="DataObject.Stamina.Actor"]').val()) * 5; // DataObject.Stamina.Actor
         var healthCost = parseInt($('input[name="DataObject.Health.Actor"]').val()) * 2.5; // DataObject.Health.Actor
 
-        // positives - (readiness * 10) (stagger x 5) (impact x 3) (health drain x 10) (stam drain x 5) (position result * 10) (quality value x2)+ (armor * 4)
+        // positives - (readiness * 10) (impact x 5) (health drain x 10) (stam drain x 5) (position result * 10) (quality value x2)+ (armor * 4)
         var armor = parseInt($('input[name="DataObject.Armor"]').val()) * 4;
         var readinessState = parseInt($('select[name="DataObject.Readiness"]').val()) * 10; // DataObject.Stagger
-        var stagger = parseInt($('input[name="DataObject.Stagger"]').val()) * 5; // DataObject.Stagger
-        var impact = parseInt($('input[name="DataObject.Impact"]').val()) * 3; // DataObject.Impact
+        var impact = parseInt($('input[name="DataObject.Impact"]').val()) * 5; // DataObject.Impact
         var healthDrain = parseInt($('input[name="DataObject.Health.Victim"]').val()) * 10; // DataObject.Health.Victim
         var staminaDrain = parseInt($('input[name="DataObject.Stamina.Victim"]').val()) * 5; // DataObject.Stamina.Victim
         var positionResult = parseInt($('select[name="DataObject.PositionResult.Victim"]').val()) * 10; // DataObject.PositionResult.Victim
         var qualityValue = parseInt($('input[name="DataObject.QualityValue"]').val()) * 2;
 
-        var powerBalance = readinessState + impact + stagger + positionResult + qualityValue + staminaDrain + healthDrain + armor
+        var powerBalance = readinessState + impact + positionResult + qualityValue + staminaDrain + healthDrain + armor
             - setup - recovery - rekka - staminaCost - healthCost;
 
         $('#powerBalance').html(powerBalance);
