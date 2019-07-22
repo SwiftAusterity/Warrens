@@ -3,7 +3,6 @@ using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Combat;
-using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
