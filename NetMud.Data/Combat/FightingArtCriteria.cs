@@ -1,7 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Combat;
-using NetMud.DataStructure.Player;
 using NetMud.Utility;
 using System.ComponentModel.DataAnnotations;
 
