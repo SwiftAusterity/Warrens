@@ -9,7 +9,6 @@ using NetMud.Gossip;
 using NetMud.Utility;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NetMud.Commands.GossipServer
 {
