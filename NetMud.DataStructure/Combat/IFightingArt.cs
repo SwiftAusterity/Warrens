@@ -1,6 +1,5 @@
-﻿using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
-using NetMud.DataStructure.Player;
 
 namespace NetMud.DataStructure.Combat
 {
