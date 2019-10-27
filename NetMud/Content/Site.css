@@ -170,17 +170,19 @@ button[type=submit].unapproveData {
     }
 
 .adminDashboard {
-    padding: 10px;
     display: flex;
     flex-wrap: wrap;
 }
 
     .adminDashboard div {
         flex: 1 1 auto;
-        margin: 15px;
+        margin: 10px;
         padding: 5px;
     }
 
+    .adminDashboard dl.dashboardItem {
+        max-width: 200px;
+    }
 
     .adminDashboard .dashboardItem dt {
         float: right;
@@ -189,7 +191,6 @@ button[type=submit].unapproveData {
     .adminDashboard .dashboardItem dd {
         margin-right: 10px;
         margin-left: 0;
-        float: left;
     }
 
 

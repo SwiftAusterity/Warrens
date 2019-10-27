@@ -107,6 +107,9 @@ namespace NetMud.Controllers.GameAdmin
                 BaseLanguage = globalConfig.BaseLanguage,
                 AzureTranslationKey = globalConfig.AzureTranslationKey,
                 TranslationActive = globalConfig.TranslationActive,
+                DeepLexActive = globalConfig.DeepLexActive,
+                MirriamDictionaryKey = globalConfig.MirriamDictionaryKey,
+                MirriamThesaurusKey = globalConfig.MirriamThesaurusKey,
 
                 QualityChange = new string[0],
                 QualityChangeValue = new int[0],

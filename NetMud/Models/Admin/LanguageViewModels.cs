@@ -96,4 +96,5 @@ namespace NetMud.Models.Admin
         public IEnumerable<IDictataPhrase> ValidPhrases { get; set; }
         public IEnumerable<ILexeme> ValidWords { get; set; }
         public Language DataObject { get; set; }
+    }
 }
