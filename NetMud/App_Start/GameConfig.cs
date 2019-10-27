@@ -67,6 +67,11 @@ namespace NetMud
                 globalConfig.SystemSave();
             }
 
+            if(globalConfig.DeepLexActive)
+            {
+                LexicalProcessor.LoadMirriamHarness(globalConfig.MirriamDictionaryKey, globalConfig.MirriamThesaurusKey);
+            }
+
             //Ensure we have base words for the language every time
             globalConfig.BaseLanguage.SystemSave();
 

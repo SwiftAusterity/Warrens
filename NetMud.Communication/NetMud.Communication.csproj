@@ -123,6 +123,10 @@
       <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
       <Name>NetMud.DataStructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Lexica\NetMud.Lexica.csproj">
+      <Project>{3E2B7290-5FFC-4493-9860-BC2D553B3EC6}</Project>
+      <Name>NetMud.Lexica</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9F3CAEC0-73DC-463C-8EF7-13B83BC8FB12}</Project>
       <Name>NetMud.Utility</Name>

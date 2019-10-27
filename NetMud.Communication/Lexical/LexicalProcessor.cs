@@ -3,6 +3,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
+using NetMud.Lexica.DeepLex;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
@@ -24,17 +25,30 @@ namespace NetMud.Communication.Lexical
     {
         private static readonly ObjectCache globalCache = MemoryCache.Default;
         private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
-        private static readonly string tokenCacheKey = "WordNetEngine";
+        private static readonly string wordNetTokenCacheKey = "WordNetEngine";
+        private static readonly string mirriamWebsterTokenCacheKey = "MirriamHarness";
 
         public static WordNetEngine WordNet
         {
             get
             {
-                return (WordNetEngine)globalCache[tokenCacheKey];
+                return (WordNetEngine)globalCache[wordNetTokenCacheKey];
             }
             set
             {
-                globalCache.AddOrGetExisting(tokenCacheKey, value, globalPolicy);
+                globalCache.AddOrGetExisting(wordNetTokenCacheKey, value, globalPolicy);
+            }
+        }
+
+        public static MirriamWebsterHarness MirriamWebsterAPI
+        {
+            get
+            {
+                return (MirriamWebsterHarness)globalCache[mirriamWebsterTokenCacheKey];
+            }
+            set
+            {
+                globalCache.AddOrGetExisting(mirriamWebsterTokenCacheKey, value, globalPolicy);
             }
         }
 
@@ -280,6 +294,11 @@ namespace NetMud.Communication.Lexical
             }
 
             WordNet = new WordNetEngine(wordNetPath);
+        }
+
+        public static void LoadMirriamHarness(string dictKey, string thesaurusKey)
+        {
+            MirriamWebsterAPI = new MirriamWebsterHarness(dictKey, thesaurusKey);
         }
 
         public static LexicalType MapLexicalTypes(PartsOfSpeech pos)

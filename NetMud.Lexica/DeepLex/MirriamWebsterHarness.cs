@@ -2,13 +2,9 @@
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -32,11 +28,16 @@ namespace NetMud.Lexica.DeepLex
             ThesaurusAttempts = 0;
             MaxAttempts = 1000;
             Serializer = SerializationUtility.GetSerializer();
-
         }
 
         public DictionaryEntry GetDictionaryEntry(string word)
         {
+            if(DictionaryAttempts >= MaxAttempts)
+            {
+                return null;
+            }
+
+            DictionaryAttempts++;
             var jsonString = GetResponse(DictionaryEndpoint, word, DictionaryKey);
 
             StringReader reader = new StringReader(jsonString);
@@ -46,6 +47,12 @@ namespace NetMud.Lexica.DeepLex
 
         public ThesaurusEntry GetThesaurusEntry(string word)
         {
+            if (ThesaurusAttempts >= MaxAttempts)
+            {
+                return null;
+            }
+
+            ThesaurusAttempts++;
             var jsonString = GetResponse(ThesaurusEndpoint, word, ThesaurusKey);
 
             StringReader reader = new StringReader(jsonString);
