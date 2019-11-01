@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace NetMud.Commands.Administrative
 {
     /// <summary>
-    /// Invokes the current container's RenderToLook
+    /// Invokes the current container's RenderToVisible
     /// </summary>
     [CommandKeyword("gotozone", false, false, true)]
     [CommandPermission(StaffRank.Guest)]
@@ -30,7 +30,7 @@ namespace NetMud.Commands.Administrative
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IZone moveTo = (IZone)Subject;
 
@@ -58,6 +58,8 @@ namespace NetMud.Commands.Administrative
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 
             Actor.TryTeleport((IGlobalPosition)moveTo.CurrentLocation.Clone());
+
+            return true;
         }
 
         /// <summary>

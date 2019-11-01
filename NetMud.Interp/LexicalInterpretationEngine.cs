@@ -1,4 +1,4 @@
-﻿using NetMud.Communication.Lexical;
+using NetMud.Communication.Lexical;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural.ActorBase;
@@ -18,7 +18,7 @@ namespace NetMud.Interp
     /// </summary>
     public class LexicalInterpretationEngine
     {
-        private IEnumerable<IDictata> _currentDictionary => ConfigDataCache.GetAll<IDictata>();
+        private IEnumerable<ILexeme> _currentDictionary => ConfigDataCache.GetAll<ILexeme>();
         private ILocation _currentPlace;
         private IEntity _actor;
 
@@ -34,36 +34,36 @@ namespace NetMud.Interp
             _currentPlace = actor.CurrentLocation.CurrentLocation();
             _actor = actor;
 
-            var spaceSplit = action.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] spaceSplit = action.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
             Dictionary<string, IDictata> brandedWords = BrandWords(spaceSplit);
 
             List<string> sentences = new List<string>();
 
-            if (brandedWords.Count(bWord => bWord.Value != null && bWord.Value.WordTypes.Contains(LexicalType.Verb)) > 1)
+            if (brandedWords.Count(bWord => bWord.Value != null && bWord.Value.WordType == LexicalType.Verb) > 1)
             {
                 //multiple verbs means multiple sentences
-                var punctuationSentences = IsolateSentences(action);
+                IEnumerable<string> punctuationSentences = IsolateSentences(action);
 
-                foreach (var sentence in punctuationSentences)
+                foreach (string sentence in punctuationSentences)
                 {
-                    var innerSplit = sentence.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] innerSplit = sentence.Split(new char[] { ' ', ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                     Dictionary<string, IDictata> innerBrands = BrandWords(innerSplit);
 
-                    if (!innerBrands.Any(inWord => inWord.Value != null && inWord.Value.WordTypes.Contains(LexicalType.Conjunction)))
+                    if (!innerBrands.Any(inWord => inWord.Value != null && inWord.Value.WordType == LexicalType.Conjunction))
                     {
                         sentences.Add(sentence);
                         continue;
                     }
 
-                    var found = false;
-                    foreach (var innerVerb in innerBrands.Select((value, i) => (value, i)))
+                    bool found = false;
+                    foreach ((KeyValuePair<string, IDictata> value, int i) innerVerb in innerBrands.Select((value, i) => (value, i)))
                     {
-                        var value = innerVerb.value;
-                        var index = innerVerb.i;
+                        KeyValuePair<string, IDictata> value = innerVerb.value;
+                        int index = innerVerb.i;
 
-                        if(value.Value != null && !value.Value.WordTypes.Contains(LexicalType.Verb))
+                        if(value.Value != null && value.Value.WordType != LexicalType.Verb)
                         {
                             continue;
                         }
@@ -71,16 +71,16 @@ namespace NetMud.Interp
                         found = true;
                         if (index > 0 && index < innerBrands.Count() - 1)
                         {
-                            var wordBefore = innerBrands.ElementAt(index - 1).Value;
+                            IDictata wordBefore = innerBrands.ElementAt(index - 1).Value;
 
-                            if(wordBefore.WordTypes.Contains(LexicalType.Conjunction))
+                            if(wordBefore.WordType == LexicalType.Conjunction)
                             {
-                                var splitIndex = innerBrands.Take(index - 1).Sum(brand => brand.Key.Length + 1);
+                                int splitIndex = innerBrands.Take(index - 1).Sum(brand => brand.Key.Length + 1);
 
-                                var bumpCount = sentence.Substring(0, splitIndex - 1).Count(ch => ch == ',' || ch == ':');
+                                int bumpCount = sentence.Substring(0, splitIndex - 1).Count(ch => ch == ',' || ch == ':');
 
-                                var sentenceOne = sentence.Substring(0, splitIndex - 1 + bumpCount);
-                                var sentenceTwo = sentence.Substring(splitIndex + wordBefore.Name.Length + bumpCount);
+                                string sentenceOne = sentence.Substring(0, splitIndex - 1 + bumpCount);
+                                string sentenceTwo = sentence.Substring(splitIndex + wordBefore.Name.Length + bumpCount);
 
                                 sentences.Add(sentenceOne);
                                 sentences.Add(sentenceTwo);
@@ -110,8 +110,8 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                var fullCommand = ParseAction(words, push, currentSubject);
-                currentSubject = fullCommand.LastOrDefault(word => word.WordTypes.Contains(LexicalType.Noun) || word.WordTypes.Contains(LexicalType.ProperNoun)); 
+                IEnumerable<IDictata> fullCommand = ParseAction(words, push, currentSubject);
+                currentSubject = fullCommand.LastOrDefault(word => word.WordType == LexicalType.Noun || word.WordType == LexicalType.ProperNoun); 
 
                 returnList.AddRange(fullCommand);
             }
@@ -138,26 +138,26 @@ namespace NetMud.Interp
             IDictata currentVerb = null;
 
             //Find unknown nouns potentially with conjunctions
-            foreach (var item in brandedWords.Where(ctx => ctx.Value == null).Select((value, i) => (value, i)).OrderByDescending(keypair => keypair.i))
+            foreach ((KeyValuePair<string, IDictata> value, int i) item in brandedWords.Where(ctx => ctx.Value == null).Select((value, i) => (value, i)).OrderByDescending(keypair => keypair.i))
             {
-                var value = item.value;
-                var index = item.i;
+                KeyValuePair<string, IDictata> value = item.value;
+                int index = item.i;
 
                 if (index < brandedWords.Count() - 1 && index > 0)
                 {
-                    var wordAfter = brandedWords.ElementAt(index + 1).Value;
-                    var wordBefore = brandedWords.ElementAt(index - 1).Value;
+                    IDictata wordAfter = brandedWords.ElementAt(index + 1).Value;
+                    IDictata wordBefore = brandedWords.ElementAt(index - 1).Value;
 
-                    if (wordBefore?.WordTypes != null && wordBefore.WordTypes.Contains(LexicalType.Adverb) && wordAfter != null && wordAfter.WordTypes.Contains(LexicalType.Verb))
+                    if (wordBefore != null && wordBefore.WordType == LexicalType.Adverb && wordAfter != null && wordAfter.WordType == LexicalType.Verb)
                     {
-                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordTypes = new HashSet<LexicalType>() { LexicalType.Adverb } };
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adverb };
                         continue;
                     }
 
-                    if (wordBefore?.WordTypes != null && (wordBefore.WordTypes.Contains(LexicalType.Adjective) || wordBefore.WordTypes.Contains(LexicalType.Article))
-                        && wordAfter?.WordTypes != null && (wordAfter.WordTypes.Contains(LexicalType.Noun) || wordAfter.WordTypes.Contains(LexicalType.ProperNoun)))
+                    if ((wordBefore != null && (wordBefore.WordType == LexicalType.Adjective) || wordBefore.WordType == LexicalType.Article)
+                        && (wordAfter != null && (wordAfter.WordType == LexicalType.Noun) || wordAfter.WordType == LexicalType.ProperNoun))
                     {
-                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordTypes = new HashSet<LexicalType>() { LexicalType.Adjective } };
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adjective };
                         continue;
                     }
 
@@ -166,67 +166,67 @@ namespace NetMud.Interp
 
                 if (index < brandedWords.Count() - 1)
                 {
-                    var wordAfter = brandedWords.ElementAt(index + 1).Value;
+                    IDictata wordAfter = brandedWords.ElementAt(index + 1).Value;
 
-                    if (wordAfter?.WordTypes != null && wordAfter.WordTypes.Contains(LexicalType.Noun))
+                    if (wordAfter != null && wordAfter.WordType == LexicalType.Noun)
                     {
-                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordTypes = new HashSet<LexicalType>() { LexicalType.Adjective } };
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adjective };
                         continue;
                     }
 
-                    if (wordAfter?.WordTypes != null && wordAfter.WordTypes.Contains(LexicalType.Verb))
+                    if (wordAfter != null && wordAfter.WordType == LexicalType.Verb)
                     {
-                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordTypes = new HashSet<LexicalType>() { LexicalType.Adverb } };
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Adverb };
                         continue;
                     }
                 }
 
                 if (index > 0)
                 {
-                    var wordBefore = brandedWords.ElementAt(index - 1).Value;
+                    IDictata wordBefore = brandedWords.ElementAt(index - 1).Value;
 
-                    if (wordBefore?.WordTypes != null && (wordBefore.WordTypes.Contains(LexicalType.Article) || wordBefore.WordTypes.Contains(LexicalType.Adjective)))
+                    if (wordBefore != null && (wordBefore.WordType == LexicalType.Article || wordBefore.WordType == LexicalType.Adjective))
                     {
-                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordTypes = new HashSet<LexicalType>() { LexicalType.Noun } };
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Noun };
                         continue;
                     }
 
-                    if (wordBefore?.WordTypes != null && wordBefore.WordTypes.Contains(LexicalType.Adverb))
+                    if (wordBefore != null && wordBefore.WordType == LexicalType.Adverb)
                     {
-                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordTypes = new HashSet<LexicalType>() { LexicalType.Verb } };
+                        brandedWords[value.Key] = new Dictata() { Name = value.Key, WordType = LexicalType.Verb };
                         continue;
                     }
                 }
             }
 
             //No verb?
-            if (!brandedWords.Any(ctx => ctx.Value != null && ctx.Value.WordTypes.Contains(LexicalType.Verb)))
+            if (!brandedWords.Any(ctx => ctx.Value != null && ctx.Value.WordType == LexicalType.Verb))
             {
                 string verbWord = brandedWords.First(ctx => ctx.Value == null).Key;
 
-                currentVerb = new Dictata() { Name = verbWord, WordTypes = new HashSet<LexicalType>() { LexicalType.Verb } };
+                currentVerb = new Dictata() { Name = verbWord, WordType = LexicalType.Verb  };
                 brandedWords[verbWord] = currentVerb;
             }
             else
             {
-                currentVerb = brandedWords.FirstOrDefault(ctx => ctx.Value != null && ctx.Value.WordTypes.Contains(LexicalType.Verb)).Value;
+                currentVerb = brandedWords.FirstOrDefault(ctx => ctx.Value != null && ctx.Value.WordType == LexicalType.Verb).Value;
             }
 
             //We might have nouns already
-            if (!brandedWords.Any(ctx => ctx.Value?.WordTypes == null || (ctx.Value?.WordTypes != null && (ctx.Value.WordTypes.Contains(LexicalType.Noun) 
-                                                                                                            || ctx.Value.WordTypes.Contains(LexicalType.ProperNoun)))))
+            if (!brandedWords.Any(ctx => ctx.Value == null || (ctx.Value != null && 
+                (ctx.Value.WordType == LexicalType.Noun || ctx.Value.WordType == LexicalType.ProperNoun))))
             {
-                var lastSubjectReplaced = false;
+                bool lastSubjectReplaced = false;
                 if (lastSubject != null)
                 {
-                    var keyList = new List<string>();
-                    foreach(var word in brandedWords.Where(ctx => ctx.Value != null && ctx.Value.WordTypes.Contains(LexicalType.Pronoun)))
+                    List<string> keyList = new List<string>();
+                    foreach(KeyValuePair<string, IDictata> word in brandedWords.Where(ctx => ctx.Value != null && ctx.Value.WordType == LexicalType.Pronoun))
                     {
                         keyList.Add(word.Key);
                         lastSubjectReplaced = true;
                     }
 
-                    foreach(var key in keyList)
+                    foreach(string key in keyList)
                     {
                         brandedWords[key] = (IDictata)lastSubject.Clone();
                     }
@@ -246,36 +246,36 @@ namespace NetMud.Interp
                         targetWord = brandedWords.LastOrDefault(ctx => ctx.Value == null).Key;
                     }
 
-                    brandedWords[targetWord] = new Dictata() { Name = targetWord, WordTypes = new HashSet<LexicalType>() { LexicalType.Noun } };
+                    brandedWords[targetWord] = new Dictata() { Name = targetWord, WordType = LexicalType.Noun };
                 }
             }
 
             List<IDictata> descriptors = new List<IDictata>();
-            foreach (var item in brandedWords.Where(ctx => ctx.Value == null).Select((value, i) => (value, i)))
+            foreach ((KeyValuePair<string, IDictata> value, int i) item in brandedWords.Where(ctx => ctx.Value == null).Select((value, i) => (value, i)))
             {
-                var value = item.value;
-                var index = item.i;
+                KeyValuePair<string, IDictata> value = item.value;
+                int index = item.i;
 
-                var wordType = LexicalType.Adjective;
+                LexicalType wordType = LexicalType.Adjective;
                 if (index == brandedWords.Count() - 1)
                 {
-                    var wordAfter = brandedWords.ElementAt(index + 1).Value;
+                    IDictata wordAfter = brandedWords.ElementAt(index + 1).Value;
 
-                    if (wordAfter?.WordTypes != null)
+                    if (wordAfter != null)
                     {
-                        if (wordAfter.WordTypes.Contains(LexicalType.Verb))
+                        if (wordAfter.WordType == LexicalType.Verb)
                         {
                             wordType = LexicalType.Adverb;
                         }
 
-                        if (wordAfter.WordTypes.Contains(LexicalType.Pronoun))
+                        if (wordAfter.WordType == LexicalType.Pronoun)
                         {
                             wordType = LexicalType.Article;
                         }
                     }
                 }
 
-                descriptors.Add(new Dictata() { Name = value.Key, WordTypes = new HashSet<LexicalType>() { wordType } });
+                descriptors.Add(new Dictata() { Name = value.Key, WordType = wordType });
             }
 
             //Add the nonadjectives and the adjectives
@@ -286,7 +286,7 @@ namespace NetMud.Interp
             {
                 foreach (IDictata item in returnList)
                 {
-                    LexicalProcessor.VerifyDictata(item);
+                    LexicalProcessor.VerifyLexeme(item.GetLexeme());
                 }
             }
 
@@ -309,7 +309,7 @@ namespace NetMud.Interp
              */
             List<IDictata> returnList = new List<IDictata>();
 
-            var currentPlace = _actor.CurrentLocation.CurrentLocation();
+            ILocation currentPlace = _actor.CurrentLocation.CurrentLocation();
 
             Dictionary<string, IDictata> brandedWords = BrandWords(words);
 
@@ -329,8 +329,8 @@ namespace NetMud.Interp
 
             List<IDictata> descriptors = new List<IDictata>();
             foreach (KeyValuePair<string, IDictata> adjective in brandedWords.Where(ctx => ctx.Value == null 
-                                                                                        || (ctx.Value != null && (ctx.Value.WordTypes.Contains(LexicalType.Adjective)
-                                                                                                                || ctx.Value.WordTypes.Contains(LexicalType.Adverb)))))
+                                                                                        || (ctx.Value != null && (ctx.Value.WordType == LexicalType.Adjective
+                                                                                                                || ctx.Value.WordType == LexicalType.Adverb))))
             {
                 if (adjective.Value != null)
                 {
@@ -338,7 +338,7 @@ namespace NetMud.Interp
                 }
                 else
                 {
-                    descriptors.Add(new Dictata() { Name = adjective.Key, WordTypes = new HashSet<LexicalType>() { LexicalType.Adjective } });
+                    descriptors.Add(new Dictata() { Name = adjective.Key, WordType = LexicalType.Adjective });
                 }
             }
 
@@ -349,7 +349,7 @@ namespace NetMud.Interp
 
         private Dictionary<string, IDictata> BrandWords(string [] words)
         {
-            var blankSlate = new List<Tuple<string, bool>>();
+            List<Tuple<string, bool>> blankSlate = new List<Tuple<string, bool>>();
 
             blankSlate.AddRange(words.Select(word => new Tuple<string, bool>(word, false)));
 
@@ -399,10 +399,10 @@ namespace NetMud.Interp
                             continue;
                         }
 
-                        var meaning = new Dictata()
+                        Dictata meaning = new Dictata()
                         {
                             Name = listWord,
-                            WordTypes = listMeaning.WordTypes
+                            WordType = listMeaning.WordType
                         };
 
                         brandedWords.Add(listWord, meaning);
@@ -417,7 +417,7 @@ namespace NetMud.Interp
             return brandedWords;
         }
 
-        private IDictata GetExistingMeaning(string word)
+        private IDictata GetExistingMeaning(string word, LexicalType wordType = LexicalType.Noun)
         {
             List<string> allContext = new List<string>();
 
@@ -432,14 +432,14 @@ namespace NetMud.Interp
             //It's a thing we can see
             if (allContext.Contains(word))
             {
-                existingMeaning = new Dictata() { Name = word, WordTypes = new HashSet<LexicalType>() { LexicalType.ProperNoun } };
+                existingMeaning = new Dictata() { Name = word, WordType = LexicalType.ProperNoun };
             }
             else
             {
                 //TODO: We need to discriminate based on lexical type as well, we could have multiple of the same word with different types
                 if (_currentDictionary.Any(dict => dict.Name.Equals(word, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    existingMeaning = _currentDictionary.FirstOrDefault(dict => dict.Name.Equals(word, StringComparison.InvariantCultureIgnoreCase));
+                    existingMeaning = _currentDictionary.FirstOrDefault(dict => dict.Name.Equals(word, StringComparison.InvariantCultureIgnoreCase))?.GetForm(wordType);
                 }
             }
 

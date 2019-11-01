@@ -30,6 +30,13 @@ namespace NetMud.DataStructure.System
         bool SendOutput(string str);
 
         /// <summary>
+        /// Wraps sending UI updates to the connected descriptor
+        /// </summary>
+        /// <returns>success status</returns>
+        bool SendWrapper();
+
+
+        /// <summary>
         /// Send a sound file to a player
         /// </summary>
         /// <param name="soundUri"></param>

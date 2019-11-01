@@ -27,7 +27,11 @@ namespace NetMud.Backup
             {
                 LoggingUtility.Log("World BackingData backup to current INITIATED.", LogChannels.Backup, true);
 
-                fileAccessor.ArchiveFull(ConfigDataType.Dictionary, backupName);
+                if (!string.IsNullOrWhiteSpace(backupName))
+                {
+                    fileAccessor.ArchiveFull(ConfigDataType.Dictionary, backupName);
+                }
+
                 fileAccessor.ArchiveFull(ConfigDataType.Language, backupName);
 
                 LoggingUtility.Log("Entire backing data set archived.", LogChannels.Backup, true);
@@ -53,7 +57,8 @@ namespace NetMud.Backup
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
             foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(Language) ? 5 :
-                                                            type == typeof(Dictata) ? 4 : 0))
+                                                                            type == typeof(Dictata) ? 4 : 
+                                                                            type == typeof(DictataPhrase) ? 3 : 0))
             {
                 LoadAllToCache(t);
             }
@@ -83,7 +88,7 @@ namespace NetMud.Backup
 
             DirectoryInfo filesDirectory = new DirectoryInfo(typeDirectory);
 
-            foreach (FileInfo file in filesDirectory.EnumerateFiles())
+            foreach (FileInfo file in filesDirectory.EnumerateFiles("*." + objectType.Name))
             {
                 try
                 {

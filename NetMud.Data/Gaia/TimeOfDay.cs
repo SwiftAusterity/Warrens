@@ -1,7 +1,9 @@
 ﻿using NetMud.DataStructure.Gaia;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gaia
 {
@@ -11,7 +13,9 @@ namespace NetMud.Data.Gaia
     [Serializable]
     public class TimeOfDay : ITimeOfDay
     {
-        IChronology BaseChronology { get; set; }
+        [JsonIgnore]
+        [ScriptIgnore]
+        public IChronology BaseChronology { get; set; }
 
         /// <summary>
         /// Current month

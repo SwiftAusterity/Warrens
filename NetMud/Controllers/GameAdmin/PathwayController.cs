@@ -53,9 +53,6 @@ namespace NetMud.Controllers.GameAdmin
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
-
-            string message = string.Empty;
-
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -64,16 +61,13 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                 {
-                    message = "That does not exist";
                 }
                 else if (obj.Remove(authedUser.GameAccount, authedUser.GetStaffRank(User)))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - RemovePathway[" + removeId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Delete Successful.";
                 }
                 else
                 {
-                    message = "Error; Removal failed.";
                 }
             }
             else if (!string.IsNullOrWhiteSpace(authorizeUnapprove) && unapproveId.ToString().Equals(authorizeUnapprove))
@@ -84,21 +78,17 @@ namespace NetMud.Controllers.GameAdmin
 
                 if (obj == null)
                 {
-                    message = "That does not exist";
                 }
                 else if (obj.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Returned))
                 {
                     LoggingUtility.LogAdminCommandUsage("*WEB* - UnapprovePathway[" + unapproveId.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                    message = "Unapproval Successful.";
                 }
                 else
                 {
-                    message = "Error; Unapproval failed.";
                 }
             }
             else
             {
-                message = "You must check the proper remove or unapprove authorization radio button first.";
             }
 
             return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
@@ -111,7 +101,7 @@ namespace NetMud.Controllers.GameAdmin
             //New room or existing room
             if (destinationRoomId.Equals(-1))
             {
-                var origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
+                IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
 
                 AddPathwayWithRoomTemplateViewModel vModel = new AddPathwayWithRoomTemplateViewModel
                 {
@@ -131,9 +121,9 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                var origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
-                var destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId);
-                var pathwayTemplate = TemplateCache.Get<IPathwayTemplate>(id);
+                IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
+                IRoomTemplate destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId);
+                IPathwayTemplate pathwayTemplate = TemplateCache.Get<IPathwayTemplate>(id);
 
                 if(pathwayTemplate == null)
                 {
@@ -160,9 +150,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var origin = TemplateCache.Get<IRoomTemplate>(vModel.Origin.Id);
-
-            string roomMessage = string.Empty;
+            IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(vModel.Origin.Id);
             IRoomTemplate newRoom = vModel.Destination;
             newRoom.ParentLocation = origin.ParentLocation;
 
@@ -265,7 +253,6 @@ namespace NetMud.Controllers.GameAdmin
             IPathwayTemplate obj = TemplateCache.Get<IPathwayTemplate>(id);
             if (obj == null)
             {
-                message = "That does not exist";
                 return View("~/Views/GameAdmin/Pathway/AddEdit.cshtml", vModel);
             }
 

@@ -89,7 +89,7 @@ namespace NetMud.DataAccess.FileSystem
 
                 DirectoryInfo currentRoot = new DirectoryInfo(BaseDirectory + CurrentDirectoryName);
 
-                var backupDir = DatedBackupDirectory;
+                string backupDir = DatedBackupDirectory;
                 if (!string.IsNullOrWhiteSpace(backupName))
                 {
                     backupDir = string.Format("{0}{1}{2}/", BaseDirectory, ArchiveDirectoryName, backupName);

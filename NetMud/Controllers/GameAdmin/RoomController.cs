@@ -78,8 +78,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Room/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -275,7 +274,6 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, AddEditRoomTemplateViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
             IPathwayTemplate zoneDestination = null;
             IPathwayTemplate localeRoomPathway = null;
@@ -283,7 +281,7 @@ namespace NetMud.Controllers.GameAdmin
             IRoomTemplate obj = TemplateCache.Get<IRoomTemplate>(id);
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
@@ -364,7 +362,6 @@ namespace NetMud.Controllers.GameAdmin
             }
             else
             {
-                message = "Error; Edit failed.";
             }
 
             return RedirectToRoute("ModalErrorOrClose");

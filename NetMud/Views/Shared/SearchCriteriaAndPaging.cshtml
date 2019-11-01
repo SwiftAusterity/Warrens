@@ -18,8 +18,7 @@
                 if (Model.NumberOfPages > 5
                 && i != 1
                 && i != Model.NumberOfPages
-                && i > (Model.NumberOfPages / 2 + 1)
-                && i < (Model.NumberOfPages / 2 - 1))
+                && i != Model.CurrentPageNumber)
                 {
                     continue;
                 }

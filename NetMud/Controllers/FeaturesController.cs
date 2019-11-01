@@ -13,6 +13,7 @@ using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Locale;
 using NetMud.DataStructure.NaturalResource;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.NPC;
 using NetMud.DataStructure.System;
 using NetMud.DataStructure.Zone;
@@ -461,6 +462,27 @@ namespace NetMud.Controllers
                 AuthedUser = user,
                 SearchTerm = SearchTerm,
                 IncludeInGame = IncludeInGame
+            };
+
+            return View(vModel);
+        }
+
+        public ActionResult FightingArts(string SearchTerm = "")
+        {
+            List<IFightingArt> validEntries = TemplateCache.GetAll<IFightingArt>(true).ToList();
+            ApplicationUser user = null;
+            string searcher = SearchTerm.Trim().ToLower();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                user = UserManager.FindById(User.Identity.GetUserId());
+                StaffRank userRank = user.GetStaffRank(User);
+            }
+
+            FightingArtsViewModel vModel = new FightingArtsViewModel(validEntries.Where(help => help.Name.ToLower().Contains(searcher)))
+            {
+                AuthedUser = user,
+                SearchTerm = SearchTerm
             };
 
             return View(vModel);

@@ -1,4 +1,4 @@
-﻿using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.System;
 using System.Collections.Generic;

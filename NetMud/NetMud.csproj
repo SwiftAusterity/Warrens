@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -67,13 +68,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServerCompact, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.SqlServerCompact.6.2.0\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.SqlServerCompact.6.3.0\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -122,17 +123,20 @@
       <HintPath>..\packages\Microsoft.WebSockets.0.2.3.1\lib\net45\Microsoft.WebSockets.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.6.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -140,13 +144,23 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.6.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
@@ -234,6 +248,7 @@
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
     <Compile Include="Controllers\GameAdmin\CelestialsController.cs" />
+    <Compile Include="Controllers\GameAdmin\DictionaryPhraseController.cs" />
     <Compile Include="Controllers\GameAdmin\GaiaController.cs" />
     <Compile Include="Controllers\GameAdmin\JournalEntryController.cs" />
     <Compile Include="Controllers\GameAdmin\LanguageController.cs" />
@@ -243,6 +258,7 @@
     <Compile Include="Controllers\GameAdmin\LiveAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\MineralsController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
+    <Compile Include="Controllers\GameAdmin\FightingArtController.cs" />
     <Compile Include="Controllers\GameAdmin\FaunaController.cs" />
     <Compile Include="Controllers\GameAdmin\LocaleController.cs" />
     <Compile Include="Controllers\GameAdmin\GenderController.cs" />
@@ -267,6 +283,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AddEditConfigDataModel.cs" />
     <Compile Include="Models\AddEditTemplateModel.cs" />
+    <Compile Include="Models\Admin\DictionaryPhraseViewModels.cs" />
     <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
     <Compile Include="Models\Admin\LanguageViewModels.cs" />
     <Compile Include="Models\Admin\DictionaryViewModels.cs" />
@@ -274,9 +291,11 @@
     <Compile Include="Models\Admin\CelestialViewModels.cs" />
     <Compile Include="Models\Admin\GaiaViewModels.cs" />
     <Compile Include="Models\Admin\LiveDataModels.cs" />
+    <Compile Include="Models\Admin\FightingArtViewModels.cs" />
     <Compile Include="Models\Admin\GenderViewModels.cs" />
     <Compile Include="Models\Admin\UIModulesViewModels.cs" />
     <Compile Include="Models\Admin\LexicalViewModels.cs" />
+    <Compile Include="Models\Admin\CombosViewModels.cs" />
     <Compile Include="Models\Admin\FloraViewModels.cs" />
     <Compile Include="Models\Admin\MineralsViewModels.cs" />
     <Compile Include="Models\Admin\FaunaViewModels.cs" />
@@ -299,6 +318,7 @@
     <Compile Include="Models\BlogViewModel.cs" />
     <Compile Include="Models\Features\CelestialsViewModel.cs" />
     <Compile Include="Models\Features\DimensionalModelsViewData.cs" />
+    <Compile Include="Models\Features\FightingArtsViewModel.cs" />
     <Compile Include="Models\Features\FaunaViewModel.cs" />
     <Compile Include="Models\Features\FloraViewModel.cs" />
     <Compile Include="Models\Features\HelpViewModel.cs" />
@@ -380,12 +400,25 @@
     <Content Include="Content\jquery.gridster.min.css" />
     <Content Include="Content\popper.css" />
     <Content Include="Content\pretty-checkbox.min.css" />
+    <Content Include="Content\Sounds\BkgMusic\blueSurprise.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\champsElysees.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\CheeryPiano.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\dreams.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\essence.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\fancyCakes.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\hypnotic.mp3" />
+    <Content Include="Content\Sounds\BkgMusic\insideDreams.mp3" />
     <Content Include="Content\Sounds\floop.wav" />
     <Content Include="Content\spectrum.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
@@ -463,10 +496,6 @@
     <Content Include="Views\GameAdmin\Gaia\Edit.cshtml" />
     <Content Include="Views\GameAdmin\Gaia\Index.cshtml" />
     <Content Include="Views\Manage\EditCharacter.cshtml" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Views\Shared\ApplyTemplate.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Help.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\InanimateTemplate.cshtml" />
@@ -663,6 +692,34 @@
     <Content Include="Views\Shared\EditorTemplates\EconomicBasisCollection.cshtml" />
     <Content Include="Views\Shared\LiveAsciiMap.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Room.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValuePairInt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValuePairShort.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValueRangeULong.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ValuePairMobilityState.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtList.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Add.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\FightingArt\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCriteria.cshtml" />
+    <Content Include="Views\Manage\Combos.cshtml" />
+    <Content Include="Views\Manage\AddCombos.cshtml" />
+    <Content Include="Views\Manage\EditCombos.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCombination.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtsCollection.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtCollectionItem.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\FightingArt.cshtml" />
+    <Content Include="Views\Features\FightingArts.cshtml" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Views\Manage\FightingArtAdd.cshtml" />
+    <Content Include="Views\Manage\FightingArtEdit.cshtml" />
+    <Content Include="Views\Manage\FightingArts.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FightingArtRated.cshtml" />
+    <Content Include="Views\GameClient\Naked.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Room.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Inanimate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Locale.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DictataTransformationRules.cshtml" />
@@ -679,6 +736,27 @@
     <Content Include="Views\Shared\EditorTemplates\MineralResourceSpawn.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MineralResourceSpawnList.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WordTypeCollection.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRuleElements.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SentenceComplexityRule.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhrase.cshtml" />
+    <Content Include="Views\GameAdmin\DictionaryPhrase\Add.cshtml" />
+    <Content Include="Views\GameAdmin\DictionaryPhrase\Edit.cshtml" />
+    <Content Include="Views\GameAdmin\DictionaryPhrase\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionPhraseWordsList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionDictataPhraseListItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionPhraseSynonymList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CollectionPhraseAntonymList.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SentenceComplexityRules.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRuleElement.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRules.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DictataPhraseRule.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Lexeme.cshtml" />
+    <Content Include="Views\GameAdmin\Dictionary\DictataList.cshtml" />
+    <Content Include="Views\GameAdmin\Dictionary\AddDictata.cshtml" />
+    <Content Include="Views\GameAdmin\Dictionary\EditDictata.cshtml" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -697,14 +775,7 @@
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\HtmlUtilities.js" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\jquery.gridster.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -900,9 +971,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Sounds\BkgMusic\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -939,7 +1008,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

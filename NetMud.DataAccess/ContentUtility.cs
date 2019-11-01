@@ -51,7 +51,7 @@ namespace NetMud.DataAccess
 
             if (!mappedName.EndsWith("/"))
             {
-                mappedName = mappedName + "/";
+                mappedName += "/";
             }
 
             try

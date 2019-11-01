@@ -155,8 +155,8 @@ namespace NetMud.Data.Room
             {
                 if (Origin != null && Destination != null)
                 {
-                    var originIsZone = Origin.GetType().GetInterfaces().Contains(typeof(IZone)) ? true : false;
-                    var destinationIsZone = Destination.GetType().GetInterfaces().Contains(typeof(IZone)) ? true : false;
+                    bool originIsZone = Origin.GetType().GetInterfaces().Contains(typeof(IZone)) ? true : false;
+                    bool destinationIsZone = Destination.GetType().GetInterfaces().Contains(typeof(IZone)) ? true : false;
 
                     if (originIsZone && destinationIsZone)
                     {
@@ -310,9 +310,9 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override ILexicalParagraph RenderToLook(IEntity viewer)
+        public override ILexicalParagraph RenderToVisible(IEntity viewer)
         {
-            var strength = 30 + (GetVisibleDelta(viewer) * 30);
+            short strength = GetVisibleDelta(viewer);
 
             IPathwayTemplate bS = Template<IPathwayTemplate>();
             ISensoryEvent me = GetSelf(MessagingType.Visible, strength);
@@ -326,7 +326,7 @@ namespace NetMud.Data.Room
             }
             else
             {
-                var collectiveContext = new LexicalContext(viewer)
+                LexicalContext collectiveContext = new LexicalContext(viewer)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.SecondPerson,
@@ -335,7 +335,7 @@ namespace NetMud.Data.Room
                     Tense = LexicalTense.Present
                 };
 
-                var discreteContext = new LexicalContext(viewer)
+                LexicalContext discreteContext = new LexicalContext(viewer)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.ThirdPerson,
@@ -379,7 +379,7 @@ namespace NetMud.Data.Room
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -388,7 +388,7 @@ namespace NetMud.Data.Room
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -398,20 +398,20 @@ namespace NetMud.Data.Room
             };
 
             List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
-            foreach (var sense in sensoryTypes)
+            foreach (MessagingType sense in sensoryTypes)
             {
-                var me = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, sense);
+                SensoryEvent me = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, sense);
                 ILexica senseVerb = null;
                 IEnumerable<ISensoryEvent> senseDescs = Enumerable.Empty<ISensoryEvent>();
 
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        me.Strength = GetAudibleDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
 
-                        var audibleDescs = GetAudibleDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> audibleDescs = GetAudibleDescriptives(viewer);
 
                         if (audibleDescs.Count() == 0)
                         {
@@ -432,11 +432,11 @@ namespace NetMud.Data.Room
                         senseDescs = new List<ISensoryEvent>() { audibleNoun };
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        me.Strength = GetOlefactoryDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
 
-                        var smellDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> smellDescs = GetOlefactoryDescriptives(viewer);
 
                         if (smellDescs.Count() == 0)
                         {
@@ -457,11 +457,11 @@ namespace NetMud.Data.Room
                         senseDescs = new List<ISensoryEvent>() { smellNoun };
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        me.Strength = GetPsychicDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
 
-                        var psyDescs = GetPsychicDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> psyDescs = GetPsychicDescriptives(viewer);
 
                         if (psyDescs.Count() == 0)
                         {
@@ -485,11 +485,11 @@ namespace NetMud.Data.Room
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
 
-                        var seeDescs = GetVisibleDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> seeDescs = GetVisibleDescriptives(viewer);
 
                         if (seeDescs.Count() == 0)
                         {
@@ -513,9 +513,9 @@ namespace NetMud.Data.Room
 
                 if (senseVerb != null && senseDescs.Count() > 0)
                 {
-                    var senseEvents = senseDescs.Select(desc => desc.Event);
+                    IEnumerable<ILexica> senseEvents = senseDescs.Select(desc => desc.Event);
 
-                    foreach (var evt in senseEvents)
+                    foreach (ILexica evt in senseEvents)
                     {
                         evt.Context = discreteContext;
                         senseVerb.TryModify(evt);

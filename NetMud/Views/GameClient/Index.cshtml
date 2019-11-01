@@ -91,9 +91,43 @@
             <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="padding-right: 15px;"><span class="glyphicon glyphicon-volume-up" title="Sound & Music"></span></a>
             <ul class="dropdown-menu dropdown-menu-left" role="menu" aria-labelledby="dropdownMenu">
                 <li class="dropdown-header" style="color: mediumvioletred">Volume Control</li>
+                <li>
+                    <span class="moduleMenuItem">
+                        Music
+                        <span id="musicVolume" style="color: orange; float: right; cursor: pointer;">
+                            <a class="volumePip" data-type="music" data-level="1">=</a>
+                            <a class="volumePip" data-type="music" data-level="2">=</a>
+                            <a class="volumePip" data-type="music" data-level="3">=</a>
+                            <a class="volumePip" data-type="music" data-level="4">=</a>
+                            <a class="volumePip" data-type="music" data-level="5">=</a>
+                            <a class="volumePip" data-type="music" data-level="6">-</a>
+                            <a class="volumePip" data-type="music" data-level="7">-</a>
+                            <a class="volumePip" data-type="music" data-level="8">-</a>
+                            <a class="volumePip" data-type="music" data-level="9">-</a>
+                            <a class="volumePip" data-type="music" data-level="10">-</a>
+                        </span>
+                    </span>
+                </li>
+                <li>
+                    <span class="moduleMenuItem">
+                        Sound
+                        <span id="soundVolume" style="color: orange; float: right; cursor: pointer;">
+                            <a class="volumePip" data-type="sound" data-level="1">=</a>
+                            <a class="volumePip" data-type="sound" data-level="2">=</a>
+                            <a class="volumePip" data-type="sound" data-level="3">=</a>
+                            <a class="volumePip" data-type="sound" data-level="4">=</a>
+                            <a class="volumePip" data-type="sound" data-level="5">=</a>
+                            <a class="volumePip" data-type="sound" data-level="6">-</a>
+                            <a class="volumePip" data-type="sound" data-level="7">-</a>
+                            <a class="volumePip" data-type="sound" data-level="8">-</a>
+                            <a class="volumePip" data-type="sound" data-level="9">-</a>
+                            <a class="volumePip" data-type="sound" data-level="10">-</a>
+                        </span>
+                    </span>
+                </li>
                 <li><a href="#" id="muteSounds" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Sound</a></li>
                 <li><a href="#" id="muteMusic" class="moduleMenuItem"><span class="glyphicon glyphicon-volume-up" style="color: green;"></span>: Music</a></li>
-                <li><a href="#" id="loopTracks" class="moduleMenuItem"><span class="glyphicon glyphicon-repeat" style="color: red;"></span>: Loop Track</a></li>
+                <li><a href="#" id="loopTracks" class="moduleMenuItem"><span class="glyphicon glyphicon-repeat" style="color: red;"></span>: Loop</a></li>
                 @if (Model.MusicPlaylists?.Count() > 0)
                 {
                     <li class="dropdown-header" style="color: mediumvioletred">Your Playlists</li>
@@ -137,6 +171,7 @@
     <input type="text" id="input" name="input" class="parserInput" />
 </div>
 <audio id="backgroundMusic" name="backgroundMusic"></audio>
+<audio id="soundEffects" name="soundEffects"></audio>
 
 @section styles {
     @Styles.Render("~/Content/GameClient.css")
@@ -151,6 +186,8 @@
         window.connection;
         window.soundMuted = '@Model.AuthedUser.GameAccount.Config.SoundMuted' === 'True';
         window.musicMuted = '@Model.AuthedUser.GameAccount.Config.MusicMuted' === 'True';
+        window.soundVolume = 5
+        window.musicVolume = 5;
         window.tutorialMode = '@Model.AuthedUser.GameAccount.Config.UITutorialMode' === 'True';
         window.gossipMode = '@Model.AuthedUser.GameAccount.Config.GossipSubscriber' === 'True';
         window.loopTrack = false;
@@ -160,6 +197,7 @@
         window.tooltips = [];
         window.stopToggle = false;
         window.selectedInventoryItem = -1;
+        window.clientCommands = {};
 
         window.commandArray = ['look'];
         window.commandPointer = 0;
@@ -182,23 +220,126 @@
         LoadUIModules();
         submitCharacter();
 
-        if (window.soundMuted) {
-            $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-off');
-            $("#muteSounds").children().attr('style', 'color: red;');
-        }
-        else {
-            $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-up');
-            $("#muteSounds").children().attr('style', 'color: green;');
-        }
+        setVolume();
 
-        if (window.musicMuted) {
-            $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-off');
-            $("#muteMusic").children().attr('style', 'color: red;');
-        }
-        else {
-            $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-up');
-            $("#muteMusic").children().attr('style', 'color: green;');
-        }
+        bindClientCommand('commands', function () {
+            var commandsList = '';
+
+            for (var key in window.clientCommands) {
+                commandsList = commandsList + key + ' ';
+            }
+
+            AppendTextToOutput(commandsList);
+        });
+
+        bindClientCommand('reloadui', function () {
+            ReloadUI();
+        });
+
+        bindClientCommand('music', function (args) {
+            var arguments = args.split(' ');
+
+            if (arguments.length == 0 || arguments[0] === '') {
+                AppendTextToOutput("Syntax: /music [mute|loop]");
+                AppendTextToOutput("Syntax: /music [v|vol|volume] #");
+                return;
+            }
+
+            if (arguments[0] !== undefined) {
+                switch (arguments[0]) {
+                    case 'mute':
+                        window.musicMuted = !musicMuted;
+
+                        $.post('/api/ClientDataApi/ToggleMusicMute');
+
+                        setVolume();
+
+                        if (window.musicMuted) {
+                            AppendTextToOutput("Music mute ON.");
+                            $('#backgroundMusic')[0].pause();
+                        }
+                        else {
+                            AppendTextToOutput("Music mute OFF.");
+                            $('#backgroundMusic')[0].play();
+                        }
+                        break;
+                    case 'loop':
+                        changeLoopTrackMode($('#loopTracks')[0]);
+                        break;
+                    case 'v':
+                    case 'vol':
+                    case 'volume':
+                        if (arguments[1] !== undefined) {
+                            var volume = parseInt(arguments[1]);
+                            window.musicVolume = volume;
+                            setVolume();
+                            AppendTextToOutput("Music volume set to " + volume);
+                        } else {
+                            AppendTextToOutput("Syntax: /music [v|vol|volume] #");
+                        }
+                        break;
+                    default:
+                        AppendTextToOutput("Syntax: /music [mute|loop]");
+                        AppendTextToOutput("Syntax: /music [v|vol|volume] #");
+                        break;
+                }
+
+                return;
+            }
+
+            AppendTextToOutput("Syntax: /music [mute|loop]");
+            AppendTextToOutput("Syntax: /music [v|vol|volume] #");
+        });
+
+        bindClientCommand('sound', function (args) {
+            var arguments = args.split(' ');
+
+            if (arguments.length == 0) {
+                AppendTextToOutput("Syntax: /sound [mute]");
+                AppendTextToOutput("Syntax: /sound [v|vol|volume] #");
+                return;
+            }
+
+            if (arguments[0] !== undefined || arguments[0] === '') {
+                switch (arguments[0]) {
+                    case 'mute':
+                        window.soundMuted = !window.soundMuted;
+
+                        $.post('/api/ClientDataApi/ToggleSoundMute');
+
+                        setVolume();
+
+                        if (window.soundMuted) {
+                            AppendTextToOutput("Sound mute ON.");
+                        }
+                        else {
+                            AppendTextToOutput("Sound mute OFF.");
+                        }
+                        break;
+                    case 'v':
+                    case 'vol':
+                    case 'volume':
+                        if (arguments[1] !== undefined) {
+                            var volume = parseInt(arguments[1]);
+                            window.soundVolume = volume;
+                            setVolume();
+                            AppendTextToOutput("Sound volume set to " + volume);
+                        } else {
+                            AppendTextToOutput("Syntax: /sound [v|vol|volume] #");
+                        }
+                        break;
+                      default:
+                        AppendTextToOutput("Syntax: /music [mute|loop]");
+                        AppendTextToOutput("Syntax: /music [v|vol|volume] #");
+                        break;
+              }
+
+                return;
+            }
+
+            AppendTextToOutput("Syntax: /sound [mute]");
+            AppendTextToOutput("Syntax: /sound [v|vol|volume] #");
+        });
 
         if ($('.audioTrackSelector') !== undefined && $('.audioTrackSelector').length > 0) {
             changeTrack($('.audioTrackSelector')[0]);
@@ -433,14 +574,7 @@
 
             $.post('/api/ClientDataApi/ToggleSoundMute');
 
-            if (window.soundMuted) {
-                $(this).children().attr('class', 'glyphicon glyphicon-volume-off');
-                $(this).children().attr('style', 'color: red;');
-            }
-            else {
-                $(this).children().attr('class', 'glyphicon glyphicon-volume-up');
-                $(this).children().attr('style', 'color: green;');
-            }
+            setVolume();
 
             return false;
         });
@@ -450,21 +584,91 @@
 
             $.post('/api/ClientDataApi/ToggleMusicMute');
 
+            setVolume();
+
             if (window.musicMuted) {
                 $('#backgroundMusic')[0].pause();
-                $(this).children().attr('class', 'glyphicon glyphicon-volume-off');
-                $(this).children().attr('style', 'color: red;');
             }
             else {
                 $('#backgroundMusic')[0].play();
-                $(this).children().attr('class', 'glyphicon glyphicon-volume-up');
-                $(this).children().attr('style', 'color: green;');
             }
 
             return false;
         });
 
+        $("a.volumePip").click(function (e) {
+            var volumeNumber = parseInt($(this).attr("data-level"));
+            var type = $(this).attr("data-type");
+
+            if (type === 'sound') {
+                window.soundVolume = volumeNumber;
+            } else {
+                window.musicVolume = volumeNumber;
+            }
+
+            setVolume();
+            return false;
+        });
+
         TestBrowser();
     });
+
+    function setVolume() {
+        var $sound = $('#soundEffects');
+        var $music = $('#backgroundMusic');
+
+
+        if (window.soundMuted) {
+            $sound[0].volume = 0;
+            $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-off');
+            $("#muteSounds").children().attr('style', 'color: red;');
+        }
+        else {
+            $sound[0].volume = window.soundVolume / 10;
+            $("#muteSounds").children().attr('class', 'glyphicon glyphicon-volume-up');
+            $("#muteSounds").children().attr('style', 'color: green;');
+        }
+
+        var $soundPip = $("a.volumePip[data-level='" + window.soundVolume + "'][data-type='sound']");
+        var soundStyle = 'color: green; float: right; cursor: pointer;';
+
+        if (window.soundVolume < 4) {
+            soundStyle = 'color: red; float: right; cursor: pointer;';
+        } else if (window.soundVolume < 7) {
+            soundStyle = 'color: orange; float: right; cursor: pointer;';
+        }
+
+        $soundPip.parent().attr("style", soundStyle);
+
+        $soundPip.html('=');
+        $soundPip.prevAll().html('=');
+        $soundPip.nextAll().html('-');
+
+        if (window.musicMuted) {
+            $music[0].volume = 0;
+            $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-off');
+            $("#muteMusic").children().attr('style', 'color: red;');
+        }
+        else {
+            $music[0].volume = window.musicVolume / 10;
+            $("#muteMusic").children().attr('class', 'glyphicon glyphicon-volume-up');
+            $("#muteMusic").children().attr('style', 'color: green;');
+        }
+
+        var $musicPip = $("a.volumePip[data-level='" + window.musicVolume + "'][data-type='music']");
+        var musicStyle = 'color: green; float: right; cursor: pointer;';
+
+        if (window.musicVolume < 4) {
+            musicStyle = 'color: red; float: right; cursor: pointer;';
+        } else if (window.musicVolume < 7) {
+            musicStyle = 'color: orange; float: right; cursor: pointer;';
+        }
+
+        $musicPip.parent().attr("style", musicStyle);
+
+        $musicPip.html('=');
+        $musicPip.prevAll().html('=');
+        $musicPip.nextAll().html('-');
+    }
     </script>
 }

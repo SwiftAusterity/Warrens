@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.DataStructure", "NetMud.DataStructure\NetMud.DataStructure.csproj", "{88B7A648-FE23-4E88-9B60-AE17C8858AF4}"
 EndProject
@@ -36,6 +36,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Gossip", "NetMud.Gossip\NetMud.Gossip.csproj", "{D98549E9-9D8C-46A7-83B2-9A4D68504F31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Intelligence", "NetMud.Intelligence\NetMud.Intelligence.csproj", "{780050F3-603F-4396-94B2-5BFEF50A4265}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordNet.Net", "WordNet.Net\WordNet.Net.csproj", "{F12805B0-D74A-4E5B-A482-7C7CCB69D572}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Lexica", "NetMud.Lexica\NetMud.Lexica.csproj", "{3E2B7290-5FFC-4493-9860-BC2D553B3EC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Combat", "NetMud.Combat\NetMud.Combat.csproj", "{AD38F9BA-B856-472C-9292-0629A86CFCC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +117,18 @@ Global
 		{780050F3-603F-4396-94B2-5BFEF50A4265}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{780050F3-603F-4396-94B2-5BFEF50A4265}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{780050F3-603F-4396-94B2-5BFEF50A4265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F12805B0-D74A-4E5B-A482-7C7CCB69D572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F12805B0-D74A-4E5B-A482-7C7CCB69D572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F12805B0-D74A-4E5B-A482-7C7CCB69D572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F12805B0-D74A-4E5B-A482-7C7CCB69D572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E2B7290-5FFC-4493-9860-BC2D553B3EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E2B7290-5FFC-4493-9860-BC2D553B3EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E2B7290-5FFC-4493-9860-BC2D553B3EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E2B7290-5FFC-4493-9860-BC2D553B3EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD38F9BA-B856-472C-9292-0629A86CFCC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

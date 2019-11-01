@@ -1,4 +1,5 @@
 ﻿using NetMud.DataStructure.Linguistic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,14 @@ namespace NetMud.Communication.Messaging
             Sentences = new List<ILexicalSentence>();
         }
 
+        public LexicalParagraph(IEnumerable<string> overRide)
+        {
+            Override = string.Join(Environment.NewLine, overRide);
+            Events = new List<ISensoryEvent>();
+            Sentences = new List<ILexicalSentence>();
+        }
+
+
         public LexicalParagraph(ISensoryEvent newEvent)
         {
             Events = new List<ISensoryEvent>() { newEvent };
@@ -66,9 +75,9 @@ namespace NetMud.Communication.Messaging
         public void Unpack(LexicalContext overridingContext = null)
         {
             //Clean them out
-            var sentences = new List<ILexicalSentence>();
+            List<ILexicalSentence> sentences = new List<ILexicalSentence>();
 
-            foreach (var sensoryEvent in Events)
+            foreach (ISensoryEvent sensoryEvent in Events)
             {
                 sentences.AddRange(sensoryEvent.Unpack(overridingContext));
             }
@@ -87,14 +96,55 @@ namespace NetMud.Communication.Messaging
                 return Override;
             }
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
             if (Sentences.Count == 0 || overridingContext != null)
             {
                 Unpack(overridingContext);
             }
 
-            foreach (var sentence in Sentences)
+            List<int> removedSentences = new List<int>();
+            List<ILexicalSentence> finalSentences = new List<ILexicalSentence>();
+            for (int i = 0; i < Sentences.Count(); i++)
+            {
+                if (removedSentences.Contains(i))
+                {
+                    continue;
+                }
+
+                ILexicalSentence sentence = Sentences[i];
+                for (int n = i + 1; n < Sentences.Count(); n++)
+                {
+                    if (removedSentences.Contains(n))
+                    {
+                        continue;
+                    }
+
+                    ILexicalSentence secondSentence = Sentences[n];
+                    foreach (SentenceComplexityRule complexityRule in sentence.Language.ComplexityRules)
+                    {
+                        short match = complexityRule.MatchesRule(sentence, secondSentence, overridingContext.Elegance);
+
+                        if (match != 0)
+                        {
+                            finalSentences.Add(CombineSentences(sentence, secondSentence, complexityRule, match));
+                            removedSentences.Add(i);
+                            removedSentences.Add(n);
+
+                            //Short circut the outer for loop
+                            n = Sentences.Count();
+                            break;
+                        }
+                    }
+                }
+
+                if (!removedSentences.Contains(i))
+                {
+                    finalSentences.Add(sentence);
+                }
+            }
+
+            foreach (ILexicalSentence sentence in finalSentences)
             {
                 sb.Append(sentence.Describe() + " ");
             }
@@ -105,6 +155,66 @@ namespace NetMud.Communication.Messaging
             }
 
             return sb.ToString();
+        }
+
+        private ILexicalSentence CombineSentences(ILexicalSentence first, ILexicalSentence second, SentenceComplexityRule rule, int matchBasis)
+        {
+            /// -1 = subject/subject match
+            /// -2 = predicate/predicate match
+            /// 0 = no match
+            /// 1 = subject/predicate match
+            /// 2 = predicate/subject match</returns>
+            switch (matchBasis)
+            {
+                case 1:
+                    first.Predicate = second.Predicate;
+                    break;
+                case 2:
+                    first.Subject = second.Subject;
+                    break;
+                case -1:
+                    List<Tuple<ISensoryEvent, short>> newSubjects = new List<Tuple<ISensoryEvent, short>>();
+                    newSubjects.AddRange(first.Subject);
+                    newSubjects.AddRange(second.Subject.Where(sub => !newSubjects.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
+
+                    foreach (ILexica sub in newSubjects.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
+                    {
+                        sub.Context.Plural = true;
+                    }
+
+                    foreach (Tuple<ISensoryEvent, short> sub in newSubjects.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
+                    {
+                        sub.Item1.Event.Context.Plural = true;
+                    }
+
+                    first.Subject = newSubjects;
+                    break;
+                case -2:
+                    List<Tuple<ISensoryEvent, short>> newPredicates = new List<Tuple<ISensoryEvent, short>>();
+                    newPredicates.AddRange(first.Predicate);
+                    newPredicates.AddRange(second.Predicate.Where(sub => !newPredicates.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
+
+                    foreach (ILexica pred in newPredicates.SelectMany(subj => subj.Item1.Event.Modifiers).Where(pre => pre.Role == GrammaticalType.Descriptive))
+                    {
+                        pred.Context.Plural = true;
+                    }
+
+                    foreach (Tuple<ISensoryEvent, short> pred in newPredicates.Where(pre => pre.Item1.Event.Role == GrammaticalType.Verb || pre.Item1.Event.Role == GrammaticalType.ConjugatedVerb))
+                    {
+                        pred.Item1.Event.Context.Plural = true;
+                    }
+
+                    first.Predicate = newPredicates;
+                    break;
+            }
+
+            List<Tuple<ISensoryEvent, short>> newModifiers = new List<Tuple<ISensoryEvent, short>>();
+            newModifiers.AddRange(first.Modifiers);
+            newModifiers.AddRange(second.Modifiers);
+
+            first.Modifiers = newModifiers;
+
+            return first;
         }
     }
 }

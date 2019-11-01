@@ -1,0 +1,29 @@
+﻿@model NetMud.Models.Admin.AddEditDictionaryPhraseViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Add Word", new string[] { "Dashboard", "Dictionary Phrase" }, new string[] { "/GameAdmin", "/DictionaryPhrase" });
+}
+<div class="accordionWrapper">
+    <h5>Use Existing Template</h5>
+    @using (Html.BeginForm("Add", "DictionaryPhrase", FormMethod.Get, new { @class = "form-horizontal", role = "form", @name = "applyTemplateForm", @id = "applyTemplateForm" }))
+    {
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Template, "DictataPhraseList", "", new { validItems = Model.ValidTemplateBases })
+            <input type="submit" value="Apply" class="btn btn-default save" , style="margin-left: 25px;" />
+        </div>
+    }
+</div>
+
+<section id="newDictataPhraseForm">
+    @using (Html.BeginForm("Add", "DictionaryPhrase", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.EditorFor(m => m.DataObject, new { ValidWords = Model.ValidWords, ValidLanguages = Model.ValidLanguages, ValidPhrases = Model.ValidPhrases })
+
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Create", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "DictionaryPhrase", IncludeCancel = true })
+    }
+</section>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

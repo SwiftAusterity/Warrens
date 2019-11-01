@@ -10,6 +10,7 @@ using System.Linq;
 
 namespace NetMud.Commands.Comm
 {
+    [CommandQueueSkip]
     [CommandKeyword("who", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandRange(CommandRangeType.Touch, 0)]
@@ -23,7 +24,7 @@ namespace NetMud.Commands.Comm
             //Generic constructor for all IHelpfuls is needed
         }
 
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IEnumerable<IPlayer> whoList = LiveCache.GetAll<IPlayer>().Where(player => player.Descriptor != null);
 
@@ -32,6 +33,8 @@ namespace NetMud.Commands.Comm
             Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+
+            return true;
         }
 
         public override IEnumerable<string> RenderSyntaxHelp()

@@ -8,7 +8,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class ConfigDataCache
     {
-        private static CacheAccessor BackingCache = new CacheAccessor(CacheType.ConfigData);
+        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.ConfigData);
 
         /// <summary>
         /// Adds a single entity into the cache

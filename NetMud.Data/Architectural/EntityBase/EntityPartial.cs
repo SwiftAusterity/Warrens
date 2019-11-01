@@ -118,9 +118,22 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
-        public virtual bool WriteTo(IEnumerable<string> input)
+        public virtual bool WriteTo(IEnumerable<string> output, bool delayed = false)
         {
-            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(input.ToArray(), this);
+            //null output means send wrapper to players
+            if(output == null)
+            {
+                if(IsPlayer())
+                {
+                    var thisPlayer = (IPlayer)this;
+
+                    thisPlayer.Descriptor.SendWrapper();
+                }
+
+                return true;
+            }
+
+            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(output.ToArray(), this);
 
             return TriggerAIAction(strings);
         }
@@ -164,6 +177,66 @@ namespace NetMud.Data.Architectural.EntityBase
         [JsonIgnore]
         [ScriptIgnore]
         public StaffRank CreatorRank { get { return Template<ITemplate>().CreatorRank; } }
+        #endregion
+        #region Command Queue
+        /// <summary>
+        /// Buffer of output to send to clients via WriteTo
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IList<IEnumerable<string>> OutputBuffer { get; set; }
+
+        /// <summary>
+        /// Buffer of command string input sent from the client
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IList<string> InputBuffer { get; set; }
+
+        /// <summary>
+        /// What is currently being executed
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public string CurrentAction { get; set; }
+
+        /// <summary>
+        /// Stops whatever is being executed and clears the input buffer
+        /// </summary>
+        public void StopInput()
+        {
+            HaltInput();
+            FlushInput();
+        }
+
+        /// <summary>
+        /// Stops whatever is being executed, does not clear the input buffer
+        /// </summary>
+        public void HaltInput()
+        {
+            CurrentAction = string.Empty;
+        }
+
+        /// <summary>
+        /// Clears the input buffer
+        /// </summary>
+        public void FlushInput()
+        {
+            InputBuffer = new List<string>();
+        }
+
+        /// <summary>
+        /// Returns whats in the input buffer
+        /// </summary>
+        /// <returns>Any strings still in the input buffer</returns>
+        public IEnumerable<string> PeekInput()
+        {
+            var newList = new List<string>() { string.Format("Acting: {0}", CurrentAction) };
+
+            newList.AddRange(InputBuffer);
+
+            return newList;
+        }
         #endregion
 
         /// <summary>
@@ -228,6 +301,12 @@ namespace NetMud.Data.Architectural.EntityBase
             }
 
             return value;
+        }
+
+        public EntityPartial()
+        {
+            OutputBuffer = new List<IEnumerable<string>>();
+            InputBuffer = new List<string>();
         }
 
         #region Movement
@@ -309,6 +388,7 @@ namespace NetMud.Data.Architectural.EntityBase
         }
         #endregion
 
+        #region Data Management
         /// <summary>
         /// Save this to the filesystem in Current
         /// </summary>
@@ -354,7 +434,7 @@ namespace NetMud.Data.Architectural.EntityBase
 
             return true;
         }
-
+        #endregion
         /// <summary>
         /// For non-player entities - accepts output "shown" to it by the parser as a result of commands and events
         /// </summary>
@@ -405,32 +485,32 @@ namespace NetMud.Data.Architectural.EntityBase
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        self.Strength = GetAudibleDelta(viewer);
 
                         self.TryModify(GetAudibleDescriptives(viewer));
                         break;
                     case MessagingType.Olefactory:
-                        self.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        self.Strength = GetOlefactoryDelta(viewer);
 
-                        self.TryModify(GetSmellableDescriptives(viewer));
+                        self.TryModify(GetOlefactoryDescriptives(viewer));
                         break;
                     case MessagingType.Psychic:
-                        self.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        self.Strength = GetPsychicDelta(viewer);
 
                         self.TryModify(GetPsychicDescriptives(viewer));
                         break;
                     case MessagingType.Tactile:
-                        self.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        self.Strength = GetTactileDelta(viewer);
 
                         self.TryModify(GetTouchDescriptives(viewer));
                         break;
                     case MessagingType.Taste:
-                        self.Strength = 30 + (GetTasteDelta(viewer) * 30);
+                        self.Strength = GetTasteDelta(viewer);
 
                         self.TryModify(GetTasteDescriptives(viewer));
                         break;
                     case MessagingType.Visible:
-                        self.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        self.Strength = GetVisibleDelta(viewer);
 
                         self.TryModify(GetVisibleDescriptives(viewer));
                         break;
@@ -456,32 +536,32 @@ namespace NetMud.Data.Architectural.EntityBase
             switch (sense)
             {
                 case MessagingType.Audible:
-                    me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                    me.Strength = GetAudibleDelta(viewer);
 
                     me.TryModify(GetAudibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Olefactory:
-                    me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                    me.Strength = GetOlefactoryDelta(viewer);
 
-                    me.TryModify(GetSmellableDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
+                    me.TryModify(GetOlefactoryDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Psychic:
-                    me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                    me.Strength = GetPsychicDelta(viewer);
 
                     me.TryModify(GetPsychicDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Tactile:
-                    me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                    me.Strength = GetTactileDelta(viewer);
 
                     me.TryModify(GetTouchDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Taste:
-                    me.Strength = 30 + (GetTasteDelta(viewer) * 30);
+                    me.Strength = GetTasteDelta(viewer);
 
                     me.TryModify(GetTasteDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
                 case MessagingType.Visible:
-                    me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                    me.Strength = GetVisibleDelta(viewer);
 
                     me.TryModify(GetVisibleDescriptives(viewer).Where(desc => desc.Event.Role == GrammaticalType.Descriptive));
                     break;
@@ -497,12 +577,12 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the output strings</returns>
         public virtual string GetDescribableName(IEntity viewer)
         {
-            var strength = 30 + (GetVisibleDelta(viewer) * 30);
+            short strength = GetVisibleDelta(viewer);
 
             return GetSelf(MessagingType.Visible, strength).ToString();
         }
 
-        internal ISensoryEvent GetSelf(MessagingType type, int strength = 30)
+        internal ISensoryEvent GetSelf(MessagingType type, short strength = 30)
         {
             return new SensoryEvent()
             {
@@ -528,17 +608,26 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this visible to the viewer
         /// </summary>
         /// <param name="viewer">the viewing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        public virtual short GetVisibleDelta(IEntity viewer)
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        public virtual short GetVisibleDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
                 float value = GetCurrentLuminosity();
                 ValueRange<float> range = viewer.GetVisualRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
+
+                if(lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -549,7 +638,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ILexicalParagraph RenderToLook(IEntity viewer)
+        public virtual ILexicalParagraph RenderToVisible(IEntity viewer)
         {
             return GetFullDescription(viewer);
         }
@@ -584,10 +673,15 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             if (Descriptives == null)
             {
-                return Enumerable.Empty<ISensoryEvent>();
+                Descriptives = new HashSet<ISensoryEvent>();
             }
+            
+            foreach(ISensoryEvent desc in Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible))
+            {
+                short senseDelta = GetVisibleDelta(viewer, desc.Strength);
 
-            return Descriptives.Where(desc => desc.SensoryType == MessagingType.Visible);
+                yield return desc;
+            }
         }
         #endregion
 
@@ -606,17 +700,26 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        public virtual short GetAudibleDelta(IEntity viewer)
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        public virtual short GetAudibleDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30; //Something to do with material composition probably or vocal range?
                 ValueRange<float> range = viewer.GetAuditoryRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -630,7 +733,7 @@ namespace NetMud.Data.Architectural.EntityBase
         public virtual ILexicalParagraph RenderToAudible(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Audible);
-            self.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+            self.Strength = GetAudibleDelta(viewer);
             self.TryModify(GetAudibleDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -658,7 +761,6 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>the working Range</returns>
         public virtual ValueRange<float> GetPsychicRange()
         {
-            //Base is "infinite" for things like rocks and zones
             return new ValueRange<float>(-999999, 999999);
         }
 
@@ -666,18 +768,26 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        public virtual short GetPsychicDelta(IEntity viewer)
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        public virtual short GetPsychicDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-
-                int value = 0;
+                float value = 30; //Something to do with material composition or emotional state
                 ValueRange<float> range = viewer.GetPsychicRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -688,10 +798,10 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ILexicalParagraph RenderToSense(IEntity viewer)
+        public virtual ILexicalParagraph RenderToPsychic(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Psychic);
-            self.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+            self.Strength = GetPsychicDelta(viewer);
             self.TryModify(GetPsychicDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -727,17 +837,26 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        public virtual short GetTasteDelta(IEntity viewer)
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        public virtual short GetTasteDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30; //Something to do with material composition 
                 ValueRange<float> range = viewer.GetTasteRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -751,7 +870,7 @@ namespace NetMud.Data.Architectural.EntityBase
         public virtual ILexicalParagraph RenderToTaste(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Taste);
-            self.Strength = 30 + (GetTasteDelta(viewer) * 30);
+            self.Strength = GetTasteDelta(viewer);
 
             self.TryModify(GetTasteDescriptives(viewer));
 
@@ -788,17 +907,26 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        public virtual short GetSmellDelta(IEntity viewer)
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        public virtual short GetOlefactoryDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-                int value = 0;
+                float value = 30; //Something to do with material composition 
                 ValueRange<float> range = viewer.GetOlefactoryRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -809,11 +937,11 @@ namespace NetMud.Data.Architectural.EntityBase
         /// </summary>
         /// <param name="viewer">The entity looking</param>
         /// <returns>the output strings</returns>
-        public virtual ILexicalParagraph RenderToSmell(IEntity viewer)
+        public virtual ILexicalParagraph RenderToOlefactory(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Olefactory);
-            self.Strength = 30 + (GetSmellDelta(viewer) * 30);
-            self.TryModify(GetSmellableDescriptives(viewer));
+            self.Strength = GetOlefactoryDelta(viewer);
+            self.TryModify(GetOlefactoryDescriptives(viewer));
 
             return new LexicalParagraph(self);
         }
@@ -822,7 +950,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Retrieve all of the descriptors that are tagged
         /// </summary>
         /// <returns>A collection of the descriptors</returns>
-        public virtual IEnumerable<ISensoryEvent> GetSmellableDescriptives(IEntity viewer)
+        public virtual IEnumerable<ISensoryEvent> GetOlefactoryDescriptives(IEntity viewer)
         {
             if (Descriptives == null)
             {
@@ -848,18 +976,26 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Is this detectable to the viewer
         /// </summary>
         /// <param name="viewer">the observing entity</param>
-        /// <returns>0 = observable, negative = too low to detect, positive = too high to detect</returns>
-        public virtual short GetTactileDelta(IEntity viewer)
+        /// <returns>(-100) to 100 rating of how well this can be detected. 0 is full detection. negative is too "low", over 0 is too "intense"</returns>
+        public virtual short GetTactileDelta(IEntity viewer, short modifier = 0)
         {
             if (viewer != null)
             {
-
-                int value = 0;
+                float value = 30; //Something to do with material composition or emotional state
                 ValueRange<float> range = viewer.GetTactileRange();
 
-                return value < range.Low ? (short)(value - range.Low)
-                    : value > range.High ? (short)(value - range.High)
-                    : (short)0;
+                float lowDelta = value - (range.Low - modifier);
+                float highDelta = (range.High + modifier) - value;
+
+                if (lowDelta < 0)
+                {
+                    return (short)Math.Max(-100, lowDelta);
+                }
+
+                if (highDelta < 0)
+                {
+                    return (short)Math.Min(100, Math.Abs(highDelta));
+                }
             }
 
             return 0;
@@ -873,7 +1009,7 @@ namespace NetMud.Data.Architectural.EntityBase
         public virtual ILexicalParagraph RenderToTouch(IEntity viewer)
         {
             ISensoryEvent self = GetSelf(MessagingType.Tactile);
-            self.Strength = 30 + (GetTactileDelta(viewer) * 30);
+            self.Strength = GetTactileDelta(viewer);
             self.TryModify(GetTouchDescriptives(viewer));
 
             return new LexicalParagraph(self);
@@ -978,7 +1114,7 @@ namespace NetMud.Data.Architectural.EntityBase
         public abstract float GetCurrentLuminosity();
 
         #region Processes
-        internal virtual void KickoffProcesses()
+        public virtual void KickoffProcesses()
         {
         }
         #endregion

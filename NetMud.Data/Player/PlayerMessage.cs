@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
@@ -43,6 +44,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The body of the message
         /// </summary>
+        [AllowHtml]
         [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body", Description = "The body of the message.")]
         [DataType("Markdown")]

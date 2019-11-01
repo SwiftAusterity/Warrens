@@ -62,7 +62,7 @@ namespace NetMud.Controllers.GameAdmin
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
                                                                 && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
 
-            foreach(var thing in newList)
+            foreach(IKeyedData thing in newList)
             {
                 thing.ChangeApprovalStatus(authedUser.GameAccount, authedUser.GetStaffRank(User), ApprovalState.Approved);
 
@@ -76,12 +76,11 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult ApproveDeny(long? approvalId, string authorizeApproval, long? denialId, string authorizeDenial)
         {
-            string message = string.Empty;
             bool approve = true;
 
             string[] approvalIdSplit = authorizeApproval?.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
             string[] denialIdSplit = authorizeDenial?.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
-
+            string message;
             if ((!string.IsNullOrWhiteSpace(authorizeApproval) && approvalIdSplit.Length > 0 && approvalId.ToString().Equals(approvalIdSplit[0])) ||
                 (!string.IsNullOrWhiteSpace(authorizeDenial) && denialIdSplit.Length > 0 && denialId.ToString().Equals(denialIdSplit[0])))
             {

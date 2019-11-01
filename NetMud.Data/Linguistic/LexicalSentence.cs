@@ -105,8 +105,8 @@ namespace NetMud.Data.Linguistic
             lex.Event.Context.Language = Language;
 
             //Contractive rules
-            var lexDict = lex.Event.GetDictata();
-            foreach (var contractionRule in Language.ContractionRules.Where(rul => rul.First == lexDict || rul.Second == lexDict))
+            IDictata lexDict = lex.Event.GetDictata();
+            foreach (IContractionRule contractionRule in Language.ContractionRules.Where(rul => rul.First == lexDict || rul.Second == lexDict))
             {
                 if (!lex.Event.Modifiers.Any(mod => contractionRule.First.Equals(mod.GetDictata()) || contractionRule.Second.Equals(mod.GetDictata())))
                 {
@@ -119,7 +119,7 @@ namespace NetMud.Data.Linguistic
             }
 
             //Sentence placement rules
-            var rule = Language.SentenceRules.FirstOrDefault(rul => rul.Type == Type && rul.Fragment == lex.Event.Role);
+            SentenceGrammarRule rule = Language.SentenceRules.FirstOrDefault(rul => rul.Type == Type && rul.Fragment == lex.Event.Role);
 
             if (rule != null)
             {
@@ -140,8 +140,8 @@ namespace NetMud.Data.Linguistic
 
             if (recursive)
             {
-                var newMods = new HashSet<ILexica>();
-                foreach (var mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.None && mod.Role != GrammaticalType.Descriptive))
+                HashSet<ILexica> newMods = new HashSet<ILexica>();
+                foreach (ILexica mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.None && mod.Role != GrammaticalType.Descriptive))
                 {
                     AddEvent(new SensoryEvent(mod, lex.Strength, lex.SensoryType));
                     newMods.Add(mod);
@@ -164,15 +164,15 @@ namespace NetMud.Data.Linguistic
                 return string.Empty;
             }
 
-            var lexes = Unpack();
+            IEnumerable<ISensoryEvent> lexes = Unpack();
             StringBuilder sb = new StringBuilder();
 
             //Listable pass rules
-            var lexList = new List<Tuple<ISensoryEvent[], int>>();
-            var i = 0;
+            List<Tuple<ISensoryEvent[], int>> lexList = new List<Tuple<ISensoryEvent[], int>>();
+            int i = 0;
             foreach (var lexPair in lexes.GroupBy(lexi => new { lexi.Event.Role, lexi.Event.Type, lexi.Event.Context.Position }))
             {
-                var rule = Language.WordRules.OrderByDescending(rul => rul.RuleSpecificity())
+                IWordRule rule = Language.WordRules.OrderByDescending(rul => rul.RuleSpecificity())
                                                  .FirstOrDefault(rul => rul.Matches(lexPair.First().Event));
 
                 if (rule != null && rule.Listable)
@@ -181,14 +181,14 @@ namespace NetMud.Data.Linguistic
                 }
                 else
                 {
-                    foreach (var modifier in lexPair)
+                    foreach (ISensoryEvent modifier in lexPair)
                     {
                         lexList.Add(new Tuple<ISensoryEvent[], int>(new ISensoryEvent[] { modifier }, i++));
                     }
                 }
             }
 
-            foreach (var grouping in lexList.OrderBy(mod => mod.Item2))
+            foreach (Tuple<ISensoryEvent[], int> grouping in lexList.OrderBy(mod => mod.Item2))
             {
                 if (grouping.Item1.Length > 1)
                 {
@@ -215,64 +215,64 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         public IEnumerable<ISensoryEvent> Unpack()
         {
-            var wordList = new List<Tuple<ISensoryEvent, int>>();
+            List<Tuple<ISensoryEvent, int>> wordList = new List<Tuple<ISensoryEvent, int>>();
 
             //Subject
-            foreach (var lex in Subject.OrderBy(pair => pair.Item2))
+            foreach (Tuple<ISensoryEvent, short> lex in Subject.OrderBy(pair => pair.Item2))
             {
-                var lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
+                IEnumerable<ILexica> lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
 
-                int i = lex.Item2 + -100000;
-                foreach (var subLex in lexes)
+                int i = (lex.Item2 * 100) + -10000;
+                foreach (ILexica subLex in lexes)
                 {
                     wordList.Add(new Tuple<ISensoryEvent, int>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
                 }
             }
 
             //Predicate
-            foreach (var lex in Predicate.OrderBy(pair => pair.Item2))
+            foreach (Tuple<ISensoryEvent, short> lex in Predicate.OrderBy(pair => pair.Item2))
             {
-                var lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
+                IEnumerable<ILexica> lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
 
-                var i = lex.Item2;
-                foreach (var subLex in lexes)
+                int i = (lex.Item2 + 1) * 100;
+                foreach (ILexica subLex in lexes)
                 {
                     wordList.Add(new Tuple<ISensoryEvent, int>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
                 }
             }
 
             //Modifiers
-            foreach (var lex in Modifiers.OrderBy(pair => pair.Item2))
+            foreach (Tuple<ISensoryEvent, short> lex in Modifiers.OrderBy(pair => pair.Item2))
             {
-                var lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
+                IEnumerable<ILexica> lexes = lex.Item1.Event.Unpack(lex.Item1.SensoryType, lex.Item1.Strength);
 
-                var i = lex.Item2 + 100000;
-                foreach (var subLex in lexes)
+                int i = (lex.Item2 * 100) + 10000;
+                foreach (ILexica subLex in lexes)
                 {
                     wordList.Add(new Tuple<ISensoryEvent, int>(new SensoryEvent(subLex, lex.Item1.Strength, lex.Item1.SensoryType), i++));
                 }
             }
 
             //Transformational word pair rules
-            foreach (var rule in Language.TransformationRules.Where(rul => rul.TransformedWord != null && wordList.Any(pair => rul.Origin.Equals(pair.Item1.Event.GetDictata()))))
+            foreach (IDictataTransformationRule rule in Language.TransformationRules.Where(rul => rul.TransformedWord != null && wordList.Any(pair => rul.Origin.Equals(pair.Item1.Event.GetDictata()))))
             {
-                var beginsWith = rule.BeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
-                var endsWith = rule.EndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                string[] beginsWith = rule.BeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                string[] endsWith = rule.EndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (var lexPair in wordList.Where(pair => rule.Origin.Equals(pair.Item1.Event.GetDictata())))
+                foreach (Tuple<ISensoryEvent, int> lexPair in wordList.Where(pair => rule.Origin.Equals(pair.Item1.Event.GetDictata())))
                 {
-                    var lex = lexPair.Item1.Event;
-                    var nextEvent = wordList.OrderBy(word => word.Item2).FirstOrDefault(word => word.Item2 > lexPair.Item2);
+                    ILexica lex = lexPair.Item1.Event;
+                    Tuple<ISensoryEvent, int> nextEvent = wordList.OrderBy(word => word.Item2).FirstOrDefault(word => word.Item2 > lexPair.Item2);
 
                     if (nextEvent == null)
                     {
                         continue;
                     }
 
-                    var nextLex = nextEvent.Item1.Event;
-                    if ((rule.SpecificFollowing != null && nextLex.GetDictata().Equals(rule.SpecificFollowing))
-                        || (beginsWith.Count() == 0 || beginsWith.Any(bw => nextLex.Phrase.StartsWith(bw)))
-                        || (endsWith.Count() == 0 || endsWith.Any(ew => nextLex.Phrase.EndsWith(ew))))
+                    ILexica nextLex = nextEvent.Item1.Event;
+                    if ((rule.SpecificFollowing == null || nextLex.GetDictata().Equals(rule.SpecificFollowing))
+                        && (beginsWith.Count() == 0 || beginsWith.Any(bw => nextLex.Phrase.StartsWith(bw)))
+                        && (endsWith.Count() == 0 || endsWith.Any(ew => nextLex.Phrase.EndsWith(ew))))
                     {
                         lex.Phrase = rule.TransformedWord.Name;
                     }
@@ -289,7 +289,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the role event</returns>
         public ISensoryEvent GetSpecificEvent(GrammaticalType eventType)
         {
-            var events = Unpack();
+            IEnumerable<ISensoryEvent> events = Unpack();
 
             return events.FirstOrDefault(ev => ev.Event.Role == eventType);
         }

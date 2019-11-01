@@ -279,7 +279,7 @@ namespace NetMud.Data.Inanimate
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -288,7 +288,7 @@ namespace NetMud.Data.Inanimate
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -301,12 +301,12 @@ namespace NetMud.Data.Inanimate
             List<ISensoryEvent> messages = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
-                var me = GetSelf(sense);
+                ISensoryEvent me = GetSelf(sense);
 
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        me.Strength = GetAudibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -330,9 +330,9 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        me.Strength = GetOlefactoryDelta(viewer);
 
-                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> oDescs = GetOlefactoryDescriptives(viewer);
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -354,7 +354,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        me.Strength = GetPsychicDelta(viewer);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -380,7 +380,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Taste:
-                        me.Strength = 30 + (GetTasteDelta(viewer) * 30);
+                        me.Strength = GetTasteDelta(viewer);
 
                         IEnumerable<ISensoryEvent> taDescs = GetTasteDescriptives(viewer);
 
@@ -404,9 +404,9 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Tactile:
-                        me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        me.Strength = GetTactileDelta(viewer);
 
-                        IEnumerable<ISensoryEvent> tDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> tDescs = GetOlefactoryDescriptives(viewer);
 
                         me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -428,7 +428,7 @@ namespace NetMud.Data.Inanimate
 
                         break;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 

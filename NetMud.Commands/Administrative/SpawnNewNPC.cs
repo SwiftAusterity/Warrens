@@ -34,7 +34,7 @@ namespace NetMud.Commands.System
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             INonPlayerCharacterTemplate newObject = (INonPlayerCharacterTemplate)Subject;
             List<string> sb = new List<string>();
@@ -68,6 +68,8 @@ namespace NetMud.Commands.System
             };
 
             messagingObject.ExecuteMessaging(Actor, entityObject, spawnTo.CurrentZone, OriginLocation.CurrentZone, null);
+
+            return true;
         }
 
         /// <summary>

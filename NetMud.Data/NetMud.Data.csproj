@@ -36,8 +36,11 @@
     <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -51,8 +54,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+    <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -72,6 +75,24 @@
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -108,11 +129,14 @@
     <Compile Include="Architectural\EntityBase\Quality.cs" />
     <Compile Include="Architectural\GlobalPosition.cs" />
     <Compile Include="Architectural\LookupDataPartial.cs" />
+    <Compile Include="Architectural\PropertyBinding\DictataPhraseCollectionDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\DictataPhraseDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\FaunaResourceBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MineralResourceBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\WordPairRuleCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\CelestialCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DimensionalModelDataBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\FightingArtCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DictataCollectionDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\DictataDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\HelpDataBinder.cs" />
@@ -124,6 +148,7 @@
     <Compile Include="Architectural\PropertyBinding\PathwayTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\LocaleTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\FightingArtDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\GenderDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\RoomTemplateDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MaterialDataBinder.cs" />
@@ -144,10 +169,13 @@
     <Compile Include="Architectural\Serialization\SerializableDataPartial.cs" />
     <Compile Include="Architectural\TemplatePartial.cs" />
     <Compile Include="Gaia\Celestial.cs" />
+    <Compile Include="Combat\FightingArtCriteria.cs" />
+    <Compile Include="Combat\FightingArtCombination.cs" />
     <Compile Include="Gaia\CelestialPosition.cs" />
     <Compile Include="Gaia\Chronology.cs" />
     <Compile Include="Gaia\EconomicBasis.cs" />
     <Compile Include="Gaia\EconomicTrend.cs" />
+    <Compile Include="Combat\FightingArt.cs" />
     <Compile Include="Gaia\Economy.cs" />
     <Compile Include="Gaia\Gaia.cs" />
     <Compile Include="Gaia\GaiaTemplate.cs" />
@@ -159,7 +187,9 @@
     <Compile Include="Inanimate\InanimateTemplate.cs" />
     <Compile Include="Inanimate\ItemStack.cs" />
     <Compile Include="Linguistic\ContractionRule.cs" />
+    <Compile Include="Linguistic\DictataPhrase.cs" />
     <Compile Include="Linguistic\Dictata.cs" />
+    <Compile Include="Linguistic\Lexeme.cs" />
     <Compile Include="Linguistic\WordPairRule.cs" />
     <Compile Include="Linguistic\DictataTransformationRule.cs" />
     <Compile Include="Linguistic\Language.cs" />
@@ -212,6 +242,10 @@
       <Project>{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}</Project>
       <Name>NetMud.CentralControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetMud.Combat\NetMud.Combat.csproj">
+      <Project>{AD38F9BA-B856-472C-9292-0629A86CFCC6}</Project>
+      <Name>NetMud.Combat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
       <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>
       <Name>NetMud.Communication</Name>
@@ -243,6 +277,10 @@
     <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
       <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
       <Name>NetMud.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WordNet.Net\WordNet.Net.csproj">
+      <Project>{F12805B0-D74A-4E5B-A482-7C7CCB69D572}</Project>
+      <Name>WordNet.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

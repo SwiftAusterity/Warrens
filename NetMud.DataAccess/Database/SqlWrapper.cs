@@ -12,7 +12,7 @@ namespace NetMud.DataAccess.Database
         /// <summary>
         /// The connection string to the db
         /// </summary>
-        private static string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        private static readonly string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         /// <summary>
         /// Run a query with no expected return value and no parameters

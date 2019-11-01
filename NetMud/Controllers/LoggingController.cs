@@ -55,7 +55,7 @@ namespace NetMud.Controllers
         public ActionResult Rollover(string selectedLog)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            string message = string.Empty;
+            string message;
             if (!string.IsNullOrWhiteSpace(selectedLog))
             {
                 if (!LoggingUtility.RolloverLog(selectedLog))

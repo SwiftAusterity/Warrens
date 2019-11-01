@@ -22,6 +22,8 @@ using System.ComponentModel.DataAnnotations;
 using NetMud.DataStructure.Architectural.PropertyValidation;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.Data.Architectural.DataIntegrity;
+using NetMud.DataStructure.Combat;
+using NetMud.Combat;
 
 namespace NetMud.Data.NPC
 {
@@ -52,16 +54,6 @@ namespace NetMud.Data.NPC
         {
             return (T)TemplateCache.Get(new TemplateCacheKey(typeof(INonPlayerCharacterTemplate), TemplateId));
         }
-
-        /// <summary>
-        /// Max stamina for this
-        /// </summary>
-        public int TotalStamina { get; set; }
-
-        /// <summary>
-        /// Max health for this
-        /// </summary>
-        public int TotalHealth { get; set; }
 
         [JsonProperty("Gender")]
         private TemplateCacheKey _gender { get; set; }
@@ -132,6 +124,17 @@ namespace NetMud.Data.NPC
         public HashSet<IQuality> TeachableProficencies { get; set; }
         #endregion
 
+        #region health and combat
+        /// <summary>
+        /// Max stamina
+        /// </summary>
+        public int TotalStamina { get; set; }
+
+        /// <summary>
+        /// Max Health
+        /// </summary>
+        public int TotalHealth { get; set; }
+
         /// <summary>
         /// Current stamina for this
         /// </summary>
@@ -141,6 +144,190 @@ namespace NetMud.Data.NPC
         /// Current health for this
         /// </summary>
         public int CurrentHealth { get; set; }
+
+        /// <summary>
+        /// How much stagger this currently has
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Stagger { get; set; }
+
+        /// <summary>
+        /// How much stagger resistance this currently has
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Sturdy { get; set; }
+
+        /// <summary>
+        /// How off balance this is. Positive is forward leaning, negative is backward leaning, 0 is in balance
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public int Balance { get; set; }
+
+        /// <summary>
+        /// What stance this is currently in (for fighting art combo choosing)
+        /// </summary>
+        public string Stance { get; set; }
+
+        /// <summary>
+        /// Is the current attack executing
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public bool Executing { get; set; }
+
+        /// <summary>
+        /// Last attack executed
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IFightingArt LastAttack { get; set; }
+
+        /// <summary>
+        /// Last combo used for attacking
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IFightingArtCombination LastCombo { get; set; }
+
+        /// <summary>
+        /// Who you're primarily attacking
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IMobile PrimaryTarget { get; set; }
+
+        /// <summary>
+        /// Who you're fighting in general
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<Tuple<IMobile, int>> EnemyGroup { get; set; }
+
+        /// <summary>
+        /// Who you're support/tank focus is
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IMobile PrimaryDefending { get; set; }
+
+        /// <summary>
+        /// Who is in your group
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public HashSet<IMobile> AllianceGroup { get; set; }
+
+
+        /// <summary>
+        /// Stop all aggression
+        /// </summary>
+        public void StopFighting()
+        {
+            LastCombo = null;
+            LastAttack = null;
+            Executing = false;
+            PrimaryTarget = null;
+            EnemyGroup = new HashSet<Tuple<IMobile, int>>();
+        }
+
+        /// <summary>
+        /// Start a fight or switch targets forcibly
+        /// </summary>
+        /// <param name="victim"></param>
+        public void StartFighting(IMobile victim)
+        {
+            var wasFighting = IsFighting();
+
+            if (victim == null)
+            {
+                victim = this;
+            }
+
+            if (victim != GetTarget())
+            {
+                PrimaryTarget = victim;
+            }
+
+            if (!EnemyGroup.Any(enemy => enemy.Item1 == PrimaryTarget))
+            {
+                EnemyGroup.Add(new Tuple<IMobile, int>(PrimaryTarget, 0));
+            }
+
+            if (!wasFighting)
+            {
+                Processor.StartSubscriptionLoop("Fighting", () => Round.ExecuteRound(this, victim), 50, false);
+            }
+        }
+
+        /// <summary>
+        /// Get the target to attack
+        /// </summary>
+        /// <returns>A target or self if shadowboxing</returns>
+        public IMobile GetTarget()
+        {
+            var target = PrimaryTarget;
+
+            //TODO: AI for NPCs for other branches
+            if (PrimaryTarget == null || (PrimaryTarget.BirthMark.Equals(BirthMark) && EnemyGroup.Count() > 0))
+            {
+                PrimaryTarget = EnemyGroup.OrderByDescending(enemy => enemy.Item2).FirstOrDefault()?.Item1;
+                target = PrimaryTarget;
+            }
+
+            return target;
+        }
+
+        /// <summary>
+        /// Is this actor in combat
+        /// </summary>
+        /// <returns>yes or no</returns>
+        public bool IsFighting()
+        {
+            return GetTarget() != null;
+        }
+
+        public int Exhaust(int exhaustionAmount)
+        {
+            int stam = Sleep(-1 * exhaustionAmount);
+
+            //TODO: Check for total exhaustion
+
+            return stam;
+        }
+
+        public int Harm(int damage)
+        {
+            CurrentHealth = Math.Max(0, TotalHealth - damage);
+
+            //TODO: Check for DEATH
+
+            return CurrentHealth;
+        }
+
+        public int Recover(int recovery)
+        {
+            CurrentHealth = Math.Max(0, Math.Min(TotalHealth, TotalHealth + recovery));
+
+            return CurrentHealth;
+        }
+
+        public int Sleep(int hours)
+        {
+            CurrentStamina = Math.Max(0, Math.Min(TotalStamina, TotalStamina + hours * 10));
+
+            return CurrentStamina;
+        }
+
+        /// <summary>
+        /// fArt Combos
+        /// </summary>
+        public HashSet<IFightingArtCombination> Combos { get; set; }
+
+        public MobilityState StancePosition { get; set; }
+        #endregion
 
         /// <summary>
         /// News up an empty entity
@@ -198,38 +385,6 @@ namespace NetMud.Data.NPC
             Race = new Race();
 
             SpawnNewInWorld(spawnTo);
-        }
-
-        public int Exhaust(int exhaustionAmount)
-        {
-            int stam = Sleep(-1 * exhaustionAmount);
-
-            //TODO: Check for total exhaustion
-
-            return stam;
-        }
-
-        public int Harm(int damage)
-        {
-            int health = Recover(-1 * damage);
-
-            //TODO: Check for DEATH
-
-            return health;
-        }
-
-        public int Recover(int recovery)
-        {
-            CurrentHealth = Math.Max(0, Math.Min(TotalHealth, TotalHealth + recovery));
-
-            return CurrentHealth;
-        }
-
-        public int Sleep(int hours)
-        {
-            CurrentStamina = Math.Max(0, Math.Min(TotalStamina, TotalStamina + hours * 10));
-
-            return CurrentStamina;
         }
 
         /// <summary>
@@ -1032,7 +1187,7 @@ namespace NetMud.Data.NPC
         #endregion
 
         #region Processes
-        internal override void KickoffProcesses()
+        public override void KickoffProcesses()
         {
             //Start decay eventing for this zone
             base.KickoffProcesses();

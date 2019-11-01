@@ -12,7 +12,7 @@ namespace NetMud.DataStructure.Architectural.PropertyBinding
                 return null;
             }
 
-            long[,] coordinateGrouping = new long[100,100];
+            long[,] coordinateGrouping = new long[100, 100];
             IEnumerable<string> inputArray = input as IEnumerable<string>;
             int maxNodes = inputArray.Count() - 1;
             short x = 0;

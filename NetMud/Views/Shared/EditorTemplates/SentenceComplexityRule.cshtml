@@ -1,0 +1,21 @@
+﻿@using NetMud.DataStructure.Linguistic
+
+@model SentenceComplexityRule
+
+@{ 
+    var titleName = string.Format("{0}: {1} / {2}", Model.PivotMatch, Model.SubjectPivot, Model.PredicatePivot);
+}
+
+<div class="accordionWrapper">
+    <h5>@titleName</h5>
+    <div>
+        <div class="form-group row">
+            <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
+            @Html.EditorFor(m => m.PivotMatch)
+            @Html.EditorFor(m => m.SensoryMatch)
+            @Html.EditorFor(m => m.EleganceThreshold)
+            @Html.EditorFor(m => m.SubjectPivot)
+            @Html.EditorFor(m => m.PredicatePivot)
+        </div>
+    </div>
+</div>

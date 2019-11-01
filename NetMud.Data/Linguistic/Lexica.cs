@@ -74,7 +74,7 @@ namespace NetMud.Data.Linguistic
 
             Modifiers = new HashSet<ILexica>();
 
-            LexicalProcessor.VerifyDictata(this);
+            LexicalProcessor.VerifyLexeme(this);
             Context = context.Clone();
         }
 
@@ -86,7 +86,7 @@ namespace NetMud.Data.Linguistic
 
             Modifiers = new HashSet<ILexica>();
 
-            LexicalProcessor.VerifyDictata(this);
+            LexicalProcessor.VerifyLexeme(this);
             Context = BuildContext(origin, observer);
         }
 
@@ -96,9 +96,10 @@ namespace NetMud.Data.Linguistic
         /// <returns>A dictata</returns>
         public IDictata GetDictata()
         {
-            var dict = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), string.Format("{0}_{1}", Context?.Language?.Name, Phrase), ConfigDataType.Dictionary));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Context?.Language?.Name, Phrase), ConfigDataType.Dictionary));
+            IDictata dict = lex?.GetForm(Type);
 
-            if(dict == null)
+            if (dict == null)
             {
                 dict = GenerateDictata();
             }
@@ -112,7 +113,24 @@ namespace NetMud.Data.Linguistic
         /// <returns></returns>
         public IDictata GenerateDictata()
         {
-            return LexicalProcessor.VerifyDictata(new Dictata(this));
+            if (string.IsNullOrWhiteSpace(Phrase))
+            {
+                return null;
+            }
+
+            Dictata dict = new Dictata(this);
+
+            Lexeme lex = new Lexeme()
+            {
+                Name = Phrase,
+                Language = dict.Language
+            };
+
+            lex.AddNewForm(dict);
+
+            LexicalProcessor.VerifyLexeme(lex);
+
+            return dict;
         }
 
         /// <summary>
@@ -122,7 +140,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
-            var newModifiers = new HashSet<ILexica>(Modifiers);
+            HashSet<ILexica> newModifiers = new HashSet<ILexica>(Modifiers);
 
             if (!newModifiers.Contains(modifier))
             {
@@ -242,30 +260,34 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="overridingContext">The full lexical context</param>
         /// <returns>A long description</returns>
-        public IEnumerable<ILexica> Unpack(MessagingType sensoryType, int strength, LexicalContext overridingContext = null)
+        public IEnumerable<ILexica> Unpack(MessagingType sensoryType, short strength, LexicalContext overridingContext = null)
         {
             if (overridingContext != null)
             {
+                IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
                 //Sentence must maintain the same language, tense and personage
-                Context.Language = overridingContext.Language;
+                Context.Language = overridingContext.Language ?? Context.Language ?? globalConfig.BaseLanguage;
                 Context.Tense = overridingContext.Tense;
                 Context.Perspective = overridingContext.Perspective;
+                Context.Elegance = overridingContext.Elegance;
+                Context.Severity = overridingContext.Severity;
+                Context.Quality = overridingContext.Quality;
             }
 
-            var obfuscationLevel = Math.Max(0, Math.Min(100, 30 - strength));
-            var newLex = Mutate(sensoryType, strength, obfuscationLevel);
+            ILexica newLex = Mutate(sensoryType, strength);
 
-            foreach (var wordRule in Context.Language.WordRules.Where(rul => rul.Matches(newLex))
-                                                   .OrderByDescending(rul => rul.RuleSpecificity()))
+            foreach (IWordRule wordRule in Context.Language.WordRules.Where(rul => rul.Matches(newLex))
+                                                    .OrderByDescending(rul => rul.RuleSpecificity()))
             {
-                if (wordRule.NeedsArticle && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None)
-                 && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None) 
+                if (wordRule.NeedsArticle && (!wordRule.WhenPositional || Context.Position != LexicalPosition.None)
+                 && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None)
                                               || (mod.Type == LexicalType.Preposition && wordRule.WhenPositional && mod.Context.Position != LexicalPosition.None)))
                 {
-                    var articleContext = newLex.Context.Clone();
+                    LexicalContext articleContext = Context.Clone();
 
                     //Make it determinant if the word is plural
-                    articleContext.Determinant = newLex.Context.Plural || articleContext.Determinant;
+                    articleContext.Determinant = Context.Plural || articleContext.Determinant;
 
                     IDictata article = null;
                     if (wordRule.SpecificAddition != null)
@@ -279,7 +301,7 @@ namespace NetMud.Data.Linguistic
 
                     if (article != null && !newLex.Modifiers.Any(lx => article.Name.Equals(lx.Phrase, StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        var newArticle = newLex.TryModify(wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article
+                        ILexica newArticle = newLex.TryModify(wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article
                                                         , GrammaticalType.Descriptive, article.Name, false);
 
                         if (!wordRule.WhenPositional)
@@ -290,7 +312,7 @@ namespace NetMud.Data.Linguistic
                 }
                 else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                 {
-                    newLex.TryModify(wordRule.SpecificAddition.WordTypes.FirstOrDefault(), GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                    newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                 }
 
                 if (!string.IsNullOrWhiteSpace(wordRule.AddPrefix) && !newLex.Phrase.StartsWith(wordRule.AddPrefix))
@@ -304,22 +326,28 @@ namespace NetMud.Data.Linguistic
                 }
             }
 
-            //modification rules ordered by specificity
-            var currentModifiers = new List<ILexica>(newLex.Modifiers);
-            foreach (var modifier in currentModifiers)
+            //Placement ordering
+            List<Tuple<ILexica, int>> modifierList = new List<Tuple<ILexica, int>>
             {
-                foreach (var wordRule in Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
+                new Tuple<ILexica, int>(newLex, 0)
+            };
+
+            //modification rules ordered by specificity
+            List<ILexica> currentModifiers = new List<ILexica>(newLex.Modifiers);
+            foreach (ILexica modifier in currentModifiers)
+            {
+                foreach (IWordPairRule wordRule in Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
                                                                .OrderByDescending(rul => rul.RuleSpecificity()))
                 {
 
-                    if (wordRule.NeedsArticle && (!wordRule.WhenPositional || newLex.Context.Position != LexicalPosition.None)
+                    if (wordRule.NeedsArticle && (!wordRule.WhenPositional || Context.Position != LexicalPosition.None)
                      && !newLex.Modifiers.Any(mod => (mod.Type == LexicalType.Article && !wordRule.WhenPositional && mod.Context.Position == LexicalPosition.None)
                                                   || (mod.Type == LexicalType.Preposition && wordRule.WhenPositional && mod.Context.Position != LexicalPosition.None)))
                     {
-                        var articleContext = newLex.Context.Clone();
+                        LexicalContext articleContext = Context.Clone();
 
                         //Make it determinant if the word is plural
-                        articleContext.Determinant = newLex.Context.Plural || articleContext.Determinant;
+                        articleContext.Determinant = Context.Plural || articleContext.Determinant;
 
                         IDictata article = null;
                         if (wordRule.SpecificAddition != null)
@@ -333,10 +361,10 @@ namespace NetMud.Data.Linguistic
 
                         if (article != null && !newLex.Modifiers.Any(lx => article.Name.Equals(lx.Phrase, StringComparison.InvariantCultureIgnoreCase)))
                         {
-                            var newArticle = newLex.TryModify(wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article
+                            ILexica newArticle = newLex.TryModify(wordRule.WhenPositional ? LexicalType.Preposition : LexicalType.Article
                                                             , GrammaticalType.Descriptive, article.Name, false);
 
-                            if(!wordRule.WhenPositional)
+                            if (!wordRule.WhenPositional)
                             {
                                 newArticle.Context.Position = LexicalPosition.None;
                             }
@@ -344,7 +372,7 @@ namespace NetMud.Data.Linguistic
                     }
                     else if (wordRule.SpecificAddition != null && !newLex.Modifiers.Any(lx => wordRule.SpecificAddition.Equals(lx.GetDictata())))
                     {
-                        newLex.TryModify(wordRule.SpecificAddition.WordTypes.FirstOrDefault(), GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
+                        newLex.TryModify(wordRule.SpecificAddition.WordType, GrammaticalType.Descriptive, wordRule.SpecificAddition.Name);
                     }
 
 
@@ -360,21 +388,24 @@ namespace NetMud.Data.Linguistic
                 }
             }
 
-            //Placement ordering
-            var modifierList = new List<Tuple<ILexica, int>>
+            //Phrase detection
+            if (newLex.Modifiers.Count() > 0)
             {
-                new Tuple<ILexica, int>(newLex, 0)
-            };
+                List<ILexica> phraseLexes = new List<ILexica>() { newLex };
+                phraseLexes.AddRange(newLex.Modifiers);
 
-            foreach (var modifier in newLex.Modifiers)
+                ParsePhrase(phraseLexes, Context.Language);
+            }
+
+            foreach (ILexica modifier in newLex.Modifiers)
             {
-                var rule = newLex.Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
+                IWordPairRule rule = Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
                                                  .FirstOrDefault(rul => rul.Matches(newLex, modifier));
 
                 if (rule != null)
                 {
-                    var i = 0;
-                    foreach (var subModifier in modifier.Unpack(sensoryType, strength, overridingContext ?? Context).Distinct())
+                    int i = 0;
+                    foreach (ILexica subModifier in modifier.Unpack(sensoryType, strength, overridingContext ?? Context).Distinct())
                     {
                         modifierList.Add(new Tuple<ILexica, int>(subModifier, rule.ModificationOrder + i++));
                     }
@@ -414,26 +445,37 @@ namespace NetMud.Data.Linguistic
         /// Alter the lex entirely including all of its sublex
         /// </summary>
         /// <param name="context">Contextual nature of the request.</param>
-        /// <param name="obfuscationLevel">% level of obfuscating this thing (0 to 100).</param>
+        /// <param name="obfuscationLevel">-100 to 100 range.</param>
         /// <returns>the new lex</returns>
-        private ILexica Mutate(MessagingType sensoryType, int strength, int obfuscationLevel = 0)
+        private ILexica Mutate(MessagingType sensoryType, short obfuscationLevel = 0)
         {
-            var rand = new Random();
-            if (obfuscationLevel < 0 || obfuscationLevel > rand.Next(0, 100))
+            IDictata dict = GetDictata();
+            ILexica newLex = Clone();
+
+            if (dict != null)
             {
-                var lex = RunObscura(sensoryType, Context.Observer, obfuscationLevel >= 100);
-                lex.Modifiers.RemoveWhere(mod => mod.Role == GrammaticalType.Descriptive);
+                IDictata newDict = null;
+                if (obfuscationLevel != 0)
+                {
+                    newDict = Thesaurus.ObscureWord(dict, obfuscationLevel);
+                }
+                else if (Type != LexicalType.ProperNoun
+                    && (Context.Severity + Context.Elegance + Context.Quality > 0
+                        || Context.Language != dict.Language
+                        || Context.Plural != dict.Plural
+                        || Context.Possessive != dict.Possessive
+                        || Context.Tense != dict.Tense
+                        || Context.Perspective != dict.Perspective
+                        || Context.Determinant != dict.Determinant
+                        || Context.GenderForm.Feminine != dict.Feminine))
+                {
+                    newDict = Thesaurus.GetSynonym(dict, Context);
+                }
 
-                return lex;
-            }
-
-            var newLex = Clone();
-            var dict = GetDictata();
-            if (dict != null && Type != LexicalType.ProperNoun && (Context.Severity + Context.Elegance + Context.Quality > 0 || Context.Language != dict.Language))
-            {
-                var newDict = Thesaurus.GetSynonym(dict, Context);
-
-                newLex.Phrase = newDict.Name;
+                if(newDict != null)
+                {
+                    newLex.Phrase = newDict.Name;
+                }
             }
 
             return newLex;
@@ -444,9 +486,9 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="type">the sentence type</param>
         /// <returns>the sentence</returns>
-        public ILexicalSentence MakeSentence(SentenceType type)
+        public ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType, short strength = 30)
         {
-            return new LexicalSentence(this) { Type = type };
+            return new LexicalSentence(new SensoryEvent(this, strength, sensoryType));
         }
 
         /// <summary>
@@ -455,13 +497,13 @@ namespace NetMud.Data.Linguistic
         /// <param name="entity">the subject</param>
         private LexicalContext BuildContext(IEntity entity, IEntity observer)
         {
-            var context = new LexicalContext(observer);
+            LexicalContext context = new LexicalContext(observer);
 
-            var specific = true;
-            var entityLocation = entity?.CurrentLocation?.CurrentLocation();
+            bool specific = true;
+            ILocation entityLocation = entity?.CurrentLocation?.CurrentLocation();
             if (entityLocation != null)
             {
-                var type = entity.GetType();
+                Type type = entity.GetType();
 
                 //We're looking for more things with the same template id (ie based on the same thing, like more than one wolf or sword)
                 if (type == typeof(IInanimate))
@@ -488,7 +530,7 @@ namespace NetMud.Data.Linguistic
         {
             ILexica message = null;
 
-            var context = new LexicalContext(observer)
+            LexicalContext context = new LexicalContext(observer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.FirstPerson,
@@ -594,6 +636,70 @@ namespace NetMud.Data.Linguistic
             }
 
             return message;
+        }
+
+        private void ParsePhrase(IEnumerable<ILexica> lexes, ILanguage language)
+        {
+            if (language?.PhraseRules != null && language.PhraseRules.Count() > 0)
+            {
+                foreach (DictataPhraseRule phraseRule in language.PhraseRules)
+                {
+                    int validCount = 0;
+                    foreach (IGrouping<LexicalType, ILexica> lexGroup in lexes.GroupBy(lex => lex.Type))
+                    {
+                        short minCount = phraseRule.Elements.FirstOrDefault(rule => rule.WordType == lexGroup.Key)?.MinimumNumber ?? 0;
+
+                        if (minCount == -1
+                            || (minCount == 0 && lexGroup.Count() == 0)
+                            || (minCount > 0 && lexGroup.Count() >= minCount))
+                        {
+                            validCount++;
+                        }
+                    }
+
+                    //Prepositional position phrase
+                    if (validCount == Enum.GetNames(typeof(LexicalType)).Count())
+                    {
+                        LexicalType primaryType = phraseRule.Elements.FirstOrDefault(ruleLex => ruleLex.Primary)?.WordType ?? LexicalType.Preposition;
+                        IDictata primaryWord = lexes.FirstOrDefault(lex => lex.Type == primaryType)?.GetDictata();
+
+                        if (primaryWord == null)
+                        {
+                            primaryWord = lexes.FirstOrDefault().GetDictata();
+                        }
+
+                        DictataPhrase newPhrase = new DictataPhrase()
+                        {
+                            Elegance = (int)Math.Truncate((primaryWord.Elegance + 1) * 1.2),
+                            Quality = (int)Math.Truncate((primaryWord.Quality + 1) * 1.2),
+                            Severity = (int)Math.Truncate((primaryWord.Severity + 1) * 1.2),
+                            Antonyms = primaryWord.Antonyms,
+                            PhraseAntonyms = primaryWord.PhraseAntonyms,
+                            Synonyms = primaryWord.Synonyms,
+                            PhraseSynonyms = primaryWord.PhraseSynonyms,
+                            Feminine = primaryWord.Feminine,
+                            Language = primaryWord.Language,
+                            Perspective = primaryWord.Perspective,
+                            Positional = primaryWord.Positional,
+                            Semantics = primaryWord.Semantics,
+                            Tense = primaryWord.Tense,
+                            Words = new HashSet<IDictata>(lexes.Select(lex => lex.GetDictata()))
+                        };
+
+                        if (!CheckForExistingPhrase(newPhrase))
+                        {
+                            newPhrase.SystemSave();
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool CheckForExistingPhrase(IDictataPhrase newPhrase)
+        {
+            //Check for existing phrases with the same word set
+            IEnumerable<IDictataPhrase> maybePhrases = ConfigDataCache.GetAll<IDictataPhrase>();
+            return maybePhrases.Any(phrase => phrase.Words.All(word => newPhrase.Words.Any(newWord => newWord.Equals(word))));
         }
 
         #region Equality Functions

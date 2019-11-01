@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NetMud.DataStructure.Linguistic
 {
@@ -18,7 +17,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Where does the To word fit around the From word? (the from word == 0)
         /// </summary>
-        [Display(Name = "Placement Order", Description = " Where in the sentence section does this fit? (starts with 0).")]
+        [Display(Name = "Placement Order", Description = "Where in the sentence section does this fit? (starts with 0).")]
         [DataType(DataType.Text)]
         public short ModificationOrder { get; set; }
 

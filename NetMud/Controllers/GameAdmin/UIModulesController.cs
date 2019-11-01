@@ -59,8 +59,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"UIModules/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -137,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
                 SystemDefault = vModel.SystemDefault
             };
 
-            System.Collections.Generic.IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
+            IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => vModel.SystemDefault > 0 && uim.SystemDefault == vModel.SystemDefault);
 
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
@@ -162,7 +161,6 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            string message = string.Empty;
             AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
@@ -172,7 +170,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 

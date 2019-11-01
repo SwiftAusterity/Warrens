@@ -88,7 +88,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="overridingContext">The full lexical context</param>
         /// <returns>A long description</returns>
-        IEnumerable<ILexica> Unpack(MessagingType sensoryType, int strength, LexicalContext overridingContext = null);
+        IEnumerable<ILexica> Unpack(MessagingType sensoryType, short strength, LexicalContext overridingContext = null);
 
         /// <summary>
         /// Describe the lexica
@@ -102,7 +102,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="type">the sentence type</param>
         /// <returns>the sentence</returns>
-        ILexicalSentence MakeSentence(SentenceType type);
+        ILexicalSentence MakeSentence(SentenceType type, MessagingType sensoryType, short strength = 30);
 
         /// <summary>
         /// Get the dictata from this lexica

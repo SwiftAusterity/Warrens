@@ -22,22 +22,9 @@ namespace NetMud.Interp
         {
             try
             {
-                //kind of cheaty for now
-                if(commandString.StartsWith("lext "))
+                if(actor == null)
                 {
-                    LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lext ", "")).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordTypes));
-                    parsed.Append(commandString);
-
-                    return parsed;
-                }
-                else if(commandString.StartsWith("lexp "))
-                {
-                    LexicalInterpretationEngine lexicalInterp = new LexicalInterpretationEngine();
-                    var parsed = lexicalInterp.Parse(actor, commandString.Replace("lexp ", ""), true).Select(dict => string.Format("{0} : {1}", dict.Name, dict.WordTypes));
-                    parsed.Append(commandString);
-
-                    return parsed;
+                    throw new AccessViolationException("Bad user.");
                 }
 
                 IContext commandContext = new Context(commandString, actor);
@@ -48,7 +35,7 @@ namespace NetMud.Interp
                     return commandContext.AccessErrors;
                 }
 
-                commandContext.Command.Execute();
+                commandContext.Command.Execute((nextInput, nextActor) => Render(nextInput, nextActor).Count() == 0);
             }
             catch(Exception ex)
             {

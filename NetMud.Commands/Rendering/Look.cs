@@ -1,19 +1,16 @@
 ﻿using NetMud.Commands.Attributes;
-using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.System;
 using NetMud.Utility;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NutMud.Commands.Rendering
 {
     /// <summary>
-    /// Invokes the current container's RenderToLook
+    /// Invokes the current container's RenderToVisible
     /// </summary>
     [CommandKeyword("look", false)]
     [CommandPermission(StaffRank.Player)]
@@ -32,20 +29,20 @@ namespace NutMud.Commands.Rendering
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             List<string> sb = new List<string>();
 
             //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
             {
-                //sb.AddRange(OriginLocation.CurrentLocation.RenderToLook(Actor));
+                //sb.AddRange(OriginLocation.CurrentLocation.RenderToVisible(Actor));
 
                 ///Need to do like HMR with a simple "update UI" pipeline TODO
                 Message blankMessenger = new Message(new LexicalParagraph("You observe your surroundings."));
 
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
-                return;
+                return true;
             }
 
             ILookable lookTarget = (ILookable)Subject;
@@ -54,13 +51,15 @@ namespace NutMud.Commands.Rendering
 
             ILexicalParagraph toSubject = new LexicalParagraph("$A$ looks at YOU.");
 
-            Message messagingObject = new Message(lookTarget.RenderToLook(Actor))
+            Message messagingObject = new Message(lookTarget.RenderToVisible(Actor))
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin },
                 ToSubject = new List<ILexicalParagraph> { toSubject }
             };
 
             messagingObject.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
+
+            return true;
         }
 
         /// <summary>

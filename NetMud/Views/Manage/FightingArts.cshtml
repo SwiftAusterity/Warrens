@@ -1,0 +1,16 @@
+﻿@model NetMud.Models.Admin.ManageFightingArtViewModel
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Fighting Arts", new string[] { "Dashboard" }, new string[] { "/Manage" });
+
+    var linkText = Html.ActionLink("99999999", "FightingArtEdit", new { id = 99999999 }).ToString();
+    var tableColumns = new Dictionary<string, Func<dynamic, string>>();
+    tableColumns.Add("Id", obj => linkText.Replace("99999999", obj.Id.ToString()));
+    tableColumns.Add("Name", obj => obj.Name);
+    tableColumns.Add("State", obj => obj.State.ToString());
+}
+    
+@Html.Partial("ListTable", new NetMud.Models.ListTableViewModel() { AddMethodName = "FightingArtAdd", RemoveMethodName = "FightingArtRemove", EntityTypeName = "FightingArt", Columns = tableColumns, Values = Model.CurrentPageOfItems, PagingModel = Model, IncludeUnapprove = false, IncludeDelete = false })
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

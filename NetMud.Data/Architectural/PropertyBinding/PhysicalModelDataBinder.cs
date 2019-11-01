@@ -13,7 +13,6 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            IEnumerable<string> coordinateGrouping = input as IEnumerable<string>;
             HashSet<Coordinate> returnList = new HashSet<Coordinate>();
 
             for (int y = 21; y >= 0; y--)

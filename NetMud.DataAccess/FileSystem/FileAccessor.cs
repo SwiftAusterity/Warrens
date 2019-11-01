@@ -117,7 +117,7 @@ namespace NetMud.DataAccess.FileSystem
 
             if (!mappedName.EndsWith("/"))
             {
-                mappedName = mappedName + "/";
+                mappedName += "/";
             }
 
             try
@@ -175,7 +175,7 @@ namespace NetMud.DataAccess.FileSystem
                 //Don't forget to write the file out
                 entityFile.Flush();
             }
-            catch(IOException)
+            catch (IOException)
             {
                 //TODO: want to retry this one, def dont log errors
                 success = false;
@@ -256,11 +256,12 @@ namespace NetMud.DataAccess.FileSystem
         {
             try
             {
-                var backupDirs = Directory.GetDirectories(baseDirectoryPath).Where(dir => !dir.Any(chr => char.IsLetter(chr))).OrderByDescending(dirName => dirName);
+                var dirs = Directory.GetDirectories(baseDirectoryPath);
 
-                //TODO: Make this a system setting
-                if (backupDirs.Count() >= 10)
+                if (dirs.Count() > 10)
                 {
+                    IOrderedEnumerable<string> backupDirs = dirs.Where(dir => char.IsNumber(dir.Last())).OrderByDescending(dirName => dirName);
+
                     //Remove some
                     foreach (string dirName in backupDirs.Skip(10))
                     {

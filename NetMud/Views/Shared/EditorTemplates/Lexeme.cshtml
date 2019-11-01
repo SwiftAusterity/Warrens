@@ -1,0 +1,10 @@
+﻿@using NetMud.Data.Linguistic
+@model Lexeme
+@{
+    var archivedTemplate = ViewData["ArchiveTemplate"] as Lexeme;
+}
+<h4>Details</h4>
+<div class="form-group row">
+    @Html.EditorFor(m => m.Name)
+    @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
+</div>

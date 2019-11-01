@@ -1,4 +1,4 @@
-﻿using NetMud.Data.Architectural.PropertyBinding;
+using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
@@ -30,7 +30,7 @@ namespace NetMud.Data.Linguistic
         public NarrativePerspective Perspective { get; set; }
 
         [JsonProperty("SpecificWord")]
-        private ConfigDataCacheKey _specificWord { get; set; }
+        private DictataKey _specificWord { get; set; }
 
         /// <summary>
         /// When the from word is specifically this
@@ -49,7 +49,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_specificWord);
+                return ConfigDataCache.Get<ILexeme>(_specificWord.LexemeKey)?.GetForm(_specificWord.FormId);
             }
             set
             {
@@ -59,12 +59,12 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _specificWord = new ConfigDataCacheKey(value);
+                _specificWord = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
         [JsonProperty("SpecificAddition")]
-        private ConfigDataCacheKey _specificAddition { get; set; }
+        private DictataKey _specificAddition { get; set; }
 
         /// <summary>
         /// When the additional word (like the article) should be this explicitely
@@ -78,12 +78,12 @@ namespace NetMud.Data.Linguistic
         {
             get
             {
-                if (_specificAddition == null)
+                if (_specificAddition?.LexemeKey == null)
                 {
                     return null;
                 }
 
-                return ConfigDataCache.Get<IDictata>(_specificAddition);
+                return ConfigDataCache.Get<ILexeme>(_specificAddition.LexemeKey)?.GetForm(_specificAddition.FormId);
             }
             set
             {
@@ -93,7 +93,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _specificAddition = new ConfigDataCacheKey(value);
+                _specificAddition = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
@@ -238,8 +238,8 @@ namespace NetMud.Data.Linguistic
         /// <returns>if it matches</returns>
         public bool Matches(ILexica lex)
         {
-            var fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
-            var fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            string[] fromBegins = FromBeginsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            string[] fromEnds = FromEndsWith.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
             return (fromBegins.Count() == 0 || fromBegins.Any(bw => lex.Phrase.StartsWith(bw)))
                     && (fromEnds.Count() == 0 || fromEnds.Any(bw => lex.Phrase.EndsWith(bw)))

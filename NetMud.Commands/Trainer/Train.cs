@@ -30,14 +30,14 @@ namespace NetMud.Commands.EntityManipulation
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             INonPlayerCharacter trainer = (INonPlayerCharacter)Subject;
 
             if (trainer == null || !trainer.DoITeachThings())
             {
                 RenderError("There is no trainer that teaches in that direction.");
-                return;
+                return false;
             }
 
             //Do the list
@@ -79,6 +79,8 @@ namespace NetMud.Commands.EntityManipulation
             };
 
             messagingObject.ExecuteMessaging(Actor, trainer, null, OriginLocation.CurrentZone, null);
+
+            return true;
         }
 
         /// <summary>

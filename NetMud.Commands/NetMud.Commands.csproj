@@ -48,6 +48,7 @@
     <Compile Include="Administrative\SpawnNewNPC.cs" />
     <Compile Include="Administrative\SpawnNewObject.cs" />
     <Compile Include="Attributes\CacheReferenceType.cs" />
+    <Compile Include="Attributes\CommandQueueSkip.cs" />
     <Compile Include="Attributes\CommandSuppressName.cs" />
     <Compile Include="Attributes\CommandKeywordAttribute.cs" />
     <Compile Include="Attributes\CommandParameterAttribute.cs" />
@@ -72,6 +73,10 @@
     <Compile Include="Comm\Who.cs" />
     <Compile Include="Social\Laid.cs" />
     <Compile Include="System\Commands.cs" />
+    <Compile Include="System\FlushQ.cs" />
+    <Compile Include="System\StopQ.cs" />
+    <Compile Include="System\HaltQ.cs" />
+    <Compile Include="System\PeekQ.cs" />
     <Compile Include="System\Save.cs" />
     <Compile Include="System\Quit.cs" />
     <Compile Include="Rendering\Look.cs" />
@@ -79,6 +84,10 @@
     <Compile Include="Trainer\Train.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetMud.CentralControl\NetMud.CentralControl.csproj">
+      <Project>{1E404CFB-4CED-42AD-B28E-BFEE270C88F9}</Project>
+      <Name>NetMud.CentralControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetMud.Cartography\NetMud.Cartography.csproj">
       <Project>{F4EAB5D7-93FA-4B7B-9E6D-B7F191E66945}</Project>
       <Name>NetMud.Cartography</Name>

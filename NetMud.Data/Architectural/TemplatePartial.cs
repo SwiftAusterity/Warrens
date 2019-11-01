@@ -580,21 +580,16 @@ namespace NetMud.Data.Architectural
         /// <returns></returns>
         public int CompareTo(IKeyedData other)
         {
-            if (other != null)
+            if (other != null && other.GetType() == GetType())
             {
                 try
                 {
-                    if (other.GetType() != GetType())
-                    {
-                        return -1;
-                    }
-
                     if (other.Id.Equals(Id))
                     {
-                        return 1;
+                        return 0;
                     }
 
-                    return 0;
+                    return (int)(other.Id - Id);
                 }
                 catch (Exception ex)
                 {

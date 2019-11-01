@@ -129,7 +129,7 @@ namespace NetMud.Controllers
         [Route("api/AdminDataApi/GetDictata/{languageCode}/{wordType}/{term}", Name = "AdminAPI_GetDictata")]
         public JsonResult<string[]> GetDictata(string languageCode, LexicalType wordType, string term)
         {
-            IEnumerable<IDictata> words = ConfigDataCache.GetAll<IDictata>().Where(dict => dict.WordTypes.Contains(wordType) && dict.Name.Contains(term) && dict.Language.GoogleLanguageCode.Equals(languageCode));
+            IEnumerable<ILexeme> words = ConfigDataCache.GetAll<ILexeme>().Where(dict => dict.GetForm(wordType) != null && dict.Name.Contains(term) && dict.Language.GoogleLanguageCode.Equals(languageCode));
 
             return Json(words.Select(word => word.Name).ToArray());
         }
@@ -187,8 +187,8 @@ namespace NetMud.Controllers
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            var origin = TemplateCache.Get<IRoomTemplate>(originId);
-            var destination = TemplateCache.Get<IRoomTemplate>(destinationId);
+            IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(originId);
+            IRoomTemplate destination = TemplateCache.Get<IRoomTemplate>(destinationId);
 
             string message = string.Empty;
 

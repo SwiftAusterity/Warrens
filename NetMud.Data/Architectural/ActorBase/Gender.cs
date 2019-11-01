@@ -121,81 +121,111 @@ namespace NetMud.Data.Architectural.ActorBase
 
         private void EnsureDictionary()
         {
-            var collective = new Dictata()
+            Lexeme collective = new Lexeme()
             {
                 Name = Collective,
-                Determinant = false,
-                Feminine = Feminine,
-                Plural = true,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                Semantics = new HashSet<string>() { "gender" },
-                WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun }
+                WordForms = new IDictata[] {
+                    new Dictata()
+                    {
+                        Name = Collective,
+                        Determinant = false,
+                        Feminine = Feminine,
+                        Plural = true,
+                        Positional = LexicalPosition.None,
+                        Perspective = NarrativePerspective.None,
+                        Possessive = false,
+                        Tense = LexicalTense.None,
+                        Semantics = new HashSet<string>() { "gender" },
+                        WordType = LexicalType.Pronoun
+                    }
+                }
             };
 
-            var possessive = new Dictata()
+            Lexeme possessive = new Lexeme()
             {
                 Name = Possessive,
-                Determinant = false,
-                Feminine = Feminine,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = true,
-                Tense = LexicalTense.None,
-                Semantics = new HashSet<string>() { "gender" },
-                WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun }
+                WordForms = new IDictata[] {
+                    new Dictata()
+                    {
+                        Name = Possessive,
+                        Determinant = false,
+                        Feminine = Feminine,
+                        Plural = false,
+                        Positional = LexicalPosition.None,
+                        Perspective = NarrativePerspective.None,
+                        Possessive = true,
+                        Tense = LexicalTense.None,
+                        Semantics = new HashSet<string>() { "gender" },
+                        WordType = LexicalType.Pronoun
+                    }
+                }
             };
 
-            var baseWord = new Dictata()
+            Lexeme baseWord = new Lexeme()
             {
                 Name = Base,
-                Determinant = false,
-                Feminine = Feminine,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Possessive = false,
-                Tense = LexicalTense.None,
-                Semantics = new HashSet<string>() { "gender" },
-                WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun }
+                WordForms = new IDictata[] {
+                    new Dictata()
+                    {
+                        Name = Base,
+                        Determinant = false,
+                        Feminine = Feminine,
+                        Plural = false,
+                        Positional = LexicalPosition.None,
+                        Perspective = NarrativePerspective.None,
+                        Possessive = false,
+                        Tense = LexicalTense.None,
+                        Semantics = new HashSet<string>() { "gender" },
+                        WordType = LexicalType.Pronoun
+                    }
+                }
             };
 
-            var adult = new Dictata()
+            Lexeme adult = new Lexeme()
             {
                 Name = Adult,
-                Determinant = false,
-                Feminine = Feminine,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Semantics = new HashSet<string>() { "adult", "gender" },
-                Possessive = false,
-                Tense = LexicalTense.None,
-                WordTypes = new HashSet<LexicalType>() { LexicalType.Noun }
+                WordForms = new IDictata[] {
+                    new Dictata()
+                    {
+                        Name = Adult,
+                        Determinant = false,
+                        Feminine = Feminine,
+                        Plural = false,
+                        Positional = LexicalPosition.None,
+                        Perspective = NarrativePerspective.None,
+                        Semantics = new HashSet<string>() { "adult", "gender" },
+                        Possessive = false,
+                        Tense = LexicalTense.None,
+                        WordType = LexicalType.Noun
+                    }
+                }
             };
 
-            var child = new Dictata()
+            Lexeme child = new Lexeme()
             {
                 Name = Child,
-                Determinant = false,
-                Feminine = Feminine,
-                Plural = false,
-                Positional = LexicalPosition.None,
-                Perspective = NarrativePerspective.None,
-                Semantics = new HashSet<string>() { "child", "gender" },
-                Possessive = false,
-                Tense = LexicalTense.None,
-                WordTypes = new HashSet<LexicalType>() { LexicalType.Noun }
+                WordForms = new IDictata[] {
+                    new Dictata()
+                    {
+                        Name = Child,
+                        Determinant = false,
+                        Feminine = Feminine,
+                        Plural = false,
+                        Positional = LexicalPosition.None,
+                        Perspective = NarrativePerspective.None,
+                        Semantics = new HashSet<string>() { "child", "gender" },
+                        Possessive = false,
+                        Tense = LexicalTense.None,
+                        WordType = LexicalType.Noun
+                    }
+                }
             };
 
-            LexicalProcessor.VerifyDictata(child);
-            LexicalProcessor.VerifyDictata(adult);
-            LexicalProcessor.VerifyDictata(baseWord);
-            LexicalProcessor.VerifyDictata(possessive);
-            LexicalProcessor.VerifyDictata(collective);
+            LexicalProcessor.VerifyLexeme(child);
+            LexicalProcessor.VerifyLexeme(adult);
+            LexicalProcessor.VerifyLexeme(baseWord);
+            LexicalProcessor.VerifyLexeme(possessive);
+            LexicalProcessor.VerifyLexeme(collective);
         }
         #endregion
     }

@@ -54,14 +54,16 @@ namespace NetMud.Models.Admin
 
         public AddEditLanguageViewModel() : base("", ConfigDataType.Language)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Language();
         }
 
         public AddEditLanguageViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Language)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>();
+            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
+            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Language();
 
@@ -77,18 +79,22 @@ namespace NetMud.Models.Admin
                 DataObject.WordPairRules = DataTemplate.WordPairRules;
                 DataObject.WordRules = DataTemplate.WordRules;
                 DataObject.SentenceRules = DataTemplate.SentenceRules;
+                DataObject.PhraseRules = DataTemplate.PhraseRules;
                 DataObject.UIOnly = DataTemplate.UIOnly;
             }
         }
 
         public AddEditLanguageViewModel(string archivePath, ILanguage item) : base(archivePath, ConfigDataType.Language, item)
         {
-            ValidWords = ConfigDataCache.GetAll<IDictata>().Where(word => word.Language == item).OrderBy(word => word.Name);
+            ValidWords = ConfigDataCache.GetAll<ILexeme>().Where(word => word.Language == item).OrderBy(word => word.Name);
+            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = (Language)item;
         }
+
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
-        public IEnumerable<IDictata> ValidWords { get; set; }
+        public IEnumerable<IDictataPhrase> ValidPhrases { get; set; }
+        public IEnumerable<ILexeme> ValidWords { get; set; }
         public Language DataObject { get; set; }
     }
 }

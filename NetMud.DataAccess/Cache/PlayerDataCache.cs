@@ -12,7 +12,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class PlayerDataCache
     {
-        private static CacheAccessor BackingCache = new CacheAccessor(CacheType.PlayerData);
+        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.PlayerData);
 
         /// <summary>
         /// Adds a single entity into the cache

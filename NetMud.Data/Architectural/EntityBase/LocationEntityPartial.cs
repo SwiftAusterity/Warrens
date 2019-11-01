@@ -343,7 +343,8 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>if we are outside</returns>
         public virtual bool IsOutside()
         {
-            return false;
+            //TODO: make this work
+            return true;// GeographicalUtilities.IsOutside(GetBiome());
         }
 
         /// <summary>

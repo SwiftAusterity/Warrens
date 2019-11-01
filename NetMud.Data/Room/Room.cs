@@ -101,7 +101,7 @@ namespace NetMud.Data.Room
             {
                 _coordinates = value;
 
-                var dt = Template<IRoomTemplate>();
+                IRoomTemplate dt = Template<IRoomTemplate>();
                 if (dt != null)
                 {
                     dt.Coordinates = _coordinates;
@@ -195,11 +195,10 @@ namespace NetMud.Data.Room
             IRoomTemplate dT = Template<IRoomTemplate>();
             IZone zone = CurrentLocation.CurrentZone;
 
-            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome())
-                            && dT.Coordinates.Z >= zone.Template<IZoneTemplate>().BaseElevation;
+            bool canSeeSky = IsOutside() && dT.Coordinates.Z >= zone.Template<IZoneTemplate>().BaseElevation;
 
-            //if (!canSeeSky)
-            //    return Enumerable.Empty<ICelestial>();
+            if (!canSeeSky)
+                return Enumerable.Empty<ICelestial>();
 
             //The zone knows about the celestial positioning
             return zone.GetVisibileCelestials(viewer);
@@ -251,7 +250,7 @@ namespace NetMud.Data.Room
         /// Render this to a look command (what something sees when it 'look's at this
         /// </summary>
         /// <returns>the output strings</returns>
-        public override ILexicalParagraph RenderToLook(IEntity viewer)
+        public override ILexicalParagraph RenderToVisible(IEntity viewer)
         {
             return GetFullDescription(viewer);
         }
@@ -268,7 +267,7 @@ namespace NetMud.Data.Room
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -277,7 +276,7 @@ namespace NetMud.Data.Room
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -290,12 +289,12 @@ namespace NetMud.Data.Room
             List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
-                var me = GetSelf(sense);
+                ISensoryEvent me = GetSelf(sense);
 
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        me.Strength = GetAudibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -319,9 +318,9 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        me.Strength = GetOlefactoryDelta(viewer);
 
-                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> oDescs = GetOlefactoryDescriptives(viewer);
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
@@ -343,7 +342,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        me.Strength = GetPsychicDelta(viewer);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -369,7 +368,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Taste:
-                        me.Strength = 30 + (GetTasteDelta(viewer) * 30);
+                        me.Strength = GetTasteDelta(viewer);
 
                         IEnumerable<ISensoryEvent> taDescs = GetPsychicDescriptives(viewer);
 
@@ -393,7 +392,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Tactile:
-                        me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        me.Strength = GetTactileDelta(viewer);
 
                         IEnumerable<ISensoryEvent> tDescs = GetTouchDescriptives(viewer);
 
@@ -423,7 +422,7 @@ namespace NetMud.Data.Room
 
                         break;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
@@ -479,17 +478,17 @@ namespace NetMud.Data.Room
                 sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            foreach (var resource in FaunaNaturalResources)
+            foreach (INaturalResourceSpawn<IFauna> resource in FaunaNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in FloraNaturalResources)
+            foreach (INaturalResourceSpawn<IFlora> resource in FloraNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in MineralNaturalResources)
+            foreach (INaturalResourceSpawn<IMineral> resource in MineralNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }

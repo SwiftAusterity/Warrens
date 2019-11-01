@@ -1,19 +1,33 @@
-﻿using NetMud.DataStructure.Architectural;
 using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
-    public interface IDictata : IConfigData
+    public interface IDictata
     {
         /// <summary>
-        /// The language this is derived from
+        /// The unique key language_name_id
+        /// </summary>
+        string UniqueKey { get; }
+
+        /// <summary>
+        /// Language for this word
         /// </summary>
         ILanguage Language { get; set; }
 
         /// <summary>
-        /// The type of word this is in general
+        /// The text of the word
         /// </summary>
-        HashSet<LexicalType> WordTypes { get; set; }
+        string Name { get; set; }
+
+        /// <summary>
+        /// The grouping value for synonym tracking
+        /// </summary>
+        short FormGroup { get; set; }
+
+        /// <summary>
+        /// The wordform
+        /// </summary>
+        LexicalType WordType { get; set; }
 
         /// <summary>
         /// Chronological tense of word
@@ -81,14 +95,38 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<IDictata> Antonyms { get; set; }
 
         /// <summary>
-        /// Add language translations for this
+        /// Things this is the same as mostly
         /// </summary>
-        void FillLanguages();
+        HashSet<IDictataPhrase> PhraseSynonyms { get; set; }
+
+        /// <summary>
+        /// Things this is specifically opposite of mostly
+        /// </summary>
+        HashSet<IDictataPhrase> PhraseAntonyms { get; set; }
+
+        /// <summary>
+        /// Get the lexeme for this word
+        /// </summary>
+        /// <returns>the lexeme</returns>
+        ILexeme GetLexeme();
+
+        /// <summary>
+        /// creates a related dictata and lexeme with a new word
+        /// </summary>
+        /// <param name="synonym"></param>
+        /// <returns></returns>
+        ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym);
 
         /// <summary>
         /// Create a lexica from this
         /// </summary>
         /// <returns></returns>
-        ILexica GetLexica(GrammaticalType role, LexicalType type, LexicalContext context);
+        ILexica GetLexica(GrammaticalType role, LexicalContext context);
+
+        /// <summary>
+        /// Make a shallow copy of this
+        /// </summary>
+        /// <returns></returns>
+        IDictata Clone();
     }
 }

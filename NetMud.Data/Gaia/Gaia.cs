@@ -371,7 +371,7 @@ namespace NetMud.Data.Gaia
             };
         }
 
-        internal override void KickoffProcesses()
+        public override void KickoffProcesses()
         {
             Processor.StartSubscriptionLoop("Time", () => AdvanceTime(), 5 * 60, false);
             Processor.StartSubscriptionLoop("MacroEconomics", () => AdvanceEconomy(), 15 * 60, false);
@@ -416,8 +416,13 @@ namespace NetMud.Data.Gaia
 
         private bool AdvanceTime()
         {
-            CurrentTimeOfDay.AdvanceByHour();
             IChronology chronoSystem = Template<IGaiaTemplate>().ChronologicalSystem;
+            if (CurrentTimeOfDay.BaseChronology == null)
+            {
+                CurrentTimeOfDay.BaseChronology = chronoSystem;
+            }
+
+            CurrentTimeOfDay.AdvanceByHour();
 
             if (CelestialPositions.Any(cp => cp.CelestialObject.OrientationType == CelestialOrientation.SolarBody))
             {
@@ -431,7 +436,7 @@ namespace NetMud.Data.Gaia
 
                 if (OrbitalPosition >= maxOrbit)
                 {
-                    OrbitalPosition = OrbitalPosition - maxOrbit;
+                    OrbitalPosition -= maxOrbit;
                 }
             }
 
@@ -451,7 +456,7 @@ namespace NetMud.Data.Gaia
                 float originalPressure = frontFront.Pressure;
 
                 //Calculate strength and pressure changes
-                IEnumerable<IZone> myZones = LiveCache.GetAll<IZone>().Where(z => z.IsOutside() && z.Template<IZoneTemplate>().Hemisphere == frontFront.Direction);
+                IEnumerable<IZone> myZones = LiveCache.GetAll<IZone>().Where(z => z.IsOutside() && z.Hemisphere == frontFront.Direction);
 
                 if (myZones.Count() > 0)
                 {
@@ -483,7 +488,7 @@ namespace NetMud.Data.Gaia
                         }
 
                         //Spawn new weather event?
-                        if (zoneVariance > 10)
+                        if (zoneVariance < 10)
                         {
                             zoneEventList.Add(new WeatherEvent()
                             {
@@ -494,6 +499,8 @@ namespace NetMud.Data.Gaia
                                 Strength = rander.Next(100, 1000),
                                 Type = WeatherEventType.Altocumulus
                             });
+
+                            zone.WeatherEvents = zoneEventList;
 
                             BroadcastEvent("Clouds begin to darken overhead.");
                         }

@@ -1,0 +1,59 @@
+﻿@model NetMud.DataStructure.Combat.IFightingArt
+
+<div class="entityDataInfoCard">
+    <h4>@Model.Name</h4>
+    <div style="padding: 5px;">
+        <span style="font-weight: normal; float: none;">@Model.HelpText</span>
+    </div>
+    <hr />
+    <div>
+        <span>Setup/Recovery Frames</span>
+        <span>@Model.Setup / @Model.Recovery</span>
+    </div>
+    <div>
+        <span>Armor</span>
+        <span>@Model.Armor</span>
+    </div>
+    <div>
+        <span>Readiness State</span>
+        <span>@Model.Readiness</span>
+    </div>
+    <div>
+        <span>Aim</span>
+        <span>@Model.Aim</span>
+    </div>
+    <div>
+        <span>Reach</span>
+        <span>@Model.DistanceRange.Low to @Model.DistanceRange.High</span>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.RekkaKey))
+    {
+        <div>
+            <span>Rekka</span>
+            <span>[@Model.RekkaPosition] @Model.RekkaKey</span>
+        </div>
+    }
+    <div>
+        <span>Shift</span>
+        <span>@Model.DistanceChange</span>
+    </div>
+    <div>
+        <span>Health Cost/Damage</span>
+        <span>@Model.Health.Actor / @Model.Health.Victim</span>
+    </div>
+    <div>
+        <span>Stamina Cost/Damage</span>
+        <span>@Model.Stamina.Actor / @Model.Stamina.Victim</span>
+    </div>
+    <div>
+        <span>Position Change</span>
+        <span>@Model.PositionResult.Actor / @Model.PositionResult.Victim</span>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.ResultQuality))
+    {
+        <div>
+            <span>Quality Affect</span>
+            <span>@Model.QualityValue @Model.ResultQuality</span>
+        </div>
+    }
+</div>

@@ -17,7 +17,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// The perceptive strength (higher = easier to see and greater distance noticed)
         /// </summary>
-        int Strength { get; set; }
+        short Strength { get; set; }
 
         /// <summary>
         /// The type of sense used to detect this

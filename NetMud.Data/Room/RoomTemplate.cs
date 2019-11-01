@@ -229,7 +229,7 @@ namespace NetMud.Data.Room
         {
             try
             {
-                var collectiveContext = new LexicalContext(null)
+                LexicalContext collectiveContext = new LexicalContext(null)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.ThirdPerson,
@@ -246,7 +246,7 @@ namespace NetMud.Data.Room
 
                 foreach (IDictata dictata in dictatas)
                 {
-                    LexicalProcessor.VerifyDictata(dictata);
+                    LexicalProcessor.VerifyLexeme(dictata.GetLexeme());
                 }
 
                 TemplateCache.Add(this);

@@ -55,8 +55,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"JournalEntry/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -117,25 +116,16 @@ namespace NetMud.Controllers.GameAdmin
             return View("~/Views/GameAdmin/JournalEntry/Add.cshtml", vModel);
         }
 
+        [ValidateInput(false)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditJournalEntryViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            JournalEntry newObj = new JournalEntry
-            {
-                Name = vModel.DataObject.Name,
-                Body = vModel.DataObject.Body,
-                Expired = vModel.DataObject.Expired,
-                ExpireDate = vModel.DataObject.ExpireDate,
-                MinimumReadLevel = vModel.DataObject.MinimumReadLevel,
-                Public = vModel.DataObject.Public,
-                PublishDate = vModel.DataObject.PublishDate,
-                Tags = vModel.DataObject.Tags
-            };
+            IJournalEntry newObj = vModel.DataObject;
 
+            string message;
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
                 message = "Error; Creation failed.";
@@ -152,7 +142,6 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            string message = string.Empty;
             AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
@@ -162,7 +151,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
@@ -171,14 +160,15 @@ namespace NetMud.Controllers.GameAdmin
             return View("~/Views/GameAdmin/JournalEntry/Edit.cshtml", vModel);
         }
 
+        [ValidateInput(false)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(long id, AddEditJournalEntryViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IJournalEntry obj = TemplateCache.Get<IJournalEntry>(id);
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";

@@ -30,6 +30,8 @@ namespace NetMud
             //Load the "config" data first
             ConfigData.LoadEverythingToCache();
 
+            LexicalProcessor.LoadWordnet();
+
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
             //We dont move forward without a global config
@@ -65,8 +67,19 @@ namespace NetMud
                 globalConfig.SystemSave();
             }
 
+            if(globalConfig.DeepLexActive)
+            {
+                LexicalProcessor.LoadMirriamHarness(globalConfig.MirriamDictionaryKey, globalConfig.MirriamThesaurusKey);
+            }
+
+            //Ensure we have base words for the language every time
+            globalConfig.BaseLanguage.SystemSave();
+
+            //Hoover up all the verbs from commands that someone might have coded
+            ProcessSystemVerbs(globalConfig.BaseLanguage);
+
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
-            var instance = HttpContext.Current.ApplicationInstance;
+            HttpApplication instance = HttpContext.Current.ApplicationInstance;
             Assembly asm = instance.GetType().BaseType.Assembly;
             Version v = asm.GetName().Version;
 
@@ -96,7 +109,7 @@ namespace NetMud
 
             if (gossipConfig.GossipActive)
             {
-                Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
+                Member[] playerList() => LiveCache.GetAll<IPlayer>()
                     .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
                     .Select(player => new Member()
                     {
@@ -115,9 +128,6 @@ namespace NetMud
 
                 LiveCache.Add(gossipServer, "GossipWebClient");
             }
-
-            //Hoover up all the verbs from commands that someone might have coded
-            ProcessSystemVerbs(globalConfig.BaseLanguage);
 
             Func<bool> backupFunction = hotBack.WriteLiveBackup;
             Func<bool> backingDataBackupFunction = Templates.WriteFullBackup;
@@ -140,7 +150,7 @@ namespace NetMud
 
                 foreach (string verb in commandVerbs)
                 {
-                    var newVerb = new Dictata()
+                    Dictata newVerb = new Dictata()
                     {
                         Name = verb,
                         Determinant = false,
@@ -151,11 +161,11 @@ namespace NetMud
                         Possessive = false,
                         Tense = LexicalTense.Present,
                         Semantics = new HashSet<string>() { "system_command" },
-                        WordTypes = new HashSet<LexicalType>() { LexicalType.Verb },
+                        WordType = LexicalType.Verb,
                         Language = language
                     };
 
-                    LexicalProcessor.VerifyDictata(newVerb);
+                    LexicalProcessor.VerifyLexeme(newVerb.GetLexeme());
                 }
             }
         }

@@ -178,7 +178,7 @@ namespace NetMud.Data.NaturalResource
                 return new LexicalParagraph();
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext personalContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -187,7 +187,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -196,7 +196,15 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            var sizeWord = "large";
+            LexicalContext collectiveContext = new LexicalContext(viewer)
+            {
+                Determinant = false,
+                Perspective = NarrativePerspective.ThirdPerson,
+                Plural = false,
+                Position = LexicalPosition.PartOf,
+                Tense = LexicalTense.Present
+            };
+            string sizeWord;
             if (amount < 20)
             {
                 sizeWord = "sparse";
@@ -214,20 +222,21 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "enormous";
             }
 
-            var observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, MessagingType.Visible)
+            SensoryEvent observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", personalContext), 0, MessagingType.Visible)
             {
-                Strength = 30 + (GetVisibleDelta(viewer) * 30)
+                Strength = GetVisibleDelta(viewer)
             };
 
-            var collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "outcropping", collectiveContext),
-                                                30 + (GetVisibleDelta(viewer) * 30), MessagingType.Visible);
+            SensoryEvent collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "outcropping", personalContext),
+                                                GetVisibleDelta(viewer), MessagingType.Visible);
 
-            var me = GetSelf(MessagingType.Visible, 30 + (GetVisibleDelta(viewer) * 30));
+            ISensoryEvent me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
             me.Event.Role = GrammaticalType.IndirectObject;
+            me.Event.Context = collectiveContext;
 
             collectiveNoun.TryModify(me);
 
-            var senseVerb = new SensoryEvent(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext), me.Strength, MessagingType.Visible);
+            SensoryEvent senseVerb = new SensoryEvent(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", personalContext), me.Strength, MessagingType.Visible);
 
             if (!string.IsNullOrWhiteSpace(sizeWord))
             {

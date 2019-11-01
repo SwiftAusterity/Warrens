@@ -12,6 +12,7 @@ using System.Linq;
 
 namespace NetMud.Commands.GossipServer
 {
+    [CommandQueueSkip]
     [CommandKeyword("gossip", false)]
     [CommandPermission(StaffRank.Player)]
     [CommandParameter(CommandUsage.Subject, typeof(string), CacheReferenceType.String, "[a-zA-Z]+@[a-zA-Z]+$", true)]
@@ -31,7 +32,7 @@ namespace NetMud.Commands.GossipServer
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             List<string> sb = new List<string>();
             IPlayer playerActor = Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)) ? Actor as IPlayer : null;
@@ -95,6 +96,8 @@ namespace NetMud.Commands.GossipServer
             Message messagingObject = new Message(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
+
+            return true;
         }
 
         /// <summary>

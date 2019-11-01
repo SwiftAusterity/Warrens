@@ -1,0 +1,77 @@
+﻿@using NetMud.DataStructure.Linguistic
+
+@model IDictataPhrase
+
+@{
+    bool disabled = ViewData["disabled"] != null;
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+    var forceOptional = ViewData["forceOptional"] != null;
+    var noValidation = ViewData["noValidation"] != null;
+    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
+    var ghostNameClass = "ghostNameTip";
+    var strippedNaked = ViewData["strippedNaked"] != null;
+
+    if (ViewData.ModelMetadata.IsRequired && !forceOptional)
+    {
+        ghostNameClass += " ghostRequired";
+    }
+
+    var htmlAttributes = new Dictionary<string, object>() { { "id", ViewData.ModelMetadata.PropertyName }, { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+
+    if (ViewData["disabled"] != null)
+    {
+        htmlAttributes.Add("readonly", true);
+    }
+
+    if (ViewData["htmlAttributes"] != null)
+    {
+        var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
+        if (additionalAttribs != null)
+        {
+            foreach (var kvp in additionalAttribs)
+            {
+                if (htmlAttributes.Any(att => att.Key == kvp.Key))
+                {
+                    htmlAttributes[kvp.Key] = kvp.Value;
+                }
+                else
+                {
+                    htmlAttributes.Add(kvp.Key, kvp.Value);
+                }
+            }
+        }
+    }
+
+    var selectedItemOverride = ViewData["selectedItem"];
+
+    if (selectedItemOverride != null)
+    {
+        ViewData.Model = (IDictataPhrase)selectedItemOverride;
+    }
+
+    var itemList = ((IEnumerable<IDictataPhrase>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = string.Format("({0}) {1}", item.Language.GoogleLanguageCode, item.Name), Value = item.UniqueKey, Selected = Model != null && item.UniqueKey == Model.UniqueKey });
+}
+
+@if (strippedNaked)
+{
+    @Html.DescriptionFor(m => m)
+    @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
+}
+else
+{
+    <div>
+        <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
+        @Html.DescriptionFor(m => m)
+        @Html.DropDownList(ViewData.ModelMetadata.PropertyName, itemList, optionLabel: "Select One", htmlAttributes: htmlAttributes)
+
+        @if (!string.IsNullOrWhiteSpace(archivedValue))
+        {
+            <span class="archive">Archived Value: <span>@archivedValue</span></span>
+
+        }
+        @if (!noValidation)
+        {
+            @Html.ValidationMessageFor(m => m, "", new { @class = "text-danger" })
+        }
+    </div>
+}

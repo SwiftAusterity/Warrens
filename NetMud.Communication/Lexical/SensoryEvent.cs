@@ -1,5 +1,6 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using System;
@@ -21,10 +22,10 @@ namespace NetMud.Communication.Lexical
         /// <summary>
         /// The perceptive strength (higher = easier to see and greater distance noticed)
         /// </summary>
-        [Range(-1000, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]
+        [Range(-100, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
         [DataType(DataType.Text)]
         [Display(Name = "Strength", Description = "How easy is this to sense. Stronger means it can be detected more easily and from a greater distance.")]
-        public int Strength { get; set; }
+        public short Strength { get; set; }
 
         /// <summary>
         /// The type of sense used to detect this
@@ -39,7 +40,7 @@ namespace NetMud.Communication.Lexical
             Strength = 30;
         }
 
-        public SensoryEvent(ILexica happening, int strength, MessagingType sensoryType)
+        public SensoryEvent(ILexica happening, short strength, MessagingType sensoryType)
         {
             Event = happening;
             Strength = strength;
@@ -163,10 +164,13 @@ namespace NetMud.Communication.Lexical
 
             if (overridingContext != null)
             {
-                //Sentence must maintain the same language, tense and personage
+                //Sentence must maintain the same language, tense and personage as well as the weight values
                 Event.Context.Language = overridingContext.Language;
                 Event.Context.Tense = overridingContext.Tense;
                 Event.Context.Perspective = overridingContext.Perspective;
+                Event.Context.Elegance = overridingContext.Elegance;
+                Event.Context.Severity = overridingContext.Severity;
+                Event.Context.Quality = overridingContext.Quality;
             }
 
             //Language rules engine, default to base language if we have an empty language
@@ -177,17 +181,16 @@ namespace NetMud.Communication.Lexical
                 Event.Context.Language = globalConfig.BaseLanguage;
             }
 
-            //Anonymizer
             if (anonymize)
             {
-                var pronounContext = Event.Context.Clone();
+                LexicalContext pronounContext = Event.Context.Clone();
                 pronounContext.Perspective = NarrativePerspective.SecondPerson;
                 pronounContext.Position = LexicalPosition.None;
                 pronounContext.Tense = LexicalTense.None;
                 pronounContext.Determinant = false;
                 pronounContext.Semantics = new HashSet<string>();
 
-                var pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
+                IDictata pronoun = Thesaurus.GetWord(pronounContext, LexicalType.Pronoun);
                 Event.Phrase = pronoun.Name;
                 Event.Type = LexicalType.Pronoun;
             }
@@ -205,12 +208,12 @@ namespace NetMud.Communication.Lexical
                 //This is to catch directly described entities, we have to add a verb to it for it to make sense. "Complete sentence rule"
                 if (subject.Modifiers.Any() && !subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Verb))
                 {
-                    var verbContext = subject.Context.Clone();
+                    LexicalContext verbContext = subject.Context.Clone();
                     verbContext.Semantics = new HashSet<string> { "existential" };
                     verbContext.Determinant = false;
-                    var verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
+                    IDictata verb = Thesaurus.GetWord(verbContext, LexicalType.Verb);
 
-                    var verbLex = verb.GetLexica(GrammaticalType.Verb, LexicalType.Verb, verbContext);
+                    ILexica verbLex = verb.GetLexica(GrammaticalType.Verb, verbContext);
                     verbLex.TryModify(subject.Modifiers);
 
                     subject.Modifiers = new HashSet<ILexica>();
@@ -219,17 +222,27 @@ namespace NetMud.Communication.Lexical
 
                 if (subject.Modifiers.Any(mod => mod.Role == GrammaticalType.Subject))
                 {
-                    sentences.Add(subject.MakeSentence(SentenceType.Partial));
+                    sentences.Add(subject.MakeSentence(SentenceType.Partial, SensoryType, Strength));
 
                     //fragment sentences
                     foreach (ILexica subLex in subject.Modifiers.Where(mod => mod.Role == GrammaticalType.Subject))
                     {
-                        sentences.Add(subLex.MakeSentence(SentenceType.Statement));
+                        sentences.Add(subLex.MakeSentence(SentenceType.Statement, SensoryType, Strength));
                     }
                 }
                 else
                 {
-                    sentences.Add(subject.MakeSentence(SentenceType.Statement));
+                    //full obfuscation happens at 100 only
+                    if (Strength <= -100 || Strength >= 100)
+                    {
+                        ILexica lex = RunObscura(SensoryType, subject, subject.Context.Observer, Strength > 0);
+
+                        sentences.Add(lex.MakeSentence(SentenceType.Statement, SensoryType, Strength));
+                    }
+                    else
+                    {
+                        sentences.Add(subject.MakeSentence(SentenceType.Statement, SensoryType, Strength));
+                    }
                 }
             }
 
@@ -243,6 +256,117 @@ namespace NetMud.Communication.Lexical
         public string Describe()
         {
             return Event.Describe();
+        }
+
+        private ILexica RunObscura(MessagingType sensoryType, ILexica subject, IEntity observer, bool over)
+        {
+            LexicalContext context = new LexicalContext(observer)
+            {
+                Determinant = true,
+                Perspective = NarrativePerspective.FirstPerson,
+                Position = LexicalPosition.Around
+            };
+
+            subject.Modifiers = new HashSet<ILexica>();
+            subject.Type = LexicalType.Verb;
+            subject.Role = GrammaticalType.Verb;
+            subject.Context = context;
+
+            switch (sensoryType)
+            {
+                case MessagingType.Audible:
+                    subject.Phrase = "hear";
+
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "sounds")
+                                .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "soft");
+
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "sounds")
+                                .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "loud");
+                    }
+                    break;
+                case MessagingType.Olefactory:
+                    subject.Phrase = "smell";
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle");
+
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "pungent");
+                    }
+                    break;
+                case MessagingType.Psychic:
+                    subject.Phrase = "sense";
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "presence")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "vague");
+
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "presence")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "disturbing");
+                    }
+                    break;
+                case MessagingType.Tactile:
+                    subject.Phrase = "brushes";
+                    context.Position = LexicalPosition.Attached;
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "skin")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "lightly");
+
+                    }
+                    else
+                    {
+                        subject.Phrase = "rubs";
+                        context.Elegance = -5;
+                        subject.TryModify(LexicalType.Pronoun, GrammaticalType.Subject, "you");
+                    }
+                    break;
+                case MessagingType.Taste:
+                    subject.Phrase = "taste";
+                    context.Position = LexicalPosition.InsideOf;
+
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle");
+
+                    }
+                    else
+                    {
+                        context.Elegance = -5;
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "something")
+                                                        .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "offensive");
+                    }
+                    break;
+                case MessagingType.Visible:
+                    subject.Phrase = "see";
+                    context.Plural = true;
+
+                    if (!over)
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "shadows");
+                    }
+                    else
+                    {
+                        subject.TryModify(LexicalType.Noun, GrammaticalType.Subject, "lights")
+                                                .TryModify(LexicalType.Adjective, GrammaticalType.Descriptive, "blinding");
+                    }
+                    break;
+            }
+
+            return subject;
         }
     }
 }

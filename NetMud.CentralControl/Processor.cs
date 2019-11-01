@@ -14,11 +14,11 @@ namespace NetMud.CentralControl
     /// </summary>
     public static class Processor
     {
-        private static ObjectCache globalCache = MemoryCache.Default;
-        private static CacheItemPolicy globalPolicy = new CacheItemPolicy();
+        private static readonly ObjectCache globalCache = MemoryCache.Default;
+        private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
         private static readonly string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
         private static readonly string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";
-        private static int _maxPulseCount = 18000; //half an hour
+        private static readonly int _maxPulseCount = 18000; //half an hour
 
         /// <summary>
         /// Starts a brand new Loop
@@ -47,7 +47,11 @@ namespace NetMud.CentralControl
 
                         foreach (Tuple<Func<bool>, int> pulsar in subList)
                         {
-                            pulsar.Item1.Invoke();
+                            //false return means it wants to be removed
+                            if(!pulsar.Item1.Invoke())
+                            {
+                                RemoveSubscriber(designator, pulsar);
+                            }
                         }
 
                         subArgs.CurrentPulse++;
@@ -57,7 +61,7 @@ namespace NetMud.CentralControl
                             subArgs.CurrentPulse = 0;
                         }
 
-                        await Task.Delay(10000);
+                        await Task.Delay(10);
                     }
                 }
 
@@ -336,7 +340,7 @@ namespace NetMud.CentralControl
                 return new List<Tuple<Func<bool>, int>>();
             }
 
-            return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
+            return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || pulseCount % ls.Item2 == 0).ToList();
         }
 
         /// <summary>
@@ -363,6 +367,29 @@ namespace NetMud.CentralControl
             }
 
             return null;
+        }
+
+        private static void RemoveSubscriber(string designator, Tuple<Func<bool>, int> memberPulser)
+        {
+            string taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
+
+            try
+            {
+                if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> subscriberList))
+                {
+                    subscriberList = new List<Tuple<Func<bool>, int>>();
+                }
+
+                subscriberList.Remove(memberPulser);
+
+                globalCache.Remove(taskKey);
+
+                globalCache.Add(taskKey, subscriberList, globalPolicy);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, false);
+            }
         }
 
         /// <summary>

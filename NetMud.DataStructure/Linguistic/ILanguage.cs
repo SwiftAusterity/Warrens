@@ -39,6 +39,11 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<SentenceGrammarRule> SentenceRules { get; set; }
 
         /// <summary>
+        /// Rules for sentence combination
+        /// </summary>
+        HashSet<SentenceComplexityRule> ComplexityRules { get; set; }
+
+        /// <summary>
         /// List of grammatical rules to use in sentence construction
         /// </summary>
         HashSet<IWordRule> WordRules { get; set; }
@@ -59,8 +64,20 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<IDictataTransformationRule> TransformationRules { get; set; }
 
         /// <summary>
+        /// Rules for phrase detection
+        /// </summary>
+        HashSet<DictataPhraseRule> PhraseRules { get; set; }
+
+        /// <summary>
         /// The base needed words for a language to function
         /// </summary>
         BaseLanguageMembers BaseWords { get; set; }
+
+        /// <summary>
+        /// Create or modify a lexeme within this language
+        /// </summary>
+        /// <param name="word">the word we're making</param>
+        /// <returns></returns>
+        ILexeme CreateOrModifyLexeme(string word, LexicalType form, string[] semantics);
     }
 }

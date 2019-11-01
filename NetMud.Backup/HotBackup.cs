@@ -260,6 +260,7 @@ namespace NetMud.Backup
                 foreach (IEntity entity in entitiesToLoad.OrderBy(ent => ent.Birthdate))
                 {
                     entity.UpsertToLiveWorldCache();
+                    entity.KickoffProcesses();
                 }
 
                 //We need to pick up any places that aren't already live from the file system incase someone added them during the last session\

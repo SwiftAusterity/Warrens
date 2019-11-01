@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace NetMud.Commands.Administrative
 {
     /// <summary>
-    /// Invokes the current container's RenderToLook
+    /// Invokes the current container's RenderToVisible
     /// </summary>
     [CommandKeyword("gotochar", false, false, true)]
     [CommandPermission(StaffRank.Guest)]
@@ -31,7 +31,7 @@ namespace NetMud.Commands.Administrative
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             IEntity moveToPerson = (IEntity)Subject;
 
@@ -66,6 +66,8 @@ namespace NetMud.Commands.Administrative
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 
             Actor.TryTeleport(moveTo);
+
+            return true;
         }
 
         /// <summary>

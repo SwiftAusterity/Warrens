@@ -63,6 +63,27 @@ namespace NetMud.Data.System
         public string AzureTranslationKey { get; set; }
 
         /// <summary>
+        /// Is the deep lex active?
+        /// </summary>
+        [Display(Name = "Deep Lex", Description = "Do words get deep lexed through Mirriam Webster?")]
+        [UIHint("Boolean")]
+        public bool DeepLexActive { get; set; }
+
+        /// <summary>
+        /// Dictionary key for the deep lex
+        /// </summary>
+        [Display(Name = "Mirriam Dictionary Key", Description = "The API key for your mirriam webster dictionary service.")]
+        [DataType(DataType.Text)]
+        public string MirriamDictionaryKey { get; set; }
+
+        /// <summary>
+        /// Thesaurus key for the deep lex
+        /// </summary>
+        [Display(Name = "Mirriam Thesaurus Key", Description = "The API key for your mirriam webster thesaurus service.")]
+        [DataType(DataType.Text)]
+        public string MirriamThesaurusKey { get; set; }
+
+        /// <summary>
         /// The base language for the system
         /// </summary>
         [JsonProperty("BaseLanguage")]

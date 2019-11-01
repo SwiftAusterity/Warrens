@@ -25,7 +25,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <summary>
         /// Executes this command
         /// </summary>
-        public override void Execute()
+        internal override bool ExecutionBody()
         {
             List<string> sb = new List<string>();
             bool wantsSellSheet = Subject == null || string.IsNullOrWhiteSpace(Subject.ToString()) || Subject.ToString() != "buy";
@@ -33,7 +33,7 @@ namespace NetMud.Commands.EntityManipulation
             if (Target == null)
             {
                 RenderError("There is no merchant in that direction.");
-                return;
+                return false;
             }
 
             INonPlayerCharacter merchant = (INonPlayerCharacter)Target;
@@ -41,10 +41,10 @@ namespace NetMud.Commands.EntityManipulation
             if (merchant == null || (!merchant.DoIBuyThings() && !merchant.DoISellThings()))
             {
                 RenderError("There is no merchant in that direction.");
-                return;
+                return false;
             }
 
-            string errorMessage = string.Empty;
+            string errorMessage;
             if (wantsSellSheet)
             {
                 errorMessage = merchant.RenderInventory(Actor);
@@ -58,6 +58,8 @@ namespace NetMud.Commands.EntityManipulation
             {
                 RenderError(errorMessage);
             }
+
+            return true;
         }
 
         /// <summary>

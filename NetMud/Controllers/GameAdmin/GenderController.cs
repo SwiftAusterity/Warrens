@@ -55,8 +55,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Gender/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -122,11 +121,10 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditGenderViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IGender newObj = vModel.DataObject;
-
+            string message;
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
                 message = "Error; Creation failed.";
@@ -143,7 +141,6 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            string message = string.Empty;
             AddEditGenderViewModel vModel = new AddEditGenderViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
@@ -153,7 +150,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("Index", new { Message = message });
             }
 
@@ -166,10 +163,10 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, AddEditGenderViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IGender obj = TemplateCache.Get<IGender>(id);
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";

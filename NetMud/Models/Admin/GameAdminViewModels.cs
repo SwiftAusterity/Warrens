@@ -3,6 +3,7 @@ using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.Combat;
 using NetMud.DataStructure.Gaia;
 using NetMud.DataStructure.Gossip;
 using NetMud.DataStructure.Inanimate;
@@ -33,7 +34,7 @@ namespace NetMud.Models.Admin
             Zones = Enumerable.Empty<IZoneTemplate>();
             Locales = Enumerable.Empty<ILocaleTemplate>();
             Worlds = Enumerable.Empty<IGaiaTemplate>();
-
+            FightingArts = Enumerable.Empty<IFightingArt>();
             DimensionalModels = Enumerable.Empty<IDimensionalModelData>();
             HelpFiles = Enumerable.Empty<IHelp>();
             Materials = Enumerable.Empty<IMaterial>();
@@ -46,7 +47,8 @@ namespace NetMud.Models.Admin
             Journals = Enumerable.Empty<IJournalEntry>();
             Genders = Enumerable.Empty<IGender>();
 
-            DictionaryWords = Enumerable.Empty<IDictata>();
+            DictionaryWords = Enumerable.Empty<ILexeme>();
+            DictionaryPhrases = Enumerable.Empty<IDictataPhrase>();
             Languages = Enumerable.Empty<ILanguage>();
 
             LiveWorlds = 0;
@@ -74,6 +76,7 @@ namespace NetMud.Models.Admin
         public IEnumerable<IRace> Races { get; set; }
         public IEnumerable<IFlora> Flora { get; set; }
         public IEnumerable<IFauna> Fauna { get; set; }
+        public IEnumerable<IFightingArt> FightingArts { get; set; }
         public IEnumerable<IMineral> Minerals { get; set; }
         public IEnumerable<IUIModule> UIModules { get; set; }
         public IEnumerable<ICelestial> Celestials { get; set; }
@@ -81,7 +84,8 @@ namespace NetMud.Models.Admin
         public IEnumerable<IGender> Genders { get; set; }
 
         //Config Data
-        public IEnumerable<IDictata> DictionaryWords { get; set; }
+        public IEnumerable<ILexeme> DictionaryWords { get; set; }
+        public IEnumerable<IDictataPhrase> DictionaryPhrases { get; set; }
         public IEnumerable<ILanguage> Languages { get; set; }
 
         //Running Data
@@ -117,6 +121,18 @@ namespace NetMud.Models.Admin
         [Display(Name = "Azure API Key", Description = "The API key for your azure translation service.")]
         [DataType(DataType.Text)]
         public string AzureTranslationKey { get; set; }
+
+        [Display(Name = "Deep Lex", Description = "Do words get deep lexed through Mirriam Webster?")]
+        [UIHint("Boolean")]
+        public bool DeepLexActive { get; set; }
+
+        [Display(Name = "Mirriam Dictionary Key", Description = "The API key for your mirriam webster dictionary service.")]
+        [DataType(DataType.Text)]
+        public string MirriamDictionaryKey { get; set; }
+
+        [Display(Name = "Mirriam Thesaurus Key", Description = "The API key for your mirriam webster thesaurus service.")]
+        [DataType(DataType.Text)]
+        public string MirriamThesaurusKey { get; set; }
 
         [Display(Name = "Base Language", Description = "The base language for the system.")]
         [UIHint("LanguageList")]

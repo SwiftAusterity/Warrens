@@ -205,7 +205,7 @@ namespace NetMud.Data.Zone
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            var collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new LexicalContext(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -214,7 +214,7 @@ namespace NetMud.Data.Zone
                 Tense = LexicalTense.Present
             };
 
-            var discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new LexicalContext(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -227,11 +227,11 @@ namespace NetMud.Data.Zone
             List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
             foreach (MessagingType sense in sensoryTypes)
             {
-                var me = GetSelf(sense);
+                ISensoryEvent me = GetSelf(sense);
                 switch (sense)
                 {
                     case MessagingType.Audible:
-                        me.Strength = 30 + (GetAudibleDelta(viewer) * 30);
+                        me.Strength = GetAudibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> aDescs = GetAudibleDescriptives(viewer);
 
@@ -260,9 +260,9 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Olefactory:
-                        me.Strength = 30 + (GetSmellDelta(viewer) * 30);
+                        me.Strength = GetOlefactoryDelta(viewer);
 
-                        IEnumerable<ISensoryEvent> oDescs = GetSmellableDescriptives(viewer);
+                        IEnumerable<ISensoryEvent> oDescs = GetOlefactoryDescriptives(viewer);
 
                         if (oDescs.Count() == 0)
                         {
@@ -289,7 +289,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Psychic:
-                        me.Strength = 30 + (GetPsychicDelta(viewer) * 30);
+                        me.Strength = GetPsychicDelta(viewer);
 
                         IEnumerable<ISensoryEvent> pDescs = GetPsychicDescriptives(viewer);
 
@@ -322,7 +322,7 @@ namespace NetMud.Data.Zone
                     case MessagingType.Taste:
                         continue;
                     case MessagingType.Tactile:
-                        me.Strength = 30 + (GetTactileDelta(viewer) * 30);
+                        me.Strength = GetTactileDelta(viewer);
 
                         //Add the temperature
                         me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
@@ -332,7 +332,7 @@ namespace NetMud.Data.Zone
 
                         break;
                     case MessagingType.Visible:
-                        me.Strength = 30 + (GetVisibleDelta(viewer) * 30);
+                        me.Strength = GetVisibleDelta(viewer);
 
                         IEnumerable<ISensoryEvent> vDescs = GetVisibleDescriptives(viewer);
 
@@ -393,17 +393,22 @@ namespace NetMud.Data.Zone
                 sensoryOutput.AddRange(celestial.RenderAsContents(viewer, sensoryTypes).Events);
             }
 
-            foreach (var resource in FloraNaturalResources)
+            foreach (IWeatherEvent wEvent in WeatherEvents)
+            {
+                sensoryOutput.AddRange(wEvent.RenderAsContents(viewer, sensoryTypes).Events);
+            }
+
+            foreach (INaturalResourceSpawn<IFlora> resource in FloraNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in FaunaNaturalResources)
+            foreach (INaturalResourceSpawn<IFauna> resource in FaunaNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
 
-            foreach (var resource in MineralNaturalResources)
+            foreach (INaturalResourceSpawn<IMineral> resource in MineralNaturalResources)
             {
                 sensoryOutput.AddRange(resource.Resource.RenderResourceCollection(viewer, resource.RateFactor).Events);
             }
@@ -415,7 +420,7 @@ namespace NetMud.Data.Zone
             }
 
             //render our locales out
-            foreach (var path in GetPathways())
+            foreach (IPathway path in GetPathways())
             {
                 sensoryOutput.AddRange(path.RenderAsContents(viewer, sensoryTypes).Events);
             }
@@ -472,12 +477,12 @@ namespace NetMud.Data.Zone
         public override IEnumerable<ICelestial> GetVisibileCelestials(IEntity viewer)
         {
             IZoneTemplate zD = Template<IZoneTemplate>();
-            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
+            bool canSeeSky = IsOutside(); //TODO: cloud cover
 
             List<ICelestial> returnList = new List<ICelestial>();
 
-            //if (!canSeeSky)
-            //  return returnList;
+            if (!canSeeSky)
+                return returnList;
 
             IGaia world = GetWorld();
             IEnumerable<ICelestialPosition> celestials = world.CelestialPositions;
@@ -610,27 +615,27 @@ namespace NetMud.Data.Zone
         {
             IZoneTemplate zD = Template<IZoneTemplate>();
             float lumins = 0;
-            bool canSeeSky = GeographicalUtilities.IsOutside(GetBiome());
+            bool canSeeSky = IsOutside();
 
             //TODO: Add cloud cover. Commented out for testing purposes ATM
-            //if (canSeeSky)
-            //{
-            IGaia world = GetWorld();
-            if (world != null)
+            if (canSeeSky)
             {
-                IEnumerable<ICelestialPosition> celestials = world.CelestialPositions;
-                float rotationalPosition = world.PlanetaryRotation;
-                float orbitalPosition = world.OrbitalPosition;
-
-                foreach (ICelestialPosition celestial in celestials)
+                IGaia world = GetWorld();
+                if (world != null)
                 {
-                    float celestialAffectModifier = AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.CelestialObject, celestial.Position, rotationalPosition, orbitalPosition
-                                                                                                        , zD.Hemisphere, world.Template<IGaiaTemplate>().RotationalAngle);
+                    IEnumerable<ICelestialPosition> celestials = world.CelestialPositions;
+                    float rotationalPosition = world.PlanetaryRotation;
+                    float orbitalPosition = world.OrbitalPosition;
 
-                    lumins += celestial.CelestialObject.Luminosity * celestialAffectModifier;
+                    foreach (ICelestialPosition celestial in celestials)
+                    {
+                        float celestialAffectModifier = AstronomicalUtilities.GetCelestialLuminosityModifier(celestial.CelestialObject, celestial.Position, rotationalPosition, orbitalPosition
+                                                                                                            , zD.Hemisphere, world.Template<IGaiaTemplate>().RotationalAngle);
+
+                        lumins += celestial.CelestialObject.Luminosity * celestialAffectModifier;
+                    }
                 }
             }
-            //}
 
             return lumins;
         }
@@ -757,7 +762,7 @@ namespace NetMud.Data.Zone
         }
 
         #region Processes
-        internal override void KickoffProcesses()
+        public override void KickoffProcesses()
         {
             //Start decay eventing for this zone
             Processor.StartSubscriptionLoop("NaturalResourceGeneration", () => AdvanceResources(), 30 * 60, false);
@@ -766,8 +771,8 @@ namespace NetMud.Data.Zone
 
         private bool AdvanceResources()
         {
-            var rand = new Random();
-            var bS = Template<IZoneTemplate>();
+            Random rand = new Random();
+            IZoneTemplate bS = Template<IZoneTemplate>();
 
             if (FloraNaturalResources.Count() == 0 && bS.FloraResourceSpawn.Count() != 0)
             {
@@ -780,7 +785,7 @@ namespace NetMud.Data.Zone
             {
                 foreach (INaturalResourceSpawn<IFlora> population in FloraNaturalResources)
                 {
-                    var baseRate = bS.FloraResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+                    INaturalResourceSpawn<IFlora> baseRate = bS.FloraResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
 
                     if (baseRate == null || population.RateFactor > 100 * baseRate.RateFactor)
                     {
@@ -802,7 +807,7 @@ namespace NetMud.Data.Zone
             {
                 foreach (INaturalResourceSpawn<IMineral> population in MineralNaturalResources)
                 {
-                    var baseRate = bS.MineralResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+                    INaturalResourceSpawn<IMineral> baseRate = bS.MineralResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
 
                     if (baseRate == null || population.RateFactor > 25 * baseRate.RateFactor)
                     {
@@ -824,7 +829,7 @@ namespace NetMud.Data.Zone
             {
                 foreach (INaturalResourceSpawn<IFauna> population in FaunaNaturalResources)
                 {
-                    var baseRate = bS.FaunaResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
+                    INaturalResourceSpawn<IFauna> baseRate = bS.FaunaResourceSpawn.FirstOrDefault(spawn => spawn.Resource.Equals(population.Resource));
 
                     if (baseRate == null || population.RateFactor > 1000 * baseRate.RateFactor)
                     {

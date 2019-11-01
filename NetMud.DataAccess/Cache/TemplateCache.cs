@@ -10,7 +10,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class TemplateCache
     {
-        private static CacheAccessor BackingCache = new CacheAccessor(CacheType.Template);
+        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.Template);
 
         /// <summary>
         /// Adds a single entity into the cache

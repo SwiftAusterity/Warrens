@@ -7,6 +7,7 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -40,7 +41,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageDictionaryViewModel vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<IDictata>())
+            ManageDictionaryViewModel vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<ILexeme>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -57,13 +58,12 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Dictionary/Remove/{removeId?}/{authorizeRemove?}")]
         public ActionResult Remove(string removeId = "", string authorizeRemove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), removeId, ConfigDataType.Dictionary));
+                ILexeme obj = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), removeId, ConfigDataType.Dictionary));
 
                 if (obj == null)
                 {
@@ -92,9 +92,9 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult Purge()
         {
-            var dictionary = ConfigDataCache.GetAll<IDictata>();
+            IEnumerable<ILexeme> dictionary = ConfigDataCache.GetAll<ILexeme>();
 
-            foreach(var dict in dictionary)
+            foreach(ILexeme dict in dictionary)
             {
                 dict.SystemRemove();
             }
@@ -103,9 +103,9 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Add(string Template = "")
+        public ActionResult Add()
         {
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(Template)
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -117,12 +117,240 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditDictionaryViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            ILexeme newObj = vModel.DataObject;
+            string message;
+            if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - AddLexeme[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Creation Successful.";
+            }
+            else
+            {
+                message = "Error; Creation failed.";
+            }
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult Edit(string id)
+        {
+            ILexeme obj = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), id, ConfigDataType.Dictionary));
+
+            if (obj == null)
+            {
+                string message = "That does not exist";
+                return RedirectToAction("Index", new { Message = message });
+            }
+
+            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(obj.WordForms)
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
+                DataObject = (Lexeme)obj
+            };
+
+            return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(string id, AddEditDictionaryViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            ILexeme obj = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), id, ConfigDataType.Dictionary));
+            string message;
+            if (obj == null)
+            {
+                message = "That does not exist";
+                return RedirectToAction("Index", new { Message = message });
+            }
+
+            obj.Name = vModel.DataObject.Name;
+            obj.Language = vModel.DataObject.Language;
+
+            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditLexeme[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+            {
+                message = "Error; Edit failed.";
+            }
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        #region dictata
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddRelatedWord(string lexemeId, string id, AddEditDictataViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            if (lex == null)
+            {
+                return RedirectToAction("Index", new { Message = "That does not exist" });
+            }
+
+            IDictata dict = lex.WordForms.FirstOrDefault(form => form.UniqueKey == id);
+            if (dict == null)
+            {
+                return RedirectToAction("Index", new { Message = "That does not exist" });
+            }
+
+            Lexeme relatedLex = new Lexeme
+            {
+                Name = vModel.Word,
+                Language = lex.Language
+            };
+
+            Dictata relatedWord = new Dictata()
+            {
+                Name = vModel.Word,
+                Severity = dict.Severity + vModel.Severity,
+                Quality = dict.Quality + vModel.Quality,
+                Elegance = dict.Elegance + vModel.Elegance,
+                Tense = dict.Tense,
+                Language = dict.Language,
+                WordType = dict.WordType,
+                Feminine = dict.Feminine,
+                Possessive = dict.Possessive,
+                Plural = dict.Plural,
+                Determinant = dict.Determinant,
+                Positional = dict.Positional,
+                Perspective = dict.Perspective,
+                Semantics = dict.Semantics
+            };
+
+            HashSet<IDictata> synonyms = dict.Synonyms;
+            synonyms.Add(dict);
+
+            if (vModel.Synonym)
+            {
+                relatedWord.Synonyms = synonyms;
+                relatedWord.Antonyms = dict.Antonyms;
+                relatedWord.PhraseSynonyms = dict.PhraseSynonyms;
+                relatedWord.PhraseAntonyms = dict.PhraseAntonyms;
+            }
+            else
+            {
+                relatedWord.Synonyms = dict.Antonyms;
+                relatedWord.Antonyms = synonyms;
+                relatedWord.PhraseSynonyms = dict.PhraseAntonyms;
+                relatedWord.PhraseAntonyms = dict.PhraseSynonyms;
+            }
+
+            relatedLex.AddNewForm(relatedWord);
+
+            string message;
+            if (relatedLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            {
+                if (vModel.Synonym)
+                {
+                    HashSet<IDictata> mySynonyms = dict.Synonyms;
+                    mySynonyms.Add(relatedWord);
+
+                    dict.Synonyms = mySynonyms;
+                }
+                else
+                {
+                    HashSet<IDictata> antonyms = dict.Antonyms;
+                    antonyms.Add(relatedWord);
+
+                    dict.Antonyms = antonyms;
+                }
+
+                lex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                relatedLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+
+                LoggingUtility.LogAdminCommandUsage("*WEB* - EditLexeme[" + lex.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                message = "Edit Successful.";
+            }
+            else
+            {
+                message = "Error; Edit failed.";
+            }
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route(@"Dictionary/RemoveDictata/{removeId?}/{authorizeRemove?}")]
+        public ActionResult RemoveDictata(string removeId = "", string authorizeRemove = "")
+        {
+            string message;
+            if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.Equals(authorizeRemove))
+            {
+                ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+                ILexeme lex = ConfigDataCache.Get<ILexeme>(removeId.Substring(0, removeId.LastIndexOf("_") - 1));
+                IDictata obj = lex?.WordForms?.FirstOrDefault(form => form.UniqueKey == removeId);
+
+                if (obj == null)
+                {
+                    message = "That does not exist";
+                }
+                else 
+                {
+                    HashSet<IDictata> wordForms = lex.WordForms.ToHashSet();
+                    wordForms.RemoveWhere(form => form.UniqueKey == removeId);
+                    lex.WordForms = wordForms.ToArray();
+
+                    lex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    LoggingUtility.LogAdminCommandUsage("*WEB* - RemoveConstants[" + removeId + "]", authedUser.GameAccount.GlobalIdentityHandle);
+                    message = "Delete Successful.";
+                }
+            }
+            else
+            {
+                message = "You must check the proper remove or unapprove authorization radio button first.";
+            }
+
+            return RedirectToAction("Index", new { Message = message });
+        }
+
+        [HttpGet]
+        public ActionResult AddDictata(string lexemeId)
+        {
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            if (lex == null)
+            {
+                string message = "That does not exist";
+                return RedirectToAction("Index", new { Message = message });
+            }
+
+            AddEditDictataViewModel vModel = new AddEditDictataViewModel(lex)
+            {
+                AuthedUser = UserManager.FindById(User.Identity.GetUserId())
+            };
+
+            return View("~/Views/GameAdmin/Dictionary/AddDictata.cshtml", vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddDictata(string lexemeId, AddEditDictataViewModel vModel)
+        {
+            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
+
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            if (lex == null)
+            {
+                return RedirectToAction("Index", new { Message = "That does not exist" });
+            }
 
             IDictata newObj = vModel.DataObject;
 
-            if (newObj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            lex.AddNewForm(newObj);
+
+            string message;
+            if (lex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
                 LoggingUtility.LogAdminCommandUsage("*WEB* - AddDictata[" + newObj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Creation Successful.";
@@ -136,34 +364,34 @@ namespace NetMud.Controllers.GameAdmin
         }
 
         [HttpGet]
-        public ActionResult Edit(string id, string ArchivePath = "")
+        public ActionResult EditDictata(string lexemeId, string id)
         {
-            string message = string.Empty;
-
-            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            IDictata obj = lex?.WordForms?.FirstOrDefault(form => form.UniqueKey == id);
 
             if (obj == null)
             {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
+                return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(ArchivePath, obj)
+            AddEditDictataViewModel vModel = new AddEditDictataViewModel(lex, obj)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
 
-            return View("~/Views/GameAdmin/Dictionary/Edit.cshtml", vModel);
+            return View("~/Views/GameAdmin/Dictionary/EditDictata.cshtml", vModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, AddEditDictionaryViewModel vModel)
+        public ActionResult EditDictata(string lexemeId, string id, AddEditDictataViewModel vModel)
         {
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            IDictata obj = lex?.WordForms?.FirstOrDefault(form => form.UniqueKey == id);
+
             if (obj == null)
             {
                 message = "That does not exist";
@@ -177,8 +405,10 @@ namespace NetMud.Controllers.GameAdmin
             obj.Tense = vModel.DataObject.Tense;
             obj.Synonyms = vModel.DataObject.Synonyms;
             obj.Antonyms = vModel.DataObject.Antonyms;
+            obj.PhraseSynonyms = vModel.DataObject.PhraseSynonyms;
+            obj.PhraseAntonyms = vModel.DataObject.PhraseAntonyms;
             obj.Language = vModel.DataObject.Language;
-            obj.WordTypes = vModel.DataObject.WordTypes;
+            obj.WordType = vModel.DataObject.WordType;
             obj.Feminine = vModel.DataObject.Feminine;
             obj.Possessive = vModel.DataObject.Possessive;
             obj.Plural = vModel.DataObject.Plural;
@@ -187,13 +417,44 @@ namespace NetMud.Controllers.GameAdmin
             obj.Perspective = vModel.DataObject.Perspective;
             obj.Semantics = vModel.DataObject.Semantics;
 
-            if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            lex.AddNewForm(obj);
+
+            if (lex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                foreach(var syn in obj.Synonyms)
+                foreach (IDictata syn in obj.Synonyms)
                 {
-                    if(!syn.Synonyms.Any(dict => dict == obj))
+                    if (!syn.Synonyms.Any(dict => dict == obj))
                     {
-                        var synonyms = syn.Synonyms;
+                        HashSet<IDictata> synonyms = syn.Synonyms;
+                        synonyms.Add(obj);
+
+                        ILexeme synLex = syn.GetLexeme();
+                        syn.Synonyms = synonyms;
+
+                        synLex.AddNewForm(syn);
+                        synLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    }
+                }
+
+                foreach (IDictata ant in obj.Antonyms)
+                {
+                    if (!ant.Antonyms.Any(dict => dict == obj))
+                    {
+                        HashSet<IDictata> antonyms = ant.Antonyms;
+                        antonyms.Add(obj);
+
+                        ILexeme antLex = ant.GetLexeme();
+                        ant.Antonyms = antonyms;
+                        antLex.AddNewForm(ant);
+                        antLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
+                    }
+                }
+
+                foreach (IDictataPhrase syn in obj.PhraseSynonyms)
+                {
+                    if (!syn.Synonyms.Any(dict => dict == obj))
+                    {
+                        HashSet<IDictata> synonyms = syn.Synonyms;
                         synonyms.Add(obj);
 
                         syn.Synonyms = synonyms;
@@ -201,11 +462,11 @@ namespace NetMud.Controllers.GameAdmin
                     }
                 }
 
-                foreach (var ant in obj.Antonyms)
+                foreach (IDictataPhrase ant in obj.PhraseAntonyms)
                 {
                     if (!ant.Antonyms.Any(dict => dict == obj))
                     {
-                        var antonyms = ant.Antonyms;
+                        HashSet<IDictata> antonyms = ant.Antonyms;
                         antonyms.Add(obj);
 
                         ant.Antonyms = antonyms;
@@ -224,81 +485,6 @@ namespace NetMud.Controllers.GameAdmin
             return RedirectToAction("Index", new { Message = message });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddRelatedWord(string id, AddEditDictionaryViewModel vModel)
-        {
-            string message = string.Empty;
-            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            IDictata obj = ConfigDataCache.Get<IDictata>(new ConfigDataCacheKey(typeof(IDictata), id, ConfigDataType.Dictionary));
-            if (obj == null)
-            {
-                message = "That does not exist";
-                return RedirectToAction("Index", new { Message = message });
-            }
-
-            var relatedWord = new Dictata
-            {
-                Name = vModel.Word,
-                Severity = obj.Severity + vModel.Severity,
-                Quality = obj.Quality + vModel.Quality,
-                Elegance = obj.Elegance + vModel.Elegance,
-                Tense = obj.Tense,
-                Language = obj.Language,
-                WordTypes = obj.WordTypes,
-                Feminine = obj.Feminine,
-                Possessive = obj.Possessive,
-                Plural = obj.Plural,
-                Determinant = obj.Determinant,
-                Positional = obj.Positional,
-                Perspective = obj.Perspective,
-                Semantics = obj.Semantics
-            };
-
-            var synonyms = obj.Synonyms;
-            synonyms.Add(obj);
-
-            if (vModel.Synonym)
-            {
-                relatedWord.Synonyms = synonyms;
-                relatedWord.Antonyms = obj.Antonyms;
-            }
-            else
-            {
-                relatedWord.Synonyms = obj.Antonyms;
-                relatedWord.Antonyms = synonyms;
-            }
-
-            if (relatedWord.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
-            {
-                if(vModel.Synonym)
-                {
-                    var mySynonyms = obj.Synonyms;
-                    mySynonyms.Add(relatedWord);
-
-                    obj.Synonyms = mySynonyms;
-                }
-                else
-                {
-                    var antonyms = obj.Antonyms;
-                    antonyms.Add(relatedWord);
-
-                    obj.Antonyms = antonyms;
-                }
-
-                obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                relatedWord.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictata[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-            {
-                message = "Error; Edit failed.";
-            }
-
-            return RedirectToAction("Index", new { Message = message });
-        }
+        #endregion
     }
 }

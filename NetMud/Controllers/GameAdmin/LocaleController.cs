@@ -48,8 +48,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Locale/Remove/{zoneId}/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long zoneId, long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            string message = string.Empty;
-
+            string message;
             if (!string.IsNullOrWhiteSpace(authorizeRemove) && removeId.ToString().Equals(authorizeRemove))
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
@@ -122,7 +121,6 @@ namespace NetMud.Controllers.GameAdmin
         [ValidateAntiForgeryToken]
         public ActionResult Add(long zoneId, AddEditLocaleTemplateViewModel vModel)
         {
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             IZoneTemplate zone = TemplateCache.Get<IZoneTemplate>(zoneId);
@@ -138,7 +136,7 @@ namespace NetMud.Controllers.GameAdmin
                 AlwaysDiscovered = vModel.DataObject.AlwaysDiscovered,
                 ParentLocation = zone
             };
-
+            string message;
             if (newObj.Create(authedUser.GameAccount, authedUser.GetStaffRank(User)) == null)
             {
                 message = "Error; Creation failed.";
@@ -162,7 +160,6 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
             }
 
-            string message = string.Empty;
             AddEditLocaleTemplateViewModel vModel = new AddEditLocaleTemplateViewModel
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
@@ -172,7 +169,7 @@ namespace NetMud.Controllers.GameAdmin
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = message });
             }
 
@@ -192,10 +189,10 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", "Zone", new { Id = zoneId, Message = "Invalid zone" });
             }
 
-            string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
             ILocaleTemplate obj = TemplateCache.Get<ILocaleTemplate>(id);
+            string message;
             if (obj == null)
             {
                 message = "That does not exist";

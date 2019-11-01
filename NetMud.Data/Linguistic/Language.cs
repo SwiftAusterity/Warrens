@@ -1,15 +1,18 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
-using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
+using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.Player;
+using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
@@ -97,6 +100,18 @@ namespace NetMud.Data.Linguistic
         public HashSet<SentenceGrammarRule> SentenceRules { get; set; }
 
         /// <summary>
+        /// Rules for sentence combination
+        /// </summary>
+        [UIHint("SentenceComplexityRules")]
+        public HashSet<SentenceComplexityRule> ComplexityRules { get; set; }
+
+        /// <summary>
+        /// Rules for phrase detection
+        /// </summary>
+        [UIHint("DictataPhraseRules")]
+        public HashSet<DictataPhraseRule> PhraseRules { get; set; }
+
+        /// <summary>
         /// The base needed words for a language to function
         /// </summary>
         [UIHint("BaseLanguageWords")]
@@ -109,8 +124,56 @@ namespace NetMud.Data.Linguistic
             WordPairRules = new HashSet<IWordPairRule>();
             ContractionRules = new HashSet<IContractionRule>();
             SentenceRules = new HashSet<SentenceGrammarRule>();
+            ComplexityRules = new HashSet<SentenceComplexityRule>();
             BaseWords = new BaseLanguageMembers();
             TransformationRules = new HashSet<IDictataTransformationRule>();
+            PhraseRules = new HashSet<DictataPhraseRule>();
+        }
+
+        /// <summary>
+        /// Create or modify a lexeme within this language
+        /// </summary>
+        /// <param name="word">the word we're making</param>
+        /// <returns></returns>
+        public ILexeme CreateOrModifyLexeme(string word, LexicalType form, string[] semantics)
+        {
+            word = word.ToLower();
+
+            Regex rgx = new Regex("[^a-z -]");
+            word = rgx.Replace(word, "");
+
+            if (string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
+            {
+                return null;
+            }
+
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
+
+            if (lex == null)
+            {
+                lex = new Lexeme()
+                {
+                    Name = word,
+                    Language = this
+                };
+            }
+
+            if (form != LexicalType.None && lex.GetForm(form, semantics, false) == null)
+            {
+                var newDict = new Dictata()
+                {
+                    Name = word,
+                    WordType = form,
+                    Language = this,
+                    Semantics = new HashSet<string>(semantics)
+                };
+
+                lex.AddNewForm(newDict);
+            }
+
+            lex.PersistToCache();
+
+            return lex;
         }
 
         #region Data persistence functions
@@ -120,7 +183,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool Save(IAccount editor, StaffRank rank)
         {
-            var result = base.Save(editor, rank);
+            bool result = base.Save(editor, rank);
             EnsureDictionary();
             return result;
         }
@@ -131,283 +194,420 @@ namespace NetMud.Data.Linguistic
         /// <returns>success status</returns>
         public override bool SystemSave()
         {
-            var result = base.SystemSave();
+            bool result = base.SystemSave();
             EnsureDictionary();
             return result;
         }
+
         private void EnsureDictionary()
         {
             if (!string.IsNullOrWhiteSpace(BaseWords.ArticleDeterminant))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.ArticleDeterminant,
-                    Determinant = true,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Article },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.ArticleDeterminant,
+                            Determinant = true,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Article,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.ArticleNonDeterminant))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.ArticleNonDeterminant,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Article },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.ArticleNonDeterminant,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Article,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.Conjunction))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.Conjunction,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Conjunction },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.Conjunction,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Conjunction,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.NeutralPronounFirstPersonPossessive))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.NeutralPronounFirstPersonPossessive,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.FirstPerson,
-                    Possessive = true,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.NeutralPronounFirstPersonPossessive,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.FirstPerson,
+                            Possessive = true,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Pronoun,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.NeutralPronounFirstPersonSingular))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.NeutralPronounFirstPersonSingular,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.FirstPerson,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.NeutralPronounFirstPersonSingular,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.FirstPerson,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Pronoun,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.NeutralPronounSecondPersonPlural))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.NeutralPronounSecondPersonPlural,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = true,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.SecondPerson,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.NeutralPronounSecondPersonPlural,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = true,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.SecondPerson,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Pronoun,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.NeutralPronounSecondPersonPossessive))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.NeutralPronounSecondPersonPossessive,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.SecondPerson,
-                    Possessive = true,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.NeutralPronounSecondPersonPossessive,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.SecondPerson,
+                            Possessive = true,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Pronoun,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.NeutralPronounSecondPersonSingular))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.NeutralPronounSecondPersonSingular,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.SecondPerson,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Pronoun },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.NeutralPronounSecondPersonSingular,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.SecondPerson,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Pronoun,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.VerbExistentialPlural))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.VerbExistentialPlural,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = true,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Semantics = new HashSet<string>() { "existential" },
-                    Tense = LexicalTense.Present,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Verb },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.VerbExistentialPlural,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = true,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Semantics = new HashSet<string>() { "existential" },
+                            Tense = LexicalTense.Present,
+                            WordType = LexicalType.Verb,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.VerbExistentialSingular))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.VerbExistentialSingular,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.None,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Semantics = new HashSet<string>() { "existential" },
-                    Tense = LexicalTense.Present,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Verb },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.VerbExistentialSingular,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.None,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Semantics = new HashSet<string>() { "existential" },
+                            Tense = LexicalTense.Present,
+                            WordType = LexicalType.Verb,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionAround))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionAround,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.Around,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
-                    Tense = LexicalTense.None,
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionAround,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.Around,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            WordType = LexicalType.Preposition,
+                            Tense = LexicalTense.None,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionAttached))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionAttached,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.Attached,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionAttached,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.Attached,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionFar))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionFar,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.Far,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionFar,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.Far,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionInside))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionInside,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.InsideOf,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionInside,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.InsideOf,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionNear))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionNear,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.Near,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionNear,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.Near,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionOn))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionOn,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.On,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionOn,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.On,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionOf))
+            {
+                LexicalProcessor.VerifyLexeme(new Lexeme()
+                {
+                    Name = BaseWords.PrepositionOf,
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionOf,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.PartOf,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
                 });
             }
 
