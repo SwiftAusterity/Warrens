@@ -90,7 +90,6 @@ namespace WordNet.Net.Searching
                     return Of("noun");
                 case PartsOfSpeech.Verb:
                     return Of("verb");
-
             }
 
             return null;            // unknown or not unique

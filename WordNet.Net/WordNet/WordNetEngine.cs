@@ -47,10 +47,10 @@ namespace WordNet.Net
 
             if (string.IsNullOrWhiteSpace(p))
             {
-                OverviewFor(t, PartsOfSpeech.Adjective.ToString(), ref b, ref obj, list);
-                OverviewFor(t,  PartsOfSpeech.Adverb.ToString(), ref b, ref obj, list);
-                OverviewFor(t,  PartsOfSpeech.Noun.ToString(), ref b, ref obj, list);
-                OverviewFor(t, PartsOfSpeech.Verb.ToString(), ref b, ref obj, list);
+                OverviewFor(t, PartOfSpeech.Of(PartsOfSpeech.Adjective).Key, ref b, ref obj, list);
+                OverviewFor(t, PartOfSpeech.Of(PartsOfSpeech.Adverb).Key, ref b, ref obj, list);
+                OverviewFor(t, PartOfSpeech.Of(PartsOfSpeech.Noun).Key, ref b, ref obj, list);
+                OverviewFor(t, PartOfSpeech.Of(PartsOfSpeech.Verb).Key, ref b, ref obj, list);
 
                 ss = obj;
             }
