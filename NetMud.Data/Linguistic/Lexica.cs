@@ -127,6 +127,8 @@ namespace NetMud.Data.Linguistic
             };
 
             lex.AddNewForm(dict);
+            lex.PersistToCache();
+            lex.SystemSave();
 
             LexicalProcessor.VerifyLexeme(lex);
 

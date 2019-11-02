@@ -150,22 +150,27 @@ namespace NetMud
 
                 foreach (string verb in commandVerbs)
                 {
-                    Dictata newVerb = new Dictata()
+                    LexicalProcessor.VerifyLexeme(new Lexeme()
                     {
                         Name = verb,
-                        Determinant = false,
-                        Feminine = false,
-                        Plural = false,
-                        Positional = LexicalPosition.None,
-                        Perspective = NarrativePerspective.None,
-                        Possessive = false,
-                        Tense = LexicalTense.Present,
-                        Semantics = new HashSet<string>() { "system_command" },
-                        WordType = LexicalType.Verb,
-                        Language = language
-                    };
-
-                    LexicalProcessor.VerifyLexeme(newVerb.GetLexeme());
+                        Language = language,
+                        WordForms = new IDictata[] {
+                            new Dictata()
+                            {
+                                Name = verb,
+                                Determinant = false,
+                                Feminine = false,
+                                Plural = false,
+                                Positional = LexicalPosition.None,
+                                Perspective = NarrativePerspective.None,
+                                Possessive = false,
+                                Tense = LexicalTense.Present,
+                                Semantics = new HashSet<string>() { "system_command" },
+                                WordType = LexicalType.Verb,
+                                Language = language
+                            }
+                        }
+                    });
                 }
             }
         }

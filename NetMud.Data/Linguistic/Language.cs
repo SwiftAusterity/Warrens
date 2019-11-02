@@ -147,7 +147,7 @@ namespace NetMud.Data.Linguistic
                 return null;
             }
 
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, Name, word));
 
             if (lex == null)
             {

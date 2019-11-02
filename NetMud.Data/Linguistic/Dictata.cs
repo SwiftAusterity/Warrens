@@ -503,7 +503,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the lexeme</returns>
         public ILexeme GetLexeme()
         {
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Language.Name, Name), ConfigDataType.Dictionary));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, Language.Name, Name));
 
             if (lex != null)
             {
@@ -522,9 +522,10 @@ namespace NetMud.Data.Linguistic
                     Language = Language
                 };
 
-                lex.AddNewForm(this);
                 lex.SystemSave();
                 lex.PersistToCache();
+
+                lex.AddNewForm(this);
             }
 
             return lex;

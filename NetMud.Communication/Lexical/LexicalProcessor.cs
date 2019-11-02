@@ -56,10 +56,10 @@ namespace NetMud.Communication.Lexical
         {
             try
             {
-                if (MapLexicalTypes(dictata.WordType) != PartsOfSpeech.None)
+                if (dictata.WordType != LexicalType.None)
                 {
                     var wordList = new List<string>();
-                    CreateOrModifyLexeme(dictata.Language, dictata.Name, ref wordList);
+                    CreateOrModifyLexeme(dictata.Language, dictata.Name, dictata.WordType, ref wordList);
                 }
             }
             catch (Exception ex)
@@ -76,7 +76,7 @@ namespace NetMud.Communication.Lexical
         /// </summary>
         /// <param name="word">just the text of the word</param>
         /// <returns>A lexeme</returns>
-        public static ILexeme CreateOrModifyLexeme(ILanguage language, string word, ref List<string> processedWords)
+        public static ILexeme CreateOrModifyLexeme(ILanguage language, string word, LexicalType wordType, ref List<string> processedWords)
         {
             word = word.ToLower();
 
@@ -88,11 +88,11 @@ namespace NetMud.Communication.Lexical
                 return null;
             }
 
-            ILexeme newLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", language.Name, word));
+            ILexeme newLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, word));
 
             if (newLex == null)
             {
-                newLex = language.CreateOrModifyLexeme(word, LexicalType.None, new string[0]);
+                newLex = language.CreateOrModifyLexeme(word, wordType, new string[0]);
             }
 
             if (newLex.IsSynMapped || processedWords.Any(wrd => wrd.Equals(word)))
@@ -218,12 +218,7 @@ namespace NetMud.Communication.Lexical
                 return;
             }
 
-            //Experiment: make new everything
-            if (VerifyLexeme(lexica.GetDictata().GetLexeme()) != null)
-            {
-                //make a new one
-                lexica.GenerateDictata();
-            }
+            VerifyLexeme(lexica.GetDictata().GetLexeme());
         }
 
         /// <summary>
@@ -248,9 +243,7 @@ namespace NetMud.Communication.Lexical
                 }
             }
 
-            ConfigDataCacheKey cacheKey = new ConfigDataCacheKey(lexeme);
-
-            ILexeme maybeLexeme = ConfigDataCache.Get<ILexeme>(cacheKey);
+            ILexeme maybeLexeme = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, lexeme.Language, lexeme.Name));
 
             if (maybeLexeme != null)
             {
@@ -258,6 +251,10 @@ namespace NetMud.Communication.Lexical
             }
 
             lexeme.IsSynMapped = false;
+
+            lexeme.PersistToCache();
+            lexeme.SystemSave();
+
             lexeme.MapSynNet();
             lexeme.FillLanguages();
 
