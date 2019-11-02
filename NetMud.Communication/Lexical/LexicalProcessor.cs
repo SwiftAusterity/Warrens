@@ -121,25 +121,29 @@ namespace NetMud.Communication.Lexical
                 {
                     //grab semantics somehow
                     List<string> semantics = new List<string>();
-                    var indexSplit = synSet.defn.IndexOf(';');
-                    string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
-                    string[] defWords = definition.Split(' ');
 
-                    foreach (string defWord in defWords)
+                    if (synSet.defn != null)
                     {
-                        var currentWord = defWord.ToLower();
-                        currentWord = rgx.Replace(currentWord, "");
+                        var indexSplit = synSet.defn.IndexOf(';');
+                        string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
+                        string[] defWords = definition.Split(' ');
 
-                        if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
+                        foreach (string defWord in defWords)
                         {
-                            continue;
-                        }
+                            var currentWord = defWord.ToLower();
+                            currentWord = rgx.Replace(currentWord, "");
 
-                        var defLex = language.CreateOrModifyLexeme(currentWord, LexicalType.None, new string[0]);
+                            if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
+                            {
+                                continue;
+                            }
 
-                        if (defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
-                        {
-                            semantics.Add(currentWord);
+                            var defLex = language.CreateOrModifyLexeme(currentWord, LexicalType.None, new string[0]);
+
+                            if (defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
+                            {
+                                semantics.Add(currentWord);
+                            }
                         }
                     }
 
@@ -148,45 +152,48 @@ namespace NetMud.Communication.Lexical
                     var newDict = newLex.GetForm(type, semantics.ToArray(), false);
 
                     ///wsns indicates hypo/hypernymity so
-                    int baseWeight = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
-                    newDict.Severity = baseWeight;
-                    newDict.Elegance = Math.Max(0, newDict.Name.SyllableCount() * 3);
-                    newDict.Quality = synSet.words.Count();
-
-                    foreach (Lexeme synWord in synSet.words)
+                    if (synSet.words.Length > 0)
                     {
-                        ///wsns indicates hypo/hypernymity so
-                        int mySeverity = synWord.wnsns;
-                        int myElegance = Math.Max(0, synWord.word.SyllableCount() * 3);
-                        int myQuality = synWord.semcor?.semcor ?? 0;
-                        
-                        //Don't bother if this word is already the same word we started with
-                        if (synWord.word.Equals(newDict.Name, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            continue;
-                        }
+                        int baseWeight = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
+                        newDict.Severity = baseWeight;
+                        newDict.Elegance = Math.Max(0, newDict.Name.SyllableCount() * 3);
+                        newDict.Quality = synSet.words.Count();
 
-                        //it's a phrase
-                        if (synWord.word.Contains("_"))
+                        foreach (Lexeme synWord in synSet.words)
                         {
-                            string[] words = synWord.word.Split('_');
+                            ///wsns indicates hypo/hypernymity so
+                            int mySeverity = synWord.wnsns;
+                            int myElegance = Math.Max(0, synWord.word.SyllableCount() * 3);
+                            int myQuality = synWord.semcor?.semcor ?? 0;
 
-                            //foreach (string phraseWord in words)
-                            //{
-                            //    //make the phrase? maybe later
-                            //}
-                        }
-                        else
-                        {
-                            var newWord = synWord.word.ToLower();
-                            newWord = rgx.Replace(newWord, "");
-
-                            if (newWord.Equals(word) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+                            //Don't bother if this word is already the same word we started with
+                            if (synWord.word.Equals(newDict.Name, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 continue;
                             }
 
-                            newDict.MakeRelatedWord(language, synWord.word, true);
+                            //it's a phrase
+                            if (synWord.word.Contains("_"))
+                            {
+                                string[] words = synWord.word.Split('_');
+
+                                //foreach (string phraseWord in words)
+                                //{
+                                //    //make the phrase? maybe later
+                                //}
+                            }
+                            else
+                            {
+                                var newWord = synWord.word.ToLower();
+                                newWord = rgx.Replace(newWord, "");
+
+                                if (newWord.Equals(word) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+                                {
+                                    continue;
+                                }
+
+                                newDict.MakeRelatedWord(language, synWord.word, true);
+                            }
                         }
                     }
                 }

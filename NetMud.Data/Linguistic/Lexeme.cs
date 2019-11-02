@@ -565,10 +565,10 @@ namespace NetMud.Data.Linguistic
             {
                 IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict => 
                     ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null 
-                                                                && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                                                                && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
                 IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
                     ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
-                                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)
                 {
@@ -584,8 +584,8 @@ namespace NetMud.Data.Linguistic
                     word.Antonyms = ants;
                 }
 
-                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
+                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn != null && syn.Equals(this)));
+                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant != null && ant.Equals(this)));
 
                 foreach (IDictataPhrase phrase in synonymPhrases)
                 {

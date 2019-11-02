@@ -163,58 +163,66 @@ namespace WordNet.Net.Searching
 
         public string BinSearch(string searchKey, char marker, StreamReader fp)
         {
-            if(fp == null)
+            try
             {
-                return string.Empty;
+                if (fp == null || fp.EndOfStream)
+                {
+                    return string.Empty;
+                }
+
+                long bot = fp.BaseStream.Seek(0, SeekOrigin.End);
+                long top = 0;
+                long mid = (bot - top) / 2 + top;
+                long diff = 666; // ???
+                string key;
+                string line;
+
+                do
+                {
+                    fp.DiscardBufferedData();
+                    fp.BaseStream.Position = mid - 1;
+
+                    if (mid != 1)
+                    {
+                        fp.ReadLine();
+                    }
+
+                    line = fp.ReadLine();
+                    if (line == null)
+                    {
+                        return null;
+                    }
+
+                    line = line.Replace("\0", "");
+                    int n = Math.Max(line.IndexOf(marker), 0);
+                    key = line.Substring(0, n);
+
+                    int co = string.CompareOrdinal(key, searchKey);
+                    if (co < 0)
+                    {
+                        // key is alphabetically less than the search key
+                        top = mid;
+                        diff = (bot - top) / 2;
+                        mid = top + diff;
+                    }
+                    if (co > 0)
+                    {
+                        // key is alphabetically greater than the search key
+                        bot = mid;
+                        diff = (bot - top) / 2;
+                        mid = top + diff;
+                    }
+                }
+                while (key != searchKey && diff != 0);
+
+                if (key == searchKey)
+                {
+                    return line;
+                }
             }
-
-            long bot = fp.BaseStream.Seek(0, SeekOrigin.End);
-            long top = 0;
-            long mid = (bot - top) / 2 + top;
-            long diff = 666; // ???
-            string key;
-            string line;
-            do
+            catch
             {
-                fp.DiscardBufferedData();
-                fp.BaseStream.Position = mid - 1;
-
-                if (mid != 1)
-                {
-                    fp.ReadLine();
-                }
-
-                line = fp.ReadLine();
-                if (line == null)
-                {
-                    return null;
-                }
-
-                line = line.Replace("\0", "");
-                int n = Math.Max(line.IndexOf(marker), 0);
-                key = line.Substring(0, n);
-
-                int co = string.CompareOrdinal(key, searchKey);
-                if (co < 0)
-                {
-                    // key is alphabetically less than the search key
-                    top = mid;
-                    diff = (bot - top) / 2;
-                    mid = top + diff;
-                }
-                if (co > 0)
-                {
-                    // key is alphabetically greater than the search key
-                    bot = mid;
-                    diff = (bot - top) / 2;
-                    mid = top + diff;
-                }
-            }
-            while (key != searchKey && diff != 0);
-
-            if (key == searchKey)
-            {
-                return line;
+                //none
             }
 
             return null;

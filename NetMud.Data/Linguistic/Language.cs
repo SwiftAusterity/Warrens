@@ -171,6 +171,7 @@ namespace NetMud.Data.Linguistic
                 lex.AddNewForm(newDict);
             }
 
+            lex.SystemSave();
             lex.PersistToCache();
 
             return lex;
@@ -613,18 +614,25 @@ namespace NetMud.Data.Linguistic
 
             if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionOf))
             {
-                LexicalProcessor.VerifyDictata(new Dictata()
+                LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionOn,
-                    Determinant = false,
-                    Feminine = false,
-                    Plural = false,
-                    Positional = LexicalPosition.PartOf,
-                    Perspective = NarrativePerspective.None,
-                    Possessive = false,
-                    Tense = LexicalTense.None,
-                    WordTypes = new HashSet<LexicalType>() { LexicalType.Preposition },
-                    Language = this
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionOf,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.PartOf,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
                 });
             }
         }

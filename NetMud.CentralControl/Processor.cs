@@ -47,8 +47,8 @@ namespace NetMud.CentralControl
 
                         foreach (Tuple<Func<bool>, int> pulsar in subList)
                         {
-                            //false return means it wants to be removed
-                            if(!pulsar.Item1.Invoke())
+                            //false return means it wants to be removed, fireonce means.. fire it once and then remove it
+                            if(!pulsar.Item1.Invoke() || fireOnce)
                             {
                                 RemoveSubscriber(designator, pulsar);
                             }

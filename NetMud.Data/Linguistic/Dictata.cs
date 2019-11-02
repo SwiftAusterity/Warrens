@@ -510,6 +510,7 @@ namespace NetMud.Data.Linguistic
                 if (!lex.WordForms.Any(form => form == this))
                 {
                     lex.AddNewForm(this);
+                    lex.SystemSave();
                     lex.PersistToCache();
                 }
             }
@@ -522,6 +523,7 @@ namespace NetMud.Data.Linguistic
                 };
 
                 lex.AddNewForm(this);
+                lex.SystemSave();
                 lex.PersistToCache();
             }
 
