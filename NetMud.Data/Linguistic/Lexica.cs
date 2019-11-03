@@ -74,8 +74,8 @@ namespace NetMud.Data.Linguistic
 
             Modifiers = new HashSet<ILexica>();
 
-            LexicalProcessor.VerifyLexeme(this);
             Context = context.Clone();
+            GetDictata();
         }
 
         public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity origin, IEntity observer)
@@ -86,8 +86,8 @@ namespace NetMud.Data.Linguistic
 
             Modifiers = new HashSet<ILexica>();
 
-            LexicalProcessor.VerifyLexeme(this);
             Context = BuildContext(origin, observer);
+            GetDictata();
         }
 
         /// <summary>

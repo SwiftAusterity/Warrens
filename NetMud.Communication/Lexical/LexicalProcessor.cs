@@ -52,6 +52,11 @@ namespace NetMud.Communication.Lexical
             }
         }
 
+        /// <summary>
+        /// Map the synonyms of this
+        /// </summary>
+        /// <param name="dictata">the word in question</param>
+        /// <returns>a trigger boolean to end a loop</returns>
         public static bool GetSynSet(IDictata dictata)
         {
             try
@@ -105,72 +110,69 @@ namespace NetMud.Communication.Lexical
                 return newLex;
             }
 
+            LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
+
             processedWords.Add(word);
 
-            bool exists = true;
-            SearchSet searchSet = null;
-            List<Search> results = new List<Search>();
-            WordNet.OverviewFor(word, string.Empty, ref exists, ref searchSet, results);
+            var newDict = newLex.GetForm(wordType, -1);
 
-            //We in theory have every single word form for this word now
-            if (exists && results != null)
+            //This is wordnet processing, wordnet doesnt have any of the above and will return weird results if we let it
+            if (!invalidTypes.Contains(wordType))
             {
-                LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
+                bool exists = true;
+                SearchSet searchSet = null;
+                List<Search> results = new List<Search>();
+                WordNet.OverviewFor(word, string.Empty, ref exists, ref searchSet, results);
 
-                foreach (SynonymSet synSet in results.SelectMany(result => result.senses))
+                //We in theory have every single word form for this word now
+                if (exists && results != null)
                 {
-                    //grab semantics somehow
-                    List<string> semantics = new List<string>();
-
-                    if (synSet.defn != null)
+                    foreach (SynonymSet synSet in results.Where(result => string.Compare(word, result.word, StringComparison.InvariantCultureIgnoreCase) == 0)
+                                                         .SelectMany(result => result.senses).Where(sense => sense.words?.Count() > 0))
                     {
-                        var indexSplit = synSet.defn.IndexOf(';');
-                        string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
-                        string[] defWords = definition.Split(' ');
+                        if (synSet.sstype == AdjSynSetType.IndirectAnt)
+                            continue;
 
-                        foreach (string defWord in defWords)
+                        //grab semantics somehow
+                        List<string> semantics = new List<string>();
+                        var type = MapLexicalTypes(synSet.pos.Flag);
+
+                        if (synSet.defn != null)
                         {
-                            var currentWord = defWord.ToLower();
-                            currentWord = rgx.Replace(currentWord, "");
+                            var indexSplit = synSet.defn.IndexOf(';');
+                            string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
+                            string[] defWords = definition.Split(' ');
 
-                            if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
+                            foreach (string defWord in defWords)
                             {
-                                continue;
-                            }
+                                var currentWord = defWord.ToLower();
+                                currentWord = rgx.Replace(currentWord, "");
 
-                            var defLex = language.CreateOrModifyLexeme(currentWord, LexicalType.None, new string[0]);
+                                if (processedWords.Contains(currentWord))
+                                    continue;
 
-                            if (defLex != null && !defLex.ContainedTypes().Any(typ => invalidTypes.Contains(typ)))
-                            {
+                                if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
+                                {
+                                    continue;
+                                }
+
                                 semantics.Add(currentWord);
                             }
                         }
-                    }
 
-                    var type = MapLexicalTypes(synSet.pos.Flag);
-                    newLex = language.CreateOrModifyLexeme(word, type, semantics.ToArray());
-                    var newDict = newLex.GetForm(type, semantics.ToArray(), false);
-
-                    ///wsns indicates hypo/hypernymity so
-                    if (synSet.words.Length > 0)
-                    {
-                        int baseWeight = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
-                        newDict.Severity = baseWeight;
-                        newDict.Elegance = Math.Max(0, newDict.Name.SyllableCount() * 3);
-                        newDict.Quality = synSet.words.Count();
-
+                        ///wsns indicates hypo/hypernymity so
                         foreach (Lexeme synWord in synSet.words)
                         {
+                            var newWord = synWord.word.ToLower();
+                            newWord = rgx.Replace(newWord, "");
+
+                            if (processedWords.Contains(newWord))
+                                continue;
+
                             ///wsns indicates hypo/hypernymity so
                             int mySeverity = synWord.wnsns;
                             int myElegance = Math.Max(0, synWord.word.SyllableCount() * 3);
                             int myQuality = synWord.semcor?.semcor ?? 0;
-
-                            //Don't bother if this word is already the same word we started with
-                            if (synWord.word.Equals(newDict.Name, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                continue;
-                            }
 
                             //it's a phrase
                             if (synWord.word.Contains("_"))
@@ -184,15 +186,27 @@ namespace NetMud.Communication.Lexical
                             }
                             else
                             {
-                                var newWord = synWord.word.ToLower();
-                                newWord = rgx.Replace(newWord, "");
+                                processedWords.Add(newWord);
 
-                                if (newWord.Equals(word) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+                                if (string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
                                 {
                                     continue;
                                 }
 
-                                newDict.MakeRelatedWord(language, synWord.word, true);
+                                var synLex = language.CreateOrModifyLexeme(newWord, type, semantics.ToArray());
+
+                                var synDict = synLex.GetForm(type, semantics.ToArray(), false);
+                                synDict.Elegance = Math.Max(0, newDict.Name.SyllableCount() * 3);
+                                synDict.Quality = synSet.words.Count();
+                                synDict.Severity = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
+
+                                synLex.PersistToCache();
+                                synLex.SystemSave();
+
+                                if (!newWord.Equals(word))
+                                {
+                                    newDict.MakeRelatedWord(language, newWord, synWord.wnsns > 0, synDict);
+                                }
                             }
                         }
                     }
@@ -212,7 +226,7 @@ namespace NetMud.Communication.Lexical
         /// <param name="lexica">lexica to check</param>
         public static void VerifyLexeme(ILexica lexica)
         {
-            if (string.IsNullOrWhiteSpace(lexica.Phrase) || lexica.Phrase.IsNumeric())
+            if (lexica == null || string.IsNullOrWhiteSpace(lexica.Phrase) || lexica.Phrase.IsNumeric())
             {
                 //we dont want numbers getting in the dict, thats bananas
                 return;

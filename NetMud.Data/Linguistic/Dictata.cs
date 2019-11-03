@@ -426,7 +426,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="synonym"></param>
         /// <returns></returns>
-        public ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym)
+        public ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym, IDictata existingWord = null)
         {
             ILexeme possibleLex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", language.Name, word), ConfigDataType.Dictionary));
 
@@ -440,23 +440,27 @@ namespace NetMud.Data.Linguistic
                 };
             }
 
-            Dictata newDict = new Dictata()
+            IDictata newDict = existingWord;
+            if (newDict == null)
             {
-                Name = word,
-                Language = language,
-                Severity = Severity,
-                Quality = Quality,
-                Elegance = Elegance,
-                Tense = Tense,
-                WordType = WordType,
-                Feminine = Feminine,
-                Possessive = Possessive,
-                Plural = Plural,
-                Determinant = Determinant,
-                Positional = Positional,
-                Perspective = Perspective,
-                Semantics = Semantics
-            };
+                newDict = new Dictata()
+                {
+                    Name = word,
+                    Language = language,
+                    Severity = Severity,
+                    Quality = Quality,
+                    Elegance = Elegance,
+                    Tense = Tense,
+                    WordType = WordType,
+                    Feminine = Feminine,
+                    Possessive = Possessive,
+                    Plural = Plural,
+                    Determinant = Determinant,
+                    Positional = Positional,
+                    Perspective = Perspective,
+                    Semantics = Semantics
+                };
+            }
 
             HashSet<IDictata> synonyms = Synonyms;
             synonyms.Add(this);
@@ -487,6 +491,8 @@ namespace NetMud.Data.Linguistic
             }
 
             possibleLex.AddNewForm(newDict);
+            possibleLex.PersistToCache();
+            possibleLex.SystemSave();
 
             Processor.StartSubscriptionLoop("WordNetMapping", possibleLex.MapSynNet, 60, true);
 

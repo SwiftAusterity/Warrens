@@ -62,27 +62,17 @@ namespace WordNet.Net.Searching
         public int CompareTo(object a)
         {
             SearchType s = (SearchType)a;
-            if (ptp.Ident < s.ptp.Ident)
+            if (ptp.Ident < s.ptp.Ident || !rec && s.rec)
             {
                 return -1;
             }
 
-            if (ptp.Ident > s.ptp.Ident)
+            if (ptp.Ident > s.ptp.Ident || rec && !s.rec)
             {
                 return 1;
             }
 
-            if ((!rec) && s.rec)
-            {
-                return -1;
-            }
-
-            if (rec && !s.rec)
-            {
-                return 1;
-            }
-
-            return 1;
+            return 0;
         }
 
         public override bool Equals(object a)

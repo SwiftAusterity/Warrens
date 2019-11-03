@@ -156,6 +156,9 @@ namespace NetMud.Data.Linguistic
                     Name = word,
                     Language = this
                 };
+
+                lex.SystemSave();
+                lex.PersistToCache();
             }
 
             if (form != LexicalType.None && lex.GetForm(form, semantics, false) == null)
@@ -170,9 +173,6 @@ namespace NetMud.Data.Linguistic
 
                 lex.AddNewForm(newDict);
             }
-
-            lex.SystemSave();
-            lex.PersistToCache();
 
             return lex;
         }

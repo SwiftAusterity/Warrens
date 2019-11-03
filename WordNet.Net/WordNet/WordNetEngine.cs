@@ -87,13 +87,20 @@ namespace WordNet.Net
 
         private bool AddSearchFor(string s, PartOfSpeech pos, List<Search> list)
         {
-            Search se = new Search(s, false, pos, new SearchType(false, "OVERVIEW"), 0, netData);
+            Search se = new Search(s, true, pos, new SearchType(false, "OVERVIEW"), 0, netData);
             if (se.lexemes.Count > 0)
             {
                 list.Add(se);
             }
 
-            return se.lexemes.Count > 0; // results were found
+            Search seS = new Search(s, true, pos, new SearchType(true, "OVERVIEW"), 0, netData);
+            if (seS.lexemes.Count > 0)
+            {
+                list.Add(seS);
+            }
+
+
+            return se.lexemes.Count > 0 || seS.lexemes.Count > 0; // results were found
         }
     }
 }
