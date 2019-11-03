@@ -156,6 +156,8 @@ namespace NetMud.Communication.Lexical
                                     continue;
                                 }
 
+                                var defLex = language.CreateOrModifyLexeme(currentWord, MapLexicalTypes(synSet.pos.Flag), new string[0]);
+
                                 semantics.Add(currentWord);
                             }
                         }
@@ -179,10 +181,28 @@ namespace NetMud.Communication.Lexical
                             {
                                 string[] words = synWord.word.Split('_');
 
-                                //foreach (string phraseWord in words)
-                                //{
-                                //    //make the phrase? maybe later
-                                //}
+                                List<ILexeme> phraseList = new List<ILexeme>();
+                                foreach (string phraseWord in words)
+                                {
+                                    //make the phrase? maybe later
+                                    ILexeme phraseLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, phraseWord));
+                                    if(phraseLex != null)
+                                    {
+                                        phraseList.Add(phraseLex);
+                                    }
+                                }
+
+
+                                if(phraseList.Count == words.Length)
+                                {
+                                    var phrase = language.CreateOrModifyPhrase(phraseList.Select(phr => phr.GetForm(MapLexicalTypes(synSet.pos.Flag), -1)),
+                                                                                MapLexicalTypes(synSet.pos.Flag),
+                                                                                semantics.ToArray(),
+                                                                                mySeverity, myElegance, myQuality, 
+                                                                                newDict.Feminine, newDict.Perspective, newDict.Positional, newDict.Tense);
+
+                                    newDict.MakeRelatedPhrase(phrase, synWord.wnsns > 0);
+                                }
                             }
                             else
                             {

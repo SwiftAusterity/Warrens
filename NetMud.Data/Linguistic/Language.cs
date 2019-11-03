@@ -177,6 +177,34 @@ namespace NetMud.Data.Linguistic
             return lex;
         }
 
+        /// <summary>
+        /// Create or modify a phrase within this language
+        /// </summary>
+        /// <param name="words">the phrase we're making</param>
+        /// <returns></returns>
+        public IDictataPhrase CreateOrModifyPhrase(IEnumerable<IDictata> words, LexicalType form, string[] semantics, 
+            int severity, int elegance, int quality, bool feminine, NarrativePerspective perspective, LexicalPosition positional, LexicalTense tense)
+        {
+            var newPhrase = new DictataPhrase()
+            {
+                Language = this,
+                Words = new HashSet<IDictata>(words),
+                Severity = severity,
+                Elegance = elegance,
+                Quality = quality,
+                Feminine = feminine,
+                Perspective = perspective,
+                Positional = positional,
+                Semantics = new HashSet<string>(semantics),
+                Tense = tense
+            };
+
+            newPhrase.PersistToCache();
+            newPhrase.SystemSave();
+
+            return newPhrase;
+        }
+
         #region Data persistence functions
         /// <summary>
         /// Update the field data for this object to the db

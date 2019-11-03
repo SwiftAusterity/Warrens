@@ -504,6 +504,56 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// relates a dictata to a phrase
+        /// </summary>
+        /// <param name="synonym"></param>
+        /// <returns></returns>
+        public bool MakeRelatedPhrase(IDictataPhrase phrase, bool synonym)
+        {
+            if (phrase == null)
+            {
+                return false;
+            }
+
+            HashSet<IDictata> synonyms = Synonyms;
+            synonyms.Add(this);
+
+            if (synonym)
+            {
+                phrase.Synonyms = synonyms;
+                phrase.Antonyms = Antonyms;
+                phrase.PhraseSynonyms = PhraseSynonyms;
+                phrase.PhraseAntonyms = PhraseAntonyms;
+
+                HashSet<IDictataPhrase> mySynonyms = PhraseSynonyms;
+                mySynonyms.Add(phrase);
+
+                PhraseSynonyms = mySynonyms;
+            }
+            else
+            {
+                phrase.Synonyms = Antonyms;
+                phrase.Antonyms = synonyms;
+                phrase.PhraseSynonyms = PhraseAntonyms;
+                phrase.PhraseAntonyms = PhraseSynonyms;
+
+                HashSet<IDictataPhrase> antonyms = PhraseAntonyms;
+                antonyms.Add(phrase);
+
+                PhraseAntonyms = antonyms;
+            }
+
+            phrase.PersistToCache();
+            phrase.SystemSave();
+
+            var myLex = GetLexeme();
+            myLex.SystemSave();
+            myLex.PersistToCache();
+
+            return true;
+        }
+
+        /// <summary>
         /// Get the lexeme for this word
         /// </summary>
         /// <returns>the lexeme</returns>
