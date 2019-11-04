@@ -5,6 +5,7 @@ using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Lexica.DeepLex;
 using NetMud.Utility;
+using Syn.WordNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,9 +13,6 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using System.Web;
-using WordNet.Net;
-using WordNet.Net.Searching;
-using WordNet.Net.WordNet;
 
 namespace NetMud.Communication.Lexical
 {
@@ -25,14 +23,14 @@ namespace NetMud.Communication.Lexical
     {
         private static readonly ObjectCache globalCache = MemoryCache.Default;
         private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
-        private static readonly string wordNetTokenCacheKey = "WordNetEngine";
+        private static readonly string wordNetTokenCacheKey = "WordNetHarness";
         private static readonly string mirriamWebsterTokenCacheKey = "MirriamHarness";
 
-        public static WordNetEngine WordNet
+        public static Syn.WordNet.WordNetEngine  WordNetHarness
         {
             get
             {
-                return (WordNetEngine)globalCache[wordNetTokenCacheKey];
+                return (Syn.WordNet.WordNetEngine)globalCache[wordNetTokenCacheKey];
             }
             set
             {
@@ -114,33 +112,34 @@ namespace NetMud.Communication.Lexical
 
             processedWords.Add(word);
 
-            var newDict = newLex.GetForm(wordType, -1);
-
             //This is wordnet processing, wordnet doesnt have any of the above and will return weird results if we let it
             if (!invalidTypes.Contains(wordType))
             {
-                bool exists = true;
-                SearchSet searchSet = null;
-                List<Search> results = new List<Search>();
-                WordNet.OverviewFor(word, string.Empty, ref exists, ref searchSet, results);
+                var synSets = WordNetHarness.GetSynSets(word, new PartOfSpeech[] { PartOfSpeech.Adjective, PartOfSpeech.Adverb, PartOfSpeech.Noun, PartOfSpeech.Verb });
 
                 //We in theory have every single word form for this word now
-                if (exists && results != null)
+                if (synSets != null)
                 {
-                    foreach (SynonymSet synSet in results.Where(result => string.Compare(word, result.word, StringComparison.InvariantCultureIgnoreCase) == 0)
-                                                         .SelectMany(result => result.senses).Where(sense => sense.words?.Count() > 0))
+                    foreach (SynSet synSet in synSets)
                     {
-                        if (synSet.sstype == AdjSynSetType.IndirectAnt)
+                        if (synSet.PartOfSpeech == PartOfSpeech.None)
                             continue;
+
+                        var newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
+
+                        if(newDict == null)
+                        {
+                            newLex = language.CreateOrModifyLexeme(word, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
+                            newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
+                        }
 
                         //grab semantics somehow
                         List<string> semantics = new List<string>();
-                        var type = MapLexicalTypes(synSet.pos.Flag);
 
-                        if (synSet.defn != null)
+                        if (!string.IsNullOrWhiteSpace(synSet.Gloss))
                         {
-                            var indexSplit = synSet.defn.IndexOf(';');
-                            string definition = synSet.defn.Substring(0, indexSplit < 0 ? synSet.defn.Length - 1 : indexSplit).Trim();
+                            var indexSplit = synSet.Gloss.IndexOf(';');
+                            string definition = synSet.Gloss.Substring(0, indexSplit < 0 ? synSet.Gloss.Length - 1 : indexSplit).Trim();
                             string[] defWords = definition.Split(' ');
 
                             foreach (string defWord in defWords)
@@ -148,38 +147,38 @@ namespace NetMud.Communication.Lexical
                                 var currentWord = defWord.ToLower();
                                 currentWord = rgx.Replace(currentWord, "");
 
-                                if (processedWords.Contains(currentWord))
-                                    continue;
+                                //if (processedWords.Contains(currentWord))
+                                //    continue;
 
                                 if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
                                 {
                                     continue;
                                 }
 
-                                var defLex = language.CreateOrModifyLexeme(currentWord, MapLexicalTypes(synSet.pos.Flag), new string[0]);
+                                //var defLex = language.CreateOrModifyLexeme(currentWord, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
 
                                 semantics.Add(currentWord);
                             }
                         }
 
                         ///wsns indicates hypo/hypernymity so
-                        foreach (Lexeme synWord in synSet.words)
+                        foreach (string synWord in synSet.Words)
                         {
-                            var newWord = synWord.word.ToLower();
+                            var newWord = synWord.ToLower();
                             newWord = rgx.Replace(newWord, "");
 
                             if (processedWords.Contains(newWord))
                                 continue;
 
                             ///wsns indicates hypo/hypernymity so
-                            int mySeverity = synWord.wnsns;
-                            int myElegance = Math.Max(0, synWord.word.SyllableCount() * 3);
-                            int myQuality = synWord.semcor?.semcor ?? 0;
+                            int mySeverity = 1;
+                            int myElegance = Math.Max(0, synWord.SyllableCount() * 3);
+                            int myQuality = 2;
 
                             //it's a phrase
-                            if (synWord.word.Contains("_"))
+                            if (synWord.Contains("_"))
                             {
-                                string[] words = synWord.word.Split('_');
+                                string[] words = synWord.Split('_');
 
                                 List<ILexeme> phraseList = new List<ILexeme>();
                                 foreach (string phraseWord in words)
@@ -195,13 +194,13 @@ namespace NetMud.Communication.Lexical
 
                                 if(phraseList.Count == words.Length)
                                 {
-                                    var phrase = language.CreateOrModifyPhrase(phraseList.Select(phr => phr.GetForm(MapLexicalTypes(synSet.pos.Flag), -1)),
-                                                                                MapLexicalTypes(synSet.pos.Flag),
+                                    var phrase = language.CreateOrModifyPhrase(phraseList.Select(phr => phr.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1)),
+                                                                                MapLexicalTypes(synSet.PartOfSpeech),
                                                                                 semantics.ToArray(),
                                                                                 mySeverity, myElegance, myQuality, 
                                                                                 newDict.Feminine, newDict.Perspective, newDict.Positional, newDict.Tense);
 
-                                    newDict.MakeRelatedPhrase(phrase, synWord.wnsns > 0);
+                                    newDict.MakeRelatedPhrase(phrase, true);
                                 }
                             }
                             else
@@ -213,19 +212,19 @@ namespace NetMud.Communication.Lexical
                                     continue;
                                 }
 
-                                var synLex = language.CreateOrModifyLexeme(newWord, type, semantics.ToArray());
+                                var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray());
 
-                                var synDict = synLex.GetForm(type, semantics.ToArray(), false);
+                                var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray(), false);
                                 synDict.Elegance = Math.Max(0, newDict.Name.SyllableCount() * 3);
-                                synDict.Quality = synSet.words.Count();
-                                synDict.Severity = synSet.words[Math.Max(0, synSet.whichword - 1)].wnsns;
+                                synDict.Quality = synSet.Words.Count();
+                                synDict.Severity = 2;
 
                                 synLex.PersistToCache();
                                 synLex.SystemSave();
 
                                 if (!newWord.Equals(word))
                                 {
-                                    newDict.MakeRelatedWord(language, newWord, synWord.wnsns > 0, synDict);
+                                    newDict.MakeRelatedWord(language, newWord, true, synDict);
                                 }
                             }
                         }
@@ -266,6 +265,7 @@ namespace NetMud.Communication.Lexical
                 return null;
             }
 
+            var deepLex = false;
             //Set the language to default if it is absent and save it, if it has a language it already exists
             if (lexeme.Language == null)
             {
@@ -275,6 +275,8 @@ namespace NetMud.Communication.Lexical
                 {
                     lexeme.Language = globalConfig.BaseLanguage;
                 }
+
+                deepLex = globalConfig?.DeepLexActive ?? false;
             }
 
             ILexeme maybeLexeme = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, lexeme.Language, lexeme.Name));
@@ -288,9 +290,7 @@ namespace NetMud.Communication.Lexical
 
             lexeme.PersistToCache();
             lexeme.SystemSave();
-
             lexeme.MapSynNet();
-            lexeme.FillLanguages();
 
             return lexeme;
         }
@@ -331,7 +331,9 @@ namespace NetMud.Communication.Lexical
                 return;
             }
 
-            WordNet = new WordNetEngine(wordNetPath);
+            var engine = new WordNetEngine();
+            engine.LoadFromDirectory(wordNetPath);
+            WordNetHarness = engine;
         }
 
         public static void LoadMirriamHarness(string dictKey, string thesaurusKey)
@@ -339,38 +341,38 @@ namespace NetMud.Communication.Lexical
             MirriamWebsterAPI = new MirriamWebsterHarness(dictKey, thesaurusKey);
         }
 
-        public static LexicalType MapLexicalTypes(PartsOfSpeech pos)
+        public static LexicalType MapLexicalTypes(PartOfSpeech pos)
         {
             switch (pos)
             {
-                case PartsOfSpeech.Adjective:
+                case PartOfSpeech.Adjective:
                     return LexicalType.Adjective;
-                case PartsOfSpeech.Adverb:
+                case PartOfSpeech.Adverb:
                     return LexicalType.Adverb;
-                case PartsOfSpeech.Noun:
+                case PartOfSpeech.Noun:
                     return LexicalType.Noun;
-                case PartsOfSpeech.Verb:
+                case PartOfSpeech.Verb:
                     return LexicalType.Verb;
             }
 
             return LexicalType.None;
         }
 
-        public static PartsOfSpeech MapLexicalTypes(LexicalType pos)
+        public static PartOfSpeech MapLexicalTypes(LexicalType pos)
         {
             switch (pos)
             {
                 case LexicalType.Adjective:
-                    return PartsOfSpeech.Adjective;
+                    return Syn.WordNet.PartOfSpeech.Adjective;
                 case LexicalType.Adverb:
-                    return PartsOfSpeech.Adverb;
+                    return Syn.WordNet.PartOfSpeech.Adverb;
                 case LexicalType.Noun:
-                    return PartsOfSpeech.Noun;
+                    return Syn.WordNet.PartOfSpeech.Noun;
                 case LexicalType.Verb:
-                    return PartsOfSpeech.Verb;
+                    return Syn.WordNet.PartOfSpeech.Verb;
             }
 
-            return PartsOfSpeech.None;
+            return Syn.WordNet.PartOfSpeech.None;
         }
     }
 }

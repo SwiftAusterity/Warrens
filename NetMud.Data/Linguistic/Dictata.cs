@@ -494,7 +494,7 @@ namespace NetMud.Data.Linguistic
             possibleLex.PersistToCache();
             possibleLex.SystemSave();
 
-            Processor.StartSubscriptionLoop("WordNetMapping", possibleLex.MapSynNet, 60, true);
+            possibleLex.MapSynNet();
 
             var myLex = GetLexeme();
             myLex.SystemSave();

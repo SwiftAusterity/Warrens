@@ -1,4 +1,5 @@
-﻿using NetMud.Communication.Lexical;
+﻿using NetMud.CentralControl;
+using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.ActorBase;
 using NetMud.Data.Architectural.PropertyBinding;
@@ -310,6 +311,20 @@ namespace NetMud.Data.Linguistic
                 return true;
             }
 
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            if (globalConfig?.DeepLexActive ?? false)
+            {
+                Processor.StartSubscriptionLoop("WordNetMapping", DeepLex, 2000, true);
+            }
+
+            return true;
+        }
+
+        private bool DeepLex()
+        {
+            FillLanguages();
+
             foreach (IDictata dict in WordForms)
             {
                 LexicalProcessor.GetSynSet(dict);
@@ -320,6 +335,7 @@ namespace NetMud.Data.Linguistic
             PersistToCache();
             SystemSave();
 
+            //We return false to break the loop
             return true;
         }
 
