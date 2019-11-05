@@ -131,6 +131,7 @@ namespace NetMud.Communication.Lexical
                         {
                             newLex = language.CreateOrModifyLexeme(word, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
                             newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
+                            newDict.Context = TranslateContext(synSet.LexicographerFileName);
                         }
 
                         //grab semantics somehow
@@ -215,9 +216,10 @@ namespace NetMud.Communication.Lexical
                                 var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray());
 
                                 var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray(), false);
-                                synDict.Elegance = Math.Max(0, newDict.Name.SyllableCount() * 3);
+                                synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
                                 synDict.Quality = synSet.Words.Count();
                                 synDict.Severity = 2;
+                                synDict.Context = TranslateContext(synSet.LexicographerFileName);
 
                                 synLex.PersistToCache();
                                 synLex.SystemSave();
@@ -363,16 +365,147 @@ namespace NetMud.Communication.Lexical
             switch (pos)
             {
                 case LexicalType.Adjective:
-                    return Syn.WordNet.PartOfSpeech.Adjective;
+                    return PartOfSpeech.Adjective;
                 case LexicalType.Adverb:
-                    return Syn.WordNet.PartOfSpeech.Adverb;
+                    return PartOfSpeech.Adverb;
                 case LexicalType.Noun:
-                    return Syn.WordNet.PartOfSpeech.Noun;
+                    return PartOfSpeech.Noun;
                 case LexicalType.Verb:
-                    return Syn.WordNet.PartOfSpeech.Verb;
+                    return PartOfSpeech.Verb;
             }
 
-            return Syn.WordNet.PartOfSpeech.None;
+            return PartOfSpeech.None;
+        }
+
+        public static SemanticContext TranslateContext(LexicographerFileName fileName)
+        {
+            SemanticContext context = SemanticContext.None;
+
+            switch(fileName)
+            {
+                case LexicographerFileName.NounAct:
+                    context = SemanticContext.Act;
+                    break;
+                case LexicographerFileName.NounAnimal:
+                    context = SemanticContext.Animal;
+                    break;
+                case LexicographerFileName.NounArtifact:
+                    context = SemanticContext.Artifact;
+                    break;
+                case LexicographerFileName.NounAttribute:
+                    context = SemanticContext.Attribute;
+                    break;
+                case LexicographerFileName.NounBody:
+                    context = SemanticContext.Body;
+                    break;
+                case LexicographerFileName.NounCognition:
+                    context = SemanticContext.Cognition;
+                    break;
+                case LexicographerFileName.NounCommunication:
+                    context = SemanticContext.Communication;
+                    break;
+                case LexicographerFileName.NounEvent:
+                    context = SemanticContext.Event;
+                    break;
+                case LexicographerFileName.NounFeeling:
+                    context = SemanticContext.Feeling;
+                    break;
+                case LexicographerFileName.NounFood:
+                    context = SemanticContext.Food;
+                    break;
+                case LexicographerFileName.NounGroup:
+                    context = SemanticContext.Group;
+                    break;
+                case LexicographerFileName.NounLocation:
+                    context = SemanticContext.Location;
+                    break;
+                case LexicographerFileName.NounMotive:
+                    context = SemanticContext.Motive;
+                    break;
+                case LexicographerFileName.NounObject:
+                    context = SemanticContext.Object;
+                    break;
+                case LexicographerFileName.NounPerson:
+                    context = SemanticContext.Person;
+                    break;
+                case LexicographerFileName.NounPhenomenon:
+                    context = SemanticContext.Phenomenon;
+                    break;
+                case LexicographerFileName.NounPlant:
+                    context = SemanticContext.Plant;
+                    break;
+                case LexicographerFileName.NounPossession:
+                    context = SemanticContext.Possession;
+                    break;
+                case LexicographerFileName.NounProcess:
+                    context = SemanticContext.Process;
+                    break;
+                case LexicographerFileName.NounQuantity:
+                    context = SemanticContext.Quantity;
+                    break;
+                case LexicographerFileName.NounRelation:
+                    context = SemanticContext.Relation;
+                    break;
+                case LexicographerFileName.NounShape:
+                    context = SemanticContext.Shape;
+                    break;
+                case LexicographerFileName.NounState:
+                    context = SemanticContext.State;
+                    break;
+                case LexicographerFileName.NounSubstance:
+                    context = SemanticContext.Substance;
+                    break;
+                case LexicographerFileName.NounTime:
+                    context = SemanticContext.Time;
+                    break;
+                case LexicographerFileName.VerbBody:
+                    context = SemanticContext.Body;
+                    break;
+                case LexicographerFileName.VerbChange:
+                    context = SemanticContext.Change;
+                    break;
+                case LexicographerFileName.VerbCognition:
+                    context = SemanticContext.Cognition;
+                    break;
+                case LexicographerFileName.VerbCommunication:
+                    context = SemanticContext.Communication;
+                    break;
+                case LexicographerFileName.VerbCompetition:
+                    context = SemanticContext.Competition;
+                    break;
+                case LexicographerFileName.VerbConsumption:
+                    context = SemanticContext.Consumption;
+                    break;
+                case LexicographerFileName.VerbContact:
+                    context = SemanticContext.Contact;
+                    break;
+                case LexicographerFileName.VerbCreation:
+                    context = SemanticContext.Creation;
+                    break;
+                case LexicographerFileName.VerbEmotion:
+                    context = SemanticContext.Emotion;
+                    break;
+                case LexicographerFileName.VerbMotion:
+                    context = SemanticContext.Motion;
+                    break;
+                case LexicographerFileName.VerbPerception:
+                    context = SemanticContext.Perception;
+                    break;
+                case LexicographerFileName.VerbPossession:
+                    context = SemanticContext.Possession;
+                    break;
+                case LexicographerFileName.VerbSocial:
+                    context = SemanticContext.Social;
+                    break;
+                case LexicographerFileName.VerbStative:
+                    context = SemanticContext.Stative;
+                    break;
+                case LexicographerFileName.VerbWeather:
+                    context = SemanticContext.Weather;
+                    break;
+            }
+
+            return context;
         }
     }
 }

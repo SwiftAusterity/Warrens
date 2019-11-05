@@ -66,6 +66,14 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// The type of word this is in general
+        /// </summary>
+        [Display(Name = "Type", Description = "The type of phrase this is.")]
+        [UIHint("EnumDropDownList")]
+        [Required]
+        public LexicalType WordType { get; set; }
+
+        /// <summary>
         /// Chronological tense of word
         /// </summary>
         [Display(Name = "Tense", Description = "Chronological tense (past, present, future)")]
@@ -104,6 +112,27 @@ namespace NetMud.Data.Linguistic
         public bool Feminine { get; set; }
 
         /// <summary>
+        /// Is this an determinant form or not (usually true)
+        /// </summary>
+        [Display(Name = "Determinant", Description = "Is this an determinant form or not? (usually true)")]
+        [UIHint("Boolean")]
+        public bool Determinant { get; set; }
+
+        /// <summary>
+        /// Is this a plural form
+        /// </summary>
+        [Display(Name = "Plural", Description = "Is this a plural form?")]
+        [UIHint("Boolean")]
+        public bool Plural { get; set; }
+
+        /// <summary>
+        /// Is this a possessive form
+        /// </summary>
+        [Display(Name = "Possessive", Description = "Is this a possessive form?")]
+        [UIHint("Boolean")]
+        public bool Possessive { get; set; }
+
+        /// <summary>
         /// Strength rating of word in relation to synonyms
         /// </summary>
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
@@ -118,6 +147,20 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "Elegance", Description = "Crudeness rating of word in relation to synonyms.")]
         [DataType(DataType.Text)]
         public int Elegance { get; set; }
+
+        /// <summary>
+        /// Usage context
+        /// </summary>
+        [Display(Name = "Usage", Description = "Usage context for the word.")]
+        [UIHint("EnumDropDownList")]
+        public SemanticContext Context { get; set; }
+
+        /// <summary>
+        /// Synonym status for offensive
+        /// </summary>
+        [Display(Name = "Vulgar", Description = "Is this considered vulgar?")]
+        [UIHint("Boolean")]
+        public bool Vulgar { get; set; }
 
         /// <summary>
         /// Finesse synonym rating; execution of form

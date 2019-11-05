@@ -94,7 +94,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             IEnumerable<ILexeme> dictionary = ConfigDataCache.GetAll<ILexeme>();
 
-            foreach(ILexeme dict in dictionary)
+            foreach (ILexeme dict in dictionary)
             {
                 dict.SystemRemove();
             }
@@ -224,7 +224,9 @@ namespace NetMud.Controllers.GameAdmin
                 Determinant = dict.Determinant,
                 Positional = dict.Positional,
                 Perspective = dict.Perspective,
-                Semantics = dict.Semantics
+                Semantics = dict.Semantics,
+                Context = dict.Context,
+                Vulgar = dict.Vulgar
             };
 
             HashSet<IDictata> synonyms = dict.Synonyms;
@@ -296,7 +298,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     message = "That does not exist";
                 }
-                else 
+                else
                 {
                     HashSet<IDictata> wordForms = lex.WordForms.ToHashSet();
                     wordForms.RemoveWhere(form => form.UniqueKey == removeId);
@@ -416,6 +418,8 @@ namespace NetMud.Controllers.GameAdmin
             obj.Positional = vModel.DataObject.Positional;
             obj.Perspective = vModel.DataObject.Perspective;
             obj.Semantics = vModel.DataObject.Semantics;
+            obj.Vulgar = vModel.DataObject.Vulgar;
+            obj.Context = vModel.DataObject.Context;
 
             lex.AddNewForm(obj);
 

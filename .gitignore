@@ -32,6 +32,7 @@ NetMud/FileStore/Logs/*
 NetMud/FileStore/*/Backups/
 NetMud/FileStore/Players/*
 NetMud/FileStore/GameWorld/*
+NetMud/FileStore/Dictionary/*
 *Backups*/
 *.mdf
 *.ldf

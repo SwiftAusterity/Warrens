@@ -179,6 +179,10 @@ namespace NetMud.Controllers.GameAdmin
             obj.Positional = vModel.DataObject.Positional;
             obj.Perspective = vModel.DataObject.Perspective;
             obj.Semantics = vModel.DataObject.Semantics;
+            obj.Vulgar = vModel.DataObject.Vulgar;
+            obj.Context = vModel.DataObject.Context;
+            obj.Plural = vModel.DataObject.Plural;
+            obj.Possessive = vModel.DataObject.Possessive;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

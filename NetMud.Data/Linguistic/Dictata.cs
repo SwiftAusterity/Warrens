@@ -158,6 +158,20 @@ namespace NetMud.Data.Linguistic
         public int Elegance { get; set; }
 
         /// <summary>
+        /// Usage context
+        /// </summary>
+        [Display(Name = "Usage", Description = "Usage context for the word.")]
+        [UIHint("EnumDropDownList")]
+        public SemanticContext Context { get; set; }
+
+        /// <summary>
+        /// Synonym status for offensive
+        /// </summary>
+        [Display(Name = "Vulgar", Description = "Is this considered vulgar?")]
+        [UIHint("Boolean")]
+        public bool Vulgar { get; set; }
+
+        /// <summary>
         /// Finesse synonym rating; execution of form
         /// </summary>
         [Range(0, 100, ErrorMessage = "The {0} must be between {2} and {1}.")]
