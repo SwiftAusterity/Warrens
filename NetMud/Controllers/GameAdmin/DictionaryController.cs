@@ -170,6 +170,7 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.DataObject.Name;
             obj.Language = vModel.DataObject.Language;
+            obj.Curated = vModel.DataObject.Curated;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {

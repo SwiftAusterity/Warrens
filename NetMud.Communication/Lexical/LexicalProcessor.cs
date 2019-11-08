@@ -26,11 +26,11 @@ namespace NetMud.Communication.Lexical
         private static readonly string wordNetTokenCacheKey = "WordNetHarness";
         private static readonly string mirriamWebsterTokenCacheKey = "MirriamHarness";
 
-        public static Syn.WordNet.WordNetEngine  WordNetHarness
+        public static WordNetEngine WordNetHarness
         {
             get
             {
-                return (Syn.WordNet.WordNetEngine)globalCache[wordNetTokenCacheKey];
+                return (WordNetEngine)globalCache[wordNetTokenCacheKey];
             }
             set
             {
@@ -104,139 +104,166 @@ namespace NetMud.Communication.Lexical
                 {
                     processedWords.Add(word);
                 }
-
-                return newLex;
             }
-
-            LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
-
-            processedWords.Add(word);
-
-            //This is wordnet processing, wordnet doesnt have any of the above and will return weird results if we let it
-            if (!invalidTypes.Contains(wordType))
+            else
             {
-                var synSets = WordNetHarness.GetSynSets(word, new PartOfSpeech[] { PartOfSpeech.Adjective, PartOfSpeech.Adverb, PartOfSpeech.Noun, PartOfSpeech.Verb });
+                LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
 
-                //We in theory have every single word form for this word now
-                if (synSets != null)
+                processedWords.Add(word);
+
+                //This is wordnet processing, wordnet doesnt have any of the above and will return weird results if we let it
+                if (!invalidTypes.Contains(wordType))
                 {
-                    foreach (SynSet synSet in synSets)
+                    var synSets = WordNetHarness.GetSynSets(word, new PartOfSpeech[] { PartOfSpeech.Adjective, PartOfSpeech.Adverb, PartOfSpeech.Noun, PartOfSpeech.Verb });
+
+                    //We in theory have every single word form for this word now
+                    if (synSets != null)
                     {
-                        if (synSet.PartOfSpeech == PartOfSpeech.None)
-                            continue;
-
-                        var newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
-
-                        if(newDict == null)
+                        foreach (SynSet synSet in synSets)
                         {
-                            newLex = language.CreateOrModifyLexeme(word, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
-                            newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
-                            newDict.Context = TranslateContext(synSet.LexicographerFileName);
-                        }
-
-                        //grab semantics somehow
-                        List<string> semantics = new List<string>();
-
-                        if (!string.IsNullOrWhiteSpace(synSet.Gloss))
-                        {
-                            var indexSplit = synSet.Gloss.IndexOf(';');
-                            string definition = synSet.Gloss.Substring(0, indexSplit < 0 ? synSet.Gloss.Length - 1 : indexSplit).Trim();
-                            string[] defWords = definition.Split(' ');
-
-                            foreach (string defWord in defWords)
-                            {
-                                var currentWord = defWord.ToLower();
-                                currentWord = rgx.Replace(currentWord, "");
-
-                                //if (processedWords.Contains(currentWord))
-                                //    continue;
-
-                                if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
-                                {
-                                    continue;
-                                }
-
-                                //var defLex = language.CreateOrModifyLexeme(currentWord, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
-
-                                semantics.Add(currentWord);
-                            }
-                        }
-
-                        ///wsns indicates hypo/hypernymity so
-                        foreach (string synWord in synSet.Words)
-                        {
-                            var newWord = synWord.ToLower();
-                            newWord = rgx.Replace(newWord, "");
-
-                            if (processedWords.Contains(newWord))
+                            if (synSet.PartOfSpeech == PartOfSpeech.None)
                                 continue;
 
-                            ///wsns indicates hypo/hypernymity so
-                            int mySeverity = 1;
-                            int myElegance = Math.Max(0, synWord.SyllableCount() * 3);
-                            int myQuality = 2;
+                            var newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
 
-                            //it's a phrase
-                            if (synWord.Contains("_"))
+                            if (newDict == null)
                             {
-                                string[] words = synWord.Split('_');
+                                newLex = language.CreateOrModifyLexeme(word, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
+                                newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
+                                newDict.Context = TranslateContext(synSet.LexicographerFileName);
+                            }
 
-                                List<ILexeme> phraseList = new List<ILexeme>();
-                                foreach (string phraseWord in words)
+                            //grab semantics somehow
+                            List<string> semantics = new List<string>();
+
+                            if (!string.IsNullOrWhiteSpace(synSet.Gloss))
+                            {
+                                var indexSplit = synSet.Gloss.IndexOf(';');
+                                string definition = synSet.Gloss.Substring(0, indexSplit < 0 ? synSet.Gloss.Length - 1 : indexSplit).Trim();
+                                string[] defWords = definition.Split(' ');
+
+                                foreach (string defWord in defWords)
                                 {
-                                    //make the phrase? maybe later
-                                    ILexeme phraseLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, phraseWord));
-                                    if(phraseLex != null)
+                                    var currentWord = defWord.ToLower();
+                                    currentWord = rgx.Replace(currentWord, "");
+
+                                    //if (processedWords.Contains(currentWord))
+                                    //    continue;
+
+                                    if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
                                     {
-                                        phraseList.Add(phraseLex);
+                                        continue;
                                     }
-                                }
 
+                                    //var defLex = language.CreateOrModifyLexeme(currentWord, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
 
-                                if(phraseList.Count == words.Length)
-                                {
-                                    var phrase = language.CreateOrModifyPhrase(phraseList.Select(phr => phr.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1)),
-                                                                                MapLexicalTypes(synSet.PartOfSpeech),
-                                                                                semantics.ToArray(),
-                                                                                mySeverity, myElegance, myQuality, 
-                                                                                newDict.Feminine, newDict.Perspective, newDict.Positional, newDict.Tense);
-
-                                    newDict.MakeRelatedPhrase(phrase, true);
+                                    semantics.Add(currentWord);
                                 }
                             }
-                            else
+
+                            ///wsns indicates hypo/hypernymity so
+                            foreach (string synWord in synSet.Words)
                             {
-                                processedWords.Add(newWord);
+                                var newWord = synWord.ToLower();
+                                newWord = rgx.Replace(newWord, "");
 
-                                if (string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
-                                {
+                                if (processedWords.Contains(newWord))
                                     continue;
-                                }
 
-                                var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray());
+                                ///wsns indicates hypo/hypernymity so
+                                int mySeverity = 1;
+                                int myElegance = Math.Max(0, synWord.SyllableCount() * 3);
+                                int myQuality = 2;
 
-                                var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray(), false);
-                                synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
-                                synDict.Quality = synSet.Words.Count();
-                                synDict.Severity = 2;
-                                synDict.Context = TranslateContext(synSet.LexicographerFileName);
-
-                                synLex.PersistToCache();
-                                synLex.SystemSave();
-
-                                if (!newWord.Equals(word))
+                                //it's a phrase
+                                if (synWord.Contains("_"))
                                 {
-                                    newDict.MakeRelatedWord(language, newWord, true, synDict);
+                                    string[] words = synWord.Split('_');
+
+                                    List<ILexeme> phraseList = new List<ILexeme>();
+                                    foreach (string phraseWord in words)
+                                    {
+                                        //make the phrase? maybe later
+                                        ILexeme phraseLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, phraseWord));
+                                        if (phraseLex != null)
+                                        {
+                                            phraseList.Add(phraseLex);
+                                        }
+                                    }
+
+
+                                    if (phraseList.Count == words.Length)
+                                    {
+                                        var phrase = language.CreateOrModifyPhrase(phraseList.Select(phr => phr.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1)),
+                                                                                    MapLexicalTypes(synSet.PartOfSpeech),
+                                                                                    semantics.ToArray(),
+                                                                                    mySeverity, myElegance, myQuality,
+                                                                                    newDict.Feminine, newDict.Perspective, newDict.Positional, newDict.Tense);
+
+                                        newDict.MakeRelatedPhrase(phrase, true);
+                                    }
+                                }
+                                else
+                                {
+                                    processedWords.Add(newWord);
+
+                                    if (string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+                                    {
+                                        continue;
+                                    }
+
+                                    var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray());
+
+                                    var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray(), false);
+                                    synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
+                                    synDict.Quality = synSet.Words.Count();
+                                    synDict.Severity = 2;
+                                    synDict.Context = TranslateContext(synSet.LexicographerFileName);
+
+                                    synLex.PersistToCache();
+                                    synLex.SystemSave();
+
+                                    if (!newWord.Equals(word))
+                                    {
+                                        newDict.MakeRelatedWord(language, newWord, true, synDict);
+                                    }
                                 }
                             }
                         }
                     }
                 }
+
+                newLex.IsSynMapped = true;
+                newLex.SystemSave();
+                newLex.PersistToCache();
             }
 
-            newLex.IsSynMapped = true;
-            newLex.SystemSave();
-            newLex.PersistToCache();
+            if(!newLex.MirriamIndexed)
+            {
+                var dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
+                if(dictEntry != null)
+                {
+                    foreach(var dict in newLex.WordForms)
+                    {
+                        dict.Vulgar = dictEntry.meta.offensive;
+
+                    }
+                }
+
+                var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
+                if (thesEntry != null)
+                {
+                }
+
+                newLex.MirriamIndexed = true;
+                newLex.SystemSave();
+                newLex.PersistToCache();
+            }
+
+            if (!newLex.IsTranslated)
+            {
+
+            }
 
             return newLex;
         }

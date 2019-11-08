@@ -51,9 +51,30 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Has this been mapped by the synset already
         /// </summary>
-        [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this can be damagaing to the synonym network)")]
+        [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
         public bool IsSynMapped { get; set; }
+
+        /// <summary>
+        /// Has this lexeme been run through the translator for other languages
+        /// </summary>
+        [Display(Name = "Translated", Description = "Has this word been translated to other languages mapped? (changing this directly can be damagaing to the synonym network)")]
+        [UIHint("Boolean")]
+        public bool IsTranslated { get; set; }
+
+        /// <summary>
+        /// Has this been curated by a human
+        /// </summary>
+        [Display(Name = "Curated", Description = "Has this word been curated by a human? (changing this directly can be damagaing to the synonym network)")]
+        [UIHint("Boolean")]
+        public bool Curated { get; set; }
+
+        /// <summary>
+        /// Has this been run through both Mirriam Webster APIs
+        /// </summary>
+        [Display(Name = "MirriamIndexed", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
+        [UIHint("Boolean")]
+        public bool MirriamIndexed { get; set; }
 
         [JsonProperty("Language")]
         private ConfigDataCacheKey _language { get; set; }
@@ -100,6 +121,10 @@ namespace NetMud.Data.Linguistic
         {
             WordForms = new IDictata[0];
             Name = string.Empty;
+            IsSynMapped = false;
+            MirriamIndexed = false;
+            IsTranslated = false;
+            Curated = false;
 
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 

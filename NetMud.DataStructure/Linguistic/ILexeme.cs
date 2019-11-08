@@ -16,6 +16,21 @@ namespace NetMud.DataStructure.Linguistic
         bool IsSynMapped { get; set; }
 
         /// <summary>
+        /// Has this lexeme been run through the translator for other languages
+        /// </summary>
+        bool IsTranslated { get; set; }
+
+        /// <summary>
+        /// Has this been curated by a human
+        /// </summary>
+        bool Curated { get; set; }
+
+        /// <summary>
+        /// Has this been run through both Mirriam Webster APIs
+        /// </summary>
+        bool MirriamIndexed { get; set; }
+
+        /// <summary>
         /// Individual meanings and types under this
         /// </summary>
         IDictata[] WordForms { get; set; }
