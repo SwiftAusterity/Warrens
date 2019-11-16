@@ -84,7 +84,7 @@ namespace NetMud.Communication.Lexical
             word = word.ToLower();
 
             Regex rgx = new Regex("[^a-z -]");
-            word = rgx.Replace(word, "");
+            word = rgx.Replace(word, " ");
 
             if (string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-'))
             {
@@ -124,6 +124,11 @@ namespace NetMud.Communication.Lexical
                             if (synSet.PartOfSpeech == PartOfSpeech.None)
                                 continue;
 
+                            var synContext = TranslateContext(synSet.LexicographerFileName);
+
+                            if (synContext == SemanticContext.Group || synContext == SemanticContext.Event || synContext == SemanticContext.Location)
+                                continue;
+
                             var newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
 
                             if (newDict == null)
@@ -143,7 +148,7 @@ namespace NetMud.Communication.Lexical
                             foreach (string synWord in synSet.Words)
                             {
                                 var newWord = synWord.ToLower();
-                                newWord = rgx.Replace(newWord, "");
+                                newWord = rgx.Replace(newWord, " ");
 
                                 if (processedWords.Contains(newWord))
                                     continue;
@@ -170,7 +175,7 @@ namespace NetMud.Communication.Lexical
                                 synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
                                 synDict.Quality = synSet.Words.Count();
                                 synDict.Severity = 2;
-                                synDict.Context = TranslateContext(synSet.LexicographerFileName);
+                                synDict.Context = synContext;
                                 synDict.Definition = newDict.Definition;
 
                                 synLex.PersistToCache();
