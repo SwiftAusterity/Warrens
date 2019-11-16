@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
     [Serializable]
     public class SynonymList
     {
-        public string[] wd { get; set; }
+        public List<string> item { get; set; }
 
-        public ThesaurusStatusLabel wsls { get; set; }
-
-        public ThesaurusStatusLabel[] wvrs { get; set; }
+        public SynonymList()
+        {
+            item = new List<string>();
+        }
     }
 }

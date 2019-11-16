@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -7,6 +8,11 @@ namespace NetMud.Lexica.DeepLex
     {
         public VerbalIllustration vis { get; set; }
 
-        public UsageNotes[] uns { get; set; }
+        public List<UsageNotes> uns { get; set; }
+
+        public UndefinedRunOnText()
+        {
+            uns = new List<UsageNotes>();
+        }
     }
 }

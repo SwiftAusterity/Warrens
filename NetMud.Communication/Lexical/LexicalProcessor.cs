@@ -98,7 +98,7 @@ namespace NetMud.Communication.Lexical
                 newLex = language.CreateOrModifyLexeme(word, wordType, new string[0]);
             }
 
-            if (newLex.IsSynMapped || processedWords.Any(wrd => wrd.Equals(word)))
+            if ((newLex.IsSynMapped && newLex.MirriamIndexed) || processedWords.Any(wrd => wrd.Equals(word)))
             {
                 if (!processedWords.Any(wrd => wrd.Equals(word)))
                 {
@@ -133,32 +133,10 @@ namespace NetMud.Communication.Lexical
                                 newDict.Context = TranslateContext(synSet.LexicographerFileName);
                             }
 
-                            //grab semantics somehow
-                            List<string> semantics = new List<string>();
-
+                            //We're going to use the definition from here
                             if (!string.IsNullOrWhiteSpace(synSet.Gloss))
                             {
-                                var indexSplit = synSet.Gloss.IndexOf(';');
-                                string definition = synSet.Gloss.Substring(0, indexSplit < 0 ? synSet.Gloss.Length - 1 : indexSplit).Trim();
-                                string[] defWords = definition.Split(' ');
-
-                                foreach (string defWord in defWords)
-                                {
-                                    var currentWord = defWord.ToLower();
-                                    currentWord = rgx.Replace(currentWord, "");
-
-                                    //if (processedWords.Contains(currentWord))
-                                    //    continue;
-
-                                    if (currentWord.Equals(word) || string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())
-                                    {
-                                        continue;
-                                    }
-
-                                    //var defLex = language.CreateOrModifyLexeme(currentWord, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
-
-                                    semantics.Add(currentWord);
-                                }
+                                newDict.Definition = synSet.Gloss;
                             }
 
                             ///wsns indicates hypo/hypernymity so
@@ -170,7 +148,7 @@ namespace NetMud.Communication.Lexical
                                 if (processedWords.Contains(newWord))
                                     continue;
 
-                                ///wsns indicates hypo/hypernymity so
+                                ///wsns indicates hypo/hypernymity so, TODO this whole thing
                                 int mySeverity = 1;
                                 int myElegance = Math.Max(0, synWord.SyllableCount() * 3);
                                 int myQuality = 2;
@@ -183,7 +161,7 @@ namespace NetMud.Communication.Lexical
                                     List<ILexeme> phraseList = new List<ILexeme>();
                                     foreach (string phraseWord in words)
                                     {
-                                        //make the phrase? maybe later
+                                        //make the phrase
                                         ILexeme phraseLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, phraseWord));
                                         if (phraseLex != null)
                                         {
@@ -196,9 +174,13 @@ namespace NetMud.Communication.Lexical
                                     {
                                         var phrase = language.CreateOrModifyPhrase(phraseList.Select(phr => phr.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1)),
                                                                                     MapLexicalTypes(synSet.PartOfSpeech),
-                                                                                    semantics.ToArray(),
+                                                                                    newDict.Semantics.ToArray(),
                                                                                     mySeverity, myElegance, myQuality,
                                                                                     newDict.Feminine, newDict.Perspective, newDict.Positional, newDict.Tense);
+
+                                        phrase.Definition = newDict.Definition;
+                                        phrase.PersistToCache();
+                                        phrase.SystemSave();
 
                                         newDict.MakeRelatedPhrase(phrase, true);
                                     }
@@ -212,13 +194,14 @@ namespace NetMud.Communication.Lexical
                                         continue;
                                     }
 
-                                    var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray());
+                                    var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray());
 
-                                    var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), semantics.ToArray(), false);
+                                    var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray(), false);
                                     synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
                                     synDict.Quality = synSet.Words.Count();
                                     synDict.Severity = 2;
                                     synDict.Context = TranslateContext(synSet.LexicographerFileName);
+                                    synDict.Definition = newDict.Definition;
 
                                     synLex.PersistToCache();
                                     synLex.SystemSave();
@@ -238,21 +221,114 @@ namespace NetMud.Communication.Lexical
                 newLex.PersistToCache();
             }
 
-            if(!newLex.MirriamIndexed)
+            if (!newLex.MirriamIndexed)
             {
-                var dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
-                if(dictEntry != null)
-                {
-                    foreach(var dict in newLex.WordForms)
-                    {
-                        dict.Vulgar = dictEntry.meta.offensive;
+                var newDict = newLex.GetForm(0);
 
+                try
+                {
+                    var dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
+                    if (dictEntry != null)
+                    {
+                        //Stuff done to modify all forms of the lexeme
+                        foreach (var dict in newLex.WordForms)
+                        {
+                            dict.Vulgar = dictEntry.meta.offensive;
+                        }
+
+                        //Stuff done based on the dictionary return data
+                        foreach (var stemWord in dictEntry.uros)
+                        {
+                            if (newLex.GetForm(MapLexicalTypes(stemWord.fl)) == null)
+                            {
+                                var wordText = stemWord.ure.Replace("*", "");
+                                ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, wordText));
+
+                                if (stemLex == null)
+                                {
+                                    stemLex = language.CreateOrModifyLexeme(wordText, MapLexicalTypes(stemWord.fl), null);
+
+                                    var stemDict = stemLex.GetForm(0);
+                                    stemDict.Elegance = newDict.Elegance;
+                                    stemDict.Quality = newDict.Quality;
+                                    stemDict.Severity = newDict.Severity;
+                                    stemDict.Context = newDict.Context;
+                                    stemDict.Definition = newDict.Definition;
+                                    stemDict.Semantics = newDict.Semantics;
+                                    processedWords.Add(wordText);
+                                }
+                            }
+                        }
+
+                        newDict.Semantics = new HashSet<string>(dictEntry.sls);
                     }
                 }
-
-                var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
-                if (thesEntry != null)
+                catch
                 {
+                    //just eating it
+                }
+
+                try
+                {
+                    var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
+                    if (thesEntry != null)
+                    {
+                        foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
+                        {
+                            if (string.IsNullOrWhiteSpace(synonym) || synonym.All(ch => ch == '-') || synonym.IsNumeric())
+                            {
+                                continue;
+                            }
+
+                            var synLex = language.CreateOrModifyLexeme(synonym, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
+
+                            var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
+                            synDict.Elegance = Math.Max(0, synonym.SyllableCount() * 3);
+                            synDict.Quality = thesEntry.meta.syns.Count();
+                            synDict.Severity = 2;
+                            synDict.Context = newDict.Context;
+                            synDict.Definition = newDict.Definition;
+
+                            synLex.PersistToCache();
+                            synLex.SystemSave();
+                            processedWords.Add(synonym);
+
+                            if (!synonym.Equals(word))
+                            {
+                                newDict.MakeRelatedWord(language, synonym, true, synDict);
+                            }
+                        }
+
+                        foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
+                        {
+                            if (string.IsNullOrWhiteSpace(antonym) || antonym.All(ch => ch == '-') || antonym.IsNumeric())
+                            {
+                                continue;
+                            }
+
+                            var synLex = language.CreateOrModifyLexeme(antonym, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
+
+                            var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
+                            synDict.Elegance = Math.Max(0, antonym.SyllableCount() * 3);
+                            synDict.Quality = thesEntry.meta.syns.Count();
+                            synDict.Severity = 2;
+                            synDict.Context = newDict.Context;
+                            synDict.Definition = newDict.Definition;
+
+                            synLex.PersistToCache();
+                            synLex.SystemSave();
+                            processedWords.Add(antonym);
+
+                            if (!antonym.Equals(word))
+                            {
+                                newDict.MakeRelatedWord(language, antonym, false, synDict);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    //just eating it
                 }
 
                 newLex.MirriamIndexed = true;
@@ -404,11 +480,28 @@ namespace NetMud.Communication.Lexical
             return PartOfSpeech.None;
         }
 
+        public static LexicalType MapLexicalTypes(string fl)
+        {
+            switch (fl)
+            {
+                case "adjective":
+                    return LexicalType.Adjective;
+                case "adverb":
+                    return LexicalType.Adverb;
+                case "noun":
+                    return LexicalType.Noun;
+                case "verb":
+                    return LexicalType.Verb;
+            }
+
+            return LexicalType.None;
+        }
+
         public static SemanticContext TranslateContext(LexicographerFileName fileName)
         {
             SemanticContext context = SemanticContext.None;
 
-            switch(fileName)
+            switch (fileName)
             {
                 case LexicographerFileName.NounAct:
                     context = SemanticContext.Act;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -7,6 +8,11 @@ namespace NetMud.Lexica.DeepLex
     {
         public string intro { get; set; }
 
-        public CalledAlsoNoteTarget[] cats { get; set; }
+        public List<CalledAlsoNoteTarget> cats { get; set; }
+
+        public CalledAlsoNote()
+        {
+            cats = new List<CalledAlsoNoteTarget>();
+        }
     }
 }

@@ -130,6 +130,24 @@ namespace NetMud.Utility
         }
 
         /// <summary>
+        /// Strips character sequences from a string
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="sequences"></param>
+        /// <returns></returns>
+        public static string Strip(this string word, string[] sequences)
+        {
+            var newString = word;
+
+            foreach (var sequence in sequences)
+            {
+                newString = newString.Replace(sequence, "");
+            }
+
+            return newString;
+        }
+
+        /// <summary>
         /// Is this any number of a specific type
         /// </summary>
         /// <typeparam name="T">the number type</typeparam>

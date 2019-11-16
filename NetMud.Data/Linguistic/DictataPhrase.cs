@@ -66,6 +66,13 @@ namespace NetMud.Data.Linguistic
         }
 
         /// <summary>
+        /// Human readable definition
+        /// </summary>
+        [Display(Name = "Definition", Description = "What this means.")]
+        [DataType(DataType.Text)]
+        public string Definition { get; set; }
+
+        /// <summary>
         /// The type of word this is in general
         /// </summary>
         [Display(Name = "Type", Description = "The type of phrase this is.")]

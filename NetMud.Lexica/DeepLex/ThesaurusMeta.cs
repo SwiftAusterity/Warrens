@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -15,14 +16,21 @@ namespace NetMud.Lexica.DeepLex
 
         public string section { get; set; }
 
-        public string[] stems { get; set; }
+        public List<string> stems { get; set; }
 
         public bool offensive { get; set; }
 
-        public string[] syns { get; set; }
+        public List<List<string>> syns { get; set; }
 
-        public string[] ants { get; set; }
+        public List<List<string>> ants { get; set; }
 
         public Target target { get; set; }
+
+        public ThesaurusMeta()
+        {
+            stems = new List<string>();
+            syns = new List<List<string>>();
+            ants = new List<List<string>>();
+        }
     }
 }

@@ -5,6 +5,11 @@ namespace NetMud.DataStructure.Linguistic
     public interface IWeightedMeaning
     {
         /// <summary>
+        /// Human readable definition
+        /// </summary>
+        string Definition { get; set; }
+
+        /// <summary>
         /// The wordform
         /// </summary>
         LexicalType WordType { get; set; }

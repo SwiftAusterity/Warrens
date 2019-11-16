@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -13,6 +14,11 @@ namespace NetMud.Lexica.DeepLex
         /// <summary>
         /// cognate cross-reference targets
         /// </summary>
-        public CognateCrossReferenceTarget[] cxtis { get; set; }
+        public List<CognateCrossReferenceTarget> cxtis { get; set; }
+
+        public CognateCrossReference()
+        {
+            cxtis = new List<CognateCrossReferenceTarget>();
+        }
     }
 }

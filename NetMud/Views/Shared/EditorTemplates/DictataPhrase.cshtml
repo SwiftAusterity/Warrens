@@ -24,6 +24,7 @@
     @Html.EditorFor(m => m.Feminine)
 </div>
 <div class="form-group row">
+    @Html.EditorFor(m => m.Definition, new { archivedValue = archivedTemplate?.Definition.ToString() ?? "" })
     @Html.EditorFor(m => m.Vulgar, new { archivedValue = archivedTemplate?.Severity.ToString() ?? "" })
     @Html.EditorFor(m => m.Severity, new { archivedValue = archivedTemplate?.Severity.ToString() ?? "" })
     @Html.EditorFor(m => m.Elegance, new { archivedValue = archivedTemplate?.Elegance.ToString() ?? "" })

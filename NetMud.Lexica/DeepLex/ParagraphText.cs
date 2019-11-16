@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -15,6 +16,11 @@ namespace NetMud.Lexica.DeepLex
         /// <summary>
         /// usage see in addition reference: contains the text and ID of a "see in addition" reference to another usage section.
         /// </summary>
-        public string[] uaref { get; set; }
+        public List<string> uaref { get; set; }
+
+        public ParagraphText()
+        {
+            uaref = new List<string>();
+        }
     }
 }

@@ -2,7 +2,9 @@
 using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -32,7 +34,7 @@ namespace NetMud.Lexica.DeepLex
 
         public DictionaryEntry GetDictionaryEntry(string word)
         {
-            if(DictionaryAttempts >= MaxAttempts)
+            if (DictionaryAttempts >= MaxAttempts)
             {
                 return null;
             }
@@ -40,9 +42,17 @@ namespace NetMud.Lexica.DeepLex
             DictionaryAttempts++;
             var jsonString = GetResponse(DictionaryEndpoint, word, DictionaryKey);
 
-            StringReader reader = new StringReader(jsonString);
+            if (!string.IsNullOrWhiteSpace(jsonString))
+            {
+                StringReader reader = new StringReader(jsonString);
 
-            return Serializer.Deserialize(reader, typeof(DictionaryEntry)) as DictionaryEntry;
+                var entryCollection = Serializer.Deserialize(reader, typeof(List<DictionaryEntry>)) as List<DictionaryEntry>;
+
+                return entryCollection.FirstOrDefault(entry => entry.meta.id.Strip(new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "_", "#" })
+                                                                            .Equals(word, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return null;
         }
 
         public ThesaurusEntry GetThesaurusEntry(string word)
@@ -55,9 +65,17 @@ namespace NetMud.Lexica.DeepLex
             ThesaurusAttempts++;
             var jsonString = GetResponse(ThesaurusEndpoint, word, ThesaurusKey);
 
-            StringReader reader = new StringReader(jsonString);
+            if (!string.IsNullOrWhiteSpace(jsonString))
+            {
+                StringReader reader = new StringReader(jsonString);
 
-            return Serializer.Deserialize(reader, typeof(ThesaurusEntry)) as ThesaurusEntry;
+                var entryCollection = Serializer.Deserialize(reader, typeof(List<ThesaurusEntry>)) as List<ThesaurusEntry>;
+
+                return entryCollection.FirstOrDefault(entry => entry.meta.id.Strip(new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "_", "#" } )
+                                                                            .Equals(word, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return null;
         }
 
         private string GetResponse(string baseUri, string searchName, string apiKey)
@@ -87,7 +105,7 @@ namespace NetMud.Lexica.DeepLex
                     LoggingUtility.Log(string.Format("Deep Lex Failure: {0} ({1})", (int)response.StatusCode, response.ReasonPhrase), LogChannels.SystemWarnings);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LoggingUtility.LogError(ex);
             }

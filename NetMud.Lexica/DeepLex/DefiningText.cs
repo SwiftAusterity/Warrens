@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -17,13 +18,18 @@ namespace NetMud.Lexica.DeepLex
 
         public RunIn ri { get; set; }
 
-        public BiographicalNameWrap[] bnw { get; set; }
+        public List<BiographicalNameWrap> bnw { get; set; }
 
         public CalledAlsoNote ca { get; set; }
 
         public SupplementalInformationNote snote { get; set; }
-        //uns
 
-        public UsageNotes[] uns { get; set; }
+        public List<UsageNotes> uns { get; set; }
+
+        public DefiningText()
+        {
+            uns = new List<UsageNotes>();
+            bnw = new List<BiographicalNameWrap>();
+        }
     }
 }

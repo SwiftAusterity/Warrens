@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -8,11 +9,16 @@ namespace NetMud.Lexica.DeepLex
     [Serializable]
     public class Definition
     {
-        public SenseSequence[] sseq { get; set; }
+        //public List<SenseSequence> sseq { get; set; }
 
         /// <summary>
         /// Verb Divider: The verb divider acts as a functional label in verb entries, introducing the separate sense sequences for transitive and intransitive meanings of the verb.
         /// </summary>
         public string vd { get; set; }
+
+        public Definition()
+        {
+            //sseq = new List<SenseSequence>();
+        }
     }
 }

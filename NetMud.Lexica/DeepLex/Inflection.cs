@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -23,11 +24,16 @@ namespace NetMud.Lexica.DeepLex
         /// <summary>
         /// Pronounciations
         /// </summary>
-        public Pronounciation[] prs { get; set; }
+        public List<Pronounciation> prs { get; set; }
 
         /// <summary>
         /// SENSE-SPECIFIC INFLECTION PLURAL LABEL
         /// </summary>
         public string spl { get; set; }
+
+        public Inflection()
+        {
+            prs = new List<Pronounciation>();
+        }
     }
 }
