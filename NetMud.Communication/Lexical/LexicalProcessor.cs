@@ -148,68 +148,37 @@ namespace NetMud.Communication.Lexical
                                 if (processedWords.Contains(newWord))
                                     continue;
 
-                                ///wsns indicates hypo/hypernymity so, TODO this whole thing
-                                int mySeverity = 1;
-                                int myElegance = Math.Max(0, synWord.SyllableCount() * 3);
-                                int myQuality = 2;
-
                                 //it's a phrase
-                                if (synWord.Contains("_"))
+                                if (newWord.Contains("_"))
                                 {
-                                    string[] words = synWord.Split('_');
-
-                                    List<ILexeme> phraseList = new List<ILexeme>();
-                                    foreach (string phraseWord in words)
-                                    {
-                                        //make the phrase
-                                        ILexeme phraseLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, phraseWord));
-                                        if (phraseLex != null)
-                                        {
-                                            phraseList.Add(phraseLex);
-                                        }
-                                    }
-
-
-                                    if (phraseList.Count == words.Length)
-                                    {
-                                        var phrase = language.CreateOrModifyPhrase(phraseList.Select(phr => phr.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1)),
-                                                                                    MapLexicalTypes(synSet.PartOfSpeech),
-                                                                                    newDict.Semantics.ToArray(),
-                                                                                    mySeverity, myElegance, myQuality,
-                                                                                    newDict.Feminine, newDict.Perspective, newDict.Positional, newDict.Tense);
-
-                                        phrase.Definition = newDict.Definition;
-                                        phrase.PersistToCache();
-                                        phrase.SystemSave();
-
-                                        newDict.MakeRelatedPhrase(phrase, true);
-                                    }
+                                    newWord = newWord.Replace("_", " ");
+                                    newWord = newWord.Strip(new string[] { "(", ")" });
                                 }
-                                else
+
+                                int myElegance = Math.Max(0, newWord.SyllableCount() * 3);
+
+                                processedWords.Add(newWord);
+
+                                if (string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
                                 {
-                                    processedWords.Add(newWord);
+                                    continue;
+                                }
 
-                                    if (string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
-                                    {
-                                        continue;
-                                    }
+                                var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray());
 
-                                    var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray());
+                                var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray(), false);
+                                synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
+                                synDict.Quality = synSet.Words.Count();
+                                synDict.Severity = 2;
+                                synDict.Context = TranslateContext(synSet.LexicographerFileName);
+                                synDict.Definition = newDict.Definition;
 
-                                    var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray(), false);
-                                    synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
-                                    synDict.Quality = synSet.Words.Count();
-                                    synDict.Severity = 2;
-                                    synDict.Context = TranslateContext(synSet.LexicographerFileName);
-                                    synDict.Definition = newDict.Definition;
+                                synLex.PersistToCache();
+                                synLex.SystemSave();
 
-                                    synLex.PersistToCache();
-                                    synLex.SystemSave();
-
-                                    if (!newWord.Equals(word))
-                                    {
-                                        newDict.MakeRelatedWord(language, newWord, true, synDict);
-                                    }
+                                if (!newWord.Equals(word))
+                                {
+                                    newDict.MakeRelatedWord(language, newWord, true, synDict);
                                 }
                             }
                         }

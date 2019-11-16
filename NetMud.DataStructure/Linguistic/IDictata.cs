@@ -31,13 +31,6 @@ namespace NetMud.DataStructure.Linguistic
         ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym, IDictata existingWord = null);
 
         /// <summary>
-        /// relates a dictata to a phrase
-        /// </summary>
-        /// <param name="synonym"></param>
-        /// <returns></returns>
-        bool MakeRelatedPhrase(IDictataPhrase phrase, bool synonym);
-
-        /// <summary>
         /// Create a lexica from this
         /// </summary>
         /// <returns></returns>

@@ -1,5 +1,4 @@
-﻿using NetMud.CentralControl;
-using NetMud.Data.Architectural.PropertyBinding;
+﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
@@ -79,8 +78,8 @@ namespace NetMud.Data.Linguistic
         /// Human readable definition
         /// </summary>
         [Display(Name = "Definition", Description = "What this means.")]
-        [DataType(DataType.Text)]
-        public string Definition { get; set; }
+        [UIHint("Markdown")]
+        public MarkdownString Definition { get; set; }
 
         /// <summary>
         /// The type of word this is in general
@@ -257,73 +256,6 @@ namespace NetMud.Data.Linguistic
             }
         }
 
-        [JsonProperty("PhraseSynonyms")]
-        private HashSet<ConfigDataCacheKey> _phraseSynonyms { get; set; }
-
-        /// <summary>
-        /// Things this is the same as mostly
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Phrase Synonyms", Description = "The synonyms (similar) of this phrase.")]
-        [UIHint("CollectionPhraseSynonymList")]
-        [DictataPhraseCollectionDataBinder]
-        public HashSet<IDictataPhrase> PhraseSynonyms
-        {
-            get
-            {
-                if (_phraseSynonyms == null)
-                {
-                    _phraseSynonyms = new HashSet<ConfigDataCacheKey>();
-                }
-
-                return new HashSet<IDictataPhrase>(_phraseSynonyms.Select(k => ConfigDataCache.Get<IDictataPhrase>(k)));
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _phraseSynonyms = new HashSet<ConfigDataCacheKey>();
-                    return;
-                }
-
-                _phraseSynonyms = new HashSet<ConfigDataCacheKey>(value.Where(k => k != null).Select(k => new ConfigDataCacheKey(k)));
-            }
-        }
-
-        [JsonProperty("PhraseAntonyms")]
-        private HashSet<ConfigDataCacheKey> _phraseAntonyms { get; set; }
-
-        /// <summary>
-        /// Things this is specifically opposite of mostly
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Phrase Antonyms", Description = "The antonyms (opposite) of this phrase.")]
-        [UIHint("CollectionPhraseAntonymList")]
-        [DictataPhraseCollectionDataBinder]
-        public HashSet<IDictataPhrase> PhraseAntonyms
-        {
-            get
-            {
-                if (_phraseAntonyms == null)
-                {
-                    _phraseAntonyms = new HashSet<ConfigDataCacheKey>();
-                }
-
-                return new HashSet<IDictataPhrase>(_phraseAntonyms.Select(k => ConfigDataCache.Get<IDictataPhrase>(k)));
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _phraseAntonyms = new HashSet<ConfigDataCacheKey>();
-                    return;
-                }
-
-                _phraseAntonyms = new HashSet<ConfigDataCacheKey>(value.Where(k => k != null).Select(k => new ConfigDataCacheKey(k)));
-            }
-        }
 
         [JsonConstructor]
         public Dictata()
@@ -343,8 +275,6 @@ namespace NetMud.Data.Linguistic
             WordType = LexicalType.None;
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
-            PhraseAntonyms = new HashSet<IDictataPhrase>();
-            PhraseSynonyms = new HashSet<IDictataPhrase>();
             Semantics = new HashSet<string>();
         }
 
@@ -366,8 +296,6 @@ namespace NetMud.Data.Linguistic
             WordType = LexicalType.None;
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
-            PhraseAntonyms = new HashSet<IDictataPhrase>();
-            PhraseSynonyms = new HashSet<IDictataPhrase>();
             Semantics = new HashSet<string>();
         }
 
@@ -380,8 +308,6 @@ namespace NetMud.Data.Linguistic
             Name = "";
             Antonyms = new HashSet<IDictata>();
             Synonyms = new HashSet<IDictata>();
-            PhraseAntonyms = new HashSet<IDictataPhrase>();
-            PhraseSynonyms = new HashSet<IDictataPhrase>();
             Semantics = new HashSet<string>();
 
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
@@ -418,8 +344,6 @@ namespace NetMud.Data.Linguistic
                 WordType = lexica.Type;
                 Synonyms = wordForm.Synonyms;
                 Antonyms = wordForm.Antonyms;
-                PhraseSynonyms = wordForm.PhraseSynonyms;
-                PhraseAntonyms = wordForm.PhraseAntonyms;
                 Determinant = wordForm.Determinant;
                 Elegance = wordForm.Elegance;
                 Feminine = wordForm.Feminine;
@@ -491,8 +415,6 @@ namespace NetMud.Data.Linguistic
             {
                 newDict.Synonyms = synonyms;
                 newDict.Antonyms = Antonyms;
-                newDict.PhraseSynonyms = PhraseSynonyms;
-                newDict.PhraseAntonyms = PhraseAntonyms;
 
                 HashSet<IDictata> mySynonyms = Synonyms;
                 mySynonyms.Add(newDict);
@@ -503,8 +425,6 @@ namespace NetMud.Data.Linguistic
             {
                 newDict.Synonyms = Antonyms;
                 newDict.Antonyms = synonyms;
-                newDict.PhraseSynonyms = PhraseAntonyms;
-                newDict.PhraseAntonyms = PhraseSynonyms;
 
                 HashSet<IDictata> antonyms = Antonyms;
                 antonyms.Add(newDict);
@@ -523,56 +443,6 @@ namespace NetMud.Data.Linguistic
             myLex.PersistToCache();
 
             return possibleLex;
-        }
-
-        /// <summary>
-        /// relates a dictata to a phrase
-        /// </summary>
-        /// <param name="synonym"></param>
-        /// <returns></returns>
-        public bool MakeRelatedPhrase(IDictataPhrase phrase, bool synonym)
-        {
-            if (phrase == null)
-            {
-                return false;
-            }
-
-            HashSet<IDictata> synonyms = Synonyms;
-            synonyms.Add(this);
-
-            if (synonym)
-            {
-                phrase.Synonyms = synonyms;
-                phrase.Antonyms = Antonyms;
-                phrase.PhraseSynonyms = PhraseSynonyms;
-                phrase.PhraseAntonyms = PhraseAntonyms;
-
-                HashSet<IDictataPhrase> mySynonyms = PhraseSynonyms;
-                mySynonyms.Add(phrase);
-
-                PhraseSynonyms = mySynonyms;
-            }
-            else
-            {
-                phrase.Synonyms = Antonyms;
-                phrase.Antonyms = synonyms;
-                phrase.PhraseSynonyms = PhraseAntonyms;
-                phrase.PhraseAntonyms = PhraseSynonyms;
-
-                HashSet<IDictataPhrase> antonyms = PhraseAntonyms;
-                antonyms.Add(phrase);
-
-                PhraseAntonyms = antonyms;
-            }
-
-            phrase.PersistToCache();
-            phrase.SystemSave();
-
-            var myLex = GetLexeme();
-            myLex.SystemSave();
-            myLex.PersistToCache();
-
-            return true;
         }
 
         /// <summary>
@@ -729,8 +599,6 @@ namespace NetMud.Data.Linguistic
                 Severity = Severity,
                 Antonyms = Antonyms,
                 Synonyms = Synonyms,
-                PhraseAntonyms = PhraseAntonyms,
-                PhraseSynonyms = PhraseSynonyms,
                 Tense = Tense,
                 WordType = WordType,
                 Quality = Quality

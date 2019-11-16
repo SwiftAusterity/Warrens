@@ -146,14 +146,6 @@
                             <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
                         }
                     </dd>
-                    <dt>Dictata Phrases [@Html.ActionLink(Model.DictionaryPhrases.Count().ToString(), "Index", "DictionaryPhrase", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]</dt>
-                    <dd>
-                        @Html.ActionLink(" ", "Add", "DictionaryPhrase", null, htmlAttributes: new { @class = "glyphicon-plus-sign glyphicon", @style = "color: green;", @title = "Add New" })
-                        @if (Model.DictionaryPhrases.Any(r => r.State != ApprovalState.Approved))
-                        {
-                            <span style="color:orange;" class="glyphicon-exclamation-sign glyphicon" title="UNAPPROVED CONTENT"></span>
-                        }
-                    </dd>
                 </dl>
             </div>
             <div>

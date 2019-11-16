@@ -64,11 +64,6 @@ namespace NetMud.DataStructure.Linguistic
         HashSet<IDictataTransformationRule> TransformationRules { get; set; }
 
         /// <summary>
-        /// Rules for phrase detection
-        /// </summary>
-        HashSet<DictataPhraseRule> PhraseRules { get; set; }
-
-        /// <summary>
         /// The base needed words for a language to function
         /// </summary>
         BaseLanguageMembers BaseWords { get; set; }
@@ -79,13 +74,5 @@ namespace NetMud.DataStructure.Linguistic
         /// <param name="word">the word we're making</param>
         /// <returns></returns>
         ILexeme CreateOrModifyLexeme(string word, LexicalType form, string[] semantics);
-
-        /// <summary>
-        /// Create or modify a phrase within this language
-        /// </summary>
-        /// <param name="words">the phrase we're making</param>
-        /// <returns></returns>
-        IDictataPhrase CreateOrModifyPhrase(IEnumerable<IDictata> words, LexicalType form, string[] semantics,
-            int severity, int elegance, int quality, bool feminine, NarrativePerspective perspective, LexicalPosition positional, LexicalTense tense);
     }
 }

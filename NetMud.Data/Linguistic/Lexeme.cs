@@ -251,8 +251,6 @@ namespace NetMud.Data.Linguistic
                                 Semantics = word.Semantics,
                                 Antonyms = word.Antonyms,
                                 Synonyms = word.Synonyms,
-                                PhraseAntonyms = word.PhraseAntonyms,
-                                PhraseSynonyms = word.PhraseSynonyms,
                                 Tense = word.Tense,
                                 WordType = word.WordType
                             };
@@ -529,32 +527,6 @@ namespace NetMud.Data.Linguistic
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.Antonyms = ants;
                 }
-
-                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
-
-                foreach (IDictataPhrase phrase in synonymPhrases)
-                {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(phrase.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Synonyms = syns;
-                    phrase.Save(remover, rank);
-                }
-
-                foreach (IDictataPhrase phrase in antonymPhrases)
-                {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(phrase.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Antonyms = ants;
-                    phrase.Save(remover, rank);
-                }
-
-                IEnumerable<IDictataPhrase> containedPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Words.Any(syn => syn.Equals(this)));
-
-                foreach (IDictataPhrase phrase in containedPhrases)
-                {
-                    phrase.Remove(remover, rank);
-                }
             }
 
             return removalState;
@@ -623,32 +595,6 @@ namespace NetMud.Data.Linguistic
                     HashSet<IDictata> ants = new HashSet<IDictata>(word.Antonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.Antonyms = ants;
-                }
-
-                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn != null && syn.Equals(this)));
-                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant != null && ant.Equals(this)));
-
-                foreach (IDictataPhrase phrase in synonymPhrases)
-                {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(phrase.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Synonyms = syns;
-                    phrase.SystemSave();
-                }
-
-                foreach (IDictataPhrase phrase in antonymPhrases)
-                {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(phrase.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Antonyms = ants;
-                    phrase.SystemSave();
-                }
-
-                IEnumerable<IDictataPhrase> containedPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Words.Any(syn => syn.Equals(this)));
-
-                foreach (IDictataPhrase phrase in containedPhrases)
-                {
-                    phrase.SystemRemove();
                 }
             }
 

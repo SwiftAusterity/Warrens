@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NetMud.DataStructure.Architectural;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
@@ -7,7 +8,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Human readable definition
         /// </summary>
-        string Definition { get; set; }
+        MarkdownString Definition { get; set; }
 
         /// <summary>
         /// The wordform
@@ -93,15 +94,5 @@ namespace NetMud.DataStructure.Linguistic
         /// Things this is specifically opposite of mostly
         /// </summary>
         HashSet<IDictata> Antonyms { get; set; }
-
-        /// <summary>
-        /// Things this is the same as mostly
-        /// </summary>
-        HashSet<IDictataPhrase> PhraseSynonyms { get; set; }
-
-        /// <summary>
-        /// Things this is specifically opposite of mostly
-        /// </summary>
-        HashSet<IDictataPhrase> PhraseAntonyms { get; set; }
     }
 }

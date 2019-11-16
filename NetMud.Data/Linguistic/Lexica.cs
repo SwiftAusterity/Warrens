@@ -390,15 +390,6 @@ namespace NetMud.Data.Linguistic
                 }
             }
 
-            //Phrase detection
-            if (newLex.Modifiers.Count() > 0)
-            {
-                List<ILexica> phraseLexes = new List<ILexica>() { newLex };
-                phraseLexes.AddRange(newLex.Modifiers);
-
-                ParsePhrase(phraseLexes, Context.Language);
-            }
-
             foreach (ILexica modifier in newLex.Modifiers)
             {
                 IWordPairRule rule = Context.Language.WordPairRules.OrderByDescending(rul => rul.RuleSpecificity())
@@ -638,70 +629,6 @@ namespace NetMud.Data.Linguistic
             }
 
             return message;
-        }
-
-        private void ParsePhrase(IEnumerable<ILexica> lexes, ILanguage language)
-        {
-            if (language?.PhraseRules != null && language.PhraseRules.Count() > 0)
-            {
-                foreach (DictataPhraseRule phraseRule in language.PhraseRules)
-                {
-                    int validCount = 0;
-                    foreach (IGrouping<LexicalType, ILexica> lexGroup in lexes.GroupBy(lex => lex.Type))
-                    {
-                        short minCount = phraseRule.Elements.FirstOrDefault(rule => rule.WordType == lexGroup.Key)?.MinimumNumber ?? 0;
-
-                        if (minCount == -1
-                            || (minCount == 0 && lexGroup.Count() == 0)
-                            || (minCount > 0 && lexGroup.Count() >= minCount))
-                        {
-                            validCount++;
-                        }
-                    }
-
-                    //Prepositional position phrase
-                    if (validCount == Enum.GetNames(typeof(LexicalType)).Count())
-                    {
-                        LexicalType primaryType = phraseRule.Elements.FirstOrDefault(ruleLex => ruleLex.Primary)?.WordType ?? LexicalType.Preposition;
-                        IDictata primaryWord = lexes.FirstOrDefault(lex => lex.Type == primaryType)?.GetDictata();
-
-                        if (primaryWord == null)
-                        {
-                            primaryWord = lexes.FirstOrDefault().GetDictata();
-                        }
-
-                        DictataPhrase newPhrase = new DictataPhrase()
-                        {
-                            Elegance = (int)Math.Truncate((primaryWord.Elegance + 1) * 1.2),
-                            Quality = (int)Math.Truncate((primaryWord.Quality + 1) * 1.2),
-                            Severity = (int)Math.Truncate((primaryWord.Severity + 1) * 1.2),
-                            Antonyms = primaryWord.Antonyms,
-                            PhraseAntonyms = primaryWord.PhraseAntonyms,
-                            Synonyms = primaryWord.Synonyms,
-                            PhraseSynonyms = primaryWord.PhraseSynonyms,
-                            Feminine = primaryWord.Feminine,
-                            Language = primaryWord.Language,
-                            Perspective = primaryWord.Perspective,
-                            Positional = primaryWord.Positional,
-                            Semantics = primaryWord.Semantics,
-                            Tense = primaryWord.Tense,
-                            Words = new HashSet<IDictata>(lexes.Select(lex => lex.GetDictata()))
-                        };
-
-                        if (!CheckForExistingPhrase(newPhrase))
-                        {
-                            newPhrase.SystemSave();
-                        }
-                    }
-                }
-            }
-        }
-
-        private bool CheckForExistingPhrase(IDictataPhrase newPhrase)
-        {
-            //Check for existing phrases with the same word set
-            IEnumerable<IDictataPhrase> maybePhrases = ConfigDataCache.GetAll<IDictataPhrase>();
-            return maybePhrases.Any(phrase => phrase.Words.All(word => newPhrase.Words.Any(newWord => newWord.Equals(word))));
         }
 
         #region Equality Functions
