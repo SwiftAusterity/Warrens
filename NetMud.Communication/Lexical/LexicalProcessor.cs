@@ -153,12 +153,8 @@ namespace NetMud.Communication.Lexical
                                 if (processedWords.Contains(newWord))
                                     continue;
 
-                                //it's a phrase
-                                if (newWord.Contains("_"))
-                                {
-                                    newWord = newWord.Replace("_", " ");
-                                    newWord = newWord.Strip(new string[] { "(", ")" });
-                                }
+                                newWord = newWord.Replace("_", " ");
+                                newWord = newWord.Strip(new string[] { "(", ")" });
 
                                 int myElegance = Math.Max(0, newWord.SyllableCount() * 3);
 
