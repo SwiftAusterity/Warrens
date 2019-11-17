@@ -120,7 +120,7 @@ namespace NetMud.Communication.Lexical
                     {
                         SemanticContext[] invalidContexts = new SemanticContext[] 
                             { SemanticContext.Group, SemanticContext.Event, SemanticContext.Location, SemanticContext.Competition, SemanticContext.Person
-                            , SemanticContext.Plant, SemanticContext.Animal };
+                            , SemanticContext.Plant, SemanticContext.Animal, SemanticContext.Time, SemanticContext.Artifact };
 
                         foreach (SynSet synSet in synSets)
                         {
@@ -226,6 +226,9 @@ namespace NetMud.Communication.Lexical
                                     stemDict.Definition = newDict.Definition;
                                     stemDict.Semantics = newDict.Semantics;
                                     processedWords.Add(wordText);
+
+                                    stemLex.SystemSave();
+                                    stemLex.PersistToCache();
                                 }
                             }
                         }
