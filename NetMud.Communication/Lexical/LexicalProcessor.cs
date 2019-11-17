@@ -84,9 +84,8 @@ namespace NetMud.Communication.Lexical
             word = word.ToLower();
 
             Regex rgx = new Regex("[^a-z -]");
-            word = rgx.Replace(word, " ");
 
-            if (string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-'))
+            if (rgx.IsMatch(word))
             {
                 return null;
             }
@@ -119,6 +118,10 @@ namespace NetMud.Communication.Lexical
                     //We in theory have every single word form for this word now
                     if (synSets != null)
                     {
+                        SemanticContext[] invalidContexts = new SemanticContext[] 
+                            { SemanticContext.Group, SemanticContext.Event, SemanticContext.Location, SemanticContext.Competition, SemanticContext.Person
+                            , SemanticContext.Plant, SemanticContext.Animal };
+
                         foreach (SynSet synSet in synSets)
                         {
                             if (synSet.PartOfSpeech == PartOfSpeech.None)
@@ -126,7 +129,7 @@ namespace NetMud.Communication.Lexical
 
                             var synContext = TranslateContext(synSet.LexicographerFileName);
 
-                            if (synContext == SemanticContext.Group || synContext == SemanticContext.Event || synContext == SemanticContext.Location)
+                            if (invalidContexts.Contains(synContext))
                                 continue;
 
                             var newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
@@ -148,13 +151,10 @@ namespace NetMud.Communication.Lexical
                             foreach (string synWord in synSet.Words)
                             {
                                 var newWord = synWord.ToLower();
-                                newWord = rgx.Replace(newWord, " ");
-
-                                if (processedWords.Contains(newWord))
-                                    continue;
-
                                 newWord = newWord.Replace("_", " ");
-                                newWord = newWord.Strip(new string[] { "(", ")" });
+
+                                if (rgx.IsMatch(newWord))
+                                    continue;
 
                                 int myElegance = Math.Max(0, newWord.SyllableCount() * 3);
 
@@ -245,15 +245,16 @@ namespace NetMud.Communication.Lexical
                     {
                         foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
                         {
-                            if (string.IsNullOrWhiteSpace(synonym) || synonym.All(ch => ch == '-') || synonym.IsNumeric())
-                            {
-                                continue;
-                            }
+                            var newWord = synonym.ToLower();
+                            newWord = newWord.Replace("_", " ");
 
-                            var synLex = language.CreateOrModifyLexeme(synonym, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
+                            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
+                                continue;
+
+                            var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
 
                             var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = Math.Max(0, synonym.SyllableCount() * 3);
+                            synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
                             synDict.Quality = thesEntry.meta.syns.Count();
                             synDict.Severity = 2;
                             synDict.Context = newDict.Context;
@@ -261,25 +262,26 @@ namespace NetMud.Communication.Lexical
 
                             synLex.PersistToCache();
                             synLex.SystemSave();
-                            processedWords.Add(synonym);
+                            processedWords.Add(newWord);
 
-                            if (!synonym.Equals(word))
+                            if (!newWord.Equals(word))
                             {
-                                newDict.MakeRelatedWord(language, synonym, true, synDict);
+                                newDict.MakeRelatedWord(language, newWord, true, synDict);
                             }
                         }
 
                         foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
                         {
-                            if (string.IsNullOrWhiteSpace(antonym) || antonym.All(ch => ch == '-') || antonym.IsNumeric())
-                            {
-                                continue;
-                            }
+                            var newWord = antonym.ToLower();
+                            newWord = newWord.Replace("_", " ");
 
-                            var synLex = language.CreateOrModifyLexeme(antonym, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
+                            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
+                                continue;
+
+                            var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
 
                             var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = Math.Max(0, antonym.SyllableCount() * 3);
+                            synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
                             synDict.Quality = thesEntry.meta.syns.Count();
                             synDict.Severity = 2;
                             synDict.Context = newDict.Context;
@@ -287,11 +289,11 @@ namespace NetMud.Communication.Lexical
 
                             synLex.PersistToCache();
                             synLex.SystemSave();
-                            processedWords.Add(antonym);
+                            processedWords.Add(newWord);
 
-                            if (!antonym.Equals(word))
+                            if (!newWord.Equals(word))
                             {
-                                newDict.MakeRelatedWord(language, antonym, false, synDict);
+                                newDict.MakeRelatedWord(language, newWord, false, synDict);
                             }
                         }
                     }
