@@ -279,7 +279,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\WordFightViewModel.cs" />
     <Compile Include="Models\AddEditConfigDataModel.cs" />
     <Compile Include="Models\AddEditTemplateModel.cs" />
     <Compile Include="Models\Admin\JournalEntryViewModels.cs" />
@@ -329,6 +329,8 @@
     <Compile Include="Models\Features\RacesViewModel.cs" />
     <Compile Include="Models\Features\WorldsViewModel.cs" />
     <Compile Include="Models\Features\ZonesViewModel.cs" />
+    <Compile Include="Models\ForgotPasswordViewModel.cs" />
+    <Compile Include="Models\ForgotViewModel.cs" />
     <Compile Include="Models\GameContextModel.cs" />
     <Compile Include="Models\IBaseViewModel.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
@@ -338,6 +340,7 @@
     <Compile Include="Models\ListTableViewModel.cs" />
     <Compile Include="Models\LiveAsciiMapViewModel.cs" />
     <Compile Include="Models\LoggingViewModels.cs" />
+    <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\PlayerManagement\ChangePasswordViewModel.cs" />
     <Compile Include="Models\PlayerManagement\ManageAccountViewModel.cs" />
     <Compile Include="Models\PlayerManagement\ManageAcquaintencesViewModel.cs" />
@@ -347,6 +350,8 @@
     <Compile Include="Models\PlayerManagement\NotificationsViewModels.cs" />
     <Compile Include="Models\PlayerManagement\PlaylistViewModels.cs" />
     <Compile Include="Models\PlayerManagement\SetPasswordViewModel.cs" />
+    <Compile Include="Models\RegisterViewModel.cs" />
+    <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Models\SubmitButtonModel.cs" />
     <Compile Include="Models\UnicodeStringValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -745,6 +750,8 @@
     <Content Include="Views\GameAdmin\Dictionary\EditDictata.cshtml" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+    <Content Include="Views\Home\WordFight.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TrinaryBoolean.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

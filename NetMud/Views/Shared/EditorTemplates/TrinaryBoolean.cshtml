@@ -1,0 +1,67 @@
+﻿@model object
+@{
+    bool disabled = ViewData["disabled"] != null;
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+    var htmlAttributes = new Dictionary<string, object>() { { "id", ViewData.ModelMetadata.PropertyName }, { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
+    var forceOptional = ViewData["forceOptional"] != null;
+    var modelName = ViewData.ModelMetadata.PropertyName;
+    var noValidation = ViewData["noValidation"] != null;
+    var modelValue = Model == null || Model.GetType() != typeof(bool) ? false : (bool)Model;
+    var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
+    var strippedNaked = ViewData["strippedNaked"] != null;
+
+    if (ViewData["forceChecked"] != null)
+    {
+        modelValue = (bool)ViewData["forceChecked"];
+    }
+
+    if (ViewData["disabled"] != null)
+    {
+        htmlAttributes.Add("readonly", true);
+    }
+
+    if (ViewData["htmlAttributes"] != null)
+    {
+        var additionalAttribs = ViewData["htmlAttributes"] as IDictionary<string, object>;
+        if (additionalAttribs != null)
+        {
+            foreach (var kvp in additionalAttribs)
+            {
+                if (htmlAttributes.Any(att => att.Key == kvp.Key))
+                {
+                    htmlAttributes[kvp.Key] = kvp.Value;
+                }
+                else
+                {
+                    htmlAttributes.Add(kvp.Key, kvp.Value);
+                }
+            }
+        }
+    }
+}
+@if (strippedNaked)
+{
+    <div class="state">
+        @Html.LabelFor(m => m, new { @class = "col-form-label" })
+        @Html.DescriptionFor(m => m)
+        <div class="trinarySwitch">
+            <input name="@modelName" id="@modelName" data-choice="1" value="1" type="radio" />
+            <input name="@modelName" id="@modelName" data-choice="2" value="0" type="radio" checked />
+            <input name="@modelName" id="@modelName" data-choice="3" value="2" type="radio" />
+            <div class="trinarySwitch__indicator"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="state">
+        @Html.LabelFor(m => m, new { @class = "col-form-label" })
+        @Html.DescriptionFor(m => m)
+        <div class="trinarySwitch">
+            <input name="@modelName" id="@modelName" data-choice="1" value="1" type="radio" />
+            <input name="@modelName" id="@modelName" data-choice="2" value="0" type="radio" checked />
+            <input name="@modelName" id="@modelName" data-choice="3" value="2" type="radio" />
+            <div class="trinarySwitch__indicator"></div>
+        </div>
+    </div>
+}

@@ -86,6 +86,11 @@ namespace NetMud.DataStructure.Linguistic
         bool Vulgar { get; set; }
 
         /// <summary>
+        /// The number of times this specific wordform has been rated
+        /// </summary>
+        int TimesRated { get; set; }
+
+        /// <summary>
         /// Things this is the same as mostly
         /// </summary>
         HashSet<IDictata> Synonyms { get; set; }

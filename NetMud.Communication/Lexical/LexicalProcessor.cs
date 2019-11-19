@@ -118,7 +118,7 @@ namespace NetMud.Communication.Lexical
                     //We in theory have every single word form for this word now
                     if (synSets != null)
                     {
-                        SemanticContext[] invalidContexts = new SemanticContext[] 
+                        SemanticContext[] invalidContexts = new SemanticContext[]
                             { SemanticContext.Group, SemanticContext.Event, SemanticContext.Location, SemanticContext.Competition, SemanticContext.Person
                             , SemanticContext.Plant, SemanticContext.Animal, SemanticContext.Time, SemanticContext.Artifact };
 
@@ -168,9 +168,9 @@ namespace NetMud.Communication.Lexical
                                 var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray());
 
                                 var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray(), false);
-                                synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
-                                synDict.Quality = synSet.Words.Count();
-                                synDict.Severity = 2;
+                                synDict.Elegance = 0;
+                                synDict.Quality = 0;
+                                synDict.Severity = 0;
                                 synDict.Context = synContext;
                                 synDict.Definition = newDict.Definition;
 
@@ -257,9 +257,9 @@ namespace NetMud.Communication.Lexical
                             var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
 
                             var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
-                            synDict.Quality = thesEntry.meta.syns.Count();
-                            synDict.Severity = 2;
+                            synDict.Elegance = 0;
+                            synDict.Quality = 0;
+                            synDict.Severity = 0;
                             synDict.Context = newDict.Context;
                             synDict.Definition = newDict.Definition;
 
@@ -284,9 +284,9 @@ namespace NetMud.Communication.Lexical
                             var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
 
                             var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = Math.Max(0, newWord.SyllableCount() * 3);
-                            synDict.Quality = thesEntry.meta.syns.Count();
-                            synDict.Severity = 2;
+                            synDict.Elegance = 0;
+                            synDict.Quality = 0;
+                            synDict.Severity = 0;
                             synDict.Context = newDict.Context;
                             synDict.Definition = newDict.Definition;
 

@@ -4,6 +4,9 @@ using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
+using NetMud.DataStructure.Linguistic;
+using NetMud.DataStructure.System;
 using NetMud.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +82,7 @@ namespace NetMud.Controllers
             return View();
         }
 
+
         [HttpGet]
         public ActionResult ReportBug()
         {
@@ -96,6 +100,96 @@ namespace NetMud.Controllers
             }
 
             return RedirectToRoute("ModalErrorOrClose", new { Message = "" });
+        }
+
+        [HttpGet]
+        public ActionResult WordFight()
+        {
+            WordFightViewModel vModel = new WordFightViewModel();
+
+            IEnumerable<ILexeme> lexes = ConfigDataCache.GetAll<ILexeme>();
+
+            var words = lexes.Where(word => !word.Curated && word.SuitableForUse && word.WordForms.Count() > 0)
+                .SelectMany(lex => lex.WordForms).Where(word => word.Synonyms.Count() > 0).OrderBy(word => word.TimesRated);
+
+            vModel.WordOne = words.FirstOrDefault();
+            vModel.WordTwo = vModel.WordOne.Synonyms.OrderBy(syn => syn.TimesRated).FirstOrDefault();
+
+            return View(vModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult WordFight(short wordOneId, string wordOneName, short wordTwoId, string wordTwoName, WordFightViewModel vModel)
+        {
+            string message = string.Empty;
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            ILexeme lexOne = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, globalConfig.BaseLanguage.Name, wordOneName));
+            ILexeme lexTwo = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, globalConfig.BaseLanguage.Name, wordTwoName));
+
+            if (lexOne != null && lexTwo != null)
+            {
+                IDictata wordOne = lexOne.GetForm(wordOneId);
+                IDictata wordTwo = lexTwo.GetForm(wordTwoId);
+
+                if (wordOne != null || wordTwo != null)
+                {
+                    switch (vModel.Elegance)
+                    {
+                        case 1:
+                            wordOne.Elegance += 1;
+                            wordTwo.Elegance -= 1;
+                            break;
+                        case 2:
+                            wordOne.Elegance -= 1;
+                            wordTwo.Elegance += 1;
+                            break;
+                    }
+
+                    switch (vModel.Severity)
+                    {
+                        case 1:
+                            wordOne.Severity += 1;
+                            wordTwo.Severity -= 1;
+                            break;
+                        case 2:
+                            wordOne.Severity -= 1;
+                            wordTwo.Severity += 1;
+                            break;
+                    }
+                    switch (vModel.Quality)
+                    {
+                        case 1:
+                            wordOne.Quality += 1;
+                            wordTwo.Quality -= 1;
+                            break;
+                        case 2:
+                            wordOne.Quality -= 1;
+                            wordTwo.Quality += 1;
+                            break;
+                    }
+
+                    wordOne.TimesRated += 1;
+                    wordTwo.TimesRated += 1;
+
+                    lexOne.PersistToCache();
+                    lexOne.SystemSave();
+                    
+                    lexTwo.PersistToCache();
+                    lexTwo.SystemSave();
+                }
+                else
+                {
+                    message = "Invalid data";
+                }
+            }
+            else
+            {
+                message = "Invalid data";
+            }
+
+            return RedirectToAction("WordFight", new { Message = message });
         }
     }
 }

@@ -165,6 +165,13 @@ namespace NetMud.Data.Linguistic
         public int Elegance { get; set; }
 
         /// <summary>
+        /// The number of times this specific wordform has been rated
+        /// </summary>
+        [Display(Name = "Rating Count", Description = "The number of times this specific wordform has been rated.")]
+        [DataType(DataType.Text)]
+        public int TimesRated { get; set; }
+
+        /// <summary>
         /// Usage context
         /// </summary>
         [Display(Name = "Usage", Description = "Usage context for the word.")]
