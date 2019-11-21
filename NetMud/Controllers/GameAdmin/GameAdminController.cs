@@ -93,7 +93,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Processor.ShutdownLoop(processName, 600);
+            Processor.ShutdownLoop(processName, 600, "{0} seconds before " + processName + " is shutdown.", 60);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningProcess[" + processName + "]", authedUser.GameAccount.GlobalIdentityHandle);
             string message = "Cancel signal sent.";
@@ -106,7 +106,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Processor.ShutdownAll(600);
+            Processor.ShutdownAll(600, "{0} seconds before TOTAL WORLD SHUTDOWN.", 60);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningALLPROCESSES", authedUser.GameAccount.GlobalIdentityHandle);
             string message = "Cancel signal sent for entire world.";
@@ -156,7 +156,7 @@ namespace NetMud.Controllers.GameAdmin
 
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
             Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
-                .Where(player => player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
+                .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
                 .Select(player => new Member()
                 {
                     Name = player.AccountHandle,

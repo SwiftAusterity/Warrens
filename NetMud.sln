@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.CentralControl", "Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Gossip", "NetMud.Gossip\NetMud.Gossip.csproj", "{D98549E9-9D8C-46A7-83B2-9A4D68504F31}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{031BA71E-91B1-4644-BB8B-A75521C66A74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMud.Communication", "NetMud.Communication\NetMud.Communication.csproj", "{7F19324F-1B9C-467D-816A-74A36EB74CDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,10 @@ Global
 		{D98549E9-9D8C-46A7-83B2-9A4D68504F31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D98549E9-9D8C-46A7-83B2-9A4D68504F31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D98549E9-9D8C-46A7-83B2-9A4D68504F31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F19324F-1B9C-467D-816A-74A36EB74CDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

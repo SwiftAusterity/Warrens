@@ -1,11 +1,15 @@
-﻿using NetMud.Data.Architectural.EntityBase;
+﻿using NetMud.Communication.Messaging;
+using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
@@ -48,6 +52,49 @@ namespace NetMud.Data.Players
         /// </summary>
         public StaffRank GamePermissionsRank { get; set; }
 
+        [ScriptIgnore]
+        [JsonIgnore]
+        private LiveCacheKey _descriptorKey;
+
+        /// <summary>
+        /// The connection the player is using to chat with us
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public IDescriptor Descriptor
+        {
+            get
+            {
+                if (_descriptorKey == null)
+                {
+                    return default;
+                }
+
+                return LiveCache.Get<IDescriptor>(_descriptorKey);
+            }
+
+            set
+            {
+                _descriptorKey = new LiveCacheKey(value);
+
+                PersistToCache();
+            }
+        }
+
+        /// <summary>
+        /// Type of connection this has, doesn't get saved as it's transitory information
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override IChannelType ConnectionType
+        {
+            get
+            {
+                //All player descriptors should be of ichanneltype too
+                return (IChannelType)Descriptor;
+            }
+        }
+
         /// <summary>
         /// The account this character belongs to
         /// </summary>
@@ -71,7 +118,22 @@ namespace NetMud.Data.Players
             GetFromWorldOrSpawn();
         }
 
+        #region Connectivity Details
         /// <summary>
+        /// Function used to close this connection
+        /// </summary>
+        public void CloseConnection()
+        {
+            Descriptor.Disconnect(string.Empty);
+        }
+
+        public override bool WriteTo(IEnumerable<string> output, bool delayed = false)
+        {
+            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(output.ToArray(), this);
+
+            return Descriptor.SendOutput(strings);
+        }
+        #endregion
         /// Get the live version of this in the world
         /// </summary>
         /// <returns>The live data</returns>

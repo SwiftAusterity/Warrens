@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using NetMud.DataStructure.NPC.IntelligenceControl;
+using NetMud.DataStructure.System;
+using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Architectural.EntityBase
 {
@@ -24,6 +26,11 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         string TemplateName { get; }
 
         /// <summary>
+        /// How this entity communicates with the system
+        /// </summary>
+        IChannelType ConnectionType { get; }
+
+        /// <summary>
         /// The backing data for this entity in the db
         /// </summary>
         T Template<T>() where T : IKeyedData;
@@ -32,6 +39,14 @@ namespace NetMud.DataStructure.Architectural.EntityBase
         /// Update this to the live cache
         /// </summary>
         void UpsertToLiveWorldCache(bool forceSave = false);
+
+        /// <summary>
+        /// For non-player entities - accepts output "shown" to it by the parser as a result of commands and events
+        /// </summary>
+        /// <param name="input">the output strings</param>
+        /// <param name="trigger">the methodology type (heard, seen, etc)</param>
+        /// <returns></returns>
+        bool TriggerAIAction(IEnumerable<string> input, AITriggerType trigger = AITriggerType.Seen);
 
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it

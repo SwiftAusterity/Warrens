@@ -1,6 +1,11 @@
 ﻿<!DOCTYPE html>
 <html>
 @{
+    if(string.IsNullOrWhiteSpace(ViewBag.StatusMessage) && !string.IsNullOrWhiteSpace(ViewData["Message"]?.ToString()))
+    {
+        ViewBag.StatusMessage = ViewData["Message"].ToString();
+    }
+
     var instance = HttpContext.Current.ApplicationInstance;
     System.Reflection.Assembly asm = instance.GetType().BaseType.Assembly;
     System.Version v = asm.GetName().Version;
@@ -60,7 +65,7 @@
         <span class="glyphicon glyphicon-chevron-up"></span>
     </div>
     <div class="container body-content">
-        <h3><p id="statusMessage" name="statusMessage" class="text-success">@ViewBag.StatusMessage</p></h3>
+        <h2 id="statusMessage" name="statusMessage" class="text-warning">@ViewData["StatusMessage"]</h2>
         @if (ViewBag.Breadcrumbs != null)
         {
             @Html.Partial("TitleAndBreadcrumbs", ViewBag.Breadcrumbs as Tuple<string, string[], string[]>)
@@ -71,7 +76,7 @@
         <br class="clearfix" />
         <hr />
         <p>GrAPI &copy; 1997-@DateTime.Now.Year - SwiftAusterity Productions</p>
-        <p>Running on <a href="https://github.com/swiftausterity/netmud" title="Github Repository" target="_blank">@assemblyVersion</a></p>
+        <p>Running on <a href="https://github.com/swiftausterity/warrens" title="Github Repository" target="_blank">@assemblyVersion</a></p>
         <p>Many of the icons used are shamelessly taken from and &copy; <a href="http://www.toicon.com/" target="_blank">The Artificial</a>.</p>
         <p><a href="//grapevine.haus/" target="_blank"><img src="//grapevine.haus/images/grapevine.png" onerror="this.src='/content/images/broken-image.png'" class="grapeLogo" title="Grapevine Network" /></a></p>
         <p>

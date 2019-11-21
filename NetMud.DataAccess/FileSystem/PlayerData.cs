@@ -71,7 +71,7 @@ namespace NetMud.DataAccess.FileSystem
                     }
 
                     //Already exists?
-                    if (VerifyDirectory(archiveDirName + DatedBackupDirectory))
+                    if (VerifyDirectory(archiveDirName + DatedBackupDirectory, false))
                     {
                         return false;
                     }
@@ -239,7 +239,6 @@ namespace NetMud.DataAccess.FileSystem
             }
 
             string fullFileName = dirName + entityFileName;
-            string archiveFileDirectory = BaseDirectory + entity.AccountHandle + "/" + ArchiveDirectoryName + entity.Id + "/" + DatedBackupDirectory;
 
             try
             {

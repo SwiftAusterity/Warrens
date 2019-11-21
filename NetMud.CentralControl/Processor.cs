@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using NetMud.Communication;
+using NetMud.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,11 +43,24 @@ namespace NetMud.CentralControl
                     SubscriptionLoopArgs subArgs = args as SubscriptionLoopArgs;
                     while (1 == 1)
                     {
-                        IList<Tuple<Func<bool>, int>> subList = GetAllCurrentSubscribers(subArgs.Designation, subArgs.CurrentPulse, fireOnce);
-
-                        foreach (Tuple<Func<bool>, int> pulsar in subList)
+                        try
                         {
-                            pulsar.Item1.Invoke();
+                            IList<Tuple<Func<bool>, int>> subList = GetAllCurrentSubscribers(subArgs.Designation, subArgs.CurrentPulse, fireOnce);
+
+                            foreach (Tuple<Func<bool>, int> pulsar in subList)
+                            {
+                                var returnStatus = pulsar.Item1.Invoke();
+
+                                //false return means it wants to be removed, fireonce means.. fire it once and then remove it
+                                if (!returnStatus || fireOnce)
+                                {
+                                    RemoveSubscriber(designator, pulsar);
+                                }
+                            }
+                        }
+                        catch
+                        {
+
                         }
 
                         subArgs.CurrentPulse++;
@@ -56,7 +70,7 @@ namespace NetMud.CentralControl
                             subArgs.CurrentPulse = 0;
                         }
 
-                        await Task.Delay(10000);
+                        await Task.Delay(10);
                     }
                 }
 
@@ -184,13 +198,23 @@ namespace NetMud.CentralControl
         /// <param name="shutdownDelay">In # of Seconds - how long to wait before cancelling it</param>
         /// <param name="shutdownAnnouncementFrequency">In # of Seconds - how often to announce the shutdown, <= 0 is only one announcement</param>
         /// <param name="shutdownAnnouncement">What to announce (string.format format) before shutting down, empty string = no announcements, ex "World shutting down in {0} seconds."</param>
-        public static void ShutdownLoop(string designator, int shutdownDelay)
+        public static void ShutdownLoop(string designator, int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency = -1)
         {
             CancellationTokenSource cancelToken = GetCancellationToken(designator);
 
             if (cancelToken != null && cancelToken.Token.CanBeCanceled)
             {
                 cancelToken.CancelAfter(shutdownDelay * 1000);
+            }
+
+            if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
+            {
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
+            }
+
+            if (shutdownAnnouncementFrequency > 0)
+            {
+                Task.Run(() => RunAnnouncements(shutdownDelay, shutdownAnnouncement, shutdownAnnouncementFrequency));
             }
         }
 
@@ -216,7 +240,7 @@ namespace NetMud.CentralControl
         /// <param name="shutdownDelay">In # of Seconds - how long to wait before cancelling it</param>
         /// <param name="shutdownAnnouncementFrequency">In # of Seconds - how often to announce the shutdown, < = 0 is only one announcement</param>
         /// <param name="shutdownAnnouncement">What to announce (string.format format) before shutting down, empty string = no announcements</param>
-        public static void ShutdownAll(int shutdownDelay)
+        public static void ShutdownAll(int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency = -1)
         {
             IEnumerable<CancellationTokenSource> tokens
                 = globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)).Select(kvp => (CancellationTokenSource)kvp.Value);
@@ -227,6 +251,33 @@ namespace NetMud.CentralControl
                 {
                     token.CancelAfter(shutdownDelay * 1000);
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
+            {
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
+            }
+
+            if (shutdownAnnouncementFrequency > 0)
+            {
+                Task.Run(() => RunAnnouncements(shutdownDelay, shutdownAnnouncement, shutdownAnnouncementFrequency));
+            }
+        }
+
+        /// <summary>
+        /// Runs looped formatted messages until the timer runs out
+        /// </summary>
+        /// <param name="shutdownDelay">Total amount of message time</param>
+        /// <param name="shutdownAnnouncement">What to announce</param>
+        /// <param name="shutdownAnnouncementFrequency">How often to announce it</param>
+        private static async void RunAnnouncements(int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency)
+        {
+            int secondsLeftBeforeShutdown = shutdownDelay;
+            while (secondsLeftBeforeShutdown > 0)
+            {
+                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
+                await Task.Delay(shutdownAnnouncementFrequency * 1000);
+                secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
             }
         }
 
@@ -298,7 +349,7 @@ namespace NetMud.CentralControl
                 return new List<Tuple<Func<bool>, int>>();
             }
 
-            return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || ls.Item2 % pulseCount == 0).ToList();
+            return GetLoopSubscribers(designator).Where(ls => (fireOnce && ls.Item2.Equals(pulseCount)) || pulseCount % ls.Item2 == 0).ToList();
         }
 
         /// <summary>
@@ -325,6 +376,29 @@ namespace NetMud.CentralControl
             }
 
             return null;
+        }
+
+        private static void RemoveSubscriber(string designator, Tuple<Func<bool>, int> memberPulser)
+        {
+            string taskKey = string.Format(subscriptionLoopCacheKeyFormat, designator);
+
+            try
+            {
+                if (!(globalCache.Get(taskKey) is IList<Tuple<Func<bool>, int>> subscriberList))
+                {
+                    subscriberList = new List<Tuple<Func<bool>, int>>();
+                }
+
+                subscriberList.Remove(memberPulser);
+
+                globalCache.Remove(taskKey);
+
+                globalCache.Add(taskKey, subscriberList, globalPolicy);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogError(ex, false);
+            }
         }
 
         /// <summary>

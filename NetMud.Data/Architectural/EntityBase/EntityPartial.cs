@@ -1,14 +1,19 @@
-﻿using NetMud.Data.Architectural.Serialization;
+﻿using NetMud.Communication;
+using NetMud.Communication.Messaging;
+using NetMud.Data.Architectural.Serialization;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.DataStructure.NPC.IntelligenceControl;
 using NetMud.DataStructure.Player;
+using NetMud.DataStructure.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
@@ -60,13 +65,47 @@ namespace NetMud.Data.Architectural.EntityBase
         }
         #endregion
 
+        #region Connection Stuff
         /// <summary>
         /// Method by which this entity has output (from commands and events) "shown" to it
         /// </summary>
         public virtual bool WriteTo(IEnumerable<string> output, bool delayed = false)
         {
-            return true;
+            //null output means send wrapper to players
+            if(output == null)
+            {
+                if(IsPlayer())
+                {
+                    var thisPlayer = (IPlayer)this;
+
+                    thisPlayer.Descriptor.SendWrapper();
+                }
+
+                return true;
+            }
+
+            IEnumerable<string> strings = MessagingUtility.TranslateColorVariables(output.ToArray(), this);
+
+            return TriggerAIAction(strings);
         }
+
+        private IChannelType _internalDescriptor;
+
+        [ScriptIgnore]
+        [JsonIgnore]
+        public virtual IChannelType ConnectionType
+        {
+            get
+            {
+                if (_internalDescriptor == null)
+                {
+                    _internalDescriptor = new InternalChannel();
+                }
+
+                return _internalDescriptor;
+            }
+        }
+        #endregion
 
         #region Ownership
         /// <summary>
@@ -182,6 +221,17 @@ namespace NetMud.Data.Architectural.EntityBase
                 return false;
             }
 
+            return true;
+        }
+        /// <summary>
+        /// For non-player entities - accepts output "shown" to it by the parser as a result of commands and events
+        /// </summary>
+        /// <param name="input">the output strings</param>
+        /// <param name="trigger">the methodology type (heard, seen, etc)</param>
+        /// <returns></returns>
+        public bool TriggerAIAction(IEnumerable<string> input, AITriggerType trigger = AITriggerType.Seen)
+        {
+            //TODO: Actual AI code
             return true;
         }
 
