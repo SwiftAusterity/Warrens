@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
     [Serializable]
     public class Etymology
     {
-        public string text { get; set; }
+        public List<string> et_snote { get; set; }
 
-        public string[] et_snote { get; set; }
+        public Etymology()
+        {
+            et_snote = new List<string>();
+        }
     }
 }

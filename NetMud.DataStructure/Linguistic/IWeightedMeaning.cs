@@ -3,12 +3,17 @@ using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
-    public interface IDictataPhrase : IConfigData
+    public interface IWeightedMeaning
     {
         /// <summary>
-        /// Things this is the same as mostly
+        /// Human readable definition
         /// </summary>
-        HashSet<IDictata> Words { get; set; }
+        MarkdownString Definition { get; set; }
+
+        /// <summary>
+        /// The wordform
+        /// </summary>
+        LexicalType WordType { get; set; }
 
         /// <summary>
         /// The language this is derived from
@@ -31,6 +36,21 @@ namespace NetMud.DataStructure.Linguistic
         NarrativePerspective Perspective { get; set; }
 
         /// <summary>
+        /// Is this an determinant form or not (usually true)
+        /// </summary>
+        bool Determinant { get; set; }
+
+        /// <summary>
+        /// Is this a plural form
+        /// </summary>
+        bool Plural { get; set; }
+
+        /// <summary>
+        /// Is this a possessive form
+        /// </summary>
+        bool Possessive { get; set; }
+
+        /// <summary>
         /// Is this a feminine or masculine word (not related to actual genders but gendered languages)
         /// </summary>
         bool Feminine { get; set; }
@@ -39,6 +59,11 @@ namespace NetMud.DataStructure.Linguistic
         /// Tags that describe the purpose/meaning of the words
         /// </summary>
         HashSet<string> Semantics { get; set; }
+
+        /// <summary>
+        /// Usage context
+        /// </summary>
+        SemanticContext Context { get; set; }
 
         /// <summary>
         /// Strength rating of word in relation to synonyms
@@ -56,6 +81,16 @@ namespace NetMud.DataStructure.Linguistic
         int Quality { get; set; }
 
         /// <summary>
+        /// Synonym rating for offensive
+        /// </summary>
+        bool Vulgar { get; set; }
+
+        /// <summary>
+        /// The number of times this specific wordform has been rated
+        /// </summary>
+        int TimesRated { get; set; }
+
+        /// <summary>
         /// Things this is the same as mostly
         /// </summary>
         HashSet<IDictata> Synonyms { get; set; }
@@ -64,15 +99,5 @@ namespace NetMud.DataStructure.Linguistic
         /// Things this is specifically opposite of mostly
         /// </summary>
         HashSet<IDictata> Antonyms { get; set; }
-
-        /// <summary>
-        /// Things this is the same as mostly
-        /// </summary>
-        HashSet<IDictataPhrase> PhraseSynonyms { get; set; }
-
-        /// <summary>
-        /// Things this is specifically opposite of mostly
-        /// </summary>
-        HashSet<IDictataPhrase> PhraseAntonyms { get; set; }
     }
 }

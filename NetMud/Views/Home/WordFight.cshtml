@@ -1,0 +1,45 @@
+﻿@using NetMud.Models
+@model WordFightViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Word Fight", new string[] { "Home" }, new string[] { "/" });
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="wordFightForm">
+    @using (Html.BeginForm("WordFight", "Home"
+        , new { wordOneName = Model.WordOne.Name, wordTwoName = Model.WordTwo.Name, wordOneId = Model.WordOne.FormGroup, wordTwoId = Model.WordTwo.FormGroup }
+        , FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h3>WORD FIGHT - @Model.WordOne.WordType.ToString()</h3>
+        <hr />
+        <h4>Rate which of these words is more than the other in these three categories</h4>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div style="display: flex;">
+            <div style="flex: 1 1 20%;text-align: center;margin: auto;">
+                <span class="h2">@Model.WordOne.Name</span>
+            </div>
+            <div style="flex: 0 1">
+                <div class="form-group row">
+                    @Html.EditorFor(m => m.Quality)
+                </div>
+                <div class="form-group row">
+                    @Html.EditorFor(m => m.Elegance)
+                </div>
+                <div class="form-group row">
+                    @Html.EditorFor(m => m.Severity)
+                </div>
+            </div>
+            <div style="flex: 1 1 10%;text-align: center;margin: auto;">
+                <span class="h2">@Model.WordTwo.Name</span>
+            </div>
+        </div>
+        @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "FIGHT!", CancelName = "Skip", ReturnAction = "WordFight", ReturnController = "Home", IncludeCancel = false })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

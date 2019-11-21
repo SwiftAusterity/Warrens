@@ -10,6 +10,11 @@ namespace NetMud.Lexica.DeepLex
         /// </summary>
         public string pl { get; set; }
 
-        public ParagraphText[] pt { get; set; }
+        //public List<ParagraphText> pt { get; set; }
+
+        public UsageSection()
+        {
+            //pt = new List<ParagraphText>();
+        }
     }
 }

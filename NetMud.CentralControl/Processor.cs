@@ -43,15 +43,24 @@ namespace NetMud.CentralControl
                     SubscriptionLoopArgs subArgs = args as SubscriptionLoopArgs;
                     while (1 == 1)
                     {
-                        IList<Tuple<Func<bool>, int>> subList = GetAllCurrentSubscribers(subArgs.Designation, subArgs.CurrentPulse, fireOnce);
-
-                        foreach (Tuple<Func<bool>, int> pulsar in subList)
+                        try
                         {
-                            //false return means it wants to be removed
-                            if(!pulsar.Item1.Invoke())
+                            IList<Tuple<Func<bool>, int>> subList = GetAllCurrentSubscribers(subArgs.Designation, subArgs.CurrentPulse, fireOnce);
+
+                            foreach (Tuple<Func<bool>, int> pulsar in subList)
                             {
-                                RemoveSubscriber(designator, pulsar);
+                                var returnStatus = pulsar.Item1.Invoke();
+
+                                //false return means it wants to be removed, fireonce means.. fire it once and then remove it
+                                if (!returnStatus || fireOnce)
+                                {
+                                    RemoveSubscriber(designator, pulsar);
+                                }
                             }
+                        }
+                        catch
+                        {
+
                         }
 
                         subArgs.CurrentPulse++;
@@ -176,9 +185,9 @@ namespace NetMud.CentralControl
         /// </summary>
         /// <param name="worker">The action to perform every cycle</param>
         /// <param name="startDelay">The amount of seconds to delay before running the worker</param>
-        private static async void StartLoop(Func<bool> worker, int startDelay)
+        private static async void StartLoop(Func<bool> worker, int startDelay = 5000)
         {
-            await Task.Delay(5000);
+            await Task.Delay(startDelay);
             worker.Invoke();
         }
 

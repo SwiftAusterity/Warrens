@@ -94,7 +94,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             IEnumerable<ILexeme> dictionary = ConfigDataCache.GetAll<ILexeme>();
 
-            foreach(ILexeme dict in dictionary)
+            foreach (ILexeme dict in dictionary)
             {
                 dict.SystemRemove();
             }
@@ -170,6 +170,7 @@ namespace NetMud.Controllers.GameAdmin
 
             obj.Name = vModel.DataObject.Name;
             obj.Language = vModel.DataObject.Language;
+            obj.Curated = vModel.DataObject.Curated;
 
             if (obj.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
@@ -224,7 +225,9 @@ namespace NetMud.Controllers.GameAdmin
                 Determinant = dict.Determinant,
                 Positional = dict.Positional,
                 Perspective = dict.Perspective,
-                Semantics = dict.Semantics
+                Semantics = dict.Semantics,
+                Context = dict.Context,
+                Vulgar = dict.Vulgar
             };
 
             HashSet<IDictata> synonyms = dict.Synonyms;
@@ -234,15 +237,11 @@ namespace NetMud.Controllers.GameAdmin
             {
                 relatedWord.Synonyms = synonyms;
                 relatedWord.Antonyms = dict.Antonyms;
-                relatedWord.PhraseSynonyms = dict.PhraseSynonyms;
-                relatedWord.PhraseAntonyms = dict.PhraseAntonyms;
             }
             else
             {
                 relatedWord.Synonyms = dict.Antonyms;
                 relatedWord.Antonyms = synonyms;
-                relatedWord.PhraseSynonyms = dict.PhraseAntonyms;
-                relatedWord.PhraseAntonyms = dict.PhraseSynonyms;
             }
 
             relatedLex.AddNewForm(relatedWord);
@@ -296,7 +295,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     message = "That does not exist";
                 }
-                else 
+                else
                 {
                     HashSet<IDictata> wordForms = lex.WordForms.ToHashSet();
                     wordForms.RemoveWhere(form => form.UniqueKey == removeId);
@@ -405,8 +404,6 @@ namespace NetMud.Controllers.GameAdmin
             obj.Tense = vModel.DataObject.Tense;
             obj.Synonyms = vModel.DataObject.Synonyms;
             obj.Antonyms = vModel.DataObject.Antonyms;
-            obj.PhraseSynonyms = vModel.DataObject.PhraseSynonyms;
-            obj.PhraseAntonyms = vModel.DataObject.PhraseAntonyms;
             obj.Language = vModel.DataObject.Language;
             obj.WordType = vModel.DataObject.WordType;
             obj.Feminine = vModel.DataObject.Feminine;
@@ -416,6 +413,8 @@ namespace NetMud.Controllers.GameAdmin
             obj.Positional = vModel.DataObject.Positional;
             obj.Perspective = vModel.DataObject.Perspective;
             obj.Semantics = vModel.DataObject.Semantics;
+            obj.Vulgar = vModel.DataObject.Vulgar;
+            obj.Context = vModel.DataObject.Context;
 
             lex.AddNewForm(obj);
 
@@ -447,30 +446,6 @@ namespace NetMud.Controllers.GameAdmin
                         ant.Antonyms = antonyms;
                         antLex.AddNewForm(ant);
                         antLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                    }
-                }
-
-                foreach (IDictataPhrase syn in obj.PhraseSynonyms)
-                {
-                    if (!syn.Synonyms.Any(dict => dict == obj))
-                    {
-                        HashSet<IDictata> synonyms = syn.Synonyms;
-                        synonyms.Add(obj);
-
-                        syn.Synonyms = synonyms;
-                        syn.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                    }
-                }
-
-                foreach (IDictataPhrase ant in obj.PhraseAntonyms)
-                {
-                    if (!ant.Antonyms.Any(dict => dict == obj))
-                    {
-                        HashSet<IDictata> antonyms = ant.Antonyms;
-                        antonyms.Add(obj);
-
-                        ant.Antonyms = antonyms;
-                        ant.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
                     }
                 }
 

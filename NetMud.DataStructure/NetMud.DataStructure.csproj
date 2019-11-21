@@ -191,11 +191,10 @@
     <Compile Include="Inanimate\IRenderAsHeld.cs" />
     <Compile Include="Linguistic\BaseLanguageMembers.cs" />
     <Compile Include="Linguistic\DictataKey.cs" />
-    <Compile Include="Linguistic\DictataPhraseRuleElement.cs" />
     <Compile Include="Linguistic\IContractionRule.cs" />
-    <Compile Include="Linguistic\IDictataPhrase.cs" />
     <Compile Include="Linguistic\IDictataTransformationRule.cs" />
     <Compile Include="Linguistic\ILexeme.cs" />
+    <Compile Include="Linguistic\IWeightedMeaning.cs" />
     <Compile Include="Linguistic\IWordPairRule.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
     <Compile Include="Linguistic\ISensoryEvent.cs" />
@@ -205,8 +204,8 @@
     <Compile Include="Linguistic\LexicalPosition.cs" />
     <Compile Include="Linguistic\ILexicalSentence.cs" />
     <Compile Include="Linguistic\NarrativePerspective.cs" />
+    <Compile Include="Linguistic\SemanticContext.cs" />
     <Compile Include="Linguistic\SentenceComplexityRule.cs" />
-    <Compile Include="Linguistic\DictataPhraseRule.cs" />
     <Compile Include="Linguistic\SentenceGrammarRule.cs" />
     <Compile Include="Linguistic\SentenceType.cs" />
     <Compile Include="Locale\ILocale.cs" />

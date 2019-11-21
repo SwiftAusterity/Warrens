@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -15,8 +16,13 @@ namespace NetMud.Lexica.DeepLex
 
         public string section { get; set; }
 
-        public string[] stems { get; set; }
+        public List<string> stems { get; set; }
 
         public bool offensive { get; set; }
+
+        public Meta()
+        {
+            stems = new List<string>();
+        }
     }
 }

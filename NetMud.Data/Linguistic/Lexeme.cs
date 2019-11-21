@@ -1,4 +1,5 @@
-﻿using NetMud.Communication.Lexical;
+﻿using NetMud.CentralControl;
+using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.ActorBase;
 using NetMud.Data.Architectural.PropertyBinding;
@@ -50,9 +51,30 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Has this been mapped by the synset already
         /// </summary>
-        [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this can be damagaing to the synonym network)")]
+        [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
         public bool IsSynMapped { get; set; }
+
+        /// <summary>
+        /// Has this lexeme been run through the translator for other languages
+        /// </summary>
+        [Display(Name = "Translated", Description = "Has this word been translated to other languages mapped? (changing this directly can be damagaing to the synonym network)")]
+        [UIHint("Boolean")]
+        public bool IsTranslated { get; set; }
+
+        /// <summary>
+        /// Has this been curated by a human
+        /// </summary>
+        [Display(Name = "Curated", Description = "Has this word been curated by a human? (changing this directly can be damagaing to the synonym network)")]
+        [UIHint("Boolean")]
+        public bool Curated { get; set; }
+
+        /// <summary>
+        /// Has this been run through both Mirriam Webster APIs
+        /// </summary>
+        [Display(Name = "MirriamIndexed", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
+        [UIHint("Boolean")]
+        public bool MirriamIndexed { get; set; }
 
         [JsonProperty("Language")]
         private ConfigDataCacheKey _language { get; set; }
@@ -99,6 +121,10 @@ namespace NetMud.Data.Linguistic
         {
             WordForms = new IDictata[0];
             Name = string.Empty;
+            IsSynMapped = false;
+            MirriamIndexed = false;
+            IsTranslated = false;
+            Curated = false;
 
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
@@ -225,8 +251,6 @@ namespace NetMud.Data.Linguistic
                                 Semantics = word.Semantics,
                                 Antonyms = word.Antonyms,
                                 Synonyms = word.Synonyms,
-                                PhraseAntonyms = word.PhraseAntonyms,
-                                PhraseSynonyms = word.PhraseSynonyms,
                                 Tense = word.Tense,
                                 WordType = word.WordType
                             };
@@ -310,6 +334,20 @@ namespace NetMud.Data.Linguistic
                 return true;
             }
 
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            if (globalConfig?.DeepLexActive ?? false)
+            {
+                Processor.StartSubscriptionLoop("WordNetMapping", DeepLex, 2000, true);
+            }
+
+            return true;
+        }
+
+        private bool DeepLex()
+        {
+            FillLanguages();
+
             foreach (IDictata dict in WordForms)
             {
                 LexicalProcessor.GetSynSet(dict);
@@ -320,6 +358,7 @@ namespace NetMud.Data.Linguistic
             PersistToCache();
             SystemSave();
 
+            //We return false to break the loop
             return true;
         }
 
@@ -488,32 +527,6 @@ namespace NetMud.Data.Linguistic
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.Antonyms = ants;
                 }
-
-                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
-
-                foreach (IDictataPhrase phrase in synonymPhrases)
-                {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(phrase.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Synonyms = syns;
-                    phrase.Save(remover, rank);
-                }
-
-                foreach (IDictataPhrase phrase in antonymPhrases)
-                {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(phrase.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Antonyms = ants;
-                    phrase.Save(remover, rank);
-                }
-
-                IEnumerable<IDictataPhrase> containedPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Words.Any(syn => syn.Equals(this)));
-
-                foreach (IDictataPhrase phrase in containedPhrases)
-                {
-                    phrase.Remove(remover, rank);
-                }
             }
 
             return removalState;
@@ -565,10 +578,10 @@ namespace NetMud.Data.Linguistic
             {
                 IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict => 
                     ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null 
-                                                                && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                                                                && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
                 IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
                     ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
-                                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)
                 {
@@ -582,32 +595,6 @@ namespace NetMud.Data.Linguistic
                     HashSet<IDictata> ants = new HashSet<IDictata>(word.Antonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.Antonyms = ants;
-                }
-
-                IEnumerable<IDictataPhrase> synonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Synonyms.Any(syn => syn.Equals(this)));
-                IEnumerable<IDictataPhrase> antonymPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Antonyms.Any(ant => ant.Equals(this)));
-
-                foreach (IDictataPhrase phrase in synonymPhrases)
-                {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(phrase.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Synonyms = syns;
-                    phrase.SystemSave();
-                }
-
-                foreach (IDictataPhrase phrase in antonymPhrases)
-                {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(phrase.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    phrase.Antonyms = ants;
-                    phrase.SystemSave();
-                }
-
-                IEnumerable<IDictataPhrase> containedPhrases = ConfigDataCache.GetAll<IDictataPhrase>().Where(dict => dict.Words.Any(syn => syn.Equals(this)));
-
-                foreach (IDictataPhrase phrase in containedPhrases)
-                {
-                    phrase.SystemRemove();
                 }
             }
 

@@ -106,12 +106,6 @@ namespace NetMud.Data.Linguistic
         public HashSet<SentenceComplexityRule> ComplexityRules { get; set; }
 
         /// <summary>
-        /// Rules for phrase detection
-        /// </summary>
-        [UIHint("DictataPhraseRules")]
-        public HashSet<DictataPhraseRule> PhraseRules { get; set; }
-
-        /// <summary>
         /// The base needed words for a language to function
         /// </summary>
         [UIHint("BaseLanguageWords")]
@@ -127,7 +121,6 @@ namespace NetMud.Data.Linguistic
             ComplexityRules = new HashSet<SentenceComplexityRule>();
             BaseWords = new BaseLanguageMembers();
             TransformationRules = new HashSet<IDictataTransformationRule>();
-            PhraseRules = new HashSet<DictataPhraseRule>();
         }
 
         /// <summary>
@@ -147,7 +140,7 @@ namespace NetMud.Data.Linguistic
                 return null;
             }
 
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, Name, word));
 
             if (lex == null)
             {
@@ -156,6 +149,9 @@ namespace NetMud.Data.Linguistic
                     Name = word,
                     Language = this
                 };
+
+                lex.SystemSave();
+                lex.PersistToCache();
             }
 
             if (form != LexicalType.None && lex.GetForm(form, semantics, false) == null)
@@ -170,8 +166,6 @@ namespace NetMud.Data.Linguistic
 
                 lex.AddNewForm(newDict);
             }
-
-            lex.PersistToCache();
 
             return lex;
         }
@@ -592,6 +586,30 @@ namespace NetMud.Data.Linguistic
                 LexicalProcessor.VerifyLexeme(new Lexeme()
                 {
                     Name = BaseWords.PrepositionOf,
+                    Language = this,
+                    WordForms = new IDictata[] {
+                        new Dictata()
+                        {
+                            Name = BaseWords.PrepositionOf,
+                            Determinant = false,
+                            Feminine = false,
+                            Plural = false,
+                            Positional = LexicalPosition.PartOf,
+                            Perspective = NarrativePerspective.None,
+                            Possessive = false,
+                            Tense = LexicalTense.None,
+                            WordType = LexicalType.Preposition,
+                            Language = this
+                        }
+                    }
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(BaseWords.PrepositionOf))
+            {
+                LexicalProcessor.VerifyLexeme(new Lexeme()
+                {
+                    Name = BaseWords.PrepositionOn,
                     Language = this,
                     WordForms = new IDictata[] {
                         new Dictata()

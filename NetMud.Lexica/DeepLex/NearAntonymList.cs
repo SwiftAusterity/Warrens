@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -9,8 +10,14 @@ namespace NetMud.Lexica.DeepLex
 
         public ThesaurusStatusLabel wsls { get; set; }
 
-        public ThesaurusStatusLabel[] wvrs { get; set; }
+        public List<ThesaurusStatusLabel> wvrs { get; set; }
 
-        public ThesaurusVerbVariant[] wvbvrs { get; set; }
+        public List<ThesaurusVerbVariant> wvbvrs { get; set; }
+
+        public NearAntonymList()
+        {
+            wvrs = new List<ThesaurusStatusLabel>();
+            wvbvrs = new List<ThesaurusVerbVariant>();
+        }
     }
 }

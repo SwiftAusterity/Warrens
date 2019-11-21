@@ -77,7 +77,6 @@ namespace NetMud.Models.Admin
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
             ValidWords = ConfigDataCache.GetAll<ILexeme>();
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Lexeme();
         }
@@ -87,14 +86,12 @@ namespace NetMud.Models.Admin
             CurrentPageNumber = 1;
             ItemsPerPage = 20;
             ValidWords = ConfigDataCache.GetAll<ILexeme>();
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Lexeme();
         }
 
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<ILexeme> ValidWords { get; set; }
-        public IEnumerable<IDictataPhrase> ValidPhrases { get; set; }
         public Lexeme DataObject { get; set; }
     }
 
@@ -105,7 +102,6 @@ namespace NetMud.Models.Admin
         public AddEditDictataViewModel(ILexeme parent)
         {
             ParentObject = (Lexeme)parent;
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Dictata();
             ValidWords = ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.Language == parent.Language && lex != parent).SelectMany(lex => lex.WordForms).OrderBy(form => form.Name);
@@ -114,7 +110,6 @@ namespace NetMud.Models.Admin
         public AddEditDictataViewModel(ILexeme parent, IDictata obj)
         {
             ParentObject = (Lexeme)parent;
-            ValidPhrases = ConfigDataCache.GetAll<IDictataPhrase>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name);
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = (Dictata)obj;
             ValidWords = ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.Language == parent.Language && lex != parent).SelectMany(lex => lex.WordForms).OrderBy(form => form.Name);
@@ -141,7 +136,6 @@ namespace NetMud.Models.Admin
 
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<IDictata> ValidWords { get; set; }
-        public IEnumerable<IDictataPhrase> ValidPhrases { get; set; }
         public Lexeme ParentObject { get; set; }
         public Dictata DataObject { get; set; }
     }

@@ -9,13 +9,11 @@
     <div>
         <h4>Account</h4>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 @Html.ActionLink("Change your password", "ChangePassword", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Change Password" })
             </dd>
         </dl>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 Characters [@Html.ActionLink(Model.AuthedUser.GameAccount.Characters.Count().ToString(), "ManageCharacters", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]
             </dd>
@@ -25,13 +23,11 @@
     <div>
         <h4>Acquaintences</h4>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 Inbox [@Html.ActionLink(Model.NotificationCount.ToString(), "Notifications", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Mail and Notifications" })]
             </dd>
         </dl>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 Friends [@Html.ActionLink(Model.AuthedUser.GameAccount.Config.Acquaintences.Count().ToString(), "Acquaintences", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Acquaintences" })]
             </dd>
@@ -41,25 +37,21 @@
     <div>
         <h4>Game Features</h4>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 My Fighting Arts: [@Html.ActionLink(Model.FightingArtCount.ToString(), "FightingArts", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
             </dd>
         </dl>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 Fighting Combos: [@Html.ActionLink(Model.ComboCount.ToString(), "Combos", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
             </dd>
         </dl>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 Music Playlists: [@Html.ActionLink(Model.AuthedUser.GameAccount.Config.Playlists.Count().ToString(), "Playlists", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Music Playlists" })]
             </dd>
         </dl>
         <dl class="dl-horizontal dashboardItem">
-            <dt>&nbsp;</dt>
             <dd>
                 UI Configuration: [@Html.ActionLink(Model.UIModuleCount.ToString(), "UIModules", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
             </dd>

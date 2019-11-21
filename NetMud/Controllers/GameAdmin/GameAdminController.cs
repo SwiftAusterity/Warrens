@@ -85,7 +85,6 @@ namespace NetMud.Controllers.GameAdmin
                 Minerals = TemplateCache.GetAll<IMineral>(),
                 Materials = TemplateCache.GetAll<IMaterial>(),
                 DictionaryWords = ConfigDataCache.GetAll<ILexeme>(),
-                DictionaryPhrases = ConfigDataCache.GetAll<IDictataPhrase>(),
                 Languages = ConfigDataCache.GetAll<ILanguage>(),
                 Genders = TemplateCache.GetAll<IGender>(),
                 UIModules = ConfigDataCache.GetAll<IUIModule>(),
@@ -107,6 +106,9 @@ namespace NetMud.Controllers.GameAdmin
                 BaseLanguage = globalConfig.BaseLanguage,
                 AzureTranslationKey = globalConfig.AzureTranslationKey,
                 TranslationActive = globalConfig.TranslationActive,
+                DeepLexActive = globalConfig.DeepLexActive,
+                MirriamDictionaryKey = globalConfig.MirriamDictionaryKey,
+                MirriamThesaurusKey = globalConfig.MirriamThesaurusKey,
 
                 QualityChange = new string[0],
                 QualityChangeValue = new int[0],

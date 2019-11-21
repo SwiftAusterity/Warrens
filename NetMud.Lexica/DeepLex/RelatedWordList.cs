@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -7,11 +8,18 @@ namespace NetMud.Lexica.DeepLex
     {
         public string wd { get; set; }
 
-        public ThesaurusVariant[] wvrs { get; set; }
+        public List<ThesaurusVariant> wvrs { get; set; }
 
-        public ThesaurusVerbVariant[] wvbvrs { get; set; }
+        public List<ThesaurusVerbVariant> wvbvrs { get; set; }
 
-        public ThesaurusStatusLabel[] wsls { get; set; }
+        public List<ThesaurusStatusLabel> wsls { get; set; }
+
+        public RelatedWordList()
+        {
+            wvrs = new List<ThesaurusVariant>();
+            wvbvrs = new List<ThesaurusVerbVariant>();
+            wsls = new List<ThesaurusStatusLabel>();
+        }
     }
 
 }
