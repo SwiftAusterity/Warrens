@@ -82,7 +82,6 @@ namespace NetMud.Controllers
             return View();
         }
 
-
         [HttpGet]
         public ActionResult ReportBug()
         {
