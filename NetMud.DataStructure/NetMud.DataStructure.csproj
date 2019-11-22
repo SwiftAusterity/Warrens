@@ -93,6 +93,9 @@
     <Compile Include="Game\ITurn.cs" />
     <Compile Include="Gossip\IGossipClient.cs" />
     <Compile Include="Gossip\IGossipConfig.cs" />
+    <Compile Include="Gossip\IGrapevineUser.cs" />
+    <Compile Include="Graces\IGrace.cs" />
+    <Compile Include="Graces\IReply.cs" />
     <Compile Include="NPC\IntelligenceControl\AITriggerType.cs" />
     <Compile Include="Player\IAccount.cs" />
     <Compile Include="Player\IAccountConfig.cs" />
