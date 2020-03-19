@@ -2,11 +2,7 @@
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.EntityBase;
-using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Linguistic;
-using NetMud.DataStructure.NPC;
-using NetMud.DataStructure.Player;
 using NetMud.DataStructure.System;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -63,7 +59,7 @@ namespace NetMud.Data.Linguistic
         public Lexica()
         {
             Modifiers = new HashSet<ILexica>();
-            Context = new LexicalContext(null);
+            Context = new LexicalContext();
         }
 
         public Lexica(LexicalType type, GrammaticalType role, string phrase, LexicalContext context)
@@ -78,7 +74,7 @@ namespace NetMud.Data.Linguistic
             GetDictata();
         }
 
-        public Lexica(LexicalType type, GrammaticalType role, string phrase, IEntity origin, IEntity observer)
+        public Lexica(LexicalType type, GrammaticalType role, string phrase)
         {
             Type = type;
             Phrase = phrase;
@@ -86,7 +82,7 @@ namespace NetMud.Data.Linguistic
 
             Modifiers = new HashSet<ILexica>();
 
-            Context = BuildContext(origin, observer);
+            Context = BuildContext();
             GetDictata();
         }
 
@@ -156,7 +152,6 @@ namespace NetMud.Data.Linguistic
                     modifier.Context.Language = Context.Language;
                     modifier.Context.Tense = Context.Tense;
                     modifier.Context.Perspective = Context.Perspective;
-                    modifier.Context.Observer = Context.Observer;
                 }
 
                 newModifiers.Add(modifier);
@@ -460,7 +455,7 @@ namespace NetMud.Data.Linguistic
                         || Context.Tense != dict.Tense
                         || Context.Perspective != dict.Perspective
                         || Context.Determinant != dict.Determinant
-                        || Context.GenderForm.Feminine != dict.Feminine))
+                        || Context.GenderForm != dict.Feminine))
                 {
                     newDict = Thesaurus.GetSynonym(dict, Context);
                 }
@@ -488,42 +483,22 @@ namespace NetMud.Data.Linguistic
         /// Build out the context object
         /// </summary>
         /// <param name="entity">the subject</param>
-        private LexicalContext BuildContext(IEntity entity, IEntity observer)
+        private LexicalContext BuildContext()
         {
-            LexicalContext context = new LexicalContext(observer);
+            LexicalContext context = new LexicalContext();
 
             bool specific = true;
-            ILocation entityLocation = entity?.CurrentLocation?.CurrentLocation();
-            if (entityLocation != null)
-            {
-                Type type = entity.GetType();
-
-                //We're looking for more things with the same template id (ie based on the same thing, like more than one wolf or sword)
-                if (type == typeof(IInanimate))
-                {
-                    specific = !entityLocation.GetContents<IInanimate>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
-                }
-                else if (type == typeof(INonPlayerCharacter))
-                {
-                    specific = !entityLocation.GetContents<INonPlayerCharacter>().Any(item => item != entity && item.TemplateId == entity.TemplateId);
-                    context.GenderForm = ((INonPlayerCharacter)entity).Gender;
-                }
-                else if (type == typeof(IPlayer))
-                {
-                    context.GenderForm = ((IPlayer)entity).Gender;
-                }
-            }
 
             context.Determinant = specific;
 
             return context;
         }
 
-        private ILexica RunObscura(MessagingType sensoryType, IEntity observer, bool over)
+        private ILexica RunObscura(MessagingType sensoryType, bool over)
         {
             ILexica message = null;
 
-            LexicalContext context = new LexicalContext(observer)
+            LexicalContext context = new LexicalContext()
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.FirstPerson,
@@ -535,14 +510,14 @@ namespace NetMud.Data.Linguistic
                 case MessagingType.Audible:
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "soft", context));
 
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "loud", context));
                     }
@@ -550,14 +525,14 @@ namespace NetMud.Data.Linguistic
                 case MessagingType.Olefactory:
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
 
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "pungent", context));
                     }
@@ -565,14 +540,14 @@ namespace NetMud.Data.Linguistic
                 case MessagingType.Psychic:
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "vague", context));
 
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "disturbing", context));
                     }
@@ -581,7 +556,7 @@ namespace NetMud.Data.Linguistic
                     context.Position = LexicalPosition.Attached;
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "brushes", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "brushes")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "skin", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "lightly", context));
 
@@ -589,7 +564,7 @@ namespace NetMud.Data.Linguistic
                     else
                     {
                         context.Elegance = -5;
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "rubs", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "rubs")
                                                         .TryModify(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", context));
                     }
                     break;
@@ -598,7 +573,7 @@ namespace NetMud.Data.Linguistic
 
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
 
@@ -606,7 +581,7 @@ namespace NetMud.Data.Linguistic
                     else
                     {
                         context.Elegance = -5;
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste")
                                                         .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
                                                         .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "offensive", context));
                     }
@@ -616,12 +591,12 @@ namespace NetMud.Data.Linguistic
 
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see")
                                                 .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "shadows", context));
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
+                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see")
                                                 .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "lights", context))
                                                 .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "blinding", context));
                     }

@@ -166,7 +166,7 @@ namespace NetMud.Communication.Lexical
                     (word.Tense == context.Tense ? 5 : 0) +
                     (word.Perspective == context.Perspective ? 5 : 0) +
                     (word.Possessive == context.Possessive ? 7 : 0) +
-                    ((context.GenderForm == null || word.Feminine == context.GenderForm?.Feminine) ? 10 : 0) +
+                    (word.Feminine != context.GenderForm ? 10 : 0) +
                     (word.Plural == context.Plural ? 2 : 0) +
                     (word.Determinant == context.Determinant ? 2 : 0) +
                     (context.Semantics.Any() ? word.Semantics.Count(wrd => context.Semantics.Contains(wrd)) * 10 : 0);
@@ -230,7 +230,7 @@ namespace NetMud.Communication.Lexical
                 //pronouns become "it"
                 if (nounWordTypes.Contains(newWord.WordType))
                 {
-                    LexicalContext itContext = new LexicalContext(null)
+                    LexicalContext itContext = new LexicalContext()
                     {
                         Determinant = false,
                         Plural = false,

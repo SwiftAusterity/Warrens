@@ -1,6 +1,4 @@
-﻿using NetMud.DataStructure.Architectural.ActorBase;
-using NetMud.DataStructure.Architectural.EntityBase;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
@@ -15,11 +13,6 @@ namespace NetMud.DataStructure.Linguistic
         public bool Anonymize { get; set; }
 
         /// <summary>
-        /// The person/thing observing this
-        /// </summary>
-        public IEntity Observer { get; set; }
-
-        /// <summary>
         /// The language this is derived from
         /// </summary>
         public ILanguage Language { get; set; }
@@ -27,7 +20,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Gender of the subject (for pronoun usage)
         /// </summary>
-        public IGender GenderForm { get; set; }
+        public bool GenderForm { get; set; }
 
         /// <summary>
         /// Chronological tense of word
@@ -79,7 +72,7 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         public int Quality { get; set; }
 
-        public LexicalContext(IEntity observer)
+        public LexicalContext()
         {
             Tense = LexicalTense.Present;
             Position = LexicalPosition.None;
@@ -90,7 +83,6 @@ namespace NetMud.DataStructure.Linguistic
             Severity = 0;
             Elegance = 0;
             Quality = 0;
-            Observer = observer;
             Anonymize = false;
 
             Semantics = new HashSet<string>();
@@ -98,7 +90,7 @@ namespace NetMud.DataStructure.Linguistic
 
         public LexicalContext Clone()
         {
-            return new LexicalContext(Observer)
+            return new LexicalContext()
             {
                 Tense = Tense,
                 Position = Position,

@@ -1,8 +1,5 @@
 ﻿using NetMud.Communication.Lexical;
-using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Room;
-using NetMud.Data.Zone;
-using NetMud.DataStructure.Architectural.EntityBase;
+using NetMud.Data.Architectural;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using System;
 using System.Collections;
@@ -24,25 +21,12 @@ namespace NetMud.Models
                 {
                     Type type = null;
 
-                    if (modelType == typeof(ILocationData))
-                    {
-                        if (bindingContext.ModelName.Contains("Zone"))
-                        {
-                            type = typeof(ZoneTemplate);
-                        }
-                        else if (bindingContext.ModelName.Contains("Room"))
-                        {
-                            type = typeof(RoomTemplate);
-                        }
-                    }
-                    else
-                    {
-                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
 
-                        if (type == null)
-                        {
-                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
-                        }
+                    type = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
+
+                    if (type == null)
+                    {
+                        type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(modelType));
                     }
 
                     if (type == null)
@@ -60,7 +44,7 @@ namespace NetMud.Models
                 {
                     //Our interface involves generics so go find the concrete class by type name match so we can build it out using the correct type for the generic parameter
                     string genericName = modelType.Name.Substring(1);
-                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
+                    Type type = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
 
                     if (type == null)
                     {
@@ -204,18 +188,11 @@ namespace NetMud.Models
                             {
                                 Type type = null;
 
-                                if (propertyDescriptor.PropertyType == typeof(ILocationData))
-                                {
-                                    type = typeof(RoomTemplate);
-                                }
-                                else
-                                {
-                                    type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
+                                type = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
 
-                                    if (type == null)
-                                    {
-                                        type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
-                                    }
+                                if (type == null)
+                                {
+                                    type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(propertyDescriptor.PropertyType));
                                 }
 
                                 if (type == null)
@@ -302,18 +279,11 @@ namespace NetMud.Models
                     {
                         Type type = null;
 
-                        if (containedType == typeof(ILocationData))
-                        {
-                            type = typeof(RoomTemplate);
-                        }
-                        else
-                        {
-                            type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
+                        type = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
 
-                            if (type == null)
-                            {
-                                type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
-                            }
+                        if (type == null)
+                        {
+                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(containedType));
                         }
 
                         containedType = type ?? throw new Exception("Invalid Binding Interface");
@@ -374,18 +344,11 @@ namespace NetMud.Models
                                     {
                                         Type type = null;
 
-                                        if (innerContainedType == typeof(ILocationData))
-                                        {
-                                            type = typeof(RoomTemplate);
-                                        }
-                                        else
-                                        {
-                                            type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
+                                        type = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
 
-                                            if (type == null)
-                                            {
-                                                type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
-                                            }
+                                        if (type == null)
+                                        {
+                                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(innerContainedType));
                                         }
 
                                         innerContainedType = type ?? throw new Exception("Invalid Binding Interface");
@@ -571,27 +534,11 @@ namespace NetMud.Models
                 //Convert the interface to the concrete class by finding a concrete class that impls this interface
                 if (!componentType.IsGenericType)
                 {
-                    Type type = null;
+                    Type type = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
 
-                    if (componentType == typeof(ILocationData))
+                    if (type == null)
                     {
-                        if (componentType.Name.Contains("Zone"))
-                        {
-                            type = typeof(ZoneTemplate);
-                        }
-                        else if (componentType.Name.Contains("Room"))
-                        {
-                            type = typeof(RoomTemplate);
-                        }
-                    }
-                    else
-                    {
-                        type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
-
-                        if (type == null)
-                        {
-                            type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
-                        }
+                        type = typeof(SensoryEvent).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(componentType));
                     }
 
                     if (type == null)
@@ -608,7 +555,7 @@ namespace NetMud.Models
                 {
                     //Our interface involves generics so go find the concrete class by type name match so we can build it out using the correct type for the generic parameter
                     string genericName = componentType.Name.Substring(1);
-                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
+                    Type type = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
 
                     if (type == null)
                     {

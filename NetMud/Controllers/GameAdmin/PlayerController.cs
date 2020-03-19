@@ -37,21 +37,6 @@ namespace NetMud.Controllers.GameAdmin
         }
 
 
-        [HttpPost]
-        [Route(@"Player/SelectCharacter/{id}")]
-        public JsonResult SelectCharacter(long id)
-        {
-            ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-
-            if (authedUser != null && id >= 0)
-            {
-                authedUser.GameAccount.CurrentlySelectedCharacter = id;
-                UserManager.Update(authedUser);
-            }
-
-            return new JsonResult();
-        }
-
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)

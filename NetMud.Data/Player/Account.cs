@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Linq;
 
 namespace NetMud.Data.Players
 {
@@ -31,7 +30,6 @@ namespace NetMud.Data.Players
         public Account()
         {
             GlobalIdentityHandle = "Nobody";
-            LogChannelSubscriptions = new List<string>();
         }
 
         /// <summary>
@@ -41,7 +39,6 @@ namespace NetMud.Data.Players
         public Account(string handle)
         {
             GlobalIdentityHandle = handle;
-            LogChannelSubscriptions = new List<string>();
 
             IAccountConfig forceLoad = Config;
         }
@@ -55,64 +52,7 @@ namespace NetMud.Data.Players
         {
             GlobalIdentityHandle = handle;
 
-            if (!string.IsNullOrEmpty(logSubscriptions))
-            {
-                LogChannelSubscriptions = logSubscriptions.Split('|');
-            }
-            else
-            {
-                LogChannelSubscriptions = new List<string>();
-            }
-
             IAccountConfig forceLoad = Config;
-        }
-
-        /// <summary>
-        /// List of log channel names subscribed to
-        /// </summary>
-        public IList<string> LogChannelSubscriptions { get; set; }
-
-        /// <summary>
-        /// For EF purposes
-        /// </summary>
-        public string LogSubs
-        {
-            get { return string.Join(",", LogChannelSubscriptions); }
-            set { LogChannelSubscriptions = value.Split(',').ToList(); }
-        }
-
-        public long CurrentlySelectedCharacter { get; set; }
-
-        /// <summary>
-        /// List of valid characters this account owns
-        /// </summary>
-        private HashSet<IPlayerTemplate> _characters;
-
-        /// <summary>
-        /// List of valid characters this account owns
-        /// </summary>
-        public HashSet<IPlayerTemplate> Characters
-        {
-            get
-            {
-                if (_characters == null)
-                {
-                    HashSet<IPlayerTemplate> returnValue = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAllForAccountHandle(GlobalIdentityHandle));
-                    _characters = returnValue;
-                }
-
-                //Cause there are none
-                if (_characters == null)
-                {
-                    _characters = new HashSet<IPlayerTemplate>();
-                }
-
-                return _characters;
-            }
-            set
-            {
-                _characters = value;
-            }
         }
 
         /// <summary>
@@ -135,7 +75,6 @@ namespace NetMud.Data.Players
                         //Just make it new and save it
                         returnValue = new AccountConfig(this)
                         {
-                            UITutorialMode = true
                         };
 
                         returnValue.Save(this, StaffRank.Player); //personal config doesnt need approval yet but your rank is ALWAYS player here
@@ -148,38 +87,6 @@ namespace NetMud.Data.Players
             {
                 ConfigDataCache.Add(value);
             }
-        }
-
-        /// <summary>
-        /// Get the current character for someone
-        /// </summary>
-        /// <returns></returns>
-        public IPlayerTemplate GetCurrentlySelectedCharacter()
-        {
-            return Characters.FirstOrDefault(chars => chars.Id == CurrentlySelectedCharacter);
-        }
-
-        /// <summary>
-        /// Add a character to this account
-        /// </summary>
-        /// <param name="newChar">the character data to add</param>
-        /// <returns>errors or Empty if successful</returns>
-        public string AddCharacter(IPlayerTemplate newChar)
-        {
-            HashSet<IPlayerTemplate> systemChars = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAll());
-
-            if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase) && newChar.SurName.Equals(newChar.SurName, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                return "A character with that name already exists, please choose another.";
-            }
-
-            newChar.AccountHandle = GlobalIdentityHandle;
-            newChar.Create(this, StaffRank.Player); //characters dont need approval yet but your rank is ALWAYS player here
-            systemChars.Add(newChar);
-
-            Characters = systemChars;
-
-            return string.Empty;
         }
 
         /// <summary>

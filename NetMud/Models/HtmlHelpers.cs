@@ -1,4 +1,4 @@
-﻿using NetMud.Data.Architectural.EntityBase;
+﻿using NetMud.Data.Architectural;
 using NetMud.Utility;
 using System;
 using System.Collections.Generic;
@@ -76,7 +76,7 @@ namespace NetMud.Models
             {
                 items = new List<TValue>()
                 {
-                    DataUtility.InsantiateThing<TValue>(typeof(EntityTemplatePartial).Assembly)
+                    DataUtility.InsantiateThing<TValue>(typeof(TemplatePartial).Assembly)
                 };
             }
 
@@ -90,7 +90,7 @@ namespace NetMud.Models
             string fieldName = html.NameFor(expression).ToString();
             List<TValue> plusOne = new List<TValue>
             {
-                DataUtility.InsantiateThing<TValue>(typeof(EntityTemplatePartial).Assembly)
+                DataUtility.InsantiateThing<TValue>(typeof(TemplatePartial).Assembly)
             };
 
             string templateNameOverride = string.IsNullOrWhiteSpace(templateName) ? html.ViewData.ModelMetadata.TemplateHint : templateName;

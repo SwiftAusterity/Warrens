@@ -1,7 +1,6 @@
 ﻿using NetMud.CentralControl;
 using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
-using NetMud.Data.Architectural.ActorBase;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -209,7 +208,7 @@ namespace NetMud.Data.Linguistic
 
                 foreach (IDictata word in WordForms)
                 {
-                    LexicalContext context = new LexicalContext(null)
+                    LexicalContext context = new LexicalContext()
                     {
                         Language = language,
                         Perspective = word.Perspective,
@@ -222,7 +221,7 @@ namespace NetMud.Data.Linguistic
                         Quality = word.Quality,
                         Semantics = word.Semantics,
                         Severity = word.Severity,
-                        GenderForm = new Gender() { Feminine = word.Feminine }
+                        GenderForm = true
                     };
 
                     IDictata translatedWord = Thesaurus.GetSynonym(word, context);

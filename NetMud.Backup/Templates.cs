@@ -1,8 +1,4 @@
-﻿using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Gaia;
-using NetMud.Data.Locale;
-using NetMud.Data.Room;
-using NetMud.Data.Zone;
+﻿using NetMud.Data.Architectural;
 using NetMud.DataAccess;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Architectural;
@@ -58,17 +54,12 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool LoadEverythingToCache()
         {
-            System.Collections.Generic.IEnumerable<Type> implimentedTypes = typeof(EntityTemplatePartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IKeyedData))
+            System.Collections.Generic.IEnumerable<Type> implimentedTypes = typeof(LookupDataPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IKeyedData))
                                                                                 && ty.IsClass
                                                                                 && !ty.IsAbstract
                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-            foreach (Type t in implimentedTypes.OrderByDescending(type => type == typeof(GaiaTemplate) ? 6 :
-                                                                            type == typeof(ZoneTemplate) ? 5 :
-                                                                            type == typeof(LocaleTemplate) ? 4 :
-                                                                            type == typeof(RoomTemplate) ? 3 :
-                                                                            type == typeof(PathwayTemplate) ? 2 :
-                                                                            type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
+            foreach (Type t in implimentedTypes.OrderByDescending(type => type.GetInterfaces().Contains(typeof(ILookupData)) ? 1 : 0))
             {
                 LoadAllToCache(t);
             }

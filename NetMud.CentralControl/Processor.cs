@@ -1,5 +1,4 @@
-﻿using NetMud.Communication;
-using NetMud.DataAccess;
+﻿using NetMud.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -206,16 +205,6 @@ namespace NetMud.CentralControl
             {
                 cancelToken.CancelAfter(shutdownDelay * 1000);
             }
-
-            if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-            {
-                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
-            }
-
-            if (shutdownAnnouncementFrequency > 0)
-            {
-                Task.Run(() => RunAnnouncements(shutdownDelay, shutdownAnnouncement, shutdownAnnouncementFrequency));
-            }
         }
 
 
@@ -251,33 +240,6 @@ namespace NetMud.CentralControl
                 {
                     token.CancelAfter(shutdownDelay * 1000);
                 }
-            }
-
-            if (!string.IsNullOrWhiteSpace(shutdownAnnouncement))
-            {
-                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, shutdownDelay));
-            }
-
-            if (shutdownAnnouncementFrequency > 0)
-            {
-                Task.Run(() => RunAnnouncements(shutdownDelay, shutdownAnnouncement, shutdownAnnouncementFrequency));
-            }
-        }
-
-        /// <summary>
-        /// Runs looped formatted messages until the timer runs out
-        /// </summary>
-        /// <param name="shutdownDelay">Total amount of message time</param>
-        /// <param name="shutdownAnnouncement">What to announce</param>
-        /// <param name="shutdownAnnouncementFrequency">How often to announce it</param>
-        private static async void RunAnnouncements(int shutdownDelay, string shutdownAnnouncement, int shutdownAnnouncementFrequency)
-        {
-            int secondsLeftBeforeShutdown = shutdownDelay;
-            while (secondsLeftBeforeShutdown > 0)
-            {
-                SystemCommunicationsUtility.BroadcastToAll(string.Format(shutdownAnnouncement, secondsLeftBeforeShutdown));
-                await Task.Delay(shutdownAnnouncementFrequency * 1000);
-                secondsLeftBeforeShutdown -= shutdownAnnouncementFrequency;
             }
         }
 

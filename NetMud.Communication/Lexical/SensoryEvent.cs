@@ -1,6 +1,5 @@
 ﻿using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
-using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using System;
@@ -235,7 +234,7 @@ namespace NetMud.Communication.Lexical
                     //full obfuscation happens at 100 only
                     if (Strength <= -100 || Strength >= 100)
                     {
-                        ILexica lex = RunObscura(SensoryType, subject, subject.Context.Observer, Strength > 0);
+                        ILexica lex = RunObscura(SensoryType, subject, Strength > 0);
 
                         sentences.Add(lex.MakeSentence(SentenceType.Statement, SensoryType, Strength));
                     }
@@ -258,9 +257,9 @@ namespace NetMud.Communication.Lexical
             return Event.Describe();
         }
 
-        private ILexica RunObscura(MessagingType sensoryType, ILexica subject, IEntity observer, bool over)
+        private ILexica RunObscura(MessagingType sensoryType, ILexica subject, bool over)
         {
-            LexicalContext context = new LexicalContext(observer)
+            LexicalContext context = new LexicalContext()
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.FirstPerson,

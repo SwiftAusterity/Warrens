@@ -1,5 +1,5 @@
 ﻿using NetMud.Authentication;
-using NetMud.Data.Architectural.EntityBase;
+using NetMud.Data.Architectural;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
 using NetMud.DataStructure.Architectural;
@@ -53,7 +53,7 @@ namespace NetMud.Models
             if (typeof(T).IsInterface)
             {
                 typeName = typeName.Substring(1);
-                templateType = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(typeof(T)));
+                templateType = typeof(TemplatePartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(typeof(T)));
             }
 
             DirectoryInfo archiveDir = new DirectoryInfo(fileAccessor.BaseDirectory + fileAccessor.ArchiveDirectoryName + ArchivePath + "/" + typeName + "/");

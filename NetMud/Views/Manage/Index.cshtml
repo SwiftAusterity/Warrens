@@ -1,7 +1,6 @@
 ﻿@model NetMud.Models.PlayerManagement.ManageAccountViewModel
 
 @{
-    Model.UITutorialMode = Model.DataObject.Config.UITutorialMode;
     ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Dashboard", new string[] { }, new string[] { });
 }
 
@@ -11,49 +10,6 @@
         <dl class="dl-horizontal dashboardItem">
             <dd>
                 @Html.ActionLink("Change your password", "ChangePassword", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Change Password" })
-            </dd>
-        </dl>
-        <dl class="dl-horizontal dashboardItem">
-            <dd>
-                Characters [@Html.ActionLink(Model.AuthedUser.GameAccount.Characters.Count().ToString(), "ManageCharacters", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Manage" })]
-            </dd>
-        </dl>
-    </div>
-
-    <div>
-        <h4>Acquaintences</h4>
-        <dl class="dl-horizontal dashboardItem">
-            <dd>
-                Inbox [@Html.ActionLink(Model.NotificationCount.ToString(), "Notifications", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Mail and Notifications" })]
-            </dd>
-        </dl>
-        <dl class="dl-horizontal dashboardItem">
-            <dd>
-                Friends [@Html.ActionLink(Model.AuthedUser.GameAccount.Config.Acquaintences.Count().ToString(), "Acquaintences", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Acquaintences" })]
-            </dd>
-        </dl>
-    </div>
-
-    <div>
-        <h4>Game Features</h4>
-        <dl class="dl-horizontal dashboardItem">
-            <dd>
-                My Fighting Arts: [@Html.ActionLink(Model.FightingArtCount.ToString(), "FightingArts", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
-            </dd>
-        </dl>
-        <dl class="dl-horizontal dashboardItem">
-            <dd>
-                Fighting Combos: [@Html.ActionLink(Model.ComboCount.ToString(), "Combos", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
-            </dd>
-        </dl>
-        <dl class="dl-horizontal dashboardItem">
-            <dd>
-                Music Playlists: [@Html.ActionLink(Model.AuthedUser.GameAccount.Config.Playlists.Count().ToString(), "Playlists", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "Music Playlists" })]
-            </dd>
-        </dl>
-        <dl class="dl-horizontal dashboardItem">
-            <dd>
-                UI Configuration: [@Html.ActionLink(Model.UIModuleCount.ToString(), "UIModules", null, htmlAttributes: new { @style = "color: midnightblue;", @title = "UI Modules" })]
             </dd>
         </dl>
     </div>
@@ -68,16 +24,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">
             @Html.EditorFor(m => m.UILanguage, new { validItems = Model.ValidLanguages })
-            @Html.EditorFor(m => m.UITutorialMode)
-            @Html.EditorFor(m => m.GossipSubscriber)
-            @Html.EditorFor(m => m.PermanentlyMuteMusic)
-            @Html.EditorFor(m => m.PermanentlyMuteSound)
         </div>
-
-        if (User.IsInRole("Admin"))
-        {
-            @Html.Partial("~/Views/Manage/LogSubscriptions.cshtml", Model)
-        }
 
         @Html.Partial("SubmitButton", new NetMud.Models.SubmitButtonModel() { SubmitName = "Save", ReturnAction = "Index", ReturnController = "Manage", IncludeCancel = false })
     }

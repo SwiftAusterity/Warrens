@@ -1,6 +1,4 @@
-﻿using NetMud.DataAccess.Cache;
-using NetMud.DataAccess.FileSystem;
-using NetMud.DataStructure.Player;
+﻿using NetMud.DataAccess.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,19 +45,6 @@ namespace NetMud.DataAccess
         {
             //Write to the log file first
             WriteLine(content, channel);
-
-            //Quiet means only write to file, non-quiet means write to whomever is subscribed
-            if (!beQuiet)
-            {
-                //write to people in game
-                IEnumerable<IPlayer> peeps = LiveCache.GetAll<IPlayer>().Where(peep => peep.Template<IPlayerTemplate>() != null && peep.Template<IPlayerTemplate>().Account != null && 
-                                                                        peep.Template<IPlayerTemplate>().Account.LogChannelSubscriptions.Contains(channel));
-
-                foreach (IPlayer peep in peeps)
-                {
-                    peep.WriteTo(new string[] { content });
-                }
-            }
         }
 
         /// <summary>

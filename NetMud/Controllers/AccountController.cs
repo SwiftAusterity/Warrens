@@ -174,13 +174,6 @@ namespace NetMud.Controllers
         {
             AccountConfig newAccountConfig = new AccountConfig(account);
 
-            IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
-
-            foreach (IUIModule module in uiModules)
-            {
-                newAccountConfig.UIModules = uiModules.Select(uim => new Tuple<IUIModule, int>(uim, uim.SystemDefault));
-            }
-
             //Save the new config
             newAccountConfig.Save(account, StaffRank.Player);
         }
