@@ -195,120 +195,132 @@ namespace NetMud.Communication.Lexical
             {
                 var newDict = newLex.GetForm(0);
 
-                try
+                //TODO: why is this occuring
+                if (newDict != null)
                 {
-                    var dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
-                    if (dictEntry != null)
+                    try
                     {
-                        //Stuff done to modify all forms of the lexeme
-                        foreach (var dict in newLex.WordForms)
+                        var dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
+                        if (dictEntry != null)
                         {
-                            dict.Vulgar = dictEntry.meta.offensive;
-                        }
-
-                        //Stuff done based on the dictionary return data
-                        foreach (var stemWord in dictEntry.uros)
-                        {
-                            if (newLex.GetForm(MapLexicalTypes(stemWord.fl)) == null)
+                            //Stuff done to modify all forms of the lexeme
+                            foreach (var dict in newLex.WordForms)
                             {
-                                var wordText = stemWord.ure.Replace("*", "");
-                                ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, wordText));
+                                dict.Vulgar = dictEntry.meta.offensive;
+                            }
 
-                                if (stemLex == null)
+                            //Stuff done based on the dictionary return data
+                            foreach (var stemWord in dictEntry.uros)
+                            {
+                                if (newLex.GetForm(MapLexicalTypes(stemWord.fl)) == null)
                                 {
-                                    stemLex = language.CreateOrModifyLexeme(wordText, MapLexicalTypes(stemWord.fl), null);
+                                    var wordText = stemWord.ure.Replace("*", "");
+                                    ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, wordText));
 
-                                    var stemDict = stemLex.GetForm(0);
-                                    stemDict.Elegance = newDict.Elegance;
-                                    stemDict.Quality = newDict.Quality;
-                                    stemDict.Severity = newDict.Severity;
-                                    stemDict.Context = newDict.Context;
-                                    stemDict.Definition = newDict.Definition;
-                                    stemDict.Semantics = newDict.Semantics;
-                                    processedWords.Add(wordText);
+                                    if (stemLex == null)
+                                    {
+                                        stemLex = language.CreateOrModifyLexeme(wordText, MapLexicalTypes(stemWord.fl), null);
 
-                                    stemLex.SystemSave();
-                                    stemLex.PersistToCache();
+                                        var stemDict = stemLex.GetForm(0);
+                                        stemDict.Elegance = newDict.Elegance;
+                                        stemDict.Quality = newDict.Quality;
+                                        stemDict.Severity = newDict.Severity;
+                                        stemDict.Context = newDict.Context;
+                                        stemDict.Definition = newDict.Definition;
+                                        stemDict.Semantics = newDict.Semantics;
+                                        processedWords.Add(wordText);
+
+                                        stemLex.SystemSave();
+                                        stemLex.PersistToCache();
+                                    }
+                                }
+                            }
+
+                            newDict.Semantics = new HashSet<string>(dictEntry.sls);
+                        }
+                    }
+                    catch
+                    {
+                        //just eating it
+                    }
+
+                    try
+                    {
+                        var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
+                        if (thesEntry != null)
+                        {
+                            foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
+                            {
+                                var newWord = synonym.ToLower();
+                                newWord = newWord.Replace("_", " ");
+
+                                if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
+                                    continue;
+
+                                var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
+
+                                var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
+
+                                if (synDict == null)
+                                { continue; }
+
+                                synDict.Elegance = 0;
+                                synDict.Quality = 0;
+                                synDict.Severity = 0;
+                                synDict.Context = newDict.Context;
+                                synDict.Definition = newDict.Definition;
+
+                                synLex.PersistToCache();
+                                synLex.SystemSave();
+                                processedWords.Add(newWord);
+
+                                if (!newWord.Equals(word))
+                                {
+                                    newDict.MakeRelatedWord(language, newWord, true, synDict);
+                                }
+                            }
+
+                            foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
+                            {
+                                var newWord = antonym.ToLower();
+                                newWord = newWord.Replace("_", " ");
+
+                                if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
+                                    continue;
+
+                                var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
+
+                                var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
+
+                                if (synDict == null)
+                                { continue; }
+
+                                synDict.Elegance = 0;
+                                synDict.Quality = 0;
+                                synDict.Severity = 0;
+                                synDict.Context = newDict.Context;
+                                synDict.Definition = newDict.Definition;
+
+                                synLex.PersistToCache();
+                                synLex.SystemSave();
+                                processedWords.Add(newWord);
+
+                                if (!newWord.Equals(word))
+                                {
+                                    newDict.MakeRelatedWord(language, newWord, false, synDict);
                                 }
                             }
                         }
-
-                        newDict.Semantics = new HashSet<string>(dictEntry.sls);
                     }
-                }
-                catch
-                {
-                    //just eating it
-                }
-
-                try
-                {
-                    var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
-                    if (thesEntry != null)
+                    catch
                     {
-                        foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
-                        {
-                            var newWord = synonym.ToLower();
-                            newWord = newWord.Replace("_", " ");
-
-                            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
-                                continue;
-
-                            var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
-
-                            var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = 0;
-                            synDict.Quality = 0;
-                            synDict.Severity = 0;
-                            synDict.Context = newDict.Context;
-                            synDict.Definition = newDict.Definition;
-
-                            synLex.PersistToCache();
-                            synLex.SystemSave();
-                            processedWords.Add(newWord);
-
-                            if (!newWord.Equals(word))
-                            {
-                                newDict.MakeRelatedWord(language, newWord, true, synDict);
-                            }
-                        }
-
-                        foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
-                        {
-                            var newWord = antonym.ToLower();
-                            newWord = newWord.Replace("_", " ");
-
-                            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
-                                continue;
-
-                            var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
-
-                            var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = 0;
-                            synDict.Quality = 0;
-                            synDict.Severity = 0;
-                            synDict.Context = newDict.Context;
-                            synDict.Definition = newDict.Definition;
-
-                            synLex.PersistToCache();
-                            synLex.SystemSave();
-                            processedWords.Add(newWord);
-
-                            if (!newWord.Equals(word))
-                            {
-                                newDict.MakeRelatedWord(language, newWord, false, synDict);
-                            }
-                        }
+                        //just eating it
                     }
-                }
-                catch
-                {
-                    //just eating it
-                }
 
-                newLex.MirriamIndexed = true;
-                newLex.SystemSave();
-                newLex.PersistToCache();
+                    newLex.MirriamIndexed = true;
+                    newLex.SystemSave();
+                    newLex.PersistToCache();
+                }
             }
 
             if (!newLex.IsTranslated)
