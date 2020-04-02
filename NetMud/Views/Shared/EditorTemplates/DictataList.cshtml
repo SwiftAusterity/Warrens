@@ -49,7 +49,7 @@
         ViewData.Model = (IDictata)selectedItemOverride;
     }
 
-    var itemList = ((IEnumerable<IDictata>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = string.Format("({0}) {1}", item.Language.GoogleLanguageCode, item.Name), Value = item.UniqueKey, Selected = Model != null && item.UniqueKey == Model.UniqueKey });
+    var itemList = ((IEnumerable<IDictata>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = string.Format("({0}:{2} {3}) {1}", item.Language.GoogleLanguageCode, item.Name, item.Tense, item.WordType), Value = item.UniqueKey, Selected = Model != null && item.UniqueKey == Model.UniqueKey });
 }
 
 @if (strippedNaked)
