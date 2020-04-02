@@ -248,6 +248,7 @@
     <Compile Include="Controllers\AdminDataApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
+    <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
     <Compile Include="Controllers\GameAdmin\JournalEntryController.cs" />
     <Compile Include="Controllers\GameAdmin\LanguageController.cs" />
     <Compile Include="Controllers\GameAdmin\DictionaryController.cs" />
@@ -493,8 +494,6 @@
     <Content Include="Views\Shared\EditorTemplates\TagItem.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ValueRangeInt.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ValueRangeShort.cshtml" />
-    <Content Include="Views\Features\Lore.cshtml" />
-    <Content Include="Views\Features\TheWorld.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CollectionEnumDropDownListItem.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SensoryEvent.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Lexica.cshtml" />

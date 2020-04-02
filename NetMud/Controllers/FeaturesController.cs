@@ -93,20 +93,7 @@ namespace NetMud.Controllers
         }
 
         #region NonDataViews
-        public ActionResult Skills()
-        {
-            return View();
-        }
 
-        public ActionResult Lore()
-        {
-            return View();
-        }
-
-        public ActionResult TheWorld()
-        {
-            return View();
-        }
         #endregion
     }
 }

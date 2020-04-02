@@ -29,10 +29,6 @@
                             <li>@Html.ActionLink("Logs", "Index", "Logging", routeValues: null, htmlAttributes: new { title = "Logs" })</li>
                             <li>@Html.ActionLink("Content Approval", "Index", "ContentApproval", routeValues: null, htmlAttributes: new { title = "Content Approval" })</li>
                         }
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li>@Html.ActionLink("Manage Players", "Index", "Player", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
-                        }
                         <li class="divider"></li>
                         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                     </ul>
