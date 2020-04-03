@@ -111,9 +111,8 @@
     <Compile Include="System\IGlobalConfig.cs" />
     <Compile Include="System\IHelpful.cs" />
     <Compile Include="System\IMessage.cs" />
-    <Compile Include="System\MessagingTargetType.cs" />
+    <Compile Include="System\LexicalOutput.cs" />
     <Compile Include="System\MessagingType.cs" />
-    <Compile Include="System\MovementDirectionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -246,6 +246,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminDataApiController.cs" />
+    <Compile Include="Controllers\LexicaApiController.cs" />
     <Compile Include="Controllers\ClientDataApiController.cs" />
     <Compile Include="Controllers\FeaturesController.cs" />
     <Compile Include="Controllers\GameAdmin\GameAdminController.cs" />
