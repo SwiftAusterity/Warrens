@@ -218,7 +218,7 @@ namespace NetMud.Communication.Lexical
                 //Adjectives/adverbs/articles get eaten
                 if (descriptiveWordTypes.Contains(newWord.WordType))
                 {
-                    newWord = null;
+                    return null;
                 }
 
                 //if it's a verb or preposition or structural leave it alone

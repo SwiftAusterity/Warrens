@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Describer", new string[] { "Documentation" }, new string[] { "/" });
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="informationalGroup">
+        <h3><a href="/api/lexicaapi/Describe">Link</a></h3>
+        <h5>Methods: POST; Parameters: None</h5>
+
+        <h4>Description</h4>
+        <p>
+            The describer is the primary endpoint for the Lexica. 
+            Send it a list of sensory events and subjects to describe and it will compile them into sentences and paragraphs.
+            Supported languages can be found <a href="/Features/Languages">here.</a>
+        </p>
+        <h4>Spec</h4>
+        <pre>
+            Main Body
+            ---------
+            {
+            "language" : string,
+            "severity" : int32,
+            "elegance" : int32,
+            "quality" : int32,
+            "paragraphs" : [{ context, paragraph }]
+            }
+
+            Context
+            ------
+            {
+            "anonymize" : bool,
+            "genderform" : bool,
+            "tense" : LexicalTense,
+            "position" : LexicalPosition,
+            "perspective" : NarrativePerspective,
+            "semantics" : [string]
+            }
+
+            Paragraph
+            ---------
+            { 
+            "events" : [event] 
+            }
+
+            Event
+            -----
+            {
+            "role" : GrammaticalType,
+            "type" : LexicalType,
+            "phrase" : string,
+            "modifiers" : [event]
+            }
+        </pre>
+        <h4>Values</h4>
+        <pre>
+            GrammaticalType
+            ----------------
+            Subject
+            DirectObject
+            IndirectObject
+            Verb
+            Descriptive
+            ConjugatedVerb
+        </pre>
+        <pre>
+            LexicalType
+            -----------
+            Noun
+            Pronoun
+            Verb
+            Adjective
+            Adverb
+            Conjunction
+            Interjection
+            ProperNoun
+            Article
+            Preposition
+        </pre>
+        <pre>
+            LexicalTense
+            ------------
+            Past
+            Present
+            Future
+        </pre>
+        <pre>
+            LexicalPosition
+            ---------------
+            None,
+            Near,
+            Far,
+            Attached,
+            Above,
+            Below,
+            On,
+            InsideOf,
+            OutsideOf,
+            Around,
+            PartOf
+        </pre>
+        <pre>
+            NarrativePerspective
+            --------------------
+            FirstPerson
+            SecondPerson
+            ThirdPerson
+        </pre>
+        <h4>Payload Examples</h4>
+        <p>
+            <pre>
+{
+  "severity" : 1,
+  "quality" : 1,
+  "elegance" : 1,
+  "language" : "english",
+  "paragraphs" : [
+    {
+      "paragraph" : {
+        "events" : [
+          {
+            "event" : {
+              "phrase" : "fish" 
+            } 
+          } ] 
+      }
+    }
+  ]
+}
+    </pre>
+        </p>
+    </div>

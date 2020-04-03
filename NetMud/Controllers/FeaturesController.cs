@@ -93,7 +93,10 @@ namespace NetMud.Controllers
         }
 
         #region NonDataViews
-
+        public ActionResult Describer()
+        {
+            return View();
+        }
         #endregion
     }
 }

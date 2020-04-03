@@ -49,9 +49,10 @@
                     <li>@Html.ActionLink("News", "Index", "Blog")</li>
                     <li>
                         <div style="padding: 15px">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Features<span class="caret"></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentation<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                                 <li class="dropdown-header" style="color: mediumvioletred">API Endpoints</li>
+                                <li>@Html.ActionLink("Describer", "Describer", "Features", routeValues: null, htmlAttributes: new { title = "Describer" })</li>
                                 <li class="dropdown-header" style="color: mediumvioletred">Knowledge</li>
                                 <li>@Html.ActionLink("Languages", "Languages", "Features", routeValues: null, htmlAttributes: new { title = "Languages" })</li>
                             </ul>

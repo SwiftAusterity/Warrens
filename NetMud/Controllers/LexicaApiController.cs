@@ -1,16 +1,12 @@
-﻿using Microsoft.Ajax.Utilities;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity.Owin;
 using NetMud.Authentication;
 using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
-using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,51 +32,57 @@ namespace NetMud.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/LexicaApi/Describe/{language}", Name = "LexicaAPI_Describe")]
-        public JsonResult<LexicalOutput> Describe(string language, int quality, int elegance, int severity, string request)
+        [HttpPost]
+        public JsonResult<LexicalOutput> Describe()
         {
-            ILanguage lang = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), language, ConfigDataType.Language));
+            string payload = Request.Content.ReadAsStringAsync().Result;
+            JToken parsedRequest = JValue.Parse(payload);
+
+            ILanguage lang = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), parsedRequest.Value<string>("language"), ConfigDataType.Language));
             bool success = false;
             List<string> errors = new List<string>();
 
-            // Describe { Paragraphs : [{ Context, Paragraph}] } }
+            // { language : "", severity : #, elegance : #, quality : #, Paragraphs : [{ Context, Paragraph}] } }
             // Context { Anonymize, GenderForm, Tense, Position, Perspective, Semantics : [string] }
             // Paragraph { Events : [Event] }
             // Event { Role, Type, Phrase, Modifiers : [Event] }
 
-            dynamic parsedRequest = JValue.Parse(request);
-
             List<ILexicalParagraph> paragraphs = new List<ILexicalParagraph>();
-            foreach (dynamic paragraphPair in parsedRequest.Paragraphs)
+            foreach (JToken paragraphPair in parsedRequest.Value<JArray>("paragraphs").Values<JToken>())
             {
-                dynamic paragraph = paragraphPair.Paragraph;
+                JToken paragraph = paragraphPair.Value<JToken>("paragraph");
                 if (paragraph != null)
                 {
                     LexicalContext globalContext = new LexicalContext();
-                    if (paragraphPair.Context != null)
+                    JToken context = paragraphPair.Value<JToken>("context");
+                    if (context != null)
                     {
-                        dynamic context = paragraphPair.Context;
-                        globalContext.Anonymize = context.Anonymize ?? false;
-                        globalContext.GenderForm = context.GenderForm ?? false;
-                        globalContext.Tense = context.Tense ?? LexicalTense.Past;
-                        globalContext.Position = context.Position ?? LexicalPosition.None;
-                        globalContext.Perspective = context.Perspective ?? NarrativePerspective.ThirdPerson;
-                        globalContext.Semantics = context.Semantics ?? new HashSet<string>();
+                        
+                        globalContext.Anonymize = context.Value<bool>("anonymize");
+                        globalContext.GenderForm = context.Value<bool>("genderform");
+                        globalContext.Tense = context.Value<LexicalTense>("tense");
+                        globalContext.Position = context.Value<LexicalPosition>("position");
+                        globalContext.Perspective = context.Value<NarrativePerspective>("perspective");
+                        globalContext.Semantics = context.Value<HashSet<string>>("semantics") ?? new HashSet<string>();
                         globalContext.Language = lang;
+                        globalContext.Severity = parsedRequest.Value<int>("severity");
+                        globalContext.Elegance = parsedRequest.Value<int>("elegance");
+                        globalContext.Quality = parsedRequest.Value<int>("quality");
                     }
 
                     List<ISensoryEvent> lexEvents = new List<ISensoryEvent>();
-                    foreach (dynamic lexEvent in paragraph.Events)
+                    foreach (JToken lexEvent in paragraph.Value<JArray>("events").Values("event"))
                     {
-                        if (lexEvent != null && !string.IsNullOrWhiteSpace(lexEvent.Phrase))
+                        if (lexEvent != null && !string.IsNullOrWhiteSpace(lexEvent.Value<string>("phrase")))
                         {
                             ILexica lex = ParseLexica(globalContext, lexEvent);
 
-                            SensoryEvent mainEvent = new SensoryEvent();
-                            mainEvent.SensoryType = MessagingType.Visible;
-                            mainEvent.Strength = short.MaxValue;
-                            mainEvent.Event = lex;
+                            SensoryEvent mainEvent = new SensoryEvent
+                            {
+                                SensoryType = MessagingType.Visible,
+                                Strength = short.MaxValue,
+                                Event = lex
+                            };
                             lexEvents.Add(mainEvent);
                         }
                     }
@@ -93,6 +95,7 @@ namespace NetMud.Controllers
             foreach (var graph in paragraphs)
             {
                 description.AppendLine(graph.Describe());
+                success = true;
             }
 
             LexicalOutput returnValue = new LexicalOutput()
@@ -105,30 +108,33 @@ namespace NetMud.Controllers
             return Json(returnValue);
         }
 
-        private static ILexica ParseLexica(LexicalContext globalContext, dynamic lexEvent)
+        private static ILexica ParseLexica(LexicalContext globalContext, JToken lexEvent)
         {
             ILexica lex = new Lexica
             {
-                Role = lexEvent.Role ?? GrammaticalType.None,
-                Type = lexEvent.Type ?? LexicalType.None,
-                Phrase = lexEvent.Phrase,
+                Role = lexEvent.Value<GrammaticalType>("role"),
+                Type = lexEvent.Value<LexicalType>("type"),
+                Phrase = lexEvent.Value<string>("phrase"),
                 Context = globalContext
             };
 
-            foreach (dynamic modifier in lexEvent.Modifiers)
+            if (lexEvent.Value<JArray>("modifiers") != null)
             {
-                if (modifier != null && !string.IsNullOrWhiteSpace(modifier.Phrase))
+                foreach (JToken modifier in lexEvent.Value<JArray>("modifiers").Values("event"))
                 {
-                    ParseLexica(globalContext, modifier);
-                    ILexica newModifier = new Lexica()
+                    if (modifier != null && !string.IsNullOrWhiteSpace(modifier.Value<string>("phrase")))
                     {
-                        Role = modifier.Role ?? GrammaticalType.None,
-                        Type = modifier.Type ?? LexicalType.None,
-                        Phrase = modifier.Phrase,
-                        Context = globalContext
-                    };
+                        ParseLexica(globalContext, modifier);
+                        ILexica newModifier = new Lexica()
+                        {
+                            Role = modifier.Value<GrammaticalType>("role"),
+                            Type = modifier.Value<LexicalType>("type"),
+                            Phrase = lexEvent.Value<string>("phrase"),
+                            Context = globalContext
+                        };
 
-                    lex.Modifiers.Add(newModifier);
+                        lex.Modifiers.Add(newModifier);
+                    }
                 }
             }
 
