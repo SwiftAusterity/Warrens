@@ -72,7 +72,7 @@ namespace NetMud.DataAccess.Cache
                 typeName = typeName.Substring(1);
             }
 
-            return string.Format("{0}_{1}_{2}", CacheType.ToString(), typeName, BirthMark.ToString());
+            return string.IsNullOrEmpty(BirthMark) ? string.Empty : string.Format("{0}_{1}_{2}", CacheType.ToString(), typeName, BirthMark);
         }
 
         #region Equality Functions

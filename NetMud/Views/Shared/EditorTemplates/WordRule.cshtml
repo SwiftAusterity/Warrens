@@ -1,6 +1,13 @@
 ﻿@using NetMud.Data.Linguistic
+@using NetMud.DataStructure.Linguistic
 
 @model WordRule
+
+@{
+
+    var validDictata = ((IEnumerable<ILexeme>)ViewData["ValidWords"]).Select(lex => lex.WordForms.FirstOrDefault());
+
+}
 
 <div class="accordionWrapper">
     <h5>@Model.FromType.ToString()|@Model.FromRole.ToString()</h5>
@@ -8,7 +15,7 @@
         <div class="form-group row">
             <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
             @Html.EditorFor(m => m.ModificationOrder)
-            @Html.EditorFor(m => m.SpecificWord, new { validItems = ViewData["ValidWords"] })
+            @Html.EditorFor(m => m.SpecificWord, new { validItems = validDictata })
             @Html.EditorFor(m => m.FromBeginsWith)
             @Html.EditorFor(m => m.FromEndsWith)
             @Html.EditorFor(m => m.Tense)
@@ -22,7 +29,7 @@
             @Html.EditorFor(m => m.WhenPositional)
             @Html.EditorFor(m => m.WhenPossessive)
             @Html.EditorFor(m => m.WhenPlural)
-            @Html.EditorFor(m => m.SpecificAddition, new { validItems = ViewData["ValidWords"] })
+            @Html.EditorFor(m => m.SpecificAddition, new { validItems = validDictata })
             @Html.EditorFor(m => m.AddPrefix)
             @Html.EditorFor(m => m.AddSuffix)
         </div>
