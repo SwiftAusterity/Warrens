@@ -132,12 +132,13 @@ namespace NetMud.Communication.Lexical
                             if (invalidContexts.Contains(synContext))
                                 continue;
 
-                            var newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
+                            var lexType = MapLexicalTypes(synSet.PartOfSpeech);
+                            var newDict = newLex.GetForm(lexType, -1);
 
                             if (newDict == null)
                             {
-                                newLex = language.CreateOrModifyLexeme(word, MapLexicalTypes(synSet.PartOfSpeech), new string[0]);
-                                newDict = newLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), -1);
+                                newLex = language.CreateOrModifyLexeme(word, lexType, new string[0]);
+                                newDict = newLex.GetForm(lexType, -1);
                                 newDict.Context = TranslateContext(synSet.LexicographerFileName);
                             }
 
@@ -147,40 +148,12 @@ namespace NetMud.Communication.Lexical
                                 newDict.Definition = synSet.Gloss;
                             }
 
+                            var semantics = newDict.Semantics.ToArray();
+
                             ///wsns indicates hypo/hypernymity so
                             foreach (string synWord in synSet.Words)
                             {
-                                var newWord = synWord.ToLower();
-                                newWord = newWord.Replace("_", " ");
-
-                                if (rgx.IsMatch(newWord))
-                                    continue;
-
-                                int myElegance = Math.Max(0, newWord.SyllableCount() * 3);
-
-                                processedWords.Add(newWord);
-
-                                if (string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
-                                {
-                                    continue;
-                                }
-
-                                var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray());
-
-                                var synDict = synLex.GetForm(MapLexicalTypes(synSet.PartOfSpeech), newDict.Semantics.ToArray(), false);
-                                synDict.Elegance = 0;
-                                synDict.Quality = 0;
-                                synDict.Severity = 0;
-                                synDict.Context = synContext;
-                                synDict.Definition = newDict.Definition;
-
-                                synLex.PersistToCache();
-                                synLex.SystemSave();
-
-                                if (!newWord.Equals(word))
-                                {
-                                    newDict.MakeRelatedWord(language, newWord, true, synDict);
-                                }
+                                MakeRelatedWord(synWord, word, newDict, rgx, processedWords, language, lexType, semantics, true);
                             }
                         }
                     }
@@ -193,7 +166,7 @@ namespace NetMud.Communication.Lexical
 
             if (!newLex.MirriamIndexed)
             {
-                var newDict = newLex.GetForm(0);
+                var newDict = newLex.GetForm(-1);
 
                 try
                 {
@@ -246,57 +219,20 @@ namespace NetMud.Communication.Lexical
                     var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
                     if (thesEntry != null)
                     {
-                        foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
+                        var lexType = MapLexicalTypes(thesEntry.fl);
+
+                        if (lexType != LexicalType.None)
                         {
-                            var newWord = synonym.ToLower();
-                            newWord = newWord.Replace("_", " ");
+                            var semantics = newDict.Semantics.ToArray();
 
-                            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
-                                continue;
-
-                            var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
-
-                            var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = 0;
-                            synDict.Quality = 0;
-                            synDict.Severity = 0;
-                            synDict.Context = newDict.Context;
-                            synDict.Definition = newDict.Definition;
-
-                            synLex.PersistToCache();
-                            synLex.SystemSave();
-                            processedWords.Add(newWord);
-
-                            if (!newWord.Equals(word))
+                            foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
                             {
-                                newDict.MakeRelatedWord(language, newWord, true, synDict);
+                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexType, semantics, true);
                             }
-                        }
 
-                        foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
-                        {
-                            var newWord = antonym.ToLower();
-                            newWord = newWord.Replace("_", " ");
-
-                            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-'))
-                                continue;
-
-                            var synLex = language.CreateOrModifyLexeme(newWord, MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray());
-
-                            var synDict = synLex.GetForm(MapLexicalTypes(thesEntry.fl), newDict.Semantics.ToArray(), false);
-                            synDict.Elegance = 0;
-                            synDict.Quality = 0;
-                            synDict.Severity = 0;
-                            synDict.Context = newDict.Context;
-                            synDict.Definition = newDict.Definition;
-
-                            synLex.PersistToCache();
-                            synLex.SystemSave();
-                            processedWords.Add(newWord);
-
-                            if (!newWord.Equals(word))
+                            foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
                             {
-                                newDict.MakeRelatedWord(language, newWord, false, synDict);
+                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexType, semantics, false);
                             }
                         }
                     }
@@ -317,6 +253,34 @@ namespace NetMud.Communication.Lexical
             }
 
             return newLex;
+        }
+
+        private static void MakeRelatedWord(string possibleWord, string word, IDictata newDict, Regex rgx, List<string> processedWords, ILanguage language,
+            LexicalType lexType, string[] semantics, bool synonym)
+        {
+            var newWord = possibleWord.ToLower();
+            newWord = newWord.Replace("_", " ");
+
+            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+                return;
+
+            var synLex = language.CreateOrModifyLexeme(newWord, lexType, semantics);
+            var synDict = synLex.GetForm(lexType, semantics, false);
+
+            synDict.Elegance = 0;
+            synDict.Quality = 0;
+            synDict.Severity = 0;
+            synDict.Context = newDict.Context;
+            synDict.Definition = newDict.Definition;
+
+            synLex.PersistToCache();
+            synLex.SystemSave();
+            processedWords.Add(newWord);
+
+            if (!newWord.Equals(word))
+            {
+                newDict.MakeRelatedWord(language, newWord, synonym, synDict);
+            }
         }
 
         /// <summary>
@@ -433,6 +397,8 @@ namespace NetMud.Communication.Lexical
                     return LexicalType.Noun;
                 case PartOfSpeech.Verb:
                     return LexicalType.Verb;
+                case PartOfSpeech.None:
+                    break;
             }
 
             return LexicalType.None;
@@ -450,6 +416,20 @@ namespace NetMud.Communication.Lexical
                     return PartOfSpeech.Noun;
                 case LexicalType.Verb:
                     return PartOfSpeech.Verb;
+                case LexicalType.None:
+                    break;
+                case LexicalType.Pronoun:
+                    break;
+                case LexicalType.Conjunction:
+                    break;
+                case LexicalType.Interjection:
+                    break;
+                case LexicalType.ProperNoun:
+                    break;
+                case LexicalType.Article:
+                    break;
+                case LexicalType.Preposition:
+                    break;
             }
 
             return PartOfSpeech.None;
@@ -467,6 +447,10 @@ namespace NetMud.Communication.Lexical
                     return LexicalType.Noun;
                 case "verb":
                     return LexicalType.Verb;
+                case "preposition":
+                    return LexicalType.Preposition;
+                default:
+                    break;
             }
 
             return LexicalType.None;
