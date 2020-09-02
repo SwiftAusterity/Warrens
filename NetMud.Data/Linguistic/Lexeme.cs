@@ -280,7 +280,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the word</returns>
         public IDictata GetForm(short formGroup)
         {
-            return WordForms.FirstOrDefault(form => form.FormGroup == formGroup);
+            return WordForms.FirstOrDefault(form => formGroup < 0 || form.FormGroup == formGroup);
         }
 
         /// <summary>
