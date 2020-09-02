@@ -81,6 +81,10 @@
     <Compile Include="Architectural\QualityValue.cs" />
     <Compile Include="Architectural\ValuePair.cs" />
     <Compile Include="Architectural\ValueRange.cs" />
+    <Compile Include="Game\IGame.cs" />
+    <Compile Include="Game\IMatchHistory.cs" />
+    <Compile Include="Game\IPlayer.cs" />
+    <Compile Include="Game\IMatch.cs" />
     <Compile Include="Linguistic\BaseLanguageMembers.cs" />
     <Compile Include="Linguistic\DictataKey.cs" />
     <Compile Include="Linguistic\IContractionRule.cs" />
