@@ -69,7 +69,7 @@ else
 }
 
 <script type="text/javascript">
-    $("#" + '@ViewData.ModelMetadata.PropertyName').autocomplete({
+    $("#" + "@ViewData.ModelMetadata.PropertyName").autocomplete({
         source: "/api/AdminDataApi/GetDictata/" + $("#languageSelect").val() + "/" + $("#SpecificWord").val(),
         minLength: 3,
         select: function (event, ui) {
