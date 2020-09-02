@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -153,7 +154,7 @@ namespace NetMud.Communication.Lexical
                             ///wsns indicates hypo/hypernymity so
                             foreach (string synWord in synSet.Words)
                             {
-                                MakeRelatedWord(synWord, word, newDict, rgx, processedWords, language, lexType, semantics, true);
+                                MakeRelatedWord(synWord, word, newDict, rgx, processedWords, language, lexType, semantics, true, false);
                             }
                         }
                     }
@@ -182,14 +183,23 @@ namespace NetMud.Communication.Lexical
                         //Stuff done based on the dictionary return data
                         foreach (var stemWord in dictEntry.uros)
                         {
-                            if (newLex.GetForm(MapLexicalTypes(stemWord.fl)) == null)
+                            var lexTypeString = stemWord.fl;
+                            var pluralize = false;
+                            if (lexTypeString.StartsWith("plural"))
+                            {
+                                lexTypeString = lexTypeString.Substring(6);
+                                pluralize = true;
+                            }
+
+                            var lexicalType = MapLexicalTypes(lexTypeString);
+                            if (newLex.GetForm(lexicalType) == null)
                             {
                                 var wordText = stemWord.ure.Replace("*", "");
                                 ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, wordText));
 
                                 if (stemLex == null)
                                 {
-                                    stemLex = language.CreateOrModifyLexeme(wordText, MapLexicalTypes(stemWord.fl), null);
+                                    stemLex = language.CreateOrModifyLexeme(wordText, lexicalType, null);
 
                                     var stemDict = stemLex.GetForm(0);
                                     stemDict.Elegance = newDict.Elegance;
@@ -197,6 +207,7 @@ namespace NetMud.Communication.Lexical
                                     stemDict.Severity = newDict.Severity;
                                     stemDict.Context = newDict.Context;
                                     stemDict.Definition = newDict.Definition;
+                                    stemDict.Plural = pluralize;
                                     stemDict.Semantics = new HashSet<string>(newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)));
                                     processedWords.Add(wordText);
 
@@ -219,7 +230,16 @@ namespace NetMud.Communication.Lexical
                     var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
                     if (thesEntry != null)
                     {
-                        var lexType = MapLexicalTypes(thesEntry.fl);
+                        var lexTypeString = thesEntry.fl;
+                        var pluralize = false;
+                        if (lexTypeString.StartsWith("plural"))
+                        {
+                            lexTypeString = lexTypeString.Substring(6);
+                            pluralize = true;
+                        }
+
+                        var lexicalType = MapLexicalTypes(lexTypeString);
+                        var lexType = MapLexicalTypes(lexTypeString);
 
                         if (lexType != LexicalType.None)
                         {
@@ -227,12 +247,12 @@ namespace NetMud.Communication.Lexical
 
                             foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
                             {
-                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexType, semantics, true);
+                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexType, semantics, true, pluralize);
                             }
 
                             foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
                             {
-                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexType, semantics, false);
+                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexType, semantics, false, pluralize);
                             }
                         }
                     }
@@ -256,7 +276,7 @@ namespace NetMud.Communication.Lexical
         }
 
         private static void MakeRelatedWord(string possibleWord, string word, IDictata newDict, Regex rgx, List<string> processedWords, ILanguage language,
-            LexicalType lexType, string[] semantics, bool synonym)
+            LexicalType lexType, string[] semantics, bool synonym, bool plural)
         {
             var newWord = possibleWord.ToLower();
             newWord = newWord.Replace("_", " ");
@@ -264,7 +284,7 @@ namespace NetMud.Communication.Lexical
             if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
                 return;
 
-            var validSemantics = newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)).ToArray();
+            var validSemantics = semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
             var synLex = language.CreateOrModifyLexeme(newWord, lexType, validSemantics);
             var synDict = synLex.GetForm(lexType, validSemantics, false);
@@ -274,6 +294,7 @@ namespace NetMud.Communication.Lexical
             synDict.Severity = 0;
             synDict.Context = newDict.Context;
             synDict.Definition = newDict.Definition;
+            synDict.Plural = plural;
 
             synLex.PersistToCache();
             synLex.SystemSave();
@@ -283,6 +304,20 @@ namespace NetMud.Communication.Lexical
             {
                 newDict.MakeRelatedWord(language, newWord, synonym, synDict);
             }
+
+            if (!string.IsNullOrWhiteSpace(newDict.Definition))
+            {
+                //experimental
+                foreach (var defWord in newDict.Definition.Split(' '))
+                {
+                    VeryDeepLex(language, defWord);
+                }
+            }
+        }
+
+        private static void VeryDeepLex(ILanguage language, string word)
+        {
+            language.CreateOrModifyLexeme(word, LexicalType.None, new string[0]);
         }
 
         /// <summary>
@@ -439,7 +474,7 @@ namespace NetMud.Communication.Lexical
 
         public static LexicalType MapLexicalTypes(string fl)
         {
-            switch (fl)
+            switch (fl.Trim())
             {
                 case "adjective":
                     return LexicalType.Adjective;
@@ -451,6 +486,8 @@ namespace NetMud.Communication.Lexical
                     return LexicalType.Verb;
                 case "preposition":
                     return LexicalType.Preposition;
+                case "phrase":
+                    return LexicalType.Interjection;                 
                 default:
                     break;
             }

@@ -62,8 +62,11 @@ namespace NetMud.Controllers.GameAdmin
                 BaseLanguage = globalConfig.BaseLanguage,
                 AzureTranslationKey = globalConfig.AzureTranslationKey,
                 TranslationActive = globalConfig.TranslationActive,
+                DeepLexActive = globalConfig.DeepLexActive,
+                MirriamDictionaryKey = globalConfig.MirriamDictionaryKey,
+                MirriamThesaurusKey = globalConfig.MirriamThesaurusKey,
 
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
+                ValidLanguages = ConfigDataCache.GetAll<ILanguage>()
             };
 
             return View(dashboardModel);

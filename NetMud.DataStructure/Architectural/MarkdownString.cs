@@ -22,7 +22,16 @@ namespace NetMud.DataStructure.Architectural
 
         public static implicit operator string(MarkdownString d)
         {
-            return CommonMarkConverter.Convert(d.Value);
+            try
+            {
+                return CommonMarkConverter.Convert(d.Value);
+            }
+            catch
+            {
+
+            }
+
+            return string.Empty;
         }
 
         public static implicit operator MarkdownString(string d)
