@@ -197,7 +197,7 @@ namespace NetMud.Communication.Lexical
                                     stemDict.Severity = newDict.Severity;
                                     stemDict.Context = newDict.Context;
                                     stemDict.Definition = newDict.Definition;
-                                    stemDict.Semantics = newDict.Semantics;
+                                    stemDict.Semantics = new HashSet<string>(newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)));
                                     processedWords.Add(wordText);
 
                                     stemLex.SystemSave();
@@ -264,8 +264,10 @@ namespace NetMud.Communication.Lexical
             if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
                 return;
 
-            var synLex = language.CreateOrModifyLexeme(newWord, lexType, semantics);
-            var synDict = synLex.GetForm(lexType, semantics, false);
+            var validSemantics = newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)).ToArray();
+
+            var synLex = language.CreateOrModifyLexeme(newWord, lexType, validSemantics);
+            var synDict = synLex.GetForm(lexType, validSemantics, false);
 
             synDict.Elegance = 0;
             synDict.Quality = 0;
