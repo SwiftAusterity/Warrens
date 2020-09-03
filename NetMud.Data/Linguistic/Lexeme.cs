@@ -48,6 +48,14 @@ namespace NetMud.Data.Linguistic
         public override string Name { get; set; }
 
         /// <summary>
+        /// How a word is pronounced
+        /// </summary>
+        [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
+        [Display(Name = "Phonetics", Description = "How a word is pronounced.")]
+        [DataType(DataType.Text)]
+        public string Phonetics { get; set; }
+
+        /// <summary>
         /// Has this been mapped by the synset already
         /// </summary>
         [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]

@@ -154,7 +154,7 @@ namespace NetMud.Communication.Lexical
                             ///wsns indicates hypo/hypernymity so
                             foreach (string synWord in synSet.Words)
                             {
-                                MakeRelatedWord(synWord, word, newDict, rgx, processedWords, language, lexType, semantics, true, false);
+                                MakeRelatedWord(synWord, word, newDict, rgx, processedWords, language, lexType, semantics, true, false, false);
                             }
                         }
                     }
@@ -168,16 +168,50 @@ namespace NetMud.Communication.Lexical
             if (!newLex.MirriamIndexed)
             {
                 var newDict = newLex.GetForm(-1);
+                if (string.IsNullOrEmpty(newDict.Definition))
+                {
+                    newDict.Definition = "";
+                }
 
                 try
                 {
                     var dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
                     if (dictEntry != null)
                     {
+                        if (dictEntry.shortdef != null && dictEntry.shortdef.Any())
+                        {
+                            newDict.Definition = " * " + newDict.Definition + " * " + string.Join(" * ", dictEntry.shortdef);
+                        }
+
                         //Stuff done to modify all forms of the lexeme
                         foreach (var dict in newLex.WordForms)
                         {
                             dict.Vulgar = dictEntry.meta.offensive;
+                        }
+
+                        if (dictEntry.hwi != null)
+                        {
+                            var lexTypeString = dictEntry.fl;
+                            var pluralize = false;
+                            var definitive = false;
+                            if (lexTypeString.StartsWith("plural"))
+                            {
+                                lexTypeString = lexTypeString.Substring(6);
+                                pluralize = true;
+                            }
+
+                            if (lexTypeString.StartsWith("definite"))
+                            {
+                                lexTypeString = lexTypeString.Substring(8).Trim();
+                                definitive = true;
+                            }
+
+                            var lexicalType = MapLexicalTypes(lexTypeString);
+
+                            newDict.Plural = pluralize;
+                            newDict.Determinant = definitive;
+                            newLex.Phonetics = dictEntry.hwi.prs?.FirstOrDefault()?.mw;
+                            newDict.Vulgar = dictEntry.meta.offensive;
                         }
 
                         //Stuff done based on the dictionary return data
@@ -185,10 +219,17 @@ namespace NetMud.Communication.Lexical
                         {
                             var lexTypeString = stemWord.fl;
                             var pluralize = false;
+                            var definitive = false;
                             if (lexTypeString.StartsWith("plural"))
                             {
                                 lexTypeString = lexTypeString.Substring(6);
                                 pluralize = true;
+                            }
+
+                            if (lexTypeString.StartsWith("definite"))
+                            {
+                                lexTypeString = lexTypeString.Substring(8).Trim();
+                                definitive = true;
                             }
 
                             var lexicalType = MapLexicalTypes(lexTypeString);
@@ -200,6 +241,7 @@ namespace NetMud.Communication.Lexical
                                 if (stemLex == null)
                                 {
                                     stemLex = language.CreateOrModifyLexeme(wordText, lexicalType, null);
+                                    stemLex.Phonetics = stemWord.prs?.FirstOrDefault()?.mw;
 
                                     var stemDict = stemLex.GetForm(0);
                                     stemDict.Elegance = newDict.Elegance;
@@ -208,6 +250,7 @@ namespace NetMud.Communication.Lexical
                                     stemDict.Context = newDict.Context;
                                     stemDict.Definition = newDict.Definition;
                                     stemDict.Plural = pluralize;
+                                    stemDict.Determinant = definitive;
                                     stemDict.Semantics = new HashSet<string>(newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)));
                                     processedWords.Add(wordText);
 
@@ -232,13 +275,19 @@ namespace NetMud.Communication.Lexical
                     {
                         var lexTypeString = thesEntry.fl;
                         var pluralize = false;
+                        var definitive = false;
                         if (lexTypeString.StartsWith("plural"))
                         {
-                            lexTypeString = lexTypeString.Substring(6);
+                            lexTypeString = lexTypeString.Substring(6).Trim();
                             pluralize = true;
                         }
 
-                        var lexicalType = MapLexicalTypes(lexTypeString);
+                        if (lexTypeString.StartsWith("definite"))
+                        {
+                            lexTypeString = lexTypeString.Substring(8).Trim();
+                            definitive = true;
+                        }
+
                         var lexType = MapLexicalTypes(lexTypeString);
 
                         if (lexType != LexicalType.None)
@@ -247,12 +296,12 @@ namespace NetMud.Communication.Lexical
 
                             foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
                             {
-                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexType, semantics, true, pluralize);
+                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexType, semantics, true, pluralize, definitive);
                             }
 
                             foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
                             {
-                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexType, semantics, false, pluralize);
+                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexType, semantics, false, pluralize, definitive);
                             }
                         }
                     }
@@ -276,7 +325,7 @@ namespace NetMud.Communication.Lexical
         }
 
         private static void MakeRelatedWord(string possibleWord, string word, IDictata newDict, Regex rgx, List<string> processedWords, ILanguage language,
-            LexicalType lexType, string[] semantics, bool synonym, bool plural)
+            LexicalType lexType, string[] semantics, bool synonym, bool plural, bool definitive)
         {
             var newWord = possibleWord.ToLower();
             newWord = newWord.Replace("_", " ");
@@ -295,6 +344,7 @@ namespace NetMud.Communication.Lexical
             synDict.Context = newDict.Context;
             synDict.Definition = newDict.Definition;
             synDict.Plural = plural;
+            synDict.Determinant = definitive;
 
             synLex.PersistToCache();
             synLex.SystemSave();
@@ -346,7 +396,6 @@ namespace NetMud.Communication.Lexical
                 return null;
             }
 
-            var deepLex = false;
             //Set the language to default if it is absent and save it, if it has a language it already exists
             if (lexeme.Language == null)
             {
@@ -356,8 +405,6 @@ namespace NetMud.Communication.Lexical
                 {
                     lexeme.Language = globalConfig.BaseLanguage;
                 }
-
-                deepLex = globalConfig?.DeepLexActive ?? false;
             }
 
             ILexeme maybeLexeme = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, lexeme.Language, lexeme.Name));
@@ -487,7 +534,13 @@ namespace NetMud.Communication.Lexical
                 case "preposition":
                     return LexicalType.Preposition;
                 case "phrase":
-                    return LexicalType.Interjection;                 
+                    return LexicalType.Interjection;
+                case "article":
+                    return LexicalType.Article;
+                case "name":
+                    return LexicalType.ProperNoun;
+                case "pronoun":
+                    return LexicalType.Pronoun;
                 default:
                     break;
             }

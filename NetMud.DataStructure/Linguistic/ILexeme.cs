@@ -11,6 +11,11 @@ namespace NetMud.DataStructure.Linguistic
         ILanguage Language { get; set; }
 
         /// <summary>
+        /// How a word is pronounced
+        /// </summary>
+        string Phonetics { get; set; }
+
+        /// <summary>
         /// Has this been mapped by the synset already
         /// </summary>
         bool IsSynMapped { get; set; }

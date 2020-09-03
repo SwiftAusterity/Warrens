@@ -54,7 +54,7 @@ namespace NetMud.Lexica.DeepLex
         /// <summary>
         /// When a headword is a less common spelling of another word with the same meaning, there will be a cognate cross-reference pointing to the headword with the more common spelling.
         /// </summary>
-        //public CognateCrossReference cxs { get; set; }
+        public List<CognateCrossReference> cxs { get; set; }
 
         /// <summary>
         /// The definition section groups together all the sense sequences and verb dividers for a headword or defined run-on phrase.
@@ -134,7 +134,7 @@ namespace NetMud.Lexica.DeepLex
             dxnls = new List<string>();
             uros = new List<UndefinedRunOns>();
             table = new Table();
-            //cxs = new CognateCrossReference();
+            cxs = new List<CognateCrossReference>();
             //et = new List<Etymology>();
         }
     }
