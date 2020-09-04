@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace NetMud.Lexica.DeepLex
 {
@@ -11,11 +10,11 @@ namespace NetMud.Lexica.DeepLex
         /// </summary>
         public string pl { get; set; }
 
-        public List<ParagraphText> pt { get; set; }
+        //public List<ParagraphText> pt { get; set; }
 
         public SynonymsSection()
         {
-            pt = new List<ParagraphText>();
+            //pt = new List<ParagraphText>();
         }
     }
 }

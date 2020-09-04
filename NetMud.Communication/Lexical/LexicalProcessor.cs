@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -140,8 +139,9 @@ namespace NetMud.Communication.Lexical
                             {
                                 newLex = language.CreateOrModifyLexeme(word, lexType, new string[0]);
                                 newDict = newLex.GetForm(lexType, -1);
-                                newDict.Context = TranslateContext(synSet.LexicographerFileName);
                             }
+
+                            newDict.Context = TranslateContext(synSet.LexicographerFileName);
 
                             //We're going to use the definition from here
                             if (!string.IsNullOrWhiteSpace(synSet.Gloss))
@@ -191,48 +191,27 @@ namespace NetMud.Communication.Lexical
 
                         if (dictEntry.hwi != null)
                         {
-                            var lexTypeString = dictEntry.fl;
-                            var pluralize = false;
-                            var definitive = false;
-                            if (lexTypeString.StartsWith("plural"))
-                            {
-                                lexTypeString = lexTypeString.Substring(6);
-                                pluralize = true;
-                            }
-
-                            if (lexTypeString.StartsWith("definite"))
-                            {
-                                lexTypeString = lexTypeString.Substring(8).Trim();
-                                definitive = true;
-                            }
-
-                            var lexicalType = MapLexicalTypes(lexTypeString);
+                            var lexTypeString = ParseLexicalType(dictEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
 
                             newDict.Plural = pluralize;
                             newDict.Determinant = definitive;
-                            newLex.Phonetics = dictEntry.hwi.prs?.FirstOrDefault()?.mw;
                             newDict.Vulgar = dictEntry.meta.offensive;
+
+                            var pronounciation = dictEntry.hwi.prs?.FirstOrDefault();
+                            if (pronounciation != null)
+                            {
+                                newLex.Phonetics = pronounciation.mw;
+                                newLex.SpeechFileUri = pronounciation.sound?.Audio;
+                            }
+
+                            ParseSystemLabels(newDict, dictEntry.sls);
                         }
 
                         //Stuff done based on the dictionary return data
                         foreach (var stemWord in dictEntry.uros)
                         {
-                            var lexTypeString = stemWord.fl;
-                            var pluralize = false;
-                            var definitive = false;
-                            if (lexTypeString.StartsWith("plural"))
-                            {
-                                lexTypeString = lexTypeString.Substring(6);
-                                pluralize = true;
-                            }
+                            var lexTypeString = ParseLexicalType(stemWord.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
 
-                            if (lexTypeString.StartsWith("definite"))
-                            {
-                                lexTypeString = lexTypeString.Substring(8).Trim();
-                                definitive = true;
-                            }
-
-                            var lexicalType = MapLexicalTypes(lexTypeString);
                             if (newLex.GetForm(lexicalType) == null)
                             {
                                 var wordText = stemWord.ure.Replace("*", "");
@@ -241,9 +220,15 @@ namespace NetMud.Communication.Lexical
                                 if (stemLex == null)
                                 {
                                     stemLex = language.CreateOrModifyLexeme(wordText, lexicalType, null);
-                                    stemLex.Phonetics = stemWord.prs?.FirstOrDefault()?.mw;
 
-                                    var stemDict = stemLex.GetForm(0);
+                                    var pronounciation = stemWord.prs?.FirstOrDefault();
+                                    if (pronounciation != null)
+                                    {
+                                        stemLex.Phonetics = pronounciation.mw;
+                                        stemLex.SpeechFileUri = pronounciation.sound?.Audio;
+                                    }
+
+                                    var stemDict = stemLex.GetForm(-1);
                                     stemDict.Elegance = newDict.Elegance;
                                     stemDict.Quality = newDict.Quality;
                                     stemDict.Severity = newDict.Severity;
@@ -254,16 +239,16 @@ namespace NetMud.Communication.Lexical
                                     stemDict.Semantics = new HashSet<string>(newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)));
                                     processedWords.Add(wordText);
 
+                                    ParseSystemLabels(stemDict, stemWord.sls);
+
                                     stemLex.SystemSave();
                                     stemLex.PersistToCache();
                                 }
                             }
                         }
-
-                        newDict.Semantics = new HashSet<string>(dictEntry.sls);
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
                     //just eating it
                 }
@@ -273,40 +258,25 @@ namespace NetMud.Communication.Lexical
                     var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
                     if (thesEntry != null)
                     {
-                        var lexTypeString = thesEntry.fl;
-                        var pluralize = false;
-                        var definitive = false;
-                        if (lexTypeString.StartsWith("plural"))
-                        {
-                            lexTypeString = lexTypeString.Substring(6).Trim();
-                            pluralize = true;
-                        }
+                        var lexTypeString = ParseLexicalType(thesEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
 
-                        if (lexTypeString.StartsWith("definite"))
-                        {
-                            lexTypeString = lexTypeString.Substring(8).Trim();
-                            definitive = true;
-                        }
-
-                        var lexType = MapLexicalTypes(lexTypeString);
-
-                        if (lexType != LexicalType.None)
+                        if (lexicalType != LexicalType.None)
                         {
                             var semantics = newDict.Semantics.ToArray();
 
                             foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
                             {
-                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexType, semantics, true, pluralize, definitive);
+                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexicalType, semantics, true, pluralize, definitive);
                             }
 
                             foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
                             {
-                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexType, semantics, false, pluralize, definitive);
+                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexicalType, semantics, false, pluralize, definitive);
                             }
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     //just eating it
                 }
@@ -322,6 +292,40 @@ namespace NetMud.Communication.Lexical
             }
 
             return newLex;
+        }
+
+        private static string ParseLexicalType(string lexTypeString, out bool pluralize, out bool definitive, out LexicalType lexicalType)
+        {
+            
+            pluralize = false;
+            definitive = false;
+            lexicalType = LexicalType.None;
+
+            if (string.IsNullOrWhiteSpace(lexTypeString))
+            {
+                return string.Empty;
+            }
+
+            if (lexTypeString.Contains(" plural "))
+            {
+                lexTypeString = lexTypeString.Replace(" plural ", "");
+                pluralize = true;
+            }
+
+            if (lexTypeString.Contains(" definite "))
+            {
+                lexTypeString = lexTypeString.Replace(" definite ", "");
+                definitive = true;
+            }
+
+            if (lexTypeString.Contains(" phrasal "))
+            {
+                lexTypeString = lexTypeString.Replace(" phrasal ", "");
+            }
+
+            lexicalType = MapLexicalTypes(lexTypeString);
+
+            return lexTypeString;
         }
 
         private static void MakeRelatedWord(string possibleWord, string word, IDictata newDict, Regex rgx, List<string> processedWords, ILanguage language,
@@ -521,31 +525,144 @@ namespace NetMud.Communication.Lexical
 
         public static LexicalType MapLexicalTypes(string fl)
         {
-            switch (fl.Trim())
+            if(fl.Contains(" or "))
             {
-                case "adjective":
-                    return LexicalType.Adjective;
-                case "adverb":
-                    return LexicalType.Adverb;
-                case "noun":
-                    return LexicalType.Noun;
-                case "verb":
-                    return LexicalType.Verb;
-                case "preposition":
-                    return LexicalType.Preposition;
-                case "phrase":
-                    return LexicalType.Interjection;
-                case "article":
-                    return LexicalType.Article;
-                case "name":
-                    return LexicalType.ProperNoun;
-                case "pronoun":
-                    return LexicalType.Pronoun;
-                default:
-                    break;
+                fl = fl.Split(' ')[0];
+            }
+
+            fl = fl.Replace(",", "").Replace("-", "").Replace("_", "");
+
+            if(fl.Contains("name"))
+            {
+                return LexicalType.ProperNoun;
+            }
+
+            if (fl.Contains("pronoun"))
+            {
+                return LexicalType.Pronoun;
+            }
+
+            if (fl.Contains("verb"))
+            {
+                return LexicalType.Verb;
+            }
+
+            if (fl.Contains("noun"))
+            {
+                return LexicalType.Noun;
+            }
+
+            if (fl.Contains("article"))
+            {
+                return LexicalType.Article;
+            }
+
+            if (fl.Contains("preposition"))
+            {
+                return LexicalType.Preposition;
+            }
+
+            if (fl.Contains("adjective"))
+            {
+                return LexicalType.Adjective;
+            }
+
+            if (fl.Contains("adverb"))
+            {
+                return LexicalType.Adverb;
+            }
+
+            if (fl.Contains("interjection"))
+            {
+                return LexicalType.Interjection;
+            }
+
+            if (fl.Contains("conjunction"))
+            {
+                return LexicalType.Conjunction;
             }
 
             return LexicalType.None;
+        }
+
+        private static IDictata ParseSystemLabels(IDictata word, List<string> sls)
+        {
+            if(sls == null)
+            {
+                return word;
+            }
+
+            /*
+             * "plural of {d_link|hop-o'-my-thumb|hop-o'-my-thumb}"
+             * slang
+             * "present tense third-person singular of {d_link|be|be}"
+             */
+
+            foreach(var sl in sls.Select(sle => sle.ToLower().Trim()))
+            {
+                var foundStructuralType = false;
+                if(sl.Contains("plural"))
+                {
+                    word.Plural = true;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("singular"))
+                {
+                    word.Plural = false;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("present tense"))
+                {
+                    word.Tense = LexicalTense.Present;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("future tense"))
+                {
+                    word.Tense = LexicalTense.Future;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("past tense"))
+                {
+                    word.Tense = LexicalTense.Past;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("present tense"))
+                {
+                    word.Tense = LexicalTense.Present;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("third-person"))
+                {
+                    word.Perspective = NarrativePerspective.ThirdPerson;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("first-person"))
+                {
+                    word.Perspective = NarrativePerspective.FirstPerson;
+                    foundStructuralType = true;
+                }
+
+                if (sl.Contains("second-person"))
+                {
+                    word.Perspective = NarrativePerspective.SecondPerson;
+                    foundStructuralType = true;
+                }
+
+                //add semantics
+                if(!foundStructuralType)
+                {
+                    word.Semantics = new HashSet<string>(word.Semantics.Union(sl.Split(' ')));
+                }
+            }
+
+            return word;
         }
 
         public static SemanticContext TranslateContext(LexicographerFileName fileName)

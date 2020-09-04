@@ -140,6 +140,11 @@ namespace NetMud.Data.Linguistic
                 return null;
             }
 
+            if(semantics == null)
+            {
+                semantics = new string[0];
+            }
+
             ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, Name, word));
 
             if (lex == null)

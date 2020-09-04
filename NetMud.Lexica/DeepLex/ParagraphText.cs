@@ -9,7 +9,7 @@ namespace NetMud.Lexica.DeepLex
         /// <summary>
         /// definition content
         /// </summary>
-        public string text { get; set; }
+        public List<string> text { get; set; }
 
         public VerbalIllustration vis { get; set; }
 

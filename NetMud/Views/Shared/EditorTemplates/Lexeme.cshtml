@@ -8,5 +8,6 @@
     @Html.EditorFor(m => m.Name)
     @Html.EditorFor(m => m.Language, new { validItems = ViewData["ValidLanguages"] })
     @Html.EditorFor(m => m.Phonetics)
+    @Html.EditorFor(m => m.SpeechFileUri) 
     @Html.EditorFor(m => m.Curated)
 </div>

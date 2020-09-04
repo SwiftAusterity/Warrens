@@ -56,6 +56,14 @@ namespace NetMud.Data.Linguistic
         public string Phonetics { get; set; }
 
         /// <summary>
+        /// Uri link to a speech file
+        /// </summary>
+        [Display(Name = "Speech URI", Description = "An audio file speaking the word.")]
+        [DataType(DataType.Url)]
+        public string SpeechFileUri { get; set; }
+
+
+        /// <summary>
         /// Has this been mapped by the synset already
         /// </summary>
         [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
@@ -313,6 +321,11 @@ namespace NetMud.Data.Linguistic
         public IDictata GetForm(LexicalType form, string[] semantics, bool bestFit = true)
         {
             IDictata returnValue = null;
+
+            if(semantics == null)
+            {
+                semantics = new string[0];
+            }
 
             if (bestFit || semantics.Count() == 0)
             {

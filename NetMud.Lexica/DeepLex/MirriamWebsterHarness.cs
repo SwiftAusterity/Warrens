@@ -28,7 +28,7 @@ namespace NetMud.Lexica.DeepLex
             ThesaurusKey = thesaurusKey;
             DictionaryAttempts = 0;
             ThesaurusAttempts = 0;
-            MaxAttempts = 100000;
+            MaxAttempts = 2000;
             Serializer = SerializationUtility.GetSerializer();
         }
 
@@ -42,7 +42,7 @@ namespace NetMud.Lexica.DeepLex
             DictionaryAttempts++;
             var jsonString = GetResponse(DictionaryEndpoint, word, DictionaryKey);
 
-            if (!string.IsNullOrWhiteSpace(jsonString))
+            if (!string.IsNullOrWhiteSpace(jsonString) && jsonString.StartsWith("[{"))
             {
                 try
                 {
@@ -53,7 +53,7 @@ namespace NetMud.Lexica.DeepLex
                     return entryCollection.FirstOrDefault(entry => entry.meta.id.Strip(new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "_", "#", ":" })
                                                                                 .Equals(word, StringComparison.OrdinalIgnoreCase));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }
@@ -72,16 +72,16 @@ namespace NetMud.Lexica.DeepLex
             ThesaurusAttempts++;
             var jsonString = GetResponse(ThesaurusEndpoint, word, ThesaurusKey);
 
-            if (!string.IsNullOrWhiteSpace(jsonString))
+            if (!string.IsNullOrWhiteSpace(jsonString) && jsonString.StartsWith("[{"))
             {
-                StringReader reader = new StringReader(jsonString);
-
                 try
                 {
+                    StringReader reader = new StringReader(jsonString);
+
                     var entryCollection = Serializer.Deserialize(reader, typeof(List<ThesaurusEntry>)) as List<ThesaurusEntry>;
 
-                return entryCollection.FirstOrDefault(entry => entry.meta.id.Strip(new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "_", "#", ":" } )
-                                                                            .Equals(word, StringComparison.OrdinalIgnoreCase));
+                    return entryCollection.FirstOrDefault(entry => entry.meta.id.Strip(new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "_", "#", ":" })
+                                                                                .Equals(word, StringComparison.OrdinalIgnoreCase));
                 }
                 catch (Exception ex)
                 {

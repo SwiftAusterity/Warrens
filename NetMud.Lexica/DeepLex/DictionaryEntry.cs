@@ -94,7 +94,7 @@ namespace NetMud.Lexica.DeepLex
         /// <summary>
         /// Entries may have illustrations to provide a visual depiction of the headword. All information needed to display an image is contained in art.
         /// </summary>
-        public List<Artwork> art { get; set; }
+        public Artwork art { get; set; }
 
         /// <summary>
         /// A reference from an entry to a table is contained in table.
@@ -121,7 +121,7 @@ namespace NetMud.Lexica.DeepLex
         {
             syns = new List<SynonymsSection>();
             usages = new List<UsageSection>();
-            art = new List<Artwork>();
+            art = new Artwork();
             quotes = new List<QuotationsSection>();
             ahws = new List<Headword>();
             vrs = new List<Variant>();

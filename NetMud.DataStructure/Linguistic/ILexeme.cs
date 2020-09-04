@@ -16,6 +16,11 @@ namespace NetMud.DataStructure.Linguistic
         string Phonetics { get; set; }
 
         /// <summary>
+        /// Uri link to a speech file
+        /// </summary>
+        string SpeechFileUri { get; set; }
+
+        /// <summary>
         /// Has this been mapped by the synset already
         /// </summary>
         bool IsSynMapped { get; set; }
