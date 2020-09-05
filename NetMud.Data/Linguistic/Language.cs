@@ -145,7 +145,7 @@ namespace NetMud.Data.Linguistic
                 semantics = new string[0];
             }
 
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, Name, word));
+            ILexeme lex = LuceneDataCache.Get<ILexeme>(string.Format("{0}_{1}", Name, word));
 
             if (lex == null)
             {

@@ -32,7 +32,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<ILexeme>(_first.LexemeKey)?.GetForm(_first.FormId);
+                return LuceneDataCache.Get<ILexeme>(_first.LexemeKey)?.GetForm(_first.FormId);
             }
             set
             {
@@ -42,7 +42,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _first = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _first = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
@@ -66,7 +66,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<ILexeme>(_first.LexemeKey)?.GetForm(_second.FormId);
+                return LuceneDataCache.Get<ILexeme>(_first.LexemeKey)?.GetForm(_second.FormId);
             }
             set
             {
@@ -76,7 +76,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _second = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _second = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
@@ -100,7 +100,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<ILexeme>(_contraction.LexemeKey)?.GetForm(_contraction.FormId);
+                return LuceneDataCache.Get<ILexeme>(_contraction.LexemeKey)?.GetForm(_contraction.FormId);
             }
             set
             {
@@ -110,7 +110,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _contraction = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _contraction = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
     }

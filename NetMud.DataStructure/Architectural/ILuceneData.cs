@@ -1,12 +1,11 @@
-﻿using Lucene.Net.Linq.Mapping;
-using NetMud.DataStructure.Administrative;
+﻿using NetMud.DataStructure.Administrative;
 
 namespace NetMud.DataStructure.Architectural
 {
     /// <summary>
-    /// Configuration data. Only one of these spawns forever
+    /// Lucene mapped data. Only one of these spawns forever
     /// </summary>
-    public interface IConfigData : IData, INeedApproval
+    public interface ILuceneData : IData, INeedApproval
     {
         /// <summary>
         /// The unique key used to identify, store and retrieve data
@@ -17,10 +16,5 @@ namespace NetMud.DataStructure.Architectural
         /// The unique name of this configuration data
         /// </summary>
         string Name { get; set; }
-
-        /// <summary>
-        /// The type of data this is (for storage)
-        /// </summary>
-        ConfigDataType Type { get; }
     }
 }

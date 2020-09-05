@@ -92,7 +92,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>A dictata</returns>
         public IDictata GetDictata()
         {
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Context?.Language?.Name, Phrase), ConfigDataType.Dictionary));
+            ILexeme lex = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Context?.Language?.Name, Phrase)));
             IDictata dict = lex?.GetForm(Type);
 
             if (dict == null)

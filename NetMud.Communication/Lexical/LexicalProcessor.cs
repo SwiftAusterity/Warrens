@@ -90,7 +90,7 @@ namespace NetMud.Communication.Lexical
                 return null;
             }
 
-            ILexeme newLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, word));
+            ILexeme newLex = LuceneDataCache.Get<ILexeme>(string.Format("{0}_{1}", language.Name, word));
 
             if (newLex == null)
             {
@@ -215,7 +215,7 @@ namespace NetMud.Communication.Lexical
                             if (newLex.GetForm(lexicalType) == null)
                             {
                                 var wordText = stemWord.ure.Replace("*", "");
-                                ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, language.Name, wordText));
+                                ILexeme stemLex = LuceneDataCache.Get<ILexeme>(string.Format("{0}_{1}", language.Name, wordText));
 
                                 if (stemLex == null)
                                 {
@@ -411,7 +411,7 @@ namespace NetMud.Communication.Lexical
                 }
             }
 
-            ILexeme maybeLexeme = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}_{2}", ConfigDataType.Dictionary, lexeme.Language, lexeme.Name));
+            ILexeme maybeLexeme = LuceneDataCache.Get<ILexeme>(string.Format("{0}_{1}", lexeme.Language, lexeme.Name));
 
             if (maybeLexeme != null)
             {

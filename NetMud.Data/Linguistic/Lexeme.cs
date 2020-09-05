@@ -1,4 +1,5 @@
-﻿using NetMud.CentralControl;
+﻿using Lucene.Net.Linq.Mapping;
+using NetMud.CentralControl;
 using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.PropertyBinding;
@@ -18,10 +19,11 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
-    public class Lexeme : ConfigData, ILexeme, IComparable<ILexeme>, IEquatable<ILexeme>, IEqualityComparer<ILexeme>
+    public class Lexeme : LuceneData, ILexeme, IComparable<ILexeme>, IEquatable<ILexeme>, IEqualityComparer<ILexeme>
     {
         [ScriptIgnore]
         [JsonIgnore]
+        [IgnoreField]
         public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
 
         /// <summary>
@@ -32,19 +34,13 @@ namespace NetMud.Data.Linguistic
         public override string UniqueKey => string.Format("{0}_{1}", Language.Name, Name);
 
         /// <summary>
-        /// Type of configuation data this is
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        public override ConfigDataType Type => ConfigDataType.Dictionary;
-
-        /// <summary>
         /// The unique name of this configuration data
         /// </summary>
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
         [Display(Name = "Word", Description = "The actual word or phrase at hand.")]
         [DataType(DataType.Text)]
         [Required]
+        [Field(CaseSensitive = false)]
         public override string Name { get; set; }
 
         /// <summary>
@@ -53,6 +49,7 @@ namespace NetMud.Data.Linguistic
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
         [Display(Name = "Phonetics", Description = "How a word is pronounced.")]
         [DataType(DataType.Text)]
+        [Field(CaseSensitive = true)]
         public string Phonetics { get; set; }
 
         /// <summary>
@@ -60,6 +57,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Speech URI", Description = "An audio file speaking the word.")]
         [DataType(DataType.Url)]
+        [Field(CaseSensitive = false)]
         public string SpeechFileUri { get; set; }
 
 
@@ -68,6 +66,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
+        [Field]
         public bool IsSynMapped { get; set; }
 
         /// <summary>
@@ -75,6 +74,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Translated", Description = "Has this word been translated to other languages mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
+        [Field]
         public bool IsTranslated { get; set; }
 
         /// <summary>
@@ -82,6 +82,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Curated", Description = "Has this word been curated by a human? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
+        [Field]
         public bool Curated { get; set; }
 
         /// <summary>
@@ -89,9 +90,11 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "MirriamIndexed", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
+        [Field]
         public bool MirriamIndexed { get; set; }
 
         [JsonProperty("Language")]
+        [Field]
         private ConfigDataCacheKey _language { get; set; }
 
         /// <summary>
@@ -99,6 +102,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [IgnoreField]
         [Display(Name = "Language", Description = "The language this is in.")]
         [UIHint("LanguageList")]
         [LanguageDataBinder]
@@ -129,6 +133,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Individual meanings and types under this
         /// </summary>
+        [IgnoreField]
         public IDictata[] WordForms { get; set; }
 
         [JsonConstructor]
@@ -174,7 +179,7 @@ namespace NetMud.Data.Linguistic
 
             //Easy way - we dont have one with this type at all
             //Hard way - reject if our semantics are similar by count and the semantics lists match
-            if (!existingWords.Any(form => form.WordType == newWord.WordType) 
+            if (!existingWords.Any(form => form.WordType == newWord.WordType)
              || (newWord.Semantics.Count() > 0 && !existingWords.Where(form => form.WordType == newWord.WordType)
                             .Any(form => form.Semantics.Count() == newWord.Semantics.Count() && form.Semantics.All(semantic => newWord.Semantics.Contains(semantic)))))
             {
@@ -277,7 +282,7 @@ namespace NetMud.Data.Linguistic
                     }
                 }
 
-                if(newLexeme.WordForms.Count() > 0)
+                if (newLexeme.WordForms.Count() > 0)
                 {
                     newLexeme.SystemSave();
                     newLexeme.PersistToCache();
@@ -322,7 +327,7 @@ namespace NetMud.Data.Linguistic
         {
             IDictata returnValue = null;
 
-            if(semantics == null)
+            if (semantics == null)
             {
                 semantics = new string[0];
             }
@@ -596,8 +601,8 @@ namespace NetMud.Data.Linguistic
 
             if (removalState)
             {
-                IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict => 
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null 
+                IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict =>
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
                                                                 && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
                 IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
                     ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null

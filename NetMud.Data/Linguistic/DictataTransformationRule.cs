@@ -35,7 +35,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<ILexeme>(_origin.LexemeKey)?.GetForm(_origin.FormId);
+                return LuceneDataCache.Get<ILexeme>(_origin.LexemeKey)?.GetForm(_origin.FormId);
             }
             set
             {
@@ -45,7 +45,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _origin = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _origin = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
@@ -69,7 +69,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<ILexeme>(_specificFollowing.LexemeKey)?.GetForm(_specificFollowing.FormId);
+                return LuceneDataCache.Get<ILexeme>(_specificFollowing.LexemeKey)?.GetForm(_specificFollowing.FormId);
             }
             set
             {
@@ -79,7 +79,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _specificFollowing = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _specificFollowing = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
@@ -120,7 +120,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return ConfigDataCache.Get<ILexeme>(_transformedWord.LexemeKey)?.GetForm(_transformedWord.FormId);
+                return LuceneDataCache.Get<ILexeme>(_transformedWord.LexemeKey)?.GetForm(_transformedWord.FormId);
             }
             set
             {
@@ -130,7 +130,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _transformedWord = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _transformedWord = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 

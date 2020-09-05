@@ -63,7 +63,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                ILexeme obj = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), removeId, ConfigDataType.Dictionary));
+                ILexeme obj = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), removeId));
 
                 if (obj == null)
                 {
@@ -137,7 +137,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(string id)
         {
-            ILexeme obj = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), id, ConfigDataType.Dictionary));
+            ILexeme obj = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), id));
 
             if (obj == null)
             {
@@ -160,7 +160,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            ILexeme obj = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), id, ConfigDataType.Dictionary));
+            ILexeme obj = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), id));
             string message;
             if (obj == null)
             {
@@ -193,7 +193,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            ILexeme lex = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), lexemeId));
             if (lex == null)
             {
                 return RedirectToAction("Index", new { Message = "That does not exist" });
@@ -289,7 +289,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                ILexeme lex = ConfigDataCache.Get<ILexeme>(removeId.Substring(0, removeId.LastIndexOf("_") - 1));
+                ILexeme lex = LuceneDataCache.Get<ILexeme>(removeId.Substring(0, removeId.LastIndexOf("_") - 1));
                 IDictata obj = lex?.WordForms?.FirstOrDefault(form => form.UniqueKey == removeId);
 
                 if (obj == null)
@@ -318,7 +318,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult AddDictata(string lexemeId)
         {
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            ILexeme lex = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), lexemeId));
             if (lex == null)
             {
                 string message = "That does not exist";
@@ -339,7 +339,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            ILexeme lex = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), lexemeId));
             if (lex == null)
             {
                 return RedirectToAction("Index", new { Message = "That does not exist" });
@@ -366,7 +366,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult EditDictata(string lexemeId, string id)
         {
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            ILexeme lex = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), lexemeId));
             IDictata obj = lex?.WordForms?.FirstOrDefault(form => form.UniqueKey == id);
 
             if (obj == null)
@@ -389,7 +389,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            ILexeme lex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), lexemeId, ConfigDataType.Dictionary));
+            ILexeme lex = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), lexemeId));
             IDictata obj = lex?.WordForms?.FirstOrDefault(form => form.UniqueKey == id);
 
             if (obj == null)

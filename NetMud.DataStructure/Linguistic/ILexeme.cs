@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NetMud.DataStructure.Linguistic
 {
-    public interface ILexeme : IConfigData
+    public interface ILexeme : ILuceneData
     {
         /// <summary>
         /// The language this is derived from

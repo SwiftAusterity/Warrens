@@ -1,4 +1,5 @@
-﻿using NetMud.Data.Architectural.Serialization;
+﻿using Lucene.Net.Linq.Mapping;
+using NetMud.Data.Architectural.Serialization;
 using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -17,7 +18,7 @@ namespace NetMud.Data.Architectural
     /// Configuration data. Only one of these spawns forever
     /// </summary>
     [Serializable]
-    public abstract class ConfigData : SerializableDataPartial, IConfigData
+    public abstract class LuceneData : SerializableDataPartial, ILuceneData
     {
         /// <summary>
         /// The unique key used to identify, store and retrieve data
@@ -27,22 +28,13 @@ namespace NetMud.Data.Architectural
         public virtual string UniqueKey => Name;
 
         /// <summary>
-        /// The type of data this is (for storage)
-        /// </summary>
-        [ScriptIgnore]
-        [JsonIgnore]
-        [Display(Name = "Type", Description = "The storage type of the config data.")]
-        [DataType(DataType.Text)]
-        [Required]
-        public abstract ConfigDataType Type { get; }
-
-        /// <summary>
         /// The unique name of this configuration data
         /// </summary>
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Name", Description = "The Name of the data type.")]
         [DataType(DataType.Text)]
         [Required]
+        [Field(Key = true, CaseSensitive = false)]
         public virtual string Name { get; set; }
 
         #region Approval System
@@ -51,35 +43,42 @@ namespace NetMud.Data.Architectural
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
+        [IgnoreField]
         public virtual ContentApprovalType ApprovalType => ContentApprovalType.Admin; //Config data defaults to admin
 
         /// <summary>
         /// Is this able to be seen and used for live purposes
         /// </summary>
+        [Field]
         public bool SuitableForUse => State == ApprovalState.Approved || ApprovalType == ContentApprovalType.None || ApprovalType == ContentApprovalType.ReviewOnly;
 
         /// <summary>
         /// Has this been approved?
         /// </summary>
+        [Field]
         public ApprovalState State { get; set; }
 
         /// <summary>
         /// When was this approved
         /// </summary>
+        [Field]
         public DateTime ApprovedOn { get; set; }
 
         /// <summary>
         /// Who created this thing, their GlobalAccountHandle
         /// </summary>
+        [Field(CaseSensitive = false)]
         public string CreatorHandle { get; set; }
 
         /// <summary>
         /// The creator's account permissions level
         /// </summary>
+        [Field]
         public StaffRank CreatorRank { get; set; }
 
         [ScriptIgnore]
         [JsonIgnore]
+        [IgnoreField]
         private IAccount _creator { get; set; }
 
         /// <summary>
@@ -87,6 +86,7 @@ namespace NetMud.Data.Architectural
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [IgnoreField]
         public IAccount Creator
         {
             get
@@ -116,15 +116,18 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// Who approved this thing, their GlobalAccountHandle
         /// </summary>
+        [Field(CaseSensitive = false)]
         public string ApproverHandle { get; set; }
 
         /// <summary>
         /// The approver's account permissions level
         /// </summary>
+        [Field]
         public StaffRank ApproverRank { get; set; }
 
         [ScriptIgnore]
         [JsonIgnore]
+        [IgnoreField]
         private IAccount _approvedBy { get; set; }
 
         /// <summary>
@@ -132,6 +135,7 @@ namespace NetMud.Data.Architectural
         /// </summary>
         [JsonIgnore]
         [ScriptIgnore]
+        [IgnoreField]
         public IAccount ApprovedBy
         {
             get
@@ -180,7 +184,7 @@ namespace NetMud.Data.Architectural
                 return false;
             }
 
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.LuceneData accessor = new DataAccess.FileSystem.LuceneData();
             ApproveMe(approver, rank, newState);
 
             PersistToCache();
@@ -218,7 +222,7 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// What type of cache is this using
         /// </summary>
-        public virtual CacheType CachingType => CacheType.ConfigData;
+        public virtual CacheType CachingType => CacheType.LuceneData;
 
         /// <summary>
         /// Put it in the cache
@@ -228,7 +232,7 @@ namespace NetMud.Data.Architectural
         {
             try
             {
-                ConfigDataCache.Add(this);
+                LuceneDataCache.Add(this);
             }
             catch (Exception ex)
             {
@@ -247,7 +251,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool Remove(IAccount remover, StaffRank rank)
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.LuceneData accessor = new DataAccess.FileSystem.LuceneData();
 
             try
             {
@@ -258,7 +262,7 @@ namespace NetMud.Data.Architectural
                 }
 
                 //Remove from cache first
-                ConfigDataCache.Remove(new ConfigDataCacheKey(this));
+                LuceneDataCache.Remove(new LuceneDataCacheKey(this));
 
                 //Remove it from the file system.
                 accessor.RemoveEntity(this);
@@ -278,7 +282,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool Save(IAccount editor, StaffRank rank)
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.LuceneData accessor = new DataAccess.FileSystem.LuceneData();
 
             try
             {
@@ -340,7 +344,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool SystemSave()
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.LuceneData accessor = new DataAccess.FileSystem.LuceneData();
 
             try
             {
@@ -378,12 +382,12 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool SystemRemove()
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.LuceneData accessor = new DataAccess.FileSystem.LuceneData();
 
             try
             {
                 //Remove from cache first
-                ConfigDataCache.Remove(new ConfigDataCacheKey(this));
+                LuceneDataCache.Remove(new LuceneDataCacheKey(this));
 
                 //Remove it from the file system.
                 accessor.RemoveEntity(this);
