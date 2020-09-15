@@ -1,5 +1,4 @@
-﻿using Lucene.Net.Linq.Mapping;
-using NetMud.DataStructure.Administrative;
+﻿using NetMud.DataStructure.Administrative;
 
 namespace NetMud.DataStructure.Architectural
 {

@@ -125,8 +125,8 @@ namespace NetMud.Controllers
             string message = string.Empty;
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
-            ILexeme lexOne = LuceneDataCache.Get<ILexeme>(string.Format("{0}_{1}", globalConfig.BaseLanguage.Name, wordOneName));
-            ILexeme lexTwo = LuceneDataCache.Get<ILexeme>(string.Format("{0}_{1}", globalConfig.BaseLanguage.Name, wordTwoName));
+            ILexeme lexOne = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", globalConfig.BaseLanguage.Name, wordOneName), ConfigDataType.Dictionary);
+            ILexeme lexTwo = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", globalConfig.BaseLanguage.Name, wordTwoName), ConfigDataType.Dictionary);
 
             if (lexOne != null && lexTwo != null)
             {

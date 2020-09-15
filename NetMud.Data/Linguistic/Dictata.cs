@@ -213,7 +213,7 @@ namespace NetMud.Data.Linguistic
                     _synonyms = new HashSet<DictataKey>();
                 }
 
-                return new HashSet<IDictata>(_synonyms.Select(k => LuceneDataCache.Get<ILexeme>(k.LexemeKey)?.GetForm(k.FormId)));
+                return new HashSet<IDictata>(_synonyms.Select(k => ConfigDataCache.Get<ILexeme>(k.LexemeKey, ConfigDataType.Dictionary)?.GetForm(k.FormId)));
             }
             set
             {
@@ -224,7 +224,7 @@ namespace NetMud.Data.Linguistic
                 }
 
                 _synonyms = new HashSet<DictataKey>(
-                    value.Where(k => k != null).Select(k => new DictataKey(new LuceneDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
+                    value.Where(k => k != null).Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
             }
         }
 
@@ -248,7 +248,7 @@ namespace NetMud.Data.Linguistic
                     _antonyms = new HashSet<DictataKey>();
                 }
 
-                return new HashSet<IDictata>(_antonyms.Select(k => LuceneDataCache.Get<ILexeme>(k.LexemeKey)?.GetForm(k.FormId)));
+                return new HashSet<IDictata>(_antonyms.Select(k => ConfigDataCache.Get<ILexeme>(k.LexemeKey, ConfigDataType.Dictionary)?.GetForm(k.FormId)));
             }
             set
             {
@@ -259,7 +259,7 @@ namespace NetMud.Data.Linguistic
                 }
 
                 _antonyms = new HashSet<DictataKey>(
-                    value.Where(k => k != null).Select(k => new DictataKey(new LuceneDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
+                    value.Where(k => k != null).Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
             }
         }
 
@@ -335,8 +335,8 @@ namespace NetMud.Data.Linguistic
                 Language = lexica.Context.Language;
             }
 
-            ILexeme maybeLex = LuceneDataCache.Get<ILexeme>(
-                new LuceneDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", Language.Name, lexica.Phrase)));
+            ILexeme maybeLex = ConfigDataCache.Get<ILexeme>(
+                new ConfigDataCacheKey(typeof(ILexeme), ConfigDataType.Dictionary, string.Format("{0}_{1}", Language.Name, lexica.Phrase)));
 
             if (maybeLex == null)
             {
@@ -381,7 +381,7 @@ namespace NetMud.Data.Linguistic
         /// <returns></returns>
         public ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym, IDictata existingWord = null)
         {
-            ILexeme possibleLex = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), string.Format("{0}_{1}", language.Name, word)));
+            ILexeme possibleLex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), ConfigDataType.Dictionary, string.Format("{0}_{1}", language.Name, word)));
 
             if (possibleLex == null)
             {
@@ -458,7 +458,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the lexeme</returns>
         public ILexeme GetLexeme()
         {
-            ILexeme lex = LuceneDataCache.Get<ILexeme>(string.Format("{0}_{1}", Language.Name, Name));
+            ILexeme lex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", Language.Name, Name), ConfigDataType.Dictionary);
 
             if (lex != null)
             {

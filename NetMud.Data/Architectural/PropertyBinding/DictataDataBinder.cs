@@ -1,4 +1,5 @@
 ﻿using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.PropertyBinding;
 using NetMud.DataStructure.Linguistic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            IDictata returnValue = LuceneDataCache.Get<ILexeme>(new LuceneDataCacheKey(typeof(ILexeme), stringInput))?.WordForms.FirstOrDefault();
+            IDictata returnValue = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), ConfigDataType.Dictionary, stringInput))?.WordForms.FirstOrDefault();
 
             return returnValue;
         }

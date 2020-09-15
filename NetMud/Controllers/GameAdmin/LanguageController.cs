@@ -61,7 +61,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                ILanguage obj = ConfigDataCache.Get<ILanguage>(removeId);
+                ILanguage obj = ConfigDataCache.Get<ILanguage>(removeId, ConfigDataType.Language);
 
                 if (obj == null)
                 {
@@ -81,7 +81,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-                ILanguage obj = ConfigDataCache.Get<ILanguage>(unapproveId);
+                ILanguage obj = ConfigDataCache.Get<ILanguage>(unapproveId, ConfigDataType.Language);
 
                 if (obj == null)
                 {

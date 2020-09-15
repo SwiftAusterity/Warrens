@@ -6,7 +6,6 @@
         Template,
         LookupData,
         PlayerData,
-        ConfigData,
-        LuceneData
+        ConfigData
     }
 }

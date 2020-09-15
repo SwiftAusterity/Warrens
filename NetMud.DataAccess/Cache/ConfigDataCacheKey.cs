@@ -21,6 +21,11 @@ namespace NetMud.DataAccess.Cache
         public Type ObjectType { get; set; }
 
         /// <summary>
+        /// The internal config data type
+        /// </summary>
+        public ConfigDataType ConfigType { get; set; }
+
+        /// <summary>
         /// Unique signature for a live object
         /// </summary>
         public string BirthMark { get; set; }
@@ -31,10 +36,11 @@ namespace NetMud.DataAccess.Cache
         /// <param name="objectType">System type of the entity being cached</param>
         /// <param name="marker">Unique signature for a live entity</param>
         [JsonConstructor]
-        public ConfigDataCacheKey(Type objectType, string birthMark)
+        public ConfigDataCacheKey(Type objectType, ConfigDataType configDataType, string birthMark)
         {
             ObjectType = objectType;
             BirthMark = birthMark;
+            ConfigType = configDataType;
         }
 
         /// <summary>
@@ -44,7 +50,8 @@ namespace NetMud.DataAccess.Cache
         public ConfigDataCacheKey(IConfigData data)
         {
             ObjectType = data.GetType();
-            BirthMark  = string.Format("{0}_{1}", data.Type, data.UniqueKey);
+            BirthMark  = data.UniqueKey;
+            ConfigType = data.Type;
         }
 
         /// <summary>
@@ -55,7 +62,8 @@ namespace NetMud.DataAccess.Cache
         public ConfigDataCacheKey(Type objectType, string uniqueKey, ConfigDataType type)
         {
             ObjectType = objectType;
-            BirthMark = string.Format("{0}_{1}", type, uniqueKey);
+            BirthMark = uniqueKey;
+            ConfigType = type;
         }
 
         /// <summary>
@@ -72,7 +80,7 @@ namespace NetMud.DataAccess.Cache
                 typeName = typeName.Substring(1);
             }
 
-            return string.Format("{0}_{1}_{2}", CacheType.ToString(), typeName, BirthMark.ToString());
+            return string.Format("{0}_{1}_{2}_{3}", CacheType.ToString(), typeName, ConfigType, BirthMark.ToString());
         }
 
         #region Equality Functions

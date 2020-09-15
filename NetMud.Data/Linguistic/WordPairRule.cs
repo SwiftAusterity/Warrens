@@ -1,5 +1,6 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Utility;
 using Newtonsoft.Json;
@@ -49,7 +50,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return LuceneDataCache.Get<ILexeme>(_specificWord.LexemeKey)?.GetForm(_specificWord.FormId);
+                return ConfigDataCache.Get<ILexeme>(_specificWord.LexemeKey, ConfigDataType.Dictionary)?.GetForm(_specificWord.FormId);
             }
             set
             {
@@ -59,7 +60,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _specificWord = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _specificWord = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 
@@ -83,7 +84,7 @@ namespace NetMud.Data.Linguistic
                     return null;
                 }
 
-                return LuceneDataCache.Get<ILexeme>(_specificAddition.LexemeKey)?.GetForm(_specificAddition.FormId);
+                return ConfigDataCache.Get<ILexeme>(_specificAddition.LexemeKey, ConfigDataType.Dictionary)?.GetForm(_specificAddition.FormId);
             }
             set
             {
@@ -93,7 +94,7 @@ namespace NetMud.Data.Linguistic
                     return;
                 }
 
-                _specificAddition = new DictataKey(new LuceneDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
+                _specificAddition = new DictataKey(new ConfigDataCacheKey(value.GetLexeme()).BirthMark, value.FormGroup);
             }
         }
 

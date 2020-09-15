@@ -1,5 +1,4 @@
-﻿using Lucene.Net.Linq.Mapping;
-using NetMud.CentralControl;
+﻿using NetMud.CentralControl;
 using NetMud.Communication.Lexical;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.PropertyBinding;
@@ -19,12 +18,18 @@ using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
-    public class Lexeme : LuceneData, ILexeme, IComparable<ILexeme>, IEquatable<ILexeme>, IEqualityComparer<ILexeme>
+    public class Lexeme : ConfigData, ILexeme, IComparable<ILexeme>, IEquatable<ILexeme>, IEqualityComparer<ILexeme>
     {
         [ScriptIgnore]
         [JsonIgnore]
-        [IgnoreField]
         public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
+
+        /// <summary>
+        /// Type of configuation data this is
+        /// </summary>
+        [ScriptIgnore]
+        [JsonIgnore]
+        public override ConfigDataType Type => ConfigDataType.Dictionary;
 
         /// <summary>
         /// The unique key used to identify, store and retrieve data
@@ -40,7 +45,6 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "Word", Description = "The actual word or phrase at hand.")]
         [DataType(DataType.Text)]
         [Required]
-        [Field(CaseSensitive = false)]
         public override string Name { get; set; }
 
         /// <summary>
@@ -49,7 +53,6 @@ namespace NetMud.Data.Linguistic
         [StringLength(200, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 1)]
         [Display(Name = "Phonetics", Description = "How a word is pronounced.")]
         [DataType(DataType.Text)]
-        [Field(CaseSensitive = true)]
         public string Phonetics { get; set; }
 
         /// <summary>
@@ -57,7 +60,6 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Speech URI", Description = "An audio file speaking the word.")]
         [DataType(DataType.Url)]
-        [Field(CaseSensitive = false)]
         public string SpeechFileUri { get; set; }
 
 
@@ -66,7 +68,6 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Mapped", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
-        [Field]
         public bool IsSynMapped { get; set; }
 
         /// <summary>
@@ -74,7 +75,6 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Translated", Description = "Has this word been translated to other languages mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
-        [Field]
         public bool IsTranslated { get; set; }
 
         /// <summary>
@@ -82,7 +82,6 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Curated", Description = "Has this word been curated by a human? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
-        [Field]
         public bool Curated { get; set; }
 
         /// <summary>
@@ -90,11 +89,9 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "MirriamIndexed", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
-        [Field]
         public bool MirriamIndexed { get; set; }
 
         [JsonProperty("Language")]
-        [Field]
         private ConfigDataCacheKey _language { get; set; }
 
         /// <summary>
@@ -102,7 +99,6 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [IgnoreField]
         [Display(Name = "Language", Description = "The language this is in.")]
         [UIHint("LanguageList")]
         [LanguageDataBinder]
@@ -133,7 +129,6 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Individual meanings and types under this
         /// </summary>
-        [IgnoreField]
         public IDictata[] WordForms { get; set; }
 
         [JsonConstructor]
