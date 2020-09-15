@@ -528,10 +528,10 @@ namespace NetMud.Data.Linguistic
             if (removalState)
             {
                 IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
                                                 && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
                 IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
                                                                 && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)
@@ -597,10 +597,10 @@ namespace NetMud.Data.Linguistic
             if (removalState)
             {
                 IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex =>  lex.GetForm(dict.WordType) != null
                                                                 && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
                 IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse && lex.GetForm(dict.WordType) != null
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex =>  lex.GetForm(dict.WordType) != null
                                                                 && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)

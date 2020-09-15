@@ -34,17 +34,11 @@ namespace NetMud.DataAccess.Cache
         private readonly CacheItemPolicy _globalPolicy = new CacheItemPolicy();
 
         /// <summary>
-        /// The cache type (affects the "ids")
-        /// </summary>
-        private readonly CacheType _type;
-
-        /// <summary>
         /// Create a new CacheAccessor with its type
         /// </summary>
         /// <param name="type">The type of item we're caching</param>
-        internal CacheAccessor(CacheType type)
+        internal CacheAccessor()
         {
-            _type = type;
         }
 
         /// <summary>
@@ -78,11 +72,11 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="keys">the keys to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(IEnumerable<ICacheKey> keys)
+        public IQueryable<T> GetMany<T>(IEnumerable<ICacheKey> keys)
         {
             try
             {
-                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && keys.Any(key => key.KeyHash().Equals(keyValuePair.Key)))
+                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && keys.Any(key => key.KeyHash().Equals(keyValuePair.Key)))
                                   .Select(kvp => (T)kvp.Value);
             }
             catch (Exception ex)
@@ -90,7 +84,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return Enumerable.Empty<T>();
+            return Enumerable.Empty<T>().AsQueryable();
         }
 
         /// <summary>
@@ -99,11 +93,11 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(HashSet<string> birthmarks) where T : ILiveData
+        public IQueryable<T> GetMany<T>(HashSet<string> birthmarks) where T : ILiveData
         {
             try
             {
-                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
+                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
                                   .Select(kvp => (T)kvp.Value);
             }
             catch (Exception ex)
@@ -111,7 +105,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return Enumerable.Empty<T>();
+            return Enumerable.Empty<T>().AsQueryable();
         }
 
         /// <summary>
@@ -120,11 +114,11 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(IEnumerable<string> birthmarks) where T : ILiveData
+        public IQueryable<T> GetMany<T>(IEnumerable<string> birthmarks) where T : ILiveData
         {
             try
             {
-                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
+                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && birthmarks.Contains(((T)keyValuePair.Value).BirthMark))
                                   .Select(kvp => (T)kvp.Value);
             }
             catch (Exception ex)
@@ -132,7 +126,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return Enumerable.Empty<T>();
+            return Enumerable.Empty<T>().AsQueryable();
         }
 
         /// <summary>
@@ -141,11 +135,11 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IKeyedData
+        public IQueryable<T> GetMany<T>(IEnumerable<long> ids) where T : IKeyedData
         {
             try
             {
-                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) 
+                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) 
                                                         && ids.Contains(((T)keyValuePair.Value).Id))
                                   .Select(kvp => (T)kvp.Value);
             }
@@ -154,7 +148,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return Enumerable.Empty<T>();
+            return Enumerable.Empty<T>().AsQueryable();
         }
 
         /// <summary>
@@ -162,11 +156,11 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <returns>a list of the entities from the cache</returns>
-        public IEnumerable<T> GetAll<T>()
+        public IQueryable<T> GetAll<T>()
         {
             try
             {
-                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)
+                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType() == typeof(T)
                                                         || (typeof(T).IsInterface && keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)))
                                         ).Select(kvp => (T)kvp.Value);
             }
@@ -175,7 +169,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return Enumerable.Empty<T>();
+            return Enumerable.Empty<T>().AsQueryable();
         }
 
         /// <summary>
@@ -184,11 +178,11 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">The base type (like ILocation)</typeparam>
         /// <param name="mainType">The inheriting type (like IRoom)</param>
         /// <returns>all the stuff and things</returns>
-        public IEnumerable<T> GetAll<T>(Type mainType)
+        public IQueryable<T> GetAll<T>(Type mainType)
         {
             try
             {
-                return _globalCache.Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && keyValuePair.Value.GetType() == mainType)
+                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) && keyValuePair.Value.GetType() == mainType)
                         .Select(kvp => (T)kvp.Value);
             }
             catch (Exception ex)
@@ -196,7 +190,7 @@ namespace NetMud.DataAccess.Cache
                 LoggingUtility.LogError(ex);
             }
 
-            return Enumerable.Empty<T>();
+            return Enumerable.Empty<T>().AsQueryable();
         }
 
         /// <summary>

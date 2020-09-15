@@ -45,7 +45,7 @@ namespace NetMud.Controllers.GameAdmin
 
             IOrderedEnumerable<IKeyedData> newList = TemplateCache.GetAll().Where(item => item.GetType().GetInterfaces().Contains(typeof(INeedApproval))
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
-                                                                && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
+                                                                && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).ToList().OrderBy(item => item.GetType().Name);
 
             ManageContentApprovalsViewModel viewModel = new ManageContentApprovalsViewModel(newList);
 
@@ -60,7 +60,7 @@ namespace NetMud.Controllers.GameAdmin
 
             IOrderedEnumerable<IKeyedData> newList = TemplateCache.GetAll().Where(item => item.GetType().GetInterfaces().Contains(typeof(INeedApproval))
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
-                                                                && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
+                                                                && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).ToList().OrderBy(item => item.GetType().Name);
 
             foreach(IKeyedData thing in newList)
             {

@@ -10,7 +10,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class TemplateCache
     {
-        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.Template);
+        private static readonly CacheAccessor BackingCache = new CacheAccessor();
 
         /// <summary>
         /// Adds a single entity into the cache
@@ -37,7 +37,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="birthmarks">the birthmarks to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetMany<T>(IEnumerable<long> ids) where T : IKeyedData
+        public static IQueryable<T> GetMany<T>(IEnumerable<long> ids) where T : IKeyedData
         {
             return BackingCache.GetMany<T>(ids);
         }
@@ -48,7 +48,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="keys">the keys to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetMany<T>(IEnumerable<TemplateCacheKey> keys) where T : IKeyedData
+        public static IQueryable<T> GetMany<T>(IEnumerable<TemplateCacheKey> keys) where T : IKeyedData
         {
             return BackingCache.GetMany<T>(keys);
         }
@@ -58,7 +58,7 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetAll<T>(bool onlyApproved = false)
+        public static IQueryable<T> GetAll<T>(bool onlyApproved = false)
         {
             //Don't waste the time with the where if it's false
             if (onlyApproved)
@@ -73,7 +73,7 @@ namespace NetMud.DataAccess.Cache
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns>All entities in the entire system</returns>
-        public static IEnumerable<IKeyedData> GetAll(bool onlyApproved = false)
+        public static IQueryable<IKeyedData> GetAll(bool onlyApproved = false)
         {
             //Don't waste the time with the where if it's false
             if(onlyApproved)

@@ -1,5 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetMud.DataAccess.Cache
 {
@@ -8,7 +9,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class ConfigDataCache
     {
-        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.ConfigData);
+        private static readonly CacheAccessor BackingCache = new CacheAccessor();
 
         /// <summary>
         /// Adds a single entity into the cache
@@ -35,7 +36,7 @@ namespace NetMud.DataAccess.Cache
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <param name="keys">the keys to retrieve</param>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetMany<T>(IEnumerable<ConfigDataCacheKey> keys) where T : IConfigData
+        public static IQueryable<T> GetMany<T>(IEnumerable<ConfigDataCacheKey> keys) where T : IConfigData
         {
             return BackingCache.GetMany<T>(keys);
         }
@@ -45,7 +46,7 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         /// <typeparam name="T">the system type for the entity</typeparam>
         /// <returns>a list of the entities from the cache</returns>
-        public static IEnumerable<T> GetAll<T>()
+        public static IQueryable<T> GetAll<T>()
         {
             return BackingCache.GetAll<T>();
         }
@@ -54,7 +55,7 @@ namespace NetMud.DataAccess.Cache
         /// Only for the hotbackup procedure
         /// </summary>
         /// <returns>All entities in the entire system</returns>
-        public static IEnumerable<IKeyedData> GetAll()
+        public static IQueryable<IKeyedData> GetAll()
         {
             return BackingCache.GetAll<IKeyedData>();
         }
