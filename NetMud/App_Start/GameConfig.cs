@@ -59,7 +59,7 @@ namespace NetMud
                 globalConfig.SystemSave();
             }
 
-            if(globalConfig.DeepLexActive)
+            if (globalConfig.DeepLexActive)
             {
                 LexicalProcessor.LoadMirriamHarness(globalConfig.MirriamDictionaryKey, globalConfig.MirriamThesaurusKey);
             }

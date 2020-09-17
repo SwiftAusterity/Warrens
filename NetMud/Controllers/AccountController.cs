@@ -74,7 +74,7 @@ namespace NetMud.Controllers
 
             ApplicationUser potentialUser = UserManager.FindByName(model.Email);
 
-            if(potentialUser != null)
+            if (potentialUser != null)
             {
                 IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
                 if (globalConfig.AdminsOnly && potentialUser.GetStaffRank(User) == StaffRank.Player)
@@ -94,7 +94,7 @@ namespace NetMud.Controllers
                     //Check for a valid character, zone and account
                     Account account = potentialUser.GameAccount;
 
-                    if(account == null)
+                    if (account == null)
                     {
                         ModelState.AddModelError("", "Your account is having technical difficulties. Please contact an administrator.");
                         return View(model);

@@ -35,7 +35,7 @@ namespace NetMud
                 {
                     refresh.DownloadString("https://netmud.swiftausterity.com/");
                 }
-                catch 
+                catch
                 {
                 }
             }

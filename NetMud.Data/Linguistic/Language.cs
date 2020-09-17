@@ -140,7 +140,7 @@ namespace NetMud.Data.Linguistic
                 return null;
             }
 
-            if(semantics == null)
+            if (semantics == null)
             {
                 semantics = new string[0];
             }
@@ -162,7 +162,7 @@ namespace NetMud.Data.Linguistic
 
             if (form != LexicalType.None && lex.GetForm(form, semantics, false) == null)
             {
-                var newDict = new Dictata()
+                Dictata newDict = new Dictata()
                 {
                     Name = word,
                     WordType = form,

@@ -48,7 +48,7 @@ namespace NetMud.CentralControl
 
                             foreach (Tuple<Func<bool>, int> pulsar in subList)
                             {
-                                var returnStatus = pulsar.Item1.Invoke();
+                                bool returnStatus = pulsar.Item1.Invoke();
 
                                 //false return means it wants to be removed, fireonce means.. fire it once and then remove it
                                 if (!returnStatus || fireOnce)

@@ -93,7 +93,7 @@ namespace NetMud.DataAccess
 
             byte[] bytes = ReadCurrentFileByPath(channel + ".txt");
 
-            if(bytes.Length > 0)
+            if (bytes.Length > 0)
             {
                 content = Encoding.UTF8.GetString(bytes);
             }

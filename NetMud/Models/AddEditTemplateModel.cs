@@ -60,7 +60,7 @@ namespace NetMud.Models
 
             FileInfo[] potentialFiles = archiveDir.GetFiles(item.Id + "." + typeName);
 
-            if(potentialFiles.Any())
+            if (potentialFiles.Any())
             {
                 DataTemplate = (T)fileAccessor.ReadEntity(potentialFiles.First(), templateType);
             }
@@ -72,7 +72,7 @@ namespace NetMud.Models
 
             string typeName = typeof(T).Name;
 
-            if(typeof(T).IsInterface)
+            if (typeof(T).IsInterface)
             {
                 typeName = typeName.Substring(1);
             }

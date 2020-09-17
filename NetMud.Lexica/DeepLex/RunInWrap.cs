@@ -4,7 +4,7 @@ namespace NetMud.Lexica.DeepLex
 {
     [Serializable]
     public class RunInWrap
-    { 
+    {
         /// <summary>
         /// Run-in entry word
         /// </summary>

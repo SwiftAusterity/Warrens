@@ -59,7 +59,7 @@ namespace NetMud.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles = "Admin")]
         [Route(@"Player/Remove/{removeId?}/{authorizeRemove?}")]
         public ActionResult Remove(string removeId, string authorizeRemove)
         {

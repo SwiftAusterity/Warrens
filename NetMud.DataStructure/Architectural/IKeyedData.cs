@@ -39,7 +39,7 @@ namespace NetMud.DataStructure.Architectural
         /// <summary>
         /// Does this data have fitness problems?
         /// </summary>
-        
+
         bool FitnessProblems { get; }
 
         /// <summary>

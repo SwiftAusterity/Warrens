@@ -3,7 +3,7 @@
     /// <summary>
     /// Type of message being outputted
     /// </summary>
-    public enum MessagingType: short
+    public enum MessagingType : short
     {
         Visible = 0,
         Audible = 1,

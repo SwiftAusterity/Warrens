@@ -40,7 +40,7 @@ namespace NetMud.Lexica.DeepLex
             }
 
             DictionaryAttempts++;
-            var jsonString = GetResponse(DictionaryEndpoint, word, DictionaryKey);
+            string jsonString = GetResponse(DictionaryEndpoint, word, DictionaryKey);
 
             if (!string.IsNullOrWhiteSpace(jsonString) && jsonString.StartsWith("[{"))
             {
@@ -48,7 +48,7 @@ namespace NetMud.Lexica.DeepLex
                 {
                     StringReader reader = new StringReader(jsonString);
 
-                    var entryCollection = Serializer.Deserialize(reader, typeof(List<DictionaryEntry>)) as List<DictionaryEntry>;
+                    List<DictionaryEntry> entryCollection = Serializer.Deserialize(reader, typeof(List<DictionaryEntry>)) as List<DictionaryEntry>;
 
                     return entryCollection.FirstOrDefault(entry => entry.meta.id.Strip(new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "_", "#", ":" })
                                                                                 .Equals(word, StringComparison.OrdinalIgnoreCase));
@@ -70,7 +70,7 @@ namespace NetMud.Lexica.DeepLex
             }
 
             ThesaurusAttempts++;
-            var jsonString = GetResponse(ThesaurusEndpoint, word, ThesaurusKey);
+            string jsonString = GetResponse(ThesaurusEndpoint, word, ThesaurusKey);
 
             if (!string.IsNullOrWhiteSpace(jsonString) && jsonString.StartsWith("[{"))
             {
@@ -78,7 +78,7 @@ namespace NetMud.Lexica.DeepLex
                 {
                     StringReader reader = new StringReader(jsonString);
 
-                    var entryCollection = Serializer.Deserialize(reader, typeof(List<ThesaurusEntry>)) as List<ThesaurusEntry>;
+                    List<ThesaurusEntry> entryCollection = Serializer.Deserialize(reader, typeof(List<ThesaurusEntry>)) as List<ThesaurusEntry>;
 
                     return entryCollection.FirstOrDefault(entry => entry.meta.id.Strip(new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "_", "#", ":" })
                                                                                 .Equals(word, StringComparison.OrdinalIgnoreCase));
@@ -94,10 +94,10 @@ namespace NetMud.Lexica.DeepLex
 
         private string GetResponse(string baseUri, string searchName, string apiKey)
         {
-            var jsonResponse = string.Empty;
-            var uriParams = string.Format("?key={0}", apiKey);
+            string jsonResponse = string.Empty;
+            string uriParams = string.Format("?key={0}", apiKey);
 
-            var client = new HttpClient
+            HttpClient client = new HttpClient
             {
                 BaseAddress = new Uri(baseUri + searchName)
             };

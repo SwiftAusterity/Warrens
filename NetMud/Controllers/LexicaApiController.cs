@@ -56,7 +56,7 @@ namespace NetMud.Controllers
                     JToken context = paragraphPair.Value<JToken>("context");
                     if (context != null)
                     {
-                        
+
                         globalContext.Anonymize = context.Value<bool>("anonymize");
                         globalContext.GenderForm = context.Value<bool>("genderform");
                         globalContext.Tense = context.Value<LexicalTense>("tense");
@@ -91,7 +91,7 @@ namespace NetMud.Controllers
             }
 
             StringBuilder description = new StringBuilder();
-            foreach (var graph in paragraphs)
+            foreach (ILexicalParagraph graph in paragraphs)
             {
                 description.AppendLine(graph.Describe());
                 success = true;

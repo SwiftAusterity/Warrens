@@ -9,7 +9,7 @@ namespace NetMud.Authentication.Migrations
             AddColumn("dbo.AspNetUsers", "GlobalIdentityHandle", c => c.String());
             DropColumn("dbo.AspNetUsers", "GameAccountId");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.AspNetUsers", "GameAccountId", c => c.String());

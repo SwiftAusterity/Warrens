@@ -76,7 +76,7 @@ namespace NetMud.DataAccess.Cache
         public static IQueryable<IKeyedData> GetAll(bool onlyApproved = false)
         {
             //Don't waste the time with the where if it's false
-            if(onlyApproved)
+            if (onlyApproved)
             {
                 return BackingCache.GetAll<IKeyedData>().Where(data => data.SuitableForUse);
             }

@@ -94,7 +94,7 @@ namespace NetMud.Communication.Lexical
                 word.Language = globalConfig.BaseLanguage;
             }
 
-            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<ILexeme>().Where(dict => dict.SuitableForUse 
+            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<ILexeme>().Where(dict => dict.SuitableForUse
                                                                                 && dict.Language == word.Language).ToList()
                                                                                 .Where(dict => dict.GetForm(word.WordType) != null).Select(lex => lex.GetForm(word.WordType));
 

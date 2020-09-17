@@ -109,7 +109,7 @@ namespace NetMud.Controllers
 
             IEnumerable<ILexeme> lexes = ConfigDataCache.GetAll<ILexeme>();
 
-            var words = lexes.Where(word => !word.Curated && word.SuitableForUse && word.WordForms.Count() > 0)
+            IOrderedEnumerable<IDictata> words = lexes.Where(word => !word.Curated && word.SuitableForUse && word.WordForms.Count() > 0)
                 .SelectMany(lex => lex.WordForms).Where(word => word.Synonyms.Count() > 0).OrderBy(word => word.TimesRated);
 
             vModel.WordOne = words.FirstOrDefault();
@@ -175,7 +175,7 @@ namespace NetMud.Controllers
 
                     lexOne.PersistToCache();
                     lexOne.SystemSave();
-                    
+
                     lexTwo.PersistToCache();
                     lexTwo.SystemSave();
                 }

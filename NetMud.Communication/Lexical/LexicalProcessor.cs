@@ -61,7 +61,7 @@ namespace NetMud.Communication.Lexical
             {
                 if (dictata.WordType != LexicalType.None)
                 {
-                    var wordList = new List<string>();
+                    List<string> wordList = new List<string>();
                     CreateOrModifyLexeme(dictata.Language, dictata.Name, dictata.WordType, ref wordList);
                 }
             }
@@ -113,7 +113,7 @@ namespace NetMud.Communication.Lexical
                 //This is wordnet processing, wordnet doesnt have any of the above and will return weird results if we let it
                 if (!invalidTypes.Contains(wordType))
                 {
-                    var synSets = WordNetHarness.GetSynSets(word, new PartOfSpeech[] { PartOfSpeech.Adjective, PartOfSpeech.Adverb, PartOfSpeech.Noun, PartOfSpeech.Verb });
+                    List<SynSet> synSets = WordNetHarness.GetSynSets(word, new PartOfSpeech[] { PartOfSpeech.Adjective, PartOfSpeech.Adverb, PartOfSpeech.Noun, PartOfSpeech.Verb });
 
                     //We in theory have every single word form for this word now
                     if (synSets != null)
@@ -125,15 +125,19 @@ namespace NetMud.Communication.Lexical
                         foreach (SynSet synSet in synSets)
                         {
                             if (synSet.PartOfSpeech == PartOfSpeech.None)
+                            {
                                 continue;
+                            }
 
-                            var synContext = TranslateContext(synSet.LexicographerFileName);
+                            SemanticContext synContext = TranslateContext(synSet.LexicographerFileName);
 
                             if (invalidContexts.Contains(synContext))
+                            {
                                 continue;
+                            }
 
-                            var lexType = MapLexicalTypes(synSet.PartOfSpeech);
-                            var newDict = newLex.GetForm(lexType, -1);
+                            LexicalType lexType = MapLexicalTypes(synSet.PartOfSpeech);
+                            IDictata newDict = newLex.GetForm(lexType, -1);
 
                             if (newDict == null)
                             {
@@ -149,7 +153,7 @@ namespace NetMud.Communication.Lexical
                                 newDict.Definition = synSet.Gloss;
                             }
 
-                            var semantics = newDict.Semantics.ToArray();
+                            string[] semantics = newDict.Semantics.ToArray();
 
                             ///wsns indicates hypo/hypernymity so
                             foreach (string synWord in synSet.Words)
@@ -167,7 +171,7 @@ namespace NetMud.Communication.Lexical
 
             if (!newLex.MirriamIndexed)
             {
-                var newDict = newLex.GetForm(-1);
+                IDictata newDict = newLex.GetForm(-1);
                 if (string.IsNullOrEmpty(newDict.Definition))
                 {
                     newDict.Definition = "";
@@ -175,29 +179,31 @@ namespace NetMud.Communication.Lexical
 
                 try
                 {
-                    var dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
+                    DictionaryEntry dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
                     if (dictEntry != null)
                     {
                         if (dictEntry.shortdef != null && dictEntry.shortdef.Any())
                         {
-                            newDict.Definition = " * " + newDict.Definition + " * " + string.Join(" * ", dictEntry.shortdef);
+                            newDict.Definition = " * "
+                                                + string.Format("{0}", string.IsNullOrWhiteSpace(newDict.Definition) ? string.Empty : newDict.Definition.ToString() + " * ")
+                                                + string.Join(" * ", dictEntry.shortdef);
                         }
 
                         //Stuff done to modify all forms of the lexeme
-                        foreach (var dict in newLex.WordForms)
+                        foreach (IDictata dict in newLex.WordForms)
                         {
                             dict.Vulgar = dictEntry.meta.offensive;
                         }
 
                         if (dictEntry.hwi != null)
                         {
-                            var lexTypeString = ParseLexicalType(dictEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
+                            string lexTypeString = ParseLexicalType(dictEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
 
                             newDict.Plural = pluralize;
                             newDict.Determinant = definitive;
                             newDict.Vulgar = dictEntry.meta.offensive;
 
-                            var pronounciation = dictEntry.hwi.prs?.FirstOrDefault();
+                            Pronounciation pronounciation = dictEntry.hwi.prs?.FirstOrDefault();
                             if (pronounciation != null)
                             {
                                 newLex.Phonetics = pronounciation.mw;
@@ -208,27 +214,27 @@ namespace NetMud.Communication.Lexical
                         }
 
                         //Stuff done based on the dictionary return data
-                        foreach (var stemWord in dictEntry.uros)
+                        foreach (UndefinedRunOns stemWord in dictEntry.uros)
                         {
-                            var lexTypeString = ParseLexicalType(stemWord.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
+                            string lexTypeString = ParseLexicalType(stemWord.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
 
                             if (newLex.GetForm(lexicalType) == null)
                             {
-                                var wordText = stemWord.ure.Replace("*", "");
+                                string wordText = stemWord.ure.Replace("*", "");
                                 ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", language.Name, wordText), ConfigDataType.Dictionary);
 
                                 if (stemLex == null)
                                 {
                                     stemLex = language.CreateOrModifyLexeme(wordText, lexicalType, null);
 
-                                    var pronounciation = stemWord.prs?.FirstOrDefault();
+                                    Pronounciation pronounciation = stemWord.prs?.FirstOrDefault();
                                     if (pronounciation != null)
                                     {
                                         stemLex.Phonetics = pronounciation.mw;
                                         stemLex.SpeechFileUri = pronounciation.sound?.Audio;
                                     }
 
-                                    var stemDict = stemLex.GetForm(-1);
+                                    IDictata stemDict = stemLex.GetForm(-1);
                                     stemDict.Elegance = newDict.Elegance;
                                     stemDict.Quality = newDict.Quality;
                                     stemDict.Severity = newDict.Severity;
@@ -248,28 +254,28 @@ namespace NetMud.Communication.Lexical
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     //just eating it
                 }
 
                 try
                 {
-                    var thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
+                    ThesaurusEntry thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
                     if (thesEntry != null)
                     {
-                        var lexTypeString = ParseLexicalType(thesEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
+                        string lexTypeString = ParseLexicalType(thesEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
 
                         if (lexicalType != LexicalType.None)
                         {
-                            var semantics = newDict.Semantics.ToArray();
+                            string[] semantics = newDict.Semantics.ToArray();
 
-                            foreach (var synonym in thesEntry.meta.syns.SelectMany(syn => syn))
+                            foreach (string synonym in thesEntry.meta.syns.SelectMany(syn => syn))
                             {
                                 MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexicalType, semantics, true, pluralize, definitive);
                             }
 
-                            foreach (var antonym in thesEntry.meta.ants.SelectMany(syn => syn))
+                            foreach (string antonym in thesEntry.meta.ants.SelectMany(syn => syn))
                             {
                                 MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexicalType, semantics, false, pluralize, definitive);
                             }
@@ -296,7 +302,7 @@ namespace NetMud.Communication.Lexical
 
         private static string ParseLexicalType(string lexTypeString, out bool pluralize, out bool definitive, out LexicalType lexicalType)
         {
-            
+
             pluralize = false;
             definitive = false;
             lexicalType = LexicalType.None;
@@ -331,16 +337,18 @@ namespace NetMud.Communication.Lexical
         private static void MakeRelatedWord(string possibleWord, string word, IDictata newDict, Regex rgx, List<string> processedWords, ILanguage language,
             LexicalType lexType, string[] semantics, bool synonym, bool plural, bool definitive)
         {
-            var newWord = possibleWord.ToLower();
+            string newWord = possibleWord.ToLower();
             newWord = newWord.Replace("_", " ");
 
             if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+            {
                 return;
+            }
 
-            var validSemantics = semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)).ToArray();
+            string[] validSemantics = semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
-            var synLex = language.CreateOrModifyLexeme(newWord, lexType, validSemantics);
-            var synDict = synLex.GetForm(lexType, validSemantics, false);
+            ILexeme synLex = language.CreateOrModifyLexeme(newWord, lexType, validSemantics);
+            IDictata synDict = synLex.GetForm(lexType, validSemantics, false);
 
             synDict.Elegance = 0;
             synDict.Quality = 0;
@@ -362,7 +370,7 @@ namespace NetMud.Communication.Lexical
             if (!string.IsNullOrWhiteSpace(newDict.Definition))
             {
                 //experimental
-                foreach (var defWord in newDict.Definition.Split(' '))
+                foreach (MarkdownString defWord in newDict.Definition.Split(' '))
                 {
                     VeryDeepLex(language, defWord);
                 }
@@ -463,7 +471,7 @@ namespace NetMud.Communication.Lexical
                 return;
             }
 
-            var engine = new WordNetEngine();
+            WordNetEngine engine = new WordNetEngine();
             engine.LoadFromDirectory(wordNetPath);
             WordNetHarness = engine;
         }
@@ -525,14 +533,14 @@ namespace NetMud.Communication.Lexical
 
         public static LexicalType MapLexicalTypes(string fl)
         {
-            if(fl.Contains(" or "))
+            if (fl.Contains(" or "))
             {
                 fl = fl.Split(' ')[0];
             }
 
             fl = fl.Replace(",", "").Replace("-", "").Replace("_", "");
 
-            if(fl.Contains("name"))
+            if (fl.Contains("name"))
             {
                 return LexicalType.ProperNoun;
             }
@@ -587,7 +595,7 @@ namespace NetMud.Communication.Lexical
 
         private static IDictata ParseSystemLabels(IDictata word, List<string> sls)
         {
-            if(sls == null)
+            if (sls == null)
             {
                 return word;
             }
@@ -598,10 +606,10 @@ namespace NetMud.Communication.Lexical
              * "present tense third-person singular of {d_link|be|be}"
              */
 
-            foreach(var sl in sls.Select(sle => sle.ToLower().Trim()))
+            foreach (string sl in sls.Select(sle => sle.ToLower().Trim()))
             {
-                var foundStructuralType = false;
-                if(sl.Contains("plural"))
+                bool foundStructuralType = false;
+                if (sl.Contains("plural"))
                 {
                     word.Plural = true;
                     foundStructuralType = true;
@@ -656,7 +664,7 @@ namespace NetMud.Communication.Lexical
                 }
 
                 //add semantics
-                if(!foundStructuralType)
+                if (!foundStructuralType)
                 {
                     word.Semantics = new HashSet<string>(word.Semantics.Union(sl.Split(' ')));
                 }

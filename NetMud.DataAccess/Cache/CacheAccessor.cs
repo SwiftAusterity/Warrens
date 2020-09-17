@@ -139,7 +139,7 @@ namespace NetMud.DataAccess.Cache
         {
             try
             {
-                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T)) 
+                return _globalCache.AsQueryable().Where(keyValuePair => keyValuePair.Value.GetType().GetInterfaces().Contains(typeof(T))
                                                         && ids.Contains(((T)keyValuePair.Value).Id))
                                   .Select(kvp => (T)kvp.Value);
             }

@@ -50,7 +50,7 @@ namespace NetMud.DataAccess.Cache
         public ConfigDataCacheKey(IConfigData data)
         {
             ObjectType = data.GetType();
-            BirthMark  = data.UniqueKey;
+            BirthMark = data.UniqueKey;
             ConfigType = data.Type;
         }
 

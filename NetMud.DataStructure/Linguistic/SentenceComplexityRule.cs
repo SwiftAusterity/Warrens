@@ -97,7 +97,7 @@ namespace NetMud.DataStructure.Linguistic
                 return 1;
             }
 
-            if (CheckPivotValidity(firstPredicatePivot?.Item1?.Event, secondSubjectPivot?.Item1?.Event) 
+            if (CheckPivotValidity(firstPredicatePivot?.Item1?.Event, secondSubjectPivot?.Item1?.Event)
                 && CheckNonPivotValidity(first, second))
             {
                 return 2;
@@ -125,16 +125,16 @@ namespace NetMud.DataStructure.Linguistic
             global::System.Collections.Generic.IEnumerable<Tuple<ISensoryEvent, short>> secondMatches = first.Subject.Where(word => word.Item1?.Event != null && word.Item1.Event.Role != PredicatePivot && significantTypes.Contains(word.Item1.Event.Role));
 
             bool returnValue = !PivotMatch;
-            if(firstChecks.Any())
+            if (firstChecks.Any())
             {
-                returnValue = returnValue 
+                returnValue = returnValue
                     && !PivotMatch == firstChecks.Any(wordPair => firstMatches.Any(matchPair => matchPair.Item1.Event.Role == wordPair.Item1.Event.Role
                                                 && matchPair.Item1.Event.Phrase.Equals(wordPair.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase)));
             }
 
             if (secondChecks.Any())
             {
-                returnValue = returnValue 
+                returnValue = returnValue
                     && !PivotMatch == secondChecks.Any(wordPair => secondMatches.Any(matchPair => matchPair.Item1.Event.Role == wordPair.Item1.Event.Role
                                                  && matchPair.Item1.Event.Phrase.Equals(wordPair.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase)));
             }

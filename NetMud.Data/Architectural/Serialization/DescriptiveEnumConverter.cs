@@ -1,6 +1,6 @@
-﻿using System;
-using NetMud.Utility;
+﻿using NetMud.Utility;
 using Newtonsoft.Json;
+using System;
 
 namespace NetMud.Data.Architectural.Serialization
 {

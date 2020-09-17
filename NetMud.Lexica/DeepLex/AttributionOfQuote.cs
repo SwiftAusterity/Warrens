@@ -23,6 +23,6 @@ namespace NetMud.Lexica.DeepLex
         /// <summary>
         /// further detail on quote source (eg, name of larger work in which an essay is found); 
         /// </summary>
-        public Subsource subsource { get; set; } 
+        public Subsource subsource { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace NetMud.DataAccess
         /// <param name="nonImportant">Should we get cross about this or not? Defaults to not.</param>
         public static void LogError(Exception ex, bool nonImportant = true)
         {
-            if(nonImportant)
+            if (nonImportant)
             {
                 LogError(ex, LogChannels.SystemWarnings);
             }

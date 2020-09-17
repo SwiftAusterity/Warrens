@@ -445,7 +445,7 @@ namespace NetMud.Data.Linguistic
 
             possibleLex.MapSynNet();
 
-            var myLex = GetLexeme();
+            ILexeme myLex = GetLexeme();
             myLex.SystemSave();
             myLex.PersistToCache();
 

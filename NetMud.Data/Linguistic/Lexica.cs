@@ -460,7 +460,7 @@ namespace NetMud.Data.Linguistic
                     newDict = Thesaurus.GetSynonym(dict, Context);
                 }
 
-                if(newDict != null)
+                if (newDict != null)
                 {
                     newLex.Phrase = newDict.Name;
                 }

@@ -106,25 +106,32 @@ namespace NetMud.Utility
         {
             word = word.ToLower().Trim();
             bool lastWasVowel = false;
-            var vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'y' };
+            char[] vowels = new[] { 'a', 'e', 'i', 'o', 'u', 'y' };
             int count = 0;
 
             //a string is an IEnumerable<char>; convenient.
-            foreach (var c in word)
+            foreach (char c in word)
             {
                 if (vowels.Contains(c))
                 {
                     if (!lastWasVowel)
+                    {
                         count++;
+                    }
+
                     lastWasVowel = true;
                 }
                 else
+                {
                     lastWasVowel = false;
+                }
             }
 
             if ((word.EndsWith("e") || (word.EndsWith("es") || word.EndsWith("ed")))
                   && !word.EndsWith("le"))
+            {
                 count--;
+            }
 
             return count;
         }
@@ -137,9 +144,9 @@ namespace NetMud.Utility
         /// <returns></returns>
         public static string Strip(this string word, string[] sequences)
         {
-            var newString = word;
+            string newString = word;
 
-            foreach (var sequence in sequences)
+            foreach (string sequence in sequences)
             {
                 newString = newString.Replace(sequence, "");
             }
@@ -473,7 +480,7 @@ namespace NetMud.Utility
         /// <returns>all types that touch the input type</returns>
         public static IEnumerable<Type> GetAllImplimentingedTypes(Type t)
         {
-            IEnumerable<Type> implimentedTypes = t.Assembly.GetTypes().Where(ty => ty == t || ty.GetInterfaces().Contains(t) );
+            IEnumerable<Type> implimentedTypes = t.Assembly.GetTypes().Where(ty => ty == t || ty.GetInterfaces().Contains(t));
             return implimentedTypes.Concat(t.GetInterfaces());
         }
 
@@ -513,13 +520,13 @@ namespace NetMud.Utility
                     thing = (T)Activator.CreateInstance(concreteClassType);
                 }
             }
-            else if (thingType.IsArray 
+            else if (thingType.IsArray
                 || (!typeof(string).Equals(thingType) && typeof(IEnumerable).IsAssignableFrom(thingType)))
             {
                 Type[] underlyingTypes = thingType.GenericTypeArguments;
                 thing = (T)Activator.CreateInstance(thingType, underlyingTypes.Select(typ => InstantiateSingleThing(typ, thingConcreteAssembly, fillAtWill)));
             }
-            else if(!typeof(string).Equals(thingType))
+            else if (!typeof(string).Equals(thingType))
             {
                 thing = Activator.CreateInstance<T>();
             }

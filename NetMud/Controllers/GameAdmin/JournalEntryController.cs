@@ -180,7 +180,7 @@ namespace NetMud.Controllers.GameAdmin
                 obj.Name = vModel.DataObject.Name;
                 obj.Body = vModel.DataObject.Body;
                 obj.Expired = vModel.DataObject.Expired;
-                obj.ExpireDate =vModel.DataObject.ExpireDate;
+                obj.ExpireDate = vModel.DataObject.ExpireDate;
                 obj.MinimumReadLevel = vModel.DataObject.MinimumReadLevel;
                 obj.Public = vModel.DataObject.Public;
                 obj.PublishDate = vModel.DataObject.PublishDate;

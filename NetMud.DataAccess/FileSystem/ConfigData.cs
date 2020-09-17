@@ -128,7 +128,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             string dirName = BaseDirectory;
 
-            switch(entity.Type)
+            switch (entity.Type)
             {
                 default:
                     dirName += entity.Type.ToString();

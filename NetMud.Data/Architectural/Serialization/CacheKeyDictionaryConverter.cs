@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace NetMud.Data.Architectural.Serialization
 {
@@ -37,7 +37,7 @@ namespace NetMud.Data.Architectural.Serialization
                 return new Dictionary<TKey, TValue>();
             }
 
-           return serializer.Deserialize<KeyValuePair<TKey, TValue>[]>(reader).ToDictionary(kv => kv.Key, kv => kv.Value);
+            return serializer.Deserialize<KeyValuePair<TKey, TValue>[]>(reader).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

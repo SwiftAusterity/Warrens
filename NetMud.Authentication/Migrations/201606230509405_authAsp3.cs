@@ -12,7 +12,7 @@ namespace NetMud.Authentication.Migrations
             CreateIndex("dbo.AspNetUsers", "GlobalIdentityHandle");
             AddForeignKey("dbo.AspNetUsers", "GlobalIdentityHandle", "dbo.Accounts", "GlobalIdentityHandle", cascadeDelete: true);
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUsers", "GlobalIdentityHandle", "dbo.Accounts");

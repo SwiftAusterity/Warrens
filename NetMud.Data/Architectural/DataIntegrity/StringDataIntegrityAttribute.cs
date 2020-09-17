@@ -30,7 +30,7 @@ namespace NetMud.Data.Architectural.DataIntegrity
             {
                 MarkdownString mdString = Utility.DataUtility.TryConvert<MarkdownString>(val);
 
-                if(!MarkdownString.IsNullOrWhiteSpace(mdString))
+                if (!MarkdownString.IsNullOrWhiteSpace(mdString))
                 {
                     compareValue = mdString.Value;
                 }

@@ -9,16 +9,16 @@ namespace NetMud.Authentication.Migrations
             CreateTable(
                 "dbo.Accounts",
                 c => new
-                    {
-                        GlobalIdentityHandle = c.String(nullable: false, maxLength: 128),
-                        CurrentlySelectedCharacter = c.Long(nullable: false),
-                    })
+                {
+                    GlobalIdentityHandle = c.String(nullable: false, maxLength: 128),
+                    CurrentlySelectedCharacter = c.Long(nullable: false),
+                })
                 .PrimaryKey(t => t.GlobalIdentityHandle)
                 .ForeignKey("dbo.AspNetUsers", t => t.GlobalIdentityHandle)
                 .Index(t => t.GlobalIdentityHandle);
-            
+
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.Accounts", "GlobalIdentityHandle", "dbo.AspNetUsers");

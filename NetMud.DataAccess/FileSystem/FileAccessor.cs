@@ -256,7 +256,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             try
             {
-                var dirs = Directory.GetDirectories(baseDirectoryPath);
+                string[] dirs = Directory.GetDirectories(baseDirectoryPath);
 
                 if (dirs.Count() > 10)
                 {

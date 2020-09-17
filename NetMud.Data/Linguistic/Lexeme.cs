@@ -335,7 +335,7 @@ namespace NetMud.Data.Linguistic
             }
             else
             {
-                var expectedMinimumSemanticSimilarity = semantics.Count() / 2;
+                int expectedMinimumSemanticSimilarity = semantics.Count() / 2;
                 returnValue = WordForms.FirstOrDefault(wordForm => wordForm.WordType == form
                                                         && semantics.Sum(sem => wordForm.Semantics.Contains(sem) ? 1 : 0) >= expectedMinimumSemanticSimilarity);
             }
@@ -597,10 +597,10 @@ namespace NetMud.Data.Linguistic
             if (removalState)
             {
                 IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex =>  lex.GetForm(dict.WordType) != null
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
                                                                 && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
                 IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex =>  lex.GetForm(dict.WordType) != null
+                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
                                                                 && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)

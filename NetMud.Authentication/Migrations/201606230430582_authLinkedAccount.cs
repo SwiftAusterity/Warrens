@@ -8,7 +8,7 @@ namespace NetMud.Authentication.Migrations
         {
             AddColumn("dbo.Accounts", "LogSubs", c => c.String());
         }
-        
+
         public override void Down()
         {
             DropColumn("dbo.Accounts", "LogSubs");

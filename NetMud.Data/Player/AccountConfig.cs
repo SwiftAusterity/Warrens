@@ -100,7 +100,7 @@ namespace NetMud.Data.Players
         public AccountConfig()
         {
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-            if(globalConfig != null)
+            if (globalConfig != null)
             {
                 UILanguage = globalConfig.BaseLanguage;
             }

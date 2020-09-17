@@ -40,11 +40,11 @@ namespace NetMud.Models
         internal abstract Func<T, object> OrderPrimary { get; }
         internal abstract Func<T, object> OrderSecondary { get; }
 
-        public IEnumerable<T> CurrentPageOfItems 
+        public IEnumerable<T> CurrentPageOfItems
         {
             get
             {
-                if(Items == null || Items.Count() == 0)
+                if (Items == null || Items.Count() == 0)
                 {
                     return Enumerable.Empty<T>();
                 }

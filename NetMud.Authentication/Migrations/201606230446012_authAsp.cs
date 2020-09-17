@@ -8,7 +8,7 @@ namespace NetMud.Authentication.Migrations
         {
             AddColumn("dbo.AspNetUsers", "GameAccountId", c => c.String());
         }
-        
+
         public override void Down()
         {
             DropColumn("dbo.AspNetUsers", "GameAccountId");
