@@ -210,9 +210,12 @@ namespace NetMud.Data.Linguistic
                 return;
             }
 
-            IEnumerable<ILanguage> otherLanguages = ConfigDataCache.GetAll<ILanguage>().Where(lang => lang != Language && lang.SuitableForUse && lang.UIOnly);
+            var wordQuery = new FilteredQuery<ILanguage>(CacheType.ConfigData)
+            {
+                Filter = lang => lang != Language && lang.SuitableForUse && lang.UIOnly
+            };
 
-            foreach (ILanguage language in otherLanguages)
+            foreach (ILanguage language in wordQuery.FilteredItems)
             {
                 short formGrouping = -1;
                 string newName = string.Empty;
@@ -527,12 +530,16 @@ namespace NetMud.Data.Linguistic
 
             if (removalState)
             {
-                IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
+                var synQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+                {
+                    Filter = lex => lex.SuitableForUse
+                };
+
+                IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
                                                 && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
-                IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
-                                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+
+                IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
+                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)
                 {
@@ -596,12 +603,15 @@ namespace NetMud.Data.Linguistic
 
             if (removalState)
             {
-                IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
-                                                                && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
-                IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict =>
-                    ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.SuitableForUse).ToList().Where(lex => lex.GetForm(dict.WordType) != null
-                                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                var synQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+                {
+                    Filter = lex => lex.SuitableForUse
+                };
+
+                IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
+                                        && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
+                                        && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)
                 {

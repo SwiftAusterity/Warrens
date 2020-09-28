@@ -94,9 +94,12 @@ namespace NetMud.Communication.Lexical
                 word.Language = globalConfig.BaseLanguage;
             }
 
-            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<ILexeme>().Where(dict => dict.SuitableForUse
-                                                                                && dict.Language == word.Language).ToList()
-                                                                                .Where(dict => dict.GetForm(word.WordType) != null).Select(lex => lex.GetForm(word.WordType));
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                Filter = dict => dict.SuitableForUse && dict.Language == word.Language
+            };
+
+            IEnumerable<IDictata> possibleWords = wordQuery.FilteredItems.Where(dict => dict.GetForm(word.WordType) != null).Select(lex => lex.GetForm(word.WordType));
 
             return GetObscuredWord(word, possibleWords, obscureStrength);
         }
@@ -110,8 +113,12 @@ namespace NetMud.Communication.Lexical
                 context.Language = globalConfig.BaseLanguage;
             }
 
-            IEnumerable<IDictata> possibleWords = ConfigDataCache.GetAll<ILexeme>()
-                .Where(dict => dict.Language == context.Language && dict.SuitableForUse).ToList().Where(dict => dict.GetForm(type) != null).Select(lex => lex.GetForm(type));
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                Filter = dict => dict.SuitableForUse && dict.Language == context.Language
+            };
+
+            IEnumerable<IDictata> possibleWords = wordQuery.FilteredItems.Where(dict => dict.GetForm(type) != null).Select(lex => lex.GetForm(type));
 
             return possibleWords.OrderByDescending(word => GetSynonymRanking(word, context)).FirstOrDefault();
         }

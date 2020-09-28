@@ -52,14 +52,14 @@ namespace NetMud.Models.Admin
 
         public AddEditLanguageViewModel() : base("", ConfigDataType.Language)
         {
-            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name).SelectMany(word => word.WordForms);
+            ValidWords = GetLexemes();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Language();
         }
 
         public AddEditLanguageViewModel(string uniqueKey) : base(uniqueKey, ConfigDataType.Language)
         {
-            ValidWords = ConfigDataCache.GetAll<ILexeme>().OrderBy(word => word.Language.Name).ThenBy(word => word.Name).SelectMany(word => word.WordForms);
+            ValidWords = GetLexemes();
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Language();
 
@@ -81,7 +81,14 @@ namespace NetMud.Models.Admin
 
         public AddEditLanguageViewModel(string archivePath, ILanguage item) : base(archivePath, ConfigDataType.Language, item)
         {
-            ValidWords = ConfigDataCache.GetAll<ILexeme>().Where(word => word.Language == item).OrderBy(word => word.Name).SelectMany(word => word.WordForms);
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                Filter = lex => lex.Language == item,
+                OrderPrimary = form => form.Name
+            };
+
+            ValidWords = wordQuery.FilteredItems.SelectMany(lex => lex.WordForms);
+
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = (Language)item;
         }
@@ -89,5 +96,16 @@ namespace NetMud.Models.Admin
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<IDictata> ValidWords { get; set; }
         public Language DataObject { get; set; }
+
+        private IEnumerable<IDictata> GetLexemes()
+        {
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                OrderPrimary = word => word.Language.Name,
+                OrderSecondary = word => word.Name
+            };
+
+            return wordQuery.FilteredItems.SelectMany(lex => lex.WordForms);
+        }
     }
 }

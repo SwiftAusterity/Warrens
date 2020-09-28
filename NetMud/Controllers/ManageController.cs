@@ -6,6 +6,7 @@ using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.PlayerManagement;
 using System;
@@ -62,6 +63,11 @@ namespace NetMud.Controllers
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
             Account account = user.GameAccount;
 
+            var wordQuery = new FilteredQuery<ILanguage>(CacheType.ConfigData)
+            {
+                Filter = lang => lang.SuitableForUse && lang.UIOnly
+            };
+
             ManageAccountViewModel model = new ManageAccountViewModel
             {
                 AuthedUser = user,
@@ -70,7 +76,7 @@ namespace NetMud.Controllers
                 UILanguage = account.Config.UILanguage,
                 ChosenRole = user.GetStaffRank(User),
                 ValidRoles = (StaffRank[])Enum.GetValues(typeof(StaffRank)),
-                ValidLanguages = ConfigDataCache.GetAll<ILanguage>().Where(lang => lang.SuitableForUse && lang.UIOnly)
+                ValidLanguages = wordQuery.FilteredItems
             };
 
             return View(model);

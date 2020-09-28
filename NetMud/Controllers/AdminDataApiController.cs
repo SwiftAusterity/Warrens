@@ -5,6 +5,7 @@ using NetMud.Authentication;
 using NetMud.Data.Players;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,12 @@ namespace NetMud.Controllers
         [Route("api/AdminDataApi/GetDictata/{languageCode}/{wordType}/{term}", Name = "AdminAPI_GetDictata")]
         public JsonResult<string[]> GetDictata(string languageCode, LexicalType wordType, string term)
         {
-            IEnumerable<ILexeme> words = ConfigDataCache.GetAll<ILexeme>().Where(dict => dict.Name.Contains(term) && dict.Language.GoogleLanguageCode.Equals(languageCode)).ToList().Where(dict => dict.GetForm(wordType) != null);
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                Filter = dict => dict.Name.Contains(term) && dict.Language.GoogleLanguageCode.Equals(languageCode)
+            };
+
+            IEnumerable<ILexeme> words = wordQuery.FilteredItems.Where(dict => dict.GetForm(wordType) != null);
 
             return Json(words.Select(word => word.Name).ToArray());
         }

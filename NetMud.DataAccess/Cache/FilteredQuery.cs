@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace NetMud.DataAccess.Cache
 {
@@ -43,6 +42,14 @@ namespace NetMud.DataAccess.Cache
         /// </summary>
         public IQueryable<T> Items { get; }
 
+        public IEnumerable<T> FilteredItems 
+        {  
+            get
+            {
+                return GetFilteredItems();
+            }
+        }
+
         public FilteredQuery(CacheType sourceType)
         {
             SourceType = sourceType;
@@ -76,11 +83,7 @@ namespace NetMud.DataAccess.Cache
 
         public int FilteredCount()
         {
-            ParallelQuery<T> parallelQuery = Items.AsParallel();
-            if (Filter != null)
-            {
-                parallelQuery = parallelQuery.Where(value => Filter(value));
-            }
+            ParallelQuery<T> parallelQuery = GetFilteredItems();
 
             return parallelQuery.Count();
         }
@@ -89,11 +92,7 @@ namespace NetMud.DataAccess.Cache
         {
             try
             {
-                ParallelQuery<T> parallelQuery = Items.AsParallel();
-                if (Filter != null)
-                {
-                    parallelQuery = parallelQuery.Where(value => Filter(value));
-                }
+                ParallelQuery<T> parallelQuery = GetFilteredItems();
 
                 if (OrderPrimary != null)
                 {
@@ -120,6 +119,17 @@ namespace NetMud.DataAccess.Cache
             }
 
             return Enumerable.Empty<T>();
+        }
+
+        private ParallelQuery<T> GetFilteredItems()
+        {
+            ParallelQuery<T> parallelQuery = Items.AsParallel();
+            if (Filter != null)
+            {
+                parallelQuery = parallelQuery.Where(value => Filter(value));
+            }
+
+            return parallelQuery;
         }
     }
 }

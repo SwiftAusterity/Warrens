@@ -105,7 +105,7 @@ namespace NetMud.Models.Admin
             ParentObject = (Lexeme)parent;
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = new Dictata();
-            ValidWords = ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.Language == parent.Language && lex != parent).SelectMany(lex => lex.WordForms).OrderBy(form => form.Name);
+            ValidWords = GetLexemes();
         }
 
         public AddEditDictataViewModel(ILexeme parent, IDictata obj)
@@ -113,7 +113,7 @@ namespace NetMud.Models.Admin
             ParentObject = (Lexeme)parent;
             ValidLanguages = ConfigDataCache.GetAll<ILanguage>();
             DataObject = (Dictata)obj;
-            ValidWords = ConfigDataCache.GetAll<ILexeme>().Where(lex => lex.Language == parent.Language && lex != parent).SelectMany(lex => lex.WordForms).OrderBy(form => form.Name);
+            ValidWords = GetLexemes();
         }
 
         [Display(Name = "Word", Description = "The new word's name/spelling.")]
@@ -139,5 +139,15 @@ namespace NetMud.Models.Admin
         public IEnumerable<IDictata> ValidWords { get; set; }
         public Lexeme ParentObject { get; set; }
         public Dictata DataObject { get; set; }
+
+        private IEnumerable<IDictata> GetLexemes()
+        {
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                Filter = lex => lex.Language == ParentObject.Language && lex != ParentObject,                
+            };
+
+            return wordQuery.FilteredItems.SelectMany(lex => lex.WordForms).OrderBy(form => form.Name);
+        }
     }
 }
