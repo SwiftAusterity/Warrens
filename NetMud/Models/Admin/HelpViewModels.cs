@@ -1,20 +1,18 @@
 ﻿using NetMud.Data.Administrative;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageHelpDataViewModel : PagedDataModel<IHelp>
+    public class ManageHelpDataViewModel : PagedCacheModel<IHelp>
     {
-        public ManageHelpDataViewModel(IEnumerable<IHelp> items)
-            : base(items)
+        public ManageHelpDataViewModel()
+            : base(CacheType.LookupData)
         {
-            CurrentPageNumber = 1;
-            ItemsPerPage = 20;
         }
 
         internal override Func<IHelp, bool> SearchFilter

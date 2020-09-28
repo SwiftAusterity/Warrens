@@ -41,7 +41,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageDictionaryViewModel vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<ILexeme>())
+            ManageDictionaryViewModel vModel = new ManageDictionaryViewModel()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 

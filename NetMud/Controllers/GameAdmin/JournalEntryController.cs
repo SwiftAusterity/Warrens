@@ -38,7 +38,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageJournalEntriesViewModel vModel = new ManageJournalEntriesViewModel(TemplateCache.GetAll<IJournalEntry>())
+            ManageJournalEntriesViewModel vModel = new ManageJournalEntriesViewModel()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 

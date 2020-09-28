@@ -1,6 +1,7 @@
 ﻿using NetMud.Authentication;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
+using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,10 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageDictionaryViewModel : PagedDataModel<ILexeme>
+    public class ManageDictionaryViewModel : PagedCacheModel<ILexeme>
     {
-        public ManageDictionaryViewModel(IEnumerable<ILexeme> items)
-            : base(items)
+        public ManageDictionaryViewModel()
+            : base(CacheType.ConfigData)
         {
             CurrentPageNumber = 1;
             ItemsPerPage = 20;

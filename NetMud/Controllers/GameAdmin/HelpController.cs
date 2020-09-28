@@ -37,7 +37,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageHelpDataViewModel vModel = new ManageHelpDataViewModel(TemplateCache.GetAll<IHelp>())
+            ManageHelpDataViewModel vModel = new ManageHelpDataViewModel()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 

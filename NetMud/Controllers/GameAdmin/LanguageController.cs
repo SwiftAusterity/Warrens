@@ -39,7 +39,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageLanguageDataViewModel vModel = new ManageLanguageDataViewModel(ConfigDataCache.GetAll<ILanguage>())
+            ManageLanguageDataViewModel vModel = new ManageLanguageDataViewModel()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 

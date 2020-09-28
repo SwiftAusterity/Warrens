@@ -10,13 +10,11 @@ using System.Linq;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageLanguageDataViewModel : PagedDataModel<ILanguage>
+    public class ManageLanguageDataViewModel : PagedCacheModel<ILanguage>
     {
-        public ManageLanguageDataViewModel(IEnumerable<ILanguage> items)
-            : base(items)
+        public ManageLanguageDataViewModel()
+            : base(CacheType.ConfigData)
         {
-            CurrentPageNumber = 1;
-            ItemsPerPage = 20;
         }
 
         internal override Func<ILanguage, bool> SearchFilter

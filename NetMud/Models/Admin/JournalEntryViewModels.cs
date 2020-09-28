@@ -1,19 +1,17 @@
 ﻿using NetMud.Authentication;
 using NetMud.DataStructure.Administrative;
+using NetMud.DataStructure.Architectural;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace NetMud.Models.Admin
 {
-    public class ManageJournalEntriesViewModel : PagedDataModel<IJournalEntry>
+    public class ManageJournalEntriesViewModel : PagedCacheModel<IJournalEntry>
     {
-        public ManageJournalEntriesViewModel(IEnumerable<IJournalEntry> items)
-            : base(items)
+        public ManageJournalEntriesViewModel()
+            : base(CacheType.LookupData)
         {
-            CurrentPageNumber = 1;
-            ItemsPerPage = 20;
         }
 
         internal override Func<IJournalEntry, bool> SearchFilter

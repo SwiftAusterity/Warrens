@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Cache\ConfigDataCache.cs" />
     <Compile Include="Cache\ConfigDataCacheKey.cs" />
+    <Compile Include="Cache\FilteredQuery.cs" />
     <Compile Include="Cache\TemplateCacheKey.cs" />
     <Compile Include="Cache\CacheAccessor.cs" />
     <Compile Include="Cache\TemplateCache.cs" />

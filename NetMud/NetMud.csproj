@@ -274,6 +274,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Admin\GameAdminViewModels.cs" />
+    <Compile Include="Models\PagedCacheModel.cs" />
     <Compile Include="Models\WordFightViewModel.cs" />
     <Compile Include="Models\AddEditConfigDataModel.cs" />
     <Compile Include="Models\AddEditTemplateModel.cs" />
