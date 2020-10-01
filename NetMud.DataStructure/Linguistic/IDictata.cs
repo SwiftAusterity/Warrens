@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace NetMud.DataStructure.Linguistic
 {
     public interface IDictata : IWeightedMeaning
@@ -28,7 +30,8 @@ namespace NetMud.DataStructure.Linguistic
         /// </summary>
         /// <param name="synonym"></param>
         /// <returns></returns>
-        ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym, IDictata existingWord = null);
+        ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym, int severity, int elegance, int quality, HashSet<string> semantics
+            , IDictata existingWord = null);
 
         /// <summary>
         /// Create a lexica from this

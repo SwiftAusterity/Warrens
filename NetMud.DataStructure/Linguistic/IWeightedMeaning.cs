@@ -93,11 +93,10 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Things this is the same as mostly
         /// </summary>
-        HashSet<IDictata> Synonyms { get; set; }
+        HashSet<IRelatedWord> RelatedWords { get; set; }
 
-        /// <summary>
-        /// Things this is specifically opposite of mostly
-        /// </summary>
-        HashSet<IDictata> Antonyms { get; set; }
+        IEnumerable<IDictata> Synonyms { get; }
+
+        IEnumerable<IDictata> Antonyms { get; }
     }
 }

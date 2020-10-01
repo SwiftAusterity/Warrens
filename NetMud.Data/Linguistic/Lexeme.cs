@@ -87,7 +87,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Has this been run through both Mirriam Webster APIs
         /// </summary>
-        [Display(Name = "MirriamIndexed", Description = "Has this word been SynSet mapped? (changing this directly can be damagaing to the synonym network)")]
+        [Display(Name = "MirriamIndexed", Description = "Has this word been Mirriam mapped? (changing this directly can be damagaing to the synonym network)")]
         [UIHint("Boolean")]
         public bool MirriamIndexed { get; set; }
 
@@ -175,8 +175,9 @@ namespace NetMud.Data.Linguistic
             //Easy way - we dont have one with this type at all
             //Hard way - reject if our semantics are similar by count and the semantics lists match
             if (!existingWords.Any(form => form.WordType == newWord.WordType)
-             || (newWord.Semantics.Count() > 0 && !existingWords.Where(form => form.WordType == newWord.WordType)
-                            .Any(form => form.Semantics.Count() == newWord.Semantics.Count() && form.Semantics.All(semantic => newWord.Semantics.Contains(semantic)))))
+             || (newWord.Semantics.Count() > 0 
+                    && !existingWords.Where(form => form.WordType == newWord.WordType)
+                       .Any(form => form.Semantics.Count() == newWord.Semantics.Count() && form.Semantics.All(semantic => newWord.Semantics.Contains(semantic)))))
             {
                 int maxForm = 0;
 
@@ -198,7 +199,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Add language translations for this
         /// </summary>
-        public void FillLanguages()
+        public bool FillLanguages()
         {
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
@@ -207,7 +208,7 @@ namespace NetMud.Data.Linguistic
             if (globalConfig == null || !globalConfig.TranslationActive || string.IsNullOrWhiteSpace(globalConfig.AzureTranslationKey)
                 || !Language.UIOnly || !Language.SuitableForUse || ContainedTypes().Contains(LexicalType.ProperNoun) || Language != globalConfig.BaseLanguage)
             {
-                return;
+                return false;
             }
 
             var wordQuery = new FilteredQuery<ILanguage>(CacheType.ConfigData)
@@ -267,14 +268,12 @@ namespace NetMud.Data.Linguistic
                                 Positional = word.Positional,
                                 Possessive = word.Possessive,
                                 Semantics = word.Semantics,
-                                Antonyms = word.Antonyms,
-                                Synonyms = word.Synonyms,
+                                RelatedWords = word.RelatedWords,
                                 Tense = word.Tense,
                                 WordType = word.WordType
                             };
 
-                            newDictata.Synonyms = new HashSet<IDictata>(word.Synonyms) { word };
-                            word.Synonyms = new HashSet<IDictata>(word.Synonyms) { newDictata };
+                            //TODO: Synonyms?
                             newLexeme.AddNewForm(newDictata);
                         }
                     }
@@ -289,6 +288,7 @@ namespace NetMud.Data.Linguistic
 
             SystemSave();
             PersistToCache();
+            return true;
         }
 
 
@@ -352,36 +352,19 @@ namespace NetMud.Data.Linguistic
         public bool MapSynNet()
         {
             //Not a whole lot of point here
-            if (IsSynMapped)
+            if (!IsSynMapped)
             {
-                return true;
+                foreach (IDictata dict in WordForms)
+                {
+                    LexicalProcessor.GetSynSet(dict);
+                }
+
+                //We've been mapped, set it and save the state
+                IsSynMapped = true;
+                PersistToCache();
+                SystemSave();
             }
 
-            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-
-            if (globalConfig?.DeepLexActive ?? false)
-            {
-                Processor.StartSubscriptionLoop("WordNetMapping", DeepLex, 2000, true);
-            }
-
-            return true;
-        }
-
-        private bool DeepLex()
-        {
-            FillLanguages();
-
-            foreach (IDictata dict in WordForms)
-            {
-                LexicalProcessor.GetSynSet(dict);
-            }
-
-            //We've been mapped, set it and save the state
-            IsSynMapped = true;
-            PersistToCache();
-            SystemSave();
-
-            //We return false to break the loop
             return true;
         }
 
@@ -536,23 +519,13 @@ namespace NetMud.Data.Linguistic
                 };
 
                 IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
-                                                && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
-
-                IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
-                                                && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
+                                                && lex.GetForm(dict.WordType).RelatedWords.Any(syn => syn.Word.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
 
                 foreach (IDictata word in synonyms)
                 {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(word.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    word.Synonyms = syns;
-                }
-
-                foreach (IDictata word in antonyms)
-                {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(word.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    word.Antonyms = ants;
+                    HashSet<IRelatedWord> rws = word.RelatedWords;
+                    rws.RemoveWhere(syn => syn.Equals(this));
+                    word.RelatedWords = rws;
                 }
             }
 
@@ -600,33 +573,6 @@ namespace NetMud.Data.Linguistic
         public override bool SystemRemove()
         {
             bool removalState = base.SystemRemove();
-
-            if (removalState)
-            {
-                var synQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
-                {
-                    Filter = lex => lex.SuitableForUse
-                };
-
-                IEnumerable<IDictata> synonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
-                                        && lex.GetForm(dict.WordType).Synonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
-                IEnumerable<IDictata> antonyms = WordForms.SelectMany(dict => synQuery.FilteredItems.Where(lex => lex.GetForm(dict.WordType) != null
-                                        && lex.GetForm(dict.WordType).Antonyms.Any(syn => syn != null && syn.Equals(dict))).Select(lex => lex.GetForm(dict.WordType)));
-
-                foreach (IDictata word in synonyms)
-                {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(word.Synonyms);
-                    syns.RemoveWhere(syn => syn.Equals(this));
-                    word.Synonyms = syns;
-                }
-
-                foreach (IDictata word in antonyms)
-                {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(word.Antonyms);
-                    ants.RemoveWhere(syn => syn.Equals(this));
-                    word.Antonyms = ants;
-                }
-            }
 
             return removalState;
         }

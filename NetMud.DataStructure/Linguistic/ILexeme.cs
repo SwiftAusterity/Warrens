@@ -54,7 +54,7 @@ namespace NetMud.DataStructure.Linguistic
         /// <summary>
         /// Add language translations for this
         /// </summary>
-        void FillLanguages();
+        bool FillLanguages();
 
         /// <summary>
         /// Map the synnet of this word

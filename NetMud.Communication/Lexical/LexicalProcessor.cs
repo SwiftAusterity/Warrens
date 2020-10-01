@@ -25,6 +25,7 @@ namespace NetMud.Communication.Lexical
         private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
         private static readonly string wordNetTokenCacheKey = "WordNetHarness";
         private static readonly string mirriamWebsterTokenCacheKey = "MirriamHarness";
+        private static Regex wordRegex = new Regex("[^a-z -]");
 
         public static WordNetEngine WordNetHarness
         {
@@ -51,6 +52,68 @@ namespace NetMud.Communication.Lexical
         }
 
         /// <summary>
+        /// Background process for the lexing
+        /// </summary>
+        /// <returns></returns>
+        public static bool DeepLexer()
+        {
+            IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
+
+            //Find a word to lex
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                Filter = lex => (!lex.IsSynMapped || !lex.MirriamIndexed) && !lex.Curated,
+                OrderPrimary = lex => lex.ApprovedOn,
+                ItemsPerPage = 1,
+                CurrentPageNumber = 1
+            };
+
+            var currentLex = wordQuery.ExecuteQuery();
+
+            if (currentLex.Any())
+            {
+                var lex = currentLex.First();
+                if (globalConfig.TranslationActive && !lex.IsTranslated)
+                {
+                    lex.FillLanguages();
+                }
+
+                if (!lex.IsSynMapped)
+                {
+                    lex.MapSynNet();
+                }
+
+                if (!lex.MirriamIndexed)
+                {
+                    MirriamIndexer(lex);
+                }
+
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Cleanup thread for bad data in the lexer
+        /// </summary>
+        /// <returns></returns>
+        public static bool LexicalJanitor()
+        {
+            //find words with null or bad dictata
+            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            {
+                Filter = lex => !lex.WordForms.Any()
+            };
+
+            foreach (var lex in wordQuery.FilteredItems)
+            {
+                lex.SystemRemove();
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Map the synonyms of this
         /// </summary>
         /// <param name="dictata">the word in question</param>
@@ -61,8 +124,8 @@ namespace NetMud.Communication.Lexical
             {
                 if (dictata.WordType != LexicalType.None)
                 {
-                    List<string> wordList = new List<string>();
-                    CreateOrModifyLexeme(dictata.Language, dictata.Name, dictata.WordType, ref wordList);
+                    var newLex = CreateOrModifyLexeme(dictata.Language, dictata.Name, dictata.WordType);
+                    MapSynNet(dictata.Language, dictata.Name, dictata.WordType, newLex);
                 }
             }
             catch (Exception ex)
@@ -79,13 +142,11 @@ namespace NetMud.Communication.Lexical
         /// </summary>
         /// <param name="word">just the text of the word</param>
         /// <returns>A lexeme</returns>
-        public static ILexeme CreateOrModifyLexeme(ILanguage language, string word, LexicalType wordType, ref List<string> processedWords)
+        public static ILexeme CreateOrModifyLexeme(ILanguage language, string word, LexicalType wordType)
         {
             word = word.ToLower();
 
-            Regex rgx = new Regex("[^a-z -]");
-
-            if (rgx.IsMatch(word))
+            if (wordRegex.IsMatch(word))
             {
                 return null;
             }
@@ -97,18 +158,14 @@ namespace NetMud.Communication.Lexical
                 newLex = language.CreateOrModifyLexeme(word, wordType, new string[0]);
             }
 
-            if ((newLex.IsSynMapped && newLex.MirriamIndexed) || processedWords.Any(wrd => wrd.Equals(word)))
-            {
-                if (!processedWords.Any(wrd => wrd.Equals(word)))
-                {
-                    processedWords.Add(word);
-                }
-            }
-            else
+            return newLex;
+        }
+
+        private static ILexeme MapSynNet(ILanguage language, string word, LexicalType wordType, ILexeme newLex)
+        {
+            if (!newLex.IsSynMapped)
             {
                 LexicalType[] invalidTypes = new LexicalType[] { LexicalType.Article, LexicalType.Conjunction, LexicalType.ProperNoun, LexicalType.Pronoun, LexicalType.None };
-
-                processedWords.Add(word);
 
                 //This is wordnet processing, wordnet doesnt have any of the above and will return weird results if we let it
                 if (!invalidTypes.Contains(wordType))
@@ -158,7 +215,7 @@ namespace NetMud.Communication.Lexical
                             ///wsns indicates hypo/hypernymity so
                             foreach (string synWord in synSet.Words)
                             {
-                                MakeRelatedWord(synWord, word, newDict, rgx, processedWords, language, lexType, semantics, true, false, false);
+                                MakeRelatedWord(synWord, word, newDict, language, lexType, semantics, true, false, false);
                             }
                         }
                     }
@@ -169,135 +226,131 @@ namespace NetMud.Communication.Lexical
                 newLex.PersistToCache();
             }
 
-            if (!newLex.MirriamIndexed)
-            {
-                IDictata newDict = newLex.GetForm(-1);
-                if (string.IsNullOrEmpty(newDict.Definition))
-                {
-                    newDict.Definition = "";
-                }
-
-                try
-                {
-                    DictionaryEntry dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
-                    if (dictEntry != null)
-                    {
-                        if (dictEntry.shortdef != null && dictEntry.shortdef.Any())
-                        {
-                            newDict.Definition = " * "
-                                                + string.Format("{0}", string.IsNullOrWhiteSpace(newDict.Definition) ? string.Empty : newDict.Definition.ToString() + " * ")
-                                                + string.Join(" * ", dictEntry.shortdef);
-                        }
-
-                        //Stuff done to modify all forms of the lexeme
-                        foreach (IDictata dict in newLex.WordForms)
-                        {
-                            dict.Vulgar = dictEntry.meta.offensive;
-                        }
-
-                        if (dictEntry.hwi != null)
-                        {
-                            string lexTypeString = ParseLexicalType(dictEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
-
-                            newDict.Plural = pluralize;
-                            newDict.Determinant = definitive;
-                            newDict.Vulgar = dictEntry.meta.offensive;
-
-                            Pronounciation pronounciation = dictEntry.hwi.prs?.FirstOrDefault();
-                            if (pronounciation != null)
-                            {
-                                newLex.Phonetics = pronounciation.mw;
-                                newLex.SpeechFileUri = pronounciation.sound?.Audio;
-                            }
-
-                            ParseSystemLabels(newDict, dictEntry.sls);
-                        }
-
-                        //Stuff done based on the dictionary return data
-                        foreach (UndefinedRunOns stemWord in dictEntry.uros)
-                        {
-                            string lexTypeString = ParseLexicalType(stemWord.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
-
-                            if (newLex.GetForm(lexicalType) == null)
-                            {
-                                string wordText = stemWord.ure.Replace("*", "");
-                                ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", language.Name, wordText), ConfigDataType.Dictionary);
-
-                                if (stemLex == null)
-                                {
-                                    stemLex = language.CreateOrModifyLexeme(wordText, lexicalType, null);
-
-                                    Pronounciation pronounciation = stemWord.prs?.FirstOrDefault();
-                                    if (pronounciation != null)
-                                    {
-                                        stemLex.Phonetics = pronounciation.mw;
-                                        stemLex.SpeechFileUri = pronounciation.sound?.Audio;
-                                    }
-
-                                    IDictata stemDict = stemLex.GetForm(-1);
-                                    stemDict.Elegance = newDict.Elegance;
-                                    stemDict.Quality = newDict.Quality;
-                                    stemDict.Severity = newDict.Severity;
-                                    stemDict.Context = newDict.Context;
-                                    stemDict.Definition = newDict.Definition;
-                                    stemDict.Plural = pluralize;
-                                    stemDict.Determinant = definitive;
-                                    stemDict.Semantics = new HashSet<string>(newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)));
-                                    processedWords.Add(wordText);
-
-                                    ParseSystemLabels(stemDict, stemWord.sls);
-
-                                    stemLex.SystemSave();
-                                    stemLex.PersistToCache();
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //just eating it
-                }
-
-                try
-                {
-                    ThesaurusEntry thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
-                    if (thesEntry != null)
-                    {
-                        string lexTypeString = ParseLexicalType(thesEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
-
-                        if (lexicalType != LexicalType.None)
-                        {
-                            string[] semantics = newDict.Semantics.ToArray();
-
-                            foreach (string synonym in thesEntry.meta.syns.SelectMany(syn => syn))
-                            {
-                                MakeRelatedWord(synonym, word, newDict, rgx, processedWords, language, lexicalType, semantics, true, pluralize, definitive);
-                            }
-
-                            foreach (string antonym in thesEntry.meta.ants.SelectMany(syn => syn))
-                            {
-                                MakeRelatedWord(antonym, word, newDict, rgx, processedWords, language, lexicalType, semantics, false, pluralize, definitive);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //just eating it
-                }
-
-                newLex.MirriamIndexed = true;
-                newLex.SystemSave();
-                newLex.PersistToCache();
-            }
-
-            if (!newLex.IsTranslated)
-            {
-
-            }
-
             return newLex;
+        }
+
+        private static void MirriamIndexer(ILexeme newLex)
+        {
+            ILanguage language = newLex.Language;
+
+            IDictata newDict = newLex.GetForm(-1);
+            if (string.IsNullOrEmpty(newDict.Definition))
+            {
+                newDict.Definition = "";
+            }
+
+            try
+            {
+                DictionaryEntry dictEntry = MirriamWebsterAPI.GetDictionaryEntry(newLex.Name);
+                if (dictEntry != null)
+                {
+                    if (dictEntry.shortdef != null && dictEntry.shortdef.Any())
+                    {
+                        newDict.Definition = " * "
+                                            + string.Format("{0}", string.IsNullOrWhiteSpace(newDict.Definition) ? string.Empty : newDict.Definition.ToString() + " * ")
+                                            + string.Join(" * ", dictEntry.shortdef);
+                    }
+
+                    //Stuff done to modify all forms of the lexeme
+                    foreach (IDictata dict in newLex.WordForms)
+                    {
+                        dict.Vulgar = dictEntry.meta.offensive;
+                    }
+
+                    if (dictEntry.hwi != null)
+                    {
+                        string lexTypeString = ParseLexicalType(dictEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
+
+                        newDict.Plural = pluralize;
+                        newDict.Determinant = definitive;
+                        newDict.Vulgar = dictEntry.meta.offensive;
+
+                        Pronounciation pronounciation = dictEntry.hwi.prs?.FirstOrDefault();
+                        if (pronounciation != null)
+                        {
+                            newLex.Phonetics = pronounciation.mw;
+                            newLex.SpeechFileUri = pronounciation.sound?.Audio;
+                        }
+
+                        ParseSystemLabels(newDict, dictEntry.sls);
+                    }
+
+                    //Stuff done based on the dictionary return data
+                    foreach (UndefinedRunOns stemWord in dictEntry.uros)
+                    {
+                        string lexTypeString = ParseLexicalType(stemWord.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
+
+                        if (newLex.GetForm(lexicalType) == null)
+                        {
+                            string wordText = stemWord.ure.Replace("*", "");
+                            ILexeme stemLex = ConfigDataCache.Get<ILexeme>(string.Format("{0}_{1}", language.Name, wordText), ConfigDataType.Dictionary);
+
+                            if (stemLex == null)
+                            {
+                                stemLex = language.CreateOrModifyLexeme(wordText, lexicalType, null);
+
+                                Pronounciation pronounciation = stemWord.prs?.FirstOrDefault();
+                                if (pronounciation != null)
+                                {
+                                    stemLex.Phonetics = pronounciation.mw;
+                                    stemLex.SpeechFileUri = pronounciation.sound?.Audio;
+                                }
+
+                                IDictata stemDict = stemLex.GetForm(-1);
+                                stemDict.Elegance = newDict.Elegance;
+                                stemDict.Quality = newDict.Quality;
+                                stemDict.Severity = newDict.Severity;
+                                stemDict.Context = newDict.Context;
+                                stemDict.Definition = newDict.Definition;
+                                stemDict.Plural = pluralize;
+                                stemDict.Determinant = definitive;
+                                stemDict.Semantics = new HashSet<string>(newDict.Semantics.Where(word => !string.Equals(word, "system_command", StringComparison.InvariantCultureIgnoreCase)));
+
+                                ParseSystemLabels(stemDict, stemWord.sls);
+
+                                stemLex.SystemSave();
+                                stemLex.PersistToCache();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //LoggingUtility.LogError(ex);
+            }
+
+            try
+            {
+                ThesaurusEntry thesEntry = MirriamWebsterAPI.GetThesaurusEntry(newLex.Name);
+                if (thesEntry != null)
+                {
+                    string lexTypeString = ParseLexicalType(thesEntry.fl, out bool pluralize, out bool definitive, out LexicalType lexicalType);
+
+                    if (lexicalType != LexicalType.None)
+                    {
+                        string[] semantics = newDict.Semantics.ToArray();
+
+                        foreach (string synonym in thesEntry.meta.syns.SelectMany(syn => syn))
+                        {
+                            MakeRelatedWord(synonym, newLex.Name, newDict, language, lexicalType, semantics, true, pluralize, definitive);
+                        }
+
+                        foreach (string antonym in thesEntry.meta.ants.SelectMany(syn => syn))
+                        {
+                            MakeRelatedWord(antonym, newLex.Name, newDict, language, lexicalType, semantics, false, pluralize, definitive);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //LoggingUtility.LogError(ex);
+            }
+
+            newLex.MirriamIndexed = true;
+            newLex.SystemSave();
+            newLex.PersistToCache();
         }
 
         private static string ParseLexicalType(string lexTypeString, out bool pluralize, out bool definitive, out LexicalType lexicalType)
@@ -334,13 +387,13 @@ namespace NetMud.Communication.Lexical
             return lexTypeString;
         }
 
-        private static void MakeRelatedWord(string possibleWord, string word, IDictata newDict, Regex rgx, List<string> processedWords, ILanguage language,
+        private static void MakeRelatedWord(string possibleWord, string word, IDictata newDict, ILanguage language,
             LexicalType lexType, string[] semantics, bool synonym, bool plural, bool definitive)
         {
             string newWord = possibleWord.ToLower();
             newWord = newWord.Replace("_", " ");
 
-            if (rgx.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
+            if (wordRegex.IsMatch(newWord) || string.IsNullOrWhiteSpace(newWord) || newWord.All(ch => ch == '-') || newWord.IsNumeric())
             {
                 return;
             }
@@ -360,11 +413,11 @@ namespace NetMud.Communication.Lexical
 
             synLex.PersistToCache();
             synLex.SystemSave();
-            processedWords.Add(newWord);
 
             if (!newWord.Equals(word))
             {
-                newDict.MakeRelatedWord(language, newWord, synonym, synDict);
+                newDict.MakeRelatedWord(language, newWord, synonym, 0, 0, 0,
+                    new HashSet<string>(newDict.Semantics.Where(semantic => validSemantics.Contains(semantic))), synDict);
             }
 
             if (!string.IsNullOrWhiteSpace(newDict.Definition))
@@ -372,14 +425,9 @@ namespace NetMud.Communication.Lexical
                 //experimental
                 foreach (MarkdownString defWord in newDict.Definition.Split(' '))
                 {
-                    VeryDeepLex(language, defWord);
+                    language.CreateOrModifyLexeme(word, LexicalType.None, new string[0]);
                 }
             }
-        }
-
-        private static void VeryDeepLex(ILanguage language, string word)
-        {
-            language.CreateOrModifyLexeme(word, LexicalType.None, new string[0]);
         }
 
         /// <summary>
@@ -430,7 +478,6 @@ namespace NetMud.Communication.Lexical
 
             lexeme.PersistToCache();
             lexeme.SystemSave();
-            lexeme.MapSynNet();
 
             return lexeme;
         }

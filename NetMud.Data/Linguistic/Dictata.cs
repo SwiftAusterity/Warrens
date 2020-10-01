@@ -193,76 +193,36 @@ namespace NetMud.Data.Linguistic
         [DataType(DataType.Text)]
         public int Quality { get; set; }
 
-        [JsonProperty("Synonyms")]
-        private HashSet<DictataKey> _synonyms { get; set; }
+        [Display(Name = "Related Words", Description = "The related words of this word/phrase.")]
+        [UIHint("CollectionSynonymList")]
+        [RelatedWordCollectionDataBinder]
+        public HashSet<IRelatedWord> RelatedWords { get; set; }
 
         /// <summary>
         /// Things this is the same as mostly
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [Display(Name = "Synonyms", Description = "The synonyms (similar) of this word/phrase.")]
-        [UIHint("CollectionSynonymList")]
-        [DictataCollectionDataBinder]
-        public HashSet<IDictata> Synonyms
+        public IEnumerable<IDictata> Synonyms
         {
             get
             {
-                if (_synonyms == null)
-                {
-                    _synonyms = new HashSet<DictataKey>();
-                }
-
-                return new HashSet<IDictata>(_synonyms.Select(k => ConfigDataCache.Get<ILexeme>(k.LexemeKey, ConfigDataType.Dictionary)?.GetForm(k.FormId)));
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _synonyms = new HashSet<DictataKey>();
-                    return;
-                }
-
-                _synonyms = new HashSet<DictataKey>(
-                    value.Where(k => k != null).Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
+                return RelatedWords.Where(word => word.RelationType == WordRelationalType.Synonym).Select(word => word.Word);
             }
         }
-
-        [JsonProperty("Antonyms")]
-        private HashSet<DictataKey> _antonyms { get; set; }
 
         /// <summary>
         /// Things this is specifically opposite of mostly
         /// </summary>
         [ScriptIgnore]
         [JsonIgnore]
-        [Display(Name = "Antonyms", Description = "The antonyms (opposite) of this word/phrase.")]
-        [UIHint("CollectionDictataList")]
-        [DictataCollectionDataBinder]
-        public HashSet<IDictata> Antonyms
+        public IEnumerable<IDictata> Antonyms
         {
             get
             {
-                if (_antonyms == null)
-                {
-                    _antonyms = new HashSet<DictataKey>();
-                }
-
-                return new HashSet<IDictata>(_antonyms.Select(k => ConfigDataCache.Get<ILexeme>(k.LexemeKey, ConfigDataType.Dictionary)?.GetForm(k.FormId)));
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _antonyms = new HashSet<DictataKey>();
-                    return;
-                }
-
-                _antonyms = new HashSet<DictataKey>(
-                    value.Where(k => k != null).Select(k => new DictataKey(new ConfigDataCacheKey(k.GetLexeme()).BirthMark, k.FormGroup)));
+                return RelatedWords.Where(word => word.RelationType == WordRelationalType.Antonym).Select(word => word.Word);
             }
         }
-
 
         [JsonConstructor]
         public Dictata()
@@ -280,8 +240,7 @@ namespace NetMud.Data.Linguistic
 
             Name = "";
             WordType = LexicalType.None;
-            Antonyms = new HashSet<IDictata>();
-            Synonyms = new HashSet<IDictata>();
+            RelatedWords = new HashSet<IRelatedWord>();
             Semantics = new HashSet<string>();
         }
 
@@ -301,8 +260,7 @@ namespace NetMud.Data.Linguistic
             Name = name.ToLower();
             FormGroup = formGrouping;
             WordType = LexicalType.None;
-            Antonyms = new HashSet<IDictata>();
-            Synonyms = new HashSet<IDictata>();
+            RelatedWords = new HashSet<IRelatedWord>();
             Semantics = new HashSet<string>();
         }
 
@@ -313,8 +271,7 @@ namespace NetMud.Data.Linguistic
         public Dictata(ILexica lexica)
         {
             Name = "";
-            Antonyms = new HashSet<IDictata>();
-            Synonyms = new HashSet<IDictata>();
+            RelatedWords = new HashSet<IRelatedWord>();
             Semantics = new HashSet<string>();
 
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
@@ -349,8 +306,7 @@ namespace NetMud.Data.Linguistic
 
                 Name = lexica.Phrase;
                 WordType = lexica.Type;
-                Synonyms = wordForm.Synonyms;
-                Antonyms = wordForm.Antonyms;
+                RelatedWords = wordForm.RelatedWords;
                 Determinant = wordForm.Determinant;
                 Elegance = wordForm.Elegance;
                 Feminine = wordForm.Feminine;
@@ -379,7 +335,8 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         /// <param name="synonym"></param>
         /// <returns></returns>
-        public ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym, IDictata existingWord = null)
+        public ILexeme MakeRelatedWord(ILanguage language, string word, bool synonym, int severity, int elegance, int quality, HashSet<string> semantics
+            , IDictata existingWord = null)
         {
             ILexeme possibleLex = ConfigDataCache.Get<ILexeme>(new ConfigDataCacheKey(typeof(ILexeme), ConfigDataType.Dictionary, string.Format("{0}_{1}", language.Name, word)));
 
@@ -415,35 +372,32 @@ namespace NetMud.Data.Linguistic
                 };
             }
 
-            HashSet<IDictata> synonyms = Synonyms;
-            synonyms.Add(this);
+            var newMyWord = new RelatedWord()
+            {
+                Word = newDict,
+                Severity = severity,
+                Quality = quality,
+                Elegance = elegance,
+                Semantics = semantics
+            };
 
             if (synonym)
             {
-                newDict.Synonyms = synonyms;
-                newDict.Antonyms = Antonyms;
-
-                HashSet<IDictata> mySynonyms = Synonyms;
-                mySynonyms.Add(newDict);
-
-                Synonyms = mySynonyms;
+                newMyWord.RelationType = WordRelationalType.Synonym;
             }
             else
             {
-                newDict.Synonyms = Antonyms;
-                newDict.Antonyms = synonyms;
-
-                HashSet<IDictata> antonyms = Antonyms;
-                antonyms.Add(newDict);
-
-                Antonyms = antonyms;
+                newMyWord.RelationType = WordRelationalType.Antonym;
             }
+
+            HashSet<IRelatedWord> myRelatedWords = RelatedWords;
+            myRelatedWords.Add(newMyWord);
+
+            RelatedWords = myRelatedWords;
 
             possibleLex.AddNewForm(newDict);
             possibleLex.PersistToCache();
             possibleLex.SystemSave();
-
-            possibleLex.MapSynNet();
 
             ILexeme myLex = GetLexeme();
             myLex.SystemSave();
@@ -604,8 +558,7 @@ namespace NetMud.Data.Linguistic
             {
                 Elegance = Elegance,
                 Severity = Severity,
-                Antonyms = Antonyms,
-                Synonyms = Synonyms,
+                RelatedWords = RelatedWords,
                 Tense = Tense,
                 WordType = WordType,
                 Quality = Quality

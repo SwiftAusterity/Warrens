@@ -29,7 +29,5 @@
 </div>
 <h4>Semantic Tags</h4>
 @Html.EditorFor(m => m.Semantics)
-<h4>Synonyms</h4>
-@Html.EditorFor(m => m.Synonyms, new { validItems = ViewData["ValidWords"] })
-<h4>Antonyms</h4>
-@Html.EditorFor(m => m.Antonyms, new { validItems = ViewData["ValidWords"] })
+<h4>Related Words</h4>
+@Html.EditorFor(m => m.RelatedWords, new { validItems = ViewData["ValidWords"] })

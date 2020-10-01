@@ -155,7 +155,6 @@ namespace NetMud.Data.Linguistic
                     Language = this
                 };
 
-                lex.MapSynNet();
                 lex.SystemSave();
                 lex.PersistToCache();
             }

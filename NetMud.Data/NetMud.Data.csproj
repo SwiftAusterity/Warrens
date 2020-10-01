@@ -141,6 +141,7 @@
     <Compile Include="Architectural\PropertyBinding\HelpDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\LanguageDataBinder.cs" />
     <Compile Include="Architectural\PropertyBinding\MarkdownBinder.cs" />
+    <Compile Include="Architectural\PropertyBinding\RelatedWordCollectionDataBinder.cs" />
     <Compile Include="Architectural\Serialization\CacheKeyDictionaryConverter.cs" />
     <Compile Include="Architectural\Serialization\ConcreteTypeConverter.cs" />
     <Compile Include="Architectural\Serialization\DescriptiveEnumConverter.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Linguistic\ContractionRule.cs" />
     <Compile Include="Linguistic\Dictata.cs" />
     <Compile Include="Linguistic\Lexeme.cs" />
+    <Compile Include="Linguistic\RelatedWord.cs" />
     <Compile Include="Linguistic\WordPairRule.cs" />
     <Compile Include="Linguistic\DictataTransformationRule.cs" />
     <Compile Include="Linguistic\Language.cs" />

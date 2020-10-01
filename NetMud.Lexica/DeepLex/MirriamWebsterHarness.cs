@@ -55,7 +55,7 @@ namespace NetMud.Lexica.DeepLex
                 }
                 catch (Exception ex)
                 {
-
+                    LoggingUtility.LogError(ex);
                 }
             }
 
@@ -85,7 +85,7 @@ namespace NetMud.Lexica.DeepLex
                 }
                 catch (Exception ex)
                 {
-
+                    LoggingUtility.LogError(ex);
                 }
             }
 

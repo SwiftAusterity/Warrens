@@ -102,6 +102,7 @@
     <Compile Include="Linguistic\IContractionRule.cs" />
     <Compile Include="Linguistic\IDictataTransformationRule.cs" />
     <Compile Include="Linguistic\ILexeme.cs" />
+    <Compile Include="Linguistic\IRelatedWord.cs" />
     <Compile Include="Linguistic\IWeightedMeaning.cs" />
     <Compile Include="Linguistic\IWordPairRule.cs" />
     <Compile Include="Linguistic\ILanguage.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Linguistic\SentenceComplexityRule.cs" />
     <Compile Include="Linguistic\SentenceGrammarRule.cs" />
     <Compile Include="Linguistic\SentenceType.cs" />
+    <Compile Include="Linguistic\WordRelationalType.cs" />
     <Compile Include="Player\IAccount.cs" />
     <Compile Include="Player\IAccountConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -205,18 +205,12 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            Lexeme relatedLex = new Lexeme
-            {
-                Name = vModel.Word,
-                Language = lex.Language
-            };
-
             Dictata relatedWord = new Dictata()
             {
                 Name = vModel.Word,
-                Severity = dict.Severity + vModel.Severity,
-                Quality = dict.Quality + vModel.Quality,
-                Elegance = dict.Elegance + vModel.Elegance,
+                Severity = vModel.Severity,
+                Quality = vModel.Quality,
+                Elegance = vModel.Elegance,
                 Tense = dict.Tense,
                 Language = dict.Language,
                 WordType = dict.WordType,
@@ -231,43 +225,9 @@ namespace NetMud.Controllers.GameAdmin
                 Vulgar = dict.Vulgar
             };
 
-            HashSet<IDictata> synonyms = dict.Synonyms;
-            synonyms.Add(dict);
-
-            if (vModel.Synonym)
-            {
-                relatedWord.Synonyms = synonyms;
-                relatedWord.Antonyms = dict.Antonyms;
-            }
-            else
-            {
-                relatedWord.Synonyms = dict.Antonyms;
-                relatedWord.Antonyms = synonyms;
-            }
-
-            relatedLex.AddNewForm(relatedWord);
-
             string message;
-            if (relatedLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
+            if (dict.MakeRelatedWord(dict.Language, vModel.Word, vModel.Synonym, vModel.Severity, vModel.Elegance, vModel.Quality, dict.Semantics, relatedWord) != null)
             {
-                if (vModel.Synonym)
-                {
-                    HashSet<IDictata> mySynonyms = dict.Synonyms;
-                    mySynonyms.Add(relatedWord);
-
-                    dict.Synonyms = mySynonyms;
-                }
-                else
-                {
-                    HashSet<IDictata> antonyms = dict.Antonyms;
-                    antonyms.Add(relatedWord);
-
-                    dict.Antonyms = antonyms;
-                }
-
-                lex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                relatedLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditLexeme[" + lex.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }
@@ -403,8 +363,7 @@ namespace NetMud.Controllers.GameAdmin
             obj.Quality = vModel.DataObject.Quality;
             obj.Elegance = vModel.DataObject.Elegance;
             obj.Tense = vModel.DataObject.Tense;
-            obj.Synonyms = vModel.DataObject.Synonyms;
-            obj.Antonyms = vModel.DataObject.Antonyms;
+            obj.RelatedWords = vModel.DataObject.RelatedWords;
             obj.Language = vModel.DataObject.Language;
             obj.WordType = vModel.DataObject.WordType;
             obj.Feminine = vModel.DataObject.Feminine;
@@ -421,35 +380,6 @@ namespace NetMud.Controllers.GameAdmin
 
             if (lex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User)))
             {
-                foreach (IDictata syn in obj.Synonyms)
-                {
-                    if (!syn.Synonyms.Any(dict => dict == obj))
-                    {
-                        HashSet<IDictata> synonyms = syn.Synonyms;
-                        synonyms.Add(obj);
-
-                        ILexeme synLex = syn.GetLexeme();
-                        syn.Synonyms = synonyms;
-
-                        synLex.AddNewForm(syn);
-                        synLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                    }
-                }
-
-                foreach (IDictata ant in obj.Antonyms)
-                {
-                    if (!ant.Antonyms.Any(dict => dict == obj))
-                    {
-                        HashSet<IDictata> antonyms = ant.Antonyms;
-                        antonyms.Add(obj);
-
-                        ILexeme antLex = ant.GetLexeme();
-                        ant.Antonyms = antonyms;
-                        antLex.AddNewForm(ant);
-                        antLex.Save(authedUser.GameAccount, authedUser.GetStaffRank(User));
-                    }
-                }
-
                 LoggingUtility.LogAdminCommandUsage("*WEB* - EditDictata[" + obj.UniqueKey + "]", authedUser.GameAccount.GlobalIdentityHandle);
                 message = "Edit Successful.";
             }

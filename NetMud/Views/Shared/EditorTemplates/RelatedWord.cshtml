@@ -1,0 +1,12 @@
+﻿@using NetMud.Data.Linguistic
+@model RelatedWord
+<h4>Target Word - @Model.Word.Name</h4>
+<div class="form-group row">
+    RelationType
+    @Html.EditorFor(m => m.RelationType)
+    @Html.EditorFor(m => m.Severity)
+    @Html.EditorFor(m => m.Elegance)
+    @Html.EditorFor(m => m.Quality)
+</div>
+<h4>Semantic Tags</h4>
+@Html.EditorFor(m => m.Semantics)

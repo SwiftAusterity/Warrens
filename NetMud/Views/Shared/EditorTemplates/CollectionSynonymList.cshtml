@@ -1,7 +1,7 @@
 ﻿@using NetMud.Models
 @using NetMud.DataStructure.Linguistic
 
-@model HashSet<IDictata>
+@model HashSet<IRelatedWord>
 
 @{
     var currentCount = Model.Count();
@@ -17,10 +17,10 @@
     </div>
     @if (currentCount > 0)
     {
-        @Html.EditorForMany(m => m, null, 0, "CollectionDictataListItem")
+        @Html.EditorForMany(m => m, null, 0, "CollectionRelatedWordListItem")
     }
 </div>
 
 <script type="text/javascript">
-    var newDictataSynonymList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "CollectionDictataListItem")');
+    var newDictataSynonymList = decodeHtml('@Html.EmptyEditorForMany(m => m, null, currentCount, "CollectionRelatedWordListItem")');
 </script>
