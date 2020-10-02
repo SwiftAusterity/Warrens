@@ -3,6 +3,7 @@ using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,7 +32,9 @@ namespace NetMud.Models.Admin
         public IEnumerable<ILanguage> Languages { get; set; }
 
         //Running Data
-        public Dictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
+        public IDictionary<string, CancellationTokenSource> LiveTaskTokens { get; set; }
+        public IDictionary<string, Tuple<string, int>> LiveTaskSubscribers { get; set; }
+
 
         [Display(Name = "System Language", Description = "The default language used for the system.")]
         [DataType(DataType.Text)]

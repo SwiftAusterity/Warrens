@@ -60,13 +60,18 @@ namespace NetMud.Communication.Lexical
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
 
             //Find a word to lex
-            var wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
+            FilteredQuery<ILexeme> wordQuery = new FilteredQuery<ILexeme>(CacheType.ConfigData)
             {
                 Filter = lex => (!lex.IsSynMapped || !lex.MirriamIndexed) && !lex.Curated,
                 OrderPrimary = lex => lex.ApprovedOn,
                 ItemsPerPage = 1,
                 CurrentPageNumber = 1
             };
+
+            if (globalConfig.TranslationActive)
+            {
+                wordQuery.Filter = lex => (!lex.IsSynMapped || !lex.MirriamIndexed || !lex.IsTranslated) && !lex.Curated;
+            }
 
             var currentLex = wordQuery.ExecuteQuery();
 
@@ -213,7 +218,7 @@ namespace NetMud.Communication.Lexical
                             string[] semantics = newDict.Semantics.ToArray();
 
                             ///wsns indicates hypo/hypernymity so
-                            foreach (string synWord in synSet.Words)
+                            foreach (string synWord in synSet.Words.Where(wrd => !wrd.Equals(word, StringComparison.CurrentCultureIgnoreCase)))
                             {
                                 MakeRelatedWord(synWord, word, newDict, language, lexType, semantics, true, false, false);
                             }
@@ -317,7 +322,7 @@ namespace NetMud.Communication.Lexical
             }
             catch (Exception ex)
             {
-                //LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex);
             }
 
             try
@@ -345,7 +350,7 @@ namespace NetMud.Communication.Lexical
             }
             catch (Exception ex)
             {
-                //LoggingUtility.LogError(ex);
+                LoggingUtility.LogError(ex);
             }
 
             newLex.MirriamIndexed = true;

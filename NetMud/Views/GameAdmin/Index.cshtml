@@ -68,18 +68,26 @@
         <div class="liveProcess">
             @foreach (var token in Model.LiveTaskTokens)
             {
-                if (token.Value.IsCancellationRequested)
-                {
-                    <div class="liveControls stop">
-                        <span>Stopping @token.Key</span>
-                    </div>
-                }
-                else
-                {
-                    <div class="liveControls go">
-                        @Html.ActionLink("Stop " + @token.Key, "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
-                    </div>
-                }
+                <div class="accordionWrapper">
+                    <h5>@token.Key</h5>
+                    @if (token.Value.IsCancellationRequested)
+                    {
+                        <div class="liveControls stop">
+                            <span>Stopping @token.Key</span>
+                        </div>
+                    }
+                    else
+                    {
+                        var subTokens = Model.LiveTaskSubscribers.Where(sub => sub.Key.Equals(token.Key));
+                        <div class="liveControls go">
+                            @Html.ActionLink("Stop " + @token.Key, "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
+                        </div>
+                        foreach (var subscriber in subTokens)
+                        {
+                            <h6>(@subscriber.Value.Item2) @subscriber.Value.Item1</h6>
+                        }
+                    }
+                </div>
             }
         </div>
     </div>

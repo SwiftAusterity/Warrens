@@ -10,6 +10,7 @@ using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.DataStructure.System;
 using NetMud.Models.Admin;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -55,6 +56,7 @@ namespace NetMud.Controllers.GameAdmin
                 Languages = ConfigDataCache.GetAll<ILanguage>(),
 
                 LiveTaskTokens = Processor.GetAllLiveTaskStatusTokens(),
+                LiveTaskSubscribers = Processor.GetAllSubscriberStatus(),
 
                 ConfigDataObject = globalConfig,
                 AdminsOnly = globalConfig.AdminsOnly,
@@ -83,7 +85,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Processor.ShutdownLoop(processName, 600, "{0} seconds before " + processName + " is shutdown.", 60);
+            Processor.ShutdownLoop(processName, 600);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningProcess[" + processName + "]", authedUser.GameAccount.GlobalIdentityHandle);
             string message = "Cancel signal sent.";
@@ -96,7 +98,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            Processor.ShutdownAll(600, "{0} seconds before TOTAL WORLD SHUTDOWN.", 60);
+            Processor.ShutdownAll(600);
 
             LoggingUtility.LogAdminCommandUsage("*WEB* - StopRunningALLPROCESSES", authedUser.GameAccount.GlobalIdentityHandle);
             string message = "Cancel signal sent for entire world.";
