@@ -52,7 +52,8 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         [Display(Name = "Relation Type", Description = "Synonym, antonym or other.")]
         [UIHint("EnumDropDownList")]
-        [Required] public WordRelationalType RelationType { get; set; }
+        [Required] 
+        public WordRelationalType RelationType { get; set; }
 
         /// <summary>
         /// Strength rating of word in relation to synonyms
@@ -84,5 +85,10 @@ namespace NetMud.Data.Linguistic
         [Display(Name = "Semantic Tags", Description = "Tags that describe the purpose/meaning of the word. (like Food or Positional)")]
         [UIHint("TagContainer")]
         public HashSet<string> Semantics { get; set; }
+
+        public RelatedWord()
+        {
+            Semantics = new HashSet<string>();
+        }
     }
 }

@@ -6,6 +6,8 @@
     var htmlAttributes = new Dictionary<string, object>() { { "id", ViewData.ModelMetadata.PropertyName }, { "class", cssClass }, { "placeholder", ViewData.ModelMetadata.DisplayName }, { "title", ViewData.ModelMetadata.DisplayName } };
     var archivedValue = ViewData["archivedValue"] == null ? "" : ViewData["archivedValue"].ToString();
     var strippedNaked = ViewData["strippedNaked"] != null;
+    var modelName = Model?.Word == null ? "" : string.Format("({0}) {1}", Model.RelationType, Model.Word.Name);
+    var keyName = Model?.Word == null ? "" : Model.Word.Name;
 
     if (ViewData["disabled"] != null)
     {
@@ -38,10 +40,10 @@
         ViewData.Model = (IRelatedWord)selectedItemOverride;
     }
 
-    var itemList = ((IEnumerable<IDictata>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = string.Format("({0}:{2} {3}) {1}", item.Language.GoogleLanguageCode, item.Name, item.Tense, item.WordType), Value = item.UniqueKey, Selected = item.UniqueKey == Model.Word.UniqueKey });
+    var itemList = ((IEnumerable<IDictata>)ViewData["validItems"]).Select(item => new SelectListItem() { Text = string.Format("({0}:{2} {3}) {1}", item.Language.GoogleLanguageCode, item.Name, item.Tense, item.WordType), Value = item.UniqueKey, Selected = item.UniqueKey == keyName });
 }
 <div class="accordionWrapper">
-    <h5>(@Model.RelationType) @Model.Word.Name</h5>
+    <h5>@modelName</h5>
     <div>
         <div class="form-group row">
             <a href="#" class="removeRow col-form-label" title="Remove this" onclick="javascript: $(this).parent().parent().parent().remove(); return false;">X</a>
