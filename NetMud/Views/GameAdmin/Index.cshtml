@@ -81,11 +81,18 @@
                         var subTokens = Model.LiveTaskSubscribers.Where(sub => sub.Key.Equals(token.Key));
                         <div class="liveControls go">
                             @Html.ActionLink("Stop " + @token.Key, "StopRunningProcess", "GameAdmin", new { processName = token.Key }, new { @class = "btn btn-default stop" })
+                            @if (subTokens.Any())
+                            {
+                                foreach (var subscriber in subTokens)
+                                {
+                                    <span style="background: white; margin: 2px;">(@subscriber.Value.Item2) @subscriber.Value.Item1</span>
+                                }
+                            }
+                            else
+                            {
+                                <span style="background: white; margin: 2px;">single chained loop</span>
+                            }
                         </div>
-                        foreach (var subscriber in subTokens)
-                        {
-                            <h6>(@subscriber.Value.Item2) @subscriber.Value.Item1</h6>
-                        }
                     }
                 </div>
             }
