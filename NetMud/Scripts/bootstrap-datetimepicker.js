@@ -1,33 +1,8 @@
-/*! version : 4.17.45
- =========================================================
- bootstrap-datetimejs
- https://github.com/Eonasdan/bootstrap-datetimepicker
- Copyright (c) 2015 Jonathan Peterson
- =========================================================
- */
-/*
- The MIT License (MIT)
-
- Copyright (c) 2015 Jonathan Peterson
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- */
+/*!
+  * Bootstrap Datetime Picker v4.17.49
+  * Copyright 2015-2020 Jonathan Peterson
+  * Licensed under MIT (https://github.com/Eonasdan/bootstrap-datetimepicker/blob/master/LICENSE)
+  */
 /*global define:false */
 /*global exports:false */
 /*global require:false */
@@ -947,7 +922,6 @@
 
                 input.blur();
 
-                currentViewMode = 0;
                 viewDate = date.clone();
 
                 return picker;
@@ -1400,9 +1374,9 @@
                 var format = options.format || 'L LT';
 
                 actualFormat = format.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput) {
-                    var newinput = date.LocaleTemplate().longDateFormat(formatInput) || formatInput;
+                    var newinput = date.localeData().longDateFormat(formatInput) || formatInput;
                     return newinput.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g, function (formatInput2) { //temp fix for #740
-                        return date.LocaleTemplate().longDateFormat(formatInput2) || formatInput2;
+                        return date.localeData().longDateFormat(formatInput2) || formatInput2;
                     });
                 });
 
@@ -1803,7 +1777,7 @@
                 return options.locale;
             }
 
-            if (!moment.LocaleTemplate(locale)) {
+            if (!moment.localeData(locale)) {
                 throw new TypeError('locale() locale ' + locale + ' is not loaded from moment locales!');
             }
 
