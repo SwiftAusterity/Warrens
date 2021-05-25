@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Backup;
 using NetMud.CentralControl;
 using NetMud.DataAccess;
@@ -28,8 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -64,7 +61,7 @@ namespace NetMud.Controllers.GameAdmin
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
 
-            DashboardViewModel dashboardModel = new DashboardViewModel
+            DashboardViewModel dashboardModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -167,7 +164,7 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult BackupWorld(string BackupName = "")
         {
-            HotBackup hotBack = new HotBackup();
+            HotBackup hotBack = new();
 
             hotBack.WriteLiveBackup(BackupName);
             Templates.WriteFullBackup(BackupName);
@@ -179,7 +176,7 @@ namespace NetMud.Controllers.GameAdmin
         [Authorize(Roles = "Admin")]
         public ActionResult RestoreWorld()
         {
-            HotBackup hotBack = new HotBackup();
+            HotBackup hotBack = new();
 
             //TODO: Ensure we suspend EVERYTHING going on (fights, etc), add some sort of announcement globally and delay the entire thing on a timer
 
@@ -216,7 +213,7 @@ namespace NetMud.Controllers.GameAdmin
             void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);
             void activityLogger(string message) => LoggingUtility.Log(message, LogChannels.GossipServer);
 
-            GossipClient gossipServer = new GossipClient(gossipConfig, exceptionLogger, activityLogger, playerList);
+            GossipClient gossipServer = new(gossipConfig, exceptionLogger, activityLogger, playerList);
 
             Task.Run(() => gossipServer.Launch());
 

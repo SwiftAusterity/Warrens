@@ -1,5 +1,4 @@
-﻿using System.Web.Optimization;
-
+﻿
 namespace NetMud
 {
     public class BundleConfig

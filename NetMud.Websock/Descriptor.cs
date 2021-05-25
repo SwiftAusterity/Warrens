@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Communication.Messaging;
 using NetMud.Data.Players;
 using NetMud.DataAccess;
@@ -113,7 +111,7 @@ namespace NetMud.Websock
         /// <returns></returns>
         public bool SendSound(string soundUri)
         {
-            OutputStatus outputFormat = new OutputStatus
+            OutputStatus outputFormat = new()
             {
                 SoundToPlay = soundUri
             };
@@ -131,7 +129,7 @@ namespace NetMud.Websock
         public bool SendOutput(IEnumerable<string> strings)
         {
             //TODO: Stop hardcoding this but we have literally no sense of injury/self status yet
-            SelfStatus self = new SelfStatus
+            SelfStatus self = new()
             {
                 Body = new BodyStatus
                 {
@@ -193,14 +191,14 @@ namespace NetMud.Websock
             IEnumerable<string> populace = Enumerable.Empty<string>();
             string locationDescription = string.Empty;
 
-            LexicalContext lexicalContext = new LexicalContext(_currentPlayer)
+            LexicalContext lexicalContext = new(_currentPlayer)
             {
                 Language = _currentPlayer.Template<IPlayerTemplate>().Account.Config.UILanguage,
                 Perspective = NarrativePerspective.SecondPerson,
                 Position = LexicalPosition.Near
             };
 
-            Message toCluster = new Message(currentContainer.RenderToVisible(_currentPlayer));
+            Message toCluster = new(currentContainer.RenderToVisible(_currentPlayer));
 
             if (currentContainer != null)
             {
@@ -210,7 +208,7 @@ namespace NetMud.Websock
                 locationDescription = toCluster.Unpack(TargetEntity.Actor, lexicalContext);
             }
 
-            LocalStatus local = new LocalStatus
+            LocalStatus local = new()
             {
                 ZoneName = currentZone?.TemplateName,
                 LocaleName = currentLocale?.TemplateName,
@@ -222,7 +220,7 @@ namespace NetMud.Websock
             };
 
             //The next two are mostly hard coded, TODO, also fix how we get the map as that's an admin thing
-            ExtendedStatus extended = new ExtendedStatus
+            ExtendedStatus extended = new()
             {
                 Horizon = new string[]
                 {
@@ -240,7 +238,7 @@ namespace NetMud.Websock
             string sun = "0";
             string moon = "0";
             string visibilityString = "5";
-            Tuple<string, string, string[]> weatherTuple = new Tuple<string, string, string[]>("", "", new string[] { });
+            Tuple<string, string, string[]> weatherTuple = new("", "", new string[] { });
 
             if (currentZone != null)
             {
@@ -273,7 +271,7 @@ namespace NetMud.Websock
                 }
             }
 
-            EnvironmentStatus environment = new EnvironmentStatus
+            EnvironmentStatus environment = new()
             {
                 Sun = sun,
                 Moon = moon,
@@ -284,7 +282,7 @@ namespace NetMud.Websock
                 TimeOfDay = timeOfDayString
             };
 
-            OutputStatus outputFormat = new OutputStatus
+            OutputStatus outputFormat = new()
             {
                 Occurrence = EncapsulateOutput(strings),
                 Self = self,
@@ -448,7 +446,7 @@ namespace NetMud.Websock
             //Check the backup
             if (_currentPlayer == null)
             {
-                PlayerData playerDataWrapper = new PlayerData();
+                PlayerData playerDataWrapper = new();
                 _currentPlayer = playerDataWrapper.RestorePlayer(currentCharacter.AccountHandle, currentCharacter);
             }
 
@@ -461,7 +459,7 @@ namespace NetMud.Websock
             _currentPlayer.Descriptor = this;
 
             //We need to barf out to the connected client the welcome message. The client will only indicate connection has been established.
-            List<string> welcomeMessage = new List<string>
+            List<string> welcomeMessage = new()
             {
                 string.Format("Welcome to alpha phase Under the Eclipse, {0}", currentCharacter.FullName()),
                 "Please feel free to LOOK around."
@@ -518,11 +516,11 @@ namespace NetMud.Websock
                 "Microsoft.Owin.Security.Cookies.CookieAuthenticationMiddleware",
                         "ApplicationCookie", "v1");
 
-            using (MemoryStream memory = new MemoryStream(bytes))
+            using (MemoryStream memory = new(bytes))
             {
-                using (GZipStream compression = new GZipStream(memory, CompressionMode.Decompress))
+                using (GZipStream compression = new(memory, CompressionMode.Decompress))
                 {
-                    using (BinaryReader reader = new BinaryReader(compression))
+                    using (BinaryReader reader = new(compression))
                     {
                         reader.ReadInt32(); // Ignoring version here
                         string authenticationType = reader.ReadString();
@@ -552,10 +550,10 @@ namespace NetMud.Websock
                             claims[index] = new Claim(type, value, valueType, issuer, originalIssuer);
                         }
 
-                        ClaimsIdentity identity = new ClaimsIdentity(claims, authenticationType,
+                        ClaimsIdentity identity = new(claims, authenticationType,
                                                               ClaimTypes.Name, ClaimTypes.Role);
 
-                        ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                        ClaimsPrincipal principal = new(identity);
                         _userId = principal.Identity.GetUserId();
                     }
                 }

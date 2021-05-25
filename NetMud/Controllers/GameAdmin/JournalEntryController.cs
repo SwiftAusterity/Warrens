@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Administrative;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.Models.Admin;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -38,7 +35,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageJournalEntriesViewModel vModel = new ManageJournalEntriesViewModel(TemplateCache.GetAll<IJournalEntry>())
+            ManageJournalEntriesViewModel vModel = new(TemplateCache.GetAll<IJournalEntry>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -107,7 +104,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
+            AddEditJournalEntryViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new JournalEntry()
@@ -116,7 +113,7 @@ namespace NetMud.Controllers.GameAdmin
             return View("~/Views/GameAdmin/JournalEntry/Add.cshtml", vModel);
         }
 
-        [ValidateInput(false)]
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(AddEditJournalEntryViewModel vModel)
@@ -142,7 +139,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            AddEditJournalEntryViewModel vModel = new AddEditJournalEntryViewModel
+            AddEditJournalEntryViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -160,7 +157,7 @@ namespace NetMud.Controllers.GameAdmin
             return View("~/Views/GameAdmin/JournalEntry/Edit.cshtml", vModel);
         }
 
-        [ValidateInput(false)]
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(long id, AddEditJournalEntryViewModel vModel)

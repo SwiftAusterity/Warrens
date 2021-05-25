@@ -140,7 +140,7 @@ namespace NetMud.Data.Linguistic
 
             if (recursive)
             {
-                HashSet<ILexica> newMods = new HashSet<ILexica>();
+                HashSet<ILexica> newMods = new();
                 foreach (ILexica mod in lex.Event.Modifiers.Where(mod => mod.Role != GrammaticalType.None && mod.Role != GrammaticalType.Descriptive))
                 {
                     AddEvent(new SensoryEvent(mod, lex.Strength, lex.SensoryType));
@@ -165,10 +165,10 @@ namespace NetMud.Data.Linguistic
             }
 
             IEnumerable<ISensoryEvent> lexes = Unpack();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             //Listable pass rules
-            List<Tuple<ISensoryEvent[], int>> lexList = new List<Tuple<ISensoryEvent[], int>>();
+            List<Tuple<ISensoryEvent[], int>> lexList = new();
             int i = 0;
             foreach (var lexPair in lexes.GroupBy(lexi => new { lexi.Event.Role, lexi.Event.Type, lexi.Event.Context.Position }))
             {
@@ -215,7 +215,7 @@ namespace NetMud.Data.Linguistic
         /// </summary>
         public IEnumerable<ISensoryEvent> Unpack()
         {
-            List<Tuple<ISensoryEvent, int>> wordList = new List<Tuple<ISensoryEvent, int>>();
+            List<Tuple<ISensoryEvent, int>> wordList = new();
 
             //Subject
             foreach (Tuple<ISensoryEvent, short> lex in Subject.OrderBy(pair => pair.Item2))

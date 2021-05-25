@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Gaia;
 using NetMud.Models.Admin;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -38,7 +35,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageGaiaViewModel vModel = new ManageGaiaViewModel(TemplateCache.GetAll<IGaiaTemplate>())
+            ManageGaiaViewModel vModel = new(TemplateCache.GetAll<IGaiaTemplate>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -107,7 +104,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long Template = -1)
         {
-            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(Template)
+            AddEditGaiaViewModel vModel = new(Template)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -145,7 +142,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            AddEditGaiaViewModel vModel = new AddEditGaiaViewModel(ArchivePath, obj)
+            AddEditGaiaViewModel vModel = new(ArchivePath, obj)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

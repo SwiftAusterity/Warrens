@@ -16,7 +16,7 @@ namespace NetMud.Communication.Messaging
         /// </summary>
         private const string colorPattern = "\\%[a-zA-z]+\\%";
 
-        public static Dictionary<string, SupportedColors> ColorGlyphs = new Dictionary<string, SupportedColors> 
+        public static Dictionary<string, SupportedColors> ColorGlyphs = new()
         {
             { "%ST%",   SupportedColors.Bold        },
             { "%IT%",   SupportedColors.Italics     },

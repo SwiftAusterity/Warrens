@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Combat;
 using NetMud.Data.Player;
 using NetMud.Data.Players;
@@ -18,8 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -69,7 +65,7 @@ namespace NetMud.Controllers
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
             Account account = user.GameAccount;
 
-            ManageAccountViewModel model = new ManageAccountViewModel
+            ManageAccountViewModel model = new()
             {
                 AuthedUser = user,
                 DataObject = account,
@@ -131,7 +127,7 @@ namespace NetMud.Controllers
             ViewBag.StatusMessage = message;
 
             string userId = User.Identity.GetUserId();
-            ManageCharactersViewModel model = new ManageCharactersViewModel
+            ManageCharactersViewModel model = new()
             {
                 AuthedUser = UserManager.FindById(userId),
                 NewCharacter = new PlayerTemplate(),
@@ -148,13 +144,13 @@ namespace NetMud.Controllers
         public ActionResult AddCharacter(ManageCharactersViewModel vModel)
         {
             string userId = User.Identity.GetUserId();
-            ManageCharactersViewModel model = new ManageCharactersViewModel
+            ManageCharactersViewModel model = new()
             {
                 AuthedUser = UserManager.FindById(userId),
                 ValidGenders = TemplateCache.GetAll<IGender>()
             };
 
-            PlayerTemplate newChar = new PlayerTemplate
+            PlayerTemplate newChar = new()
             {
                 Name = vModel.NewCharacter.Name,
                 SurName = vModel.NewCharacter.SurName,
@@ -181,7 +177,7 @@ namespace NetMud.Controllers
             ApplicationUser user = UserManager.FindById(userId);
 
             IPlayerTemplate obj = PlayerDataCache.Get(new PlayerDataCacheKey(typeof(IPlayerTemplate), user.GlobalIdentityHandle, id));
-            AddEditCharacterViewModel model = new AddEditCharacterViewModel
+            AddEditCharacterViewModel model = new()
             {
                 AuthedUser  = user,
                 DataObject = obj,
@@ -241,7 +237,7 @@ namespace NetMud.Controllers
             {
 
                 string userId = User.Identity.GetUserId();
-                ManageCharactersViewModel model = new ManageCharactersViewModel
+                ManageCharactersViewModel model = new()
                 {
                     AuthedUser = UserManager.FindById(userId)
                 };
@@ -277,7 +273,7 @@ namespace NetMud.Controllers
 
             IEnumerable<IPlayerMessage> notifications = authedUser.GameAccount.Config.Notifications;
 
-            ManageNotificationsViewModel model = new ManageNotificationsViewModel(notifications)
+            ManageNotificationsViewModel model = new(notifications)
             {
                 AuthedUser = authedUser
             };
@@ -289,7 +285,7 @@ namespace NetMud.Controllers
         public ActionResult AddViewNotification(string id)
         {
             string userId = User.Identity.GetUserId();
-            AddViewNotificationViewModel model = new AddViewNotificationViewModel
+            AddViewNotificationViewModel model = new()
             {
                 AuthedUser = UserManager.FindById(userId)
             };
@@ -340,7 +336,7 @@ namespace NetMud.Controllers
                         }
                         else
                         {
-                            PlayerMessage newMessage = new PlayerMessage
+                            PlayerMessage newMessage = new()
                             {
                                 Body = vModel.Body,
                                 Subject = vModel.Subject,
@@ -456,7 +452,7 @@ namespace NetMud.Controllers
 
             IEnumerable<IAcquaintence> acquaintences = authedUser.GameAccount.Config.Acquaintences;
 
-            ManageAcquaintencesViewModel model = new ManageAcquaintencesViewModel(acquaintences)
+            ManageAcquaintencesViewModel model = new(acquaintences)
             {
                 AuthedUser = authedUser
             };
@@ -478,7 +474,7 @@ namespace NetMud.Controllers
             }
             else
             {
-                List<AcquaintenceNotifications> notificationsList = new List<AcquaintenceNotifications>();
+                List<AcquaintenceNotifications> notificationsList = new();
 
                 foreach (string notification in Notifications.Split(new string[] { "||" }, StringSplitOptions.RemoveEmptyEntries))
                 {
@@ -487,7 +483,7 @@ namespace NetMud.Controllers
                     notificationsList.Add(anShort);
                 }
 
-                Acquaintence newAcq = new Acquaintence
+                Acquaintence newAcq = new()
                 {
                     PersonHandle = AcquaintenceName,
                     IsFriend = IsFriend,
@@ -566,7 +562,7 @@ namespace NetMud.Controllers
         public ActionResult FightingArts(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
             var authedUser = UserManager.FindById(User.Identity.GetUserId());
-            ManageFightingArtViewModel vModel = new ManageFightingArtViewModel(TemplateCache.GetAll<IFightingArt>().Where(art => art.CreatorHandle == authedUser.GlobalIdentityHandle))
+            ManageFightingArtViewModel vModel = new(TemplateCache.GetAll<IFightingArt>().Where(art => art.CreatorHandle == authedUser.GlobalIdentityHandle))
             {
                 AuthedUser = authedUser,
                 CurrentPageNumber = CurrentPageNumber,
@@ -634,7 +630,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult FightingArtAdd()
         {
-            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
+            AddEditFightingArtViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new FightingArt()
@@ -682,7 +678,7 @@ namespace NetMud.Controllers
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
-            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
+            AddEditFightingArtViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
@@ -752,7 +748,7 @@ namespace NetMud.Controllers
         {
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            ManageCombosViewModel vModel = new ManageCombosViewModel(user.GameAccount.Config.Combos)
+            ManageCombosViewModel vModel = new(user.GameAccount.Config.Combos)
             {
                 AuthedUser = user,
                 CurrentPageNumber = CurrentPageNumber,
@@ -804,7 +800,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult AddCombos()
         {
-            AddEditCombosViewModel vModel = new AddEditCombosViewModel
+            AddEditCombosViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new FightingArtCombination()
@@ -847,7 +843,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult EditCombos(string id)
         {
-            AddEditCombosViewModel vModel = new AddEditCombosViewModel
+            AddEditCombosViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -904,7 +900,7 @@ namespace NetMud.Controllers
         {
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
 
-            ManageUIModulesViewModel vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
+            ManageUIModulesViewModel vModel = new(TemplateCache.GetAll<IUIModule>().Where(uimod => uimod.CreatorHandle.Equals(user.GameAccount.GlobalIdentityHandle)))
             {
                 AuthedUser = user,
                 CurrentPageNumber = CurrentPageNumber,
@@ -951,7 +947,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult AddUIModule()
         {
-            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
+            AddEditUIModuleViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -965,7 +961,7 @@ namespace NetMud.Controllers
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            UIModule newObj = new UIModule
+            UIModule newObj = new()
             {
                 Name = vModel.Name,
                 BodyHtml = vModel.BodyHtml,
@@ -990,7 +986,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult EditUIModule(long id)
         {
-            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
+            AddEditUIModuleViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -1059,7 +1055,7 @@ namespace NetMud.Controllers
 
             HashSet<IPlaylist> lists = authedUser.GameAccount.Config.Playlists;
 
-            ManagePlaylistsViewModel model = new ManagePlaylistsViewModel(lists)
+            ManagePlaylistsViewModel model = new(lists)
             {
                 AuthedUser = authedUser
             };
@@ -1075,7 +1071,7 @@ namespace NetMud.Controllers
 
             IPlayerTemplate currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
 
-            AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
+            AddEditPlaylistViewModel vModel = new()
             {
                 AuthedUser = authedUser,
                 ValidSongs = ContentUtility.GetMusicTracksForZone(currentCharacter?.CurrentLocation?.CurrentZone)
@@ -1098,7 +1094,7 @@ namespace NetMud.Controllers
                 message = "Your playlist needs at least one song in it.";
             else
             {
-                Playlist playlist = new Playlist()
+                Playlist playlist = new()
                 {
                     Name = vModel.Name,
                     Songs = new HashSet<string>(vModel.SongList)
@@ -1131,7 +1127,7 @@ namespace NetMud.Controllers
             }
 
             IPlayerTemplate currentCharacter = authedUser.GameAccount.Characters.FirstOrDefault(chr => chr.Id == authedUser.GameAccount.CurrentlySelectedCharacter);
-            AddEditPlaylistViewModel vModel = new AddEditPlaylistViewModel
+            AddEditPlaylistViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 Name = obj.Name,
@@ -1158,7 +1154,7 @@ namespace NetMud.Controllers
 
             authedUser.GameAccount.Config.Playlists.Remove(obj);
 
-            Playlist playlist = new Playlist()
+            Playlist playlist = new()
             {
                 Name = vModel.Name,
                 Songs = new HashSet<string>(vModel.SongList)

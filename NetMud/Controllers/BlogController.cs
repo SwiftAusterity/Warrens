@@ -1,15 +1,11 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.Models;
-using NetMud.Utility;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -79,7 +75,7 @@ namespace NetMud.Controllers
                 filteredEntries = validEntries;
             }
 
-            BlogViewModel vModel = new BlogViewModel(filteredEntries.OrderByDescending(obj => obj.PublishDate))
+            BlogViewModel vModel = new(filteredEntries.OrderByDescending(obj => obj.PublishDate))
              {
                 AuthedUser = user,
                 MonthYearPairs = validEntries.Select(blog => new Tuple<string, int>(blog.PublishDate.ToString("MMMM", CultureInfo.InvariantCulture), blog.PublishDate.Year)).Distinct(),

@@ -33,7 +33,7 @@ namespace NetMud.Commands.EntityManipulation
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
 
             if (!(Actor is IContains actorContainer))
             {
@@ -71,7 +71,7 @@ namespace NetMud.Commands.EntityManipulation
 
                 ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-                Message messagingObject = new Message(toActor);
+                Message messagingObject = new(toActor);
 
                 messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -94,7 +94,7 @@ namespace NetMud.Commands.EntityManipulation
 
                 ILexicalParagraph toOrigin = new LexicalParagraph(string.Format("$A$ crafts {0} {1}{2}.", itemToMake.Produces, itemToMake.Name, itemToMake.Produces > 1 ? "s" : ""));
 
-                Message messagingObject = new Message(toActor)
+                Message messagingObject = new(toActor)
                 {
                     ToOrigin = new List<ILexicalParagraph> { toOrigin }
                 };
@@ -113,7 +113,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: craft &lt;item name&gt;",
                 "craft &lt;?&gt;".PadWithString(14, "&nbsp;", true),

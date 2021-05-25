@@ -27,7 +27,7 @@ namespace NetMud.Commands.EntityManipulation
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
             bool wantsSellSheet = Subject == null || string.IsNullOrWhiteSpace(Subject.ToString()) || Subject.ToString() != "buy";
 
             if (Target == null)
@@ -68,7 +68,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: list &lt;direction&gt;",
                 "list &lt;direction&gt; buy|sell".PadWithString(14, "&nbsp;", true)

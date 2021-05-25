@@ -2,7 +2,6 @@
 using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
-using NetMud.Data.Linguistic;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -15,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.NaturalResource
 {
@@ -28,7 +26,7 @@ namespace NetMud.Data.NaturalResource
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
@@ -311,7 +309,7 @@ namespace NetMud.Data.NaturalResource
             {
                 SensoryType = type,
                 Strength = strength,
-                Event = new Lexica() { Phrase = Name, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
+                Event = new Linguistic.Lexica() { Phrase = Name, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
             };
         }
         #endregion
@@ -684,7 +682,7 @@ namespace NetMud.Data.NaturalResource
 
         public virtual ILexicalParagraph RenderResourceCollection(IEntity viewer, int amount)
         {
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -694,7 +692,7 @@ namespace NetMud.Data.NaturalResource
             };
 
             ISensoryEvent me = GetImmediateDescription(viewer, MessagingType.Visible);
-            me.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), collectiveContext));
+            me.TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, amount.ToString(), collectiveContext));
 
             return new LexicalParagraph(me);
         }

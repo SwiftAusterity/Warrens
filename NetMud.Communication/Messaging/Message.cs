@@ -103,7 +103,7 @@ namespace NetMud.Communication.Messaging
         /// <param name="DestinationLocation">The location the command is targetting</param>
         public void ExecuteMessaging(IEntity Actor, IEntity Subject, IEntity Target, IEntity OriginLocation, IEntity DestinationLocation, bool coallate = false)
         {
-            Dictionary<MessagingTargetType, IEntity[]> entities = new Dictionary<MessagingTargetType, IEntity[]>
+            Dictionary<MessagingTargetType, IEntity[]> entities = new()
             {
                 { MessagingTargetType.Actor, new IEntity[] { Actor } },
                 { MessagingTargetType.Subject, new IEntity[] { Subject } },

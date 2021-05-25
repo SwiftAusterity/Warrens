@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.Models.Admin;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -38,7 +35,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageRaceDataViewModel vModel = new ManageRaceDataViewModel(TemplateCache.GetAll<IRace>())
+            ManageRaceDataViewModel vModel = new(TemplateCache.GetAll<IRace>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -108,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long Template = -1)
         {
-            AddEditRaceViewModel vModel = new AddEditRaceViewModel(Template)
+            AddEditRaceViewModel vModel = new(Template)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -148,7 +145,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            AddEditRaceViewModel vModel = new AddEditRaceViewModel(ArchivePath, obj)
+            AddEditRaceViewModel vModel = new(ArchivePath, obj)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

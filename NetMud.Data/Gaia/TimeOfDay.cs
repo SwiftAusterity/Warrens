@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gaia
 {
@@ -14,7 +13,7 @@ namespace NetMud.Data.Gaia
     public class TimeOfDay : ITimeOfDay
     {
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IChronology BaseChronology { get; set; }
 
         /// <summary>

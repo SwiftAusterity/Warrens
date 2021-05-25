@@ -2,7 +2,6 @@
 using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -15,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.NaturalResource
 {
@@ -48,7 +46,7 @@ namespace NetMud.Data.NaturalResource
         /// What is the solid, crystallized form of this
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [NonNullableDataIntegrity("Rock must have a value.")]
         [Display(Name = "Rock", Description = "What object is used to refer to this in rock form.")]
         [UIHint("MaterialList")]
@@ -72,7 +70,7 @@ namespace NetMud.Data.NaturalResource
         /// What is the scattered, ground form of this
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [NonNullableDataIntegrity("Dirt must have a value.")]
         [Display(Name = "Dirt", Description = "What object is used to refer to this in dirt form.")]
         [UIHint("MaterialList")]
@@ -96,7 +94,7 @@ namespace NetMud.Data.NaturalResource
         /// What medium minerals this can spawn in
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [Display(Name = "Ores", Description = "What ores this contains when mined as rock.")]
         [UIHint("CollectionMineralList")]
         [MineralCollectionDataBinder]
@@ -178,7 +176,7 @@ namespace NetMud.Data.NaturalResource
                 return new LexicalParagraph();
             }
 
-            LexicalContext personalContext = new LexicalContext(viewer)
+            LexicalContext personalContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -187,7 +185,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -196,7 +194,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -222,12 +220,12 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "enormous";
             }
 
-            SensoryEvent observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", personalContext), 0, MessagingType.Visible)
+            SensoryEvent observer = new(new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", personalContext), 0, MessagingType.Visible)
             {
                 Strength = GetVisibleDelta(viewer)
             };
 
-            SensoryEvent collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "outcropping", personalContext),
+            SensoryEvent collectiveNoun = new(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "outcropping", personalContext),
                                                 GetVisibleDelta(viewer), MessagingType.Visible);
 
             ISensoryEvent me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
@@ -236,11 +234,11 @@ namespace NetMud.Data.NaturalResource
 
             collectiveNoun.TryModify(me);
 
-            SensoryEvent senseVerb = new SensoryEvent(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", personalContext), me.Strength, MessagingType.Visible);
+            SensoryEvent senseVerb = new(new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", personalContext), me.Strength, MessagingType.Visible);
 
             if (!string.IsNullOrWhiteSpace(sizeWord))
             {
-                collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
+                collectiveNoun.TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
             }
 
             senseVerb.TryModify(collectiveNoun);

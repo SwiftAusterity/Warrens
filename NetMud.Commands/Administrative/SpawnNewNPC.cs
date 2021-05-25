@@ -37,7 +37,7 @@ namespace NetMud.Commands.System
         internal override bool ExecutionBody()
         {
             INonPlayerCharacterTemplate newObject = (INonPlayerCharacterTemplate)Subject;
-            List<string> sb = new List<string>();
+            List<string> sb = new();
             IGlobalPosition spawnTo;
 
             //No target = spawn to room you're in
@@ -78,7 +78,7 @@ namespace NetMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 string.Format("Valid Syntax: spawnNewNPC &lt;NPC name&gt;"),
                 "spawnNewNPC  &lt;NPC name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true)

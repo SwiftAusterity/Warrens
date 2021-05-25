@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
 {
@@ -42,7 +41,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -66,7 +65,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Gender data string for player characters
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Gender is required.")]
         [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
@@ -104,14 +103,14 @@ namespace NetMud.Data.Players
 
         #endregion
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private LiveCacheKey _descriptorKey;
 
         /// <summary>
         /// The connection the player is using to chat with us
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IDescriptor Descriptor
         {
@@ -136,7 +135,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Type of connection this has, doesn't get saved as it's transitory information
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override IChannelType ConnectionType
         {
@@ -266,21 +265,21 @@ namespace NetMud.Data.Players
         /// <summary>
         /// How much stagger this currently has
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public int Stagger { get; set; }
 
         /// <summary>
         /// How much stagger resistance this currently has
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public int Sturdy { get; set; }
 
         /// <summary>
         /// How off balance this is. Positive is forward leaning, negative is backward leaning, 0 is in balance
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public int Balance { get; set; }
 
@@ -292,49 +291,49 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Is the current attack executing
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public bool Executing { get; set; }
 
         /// <summary>
         /// Last attack executed
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IFightingArt LastAttack { get; set; }
 
         /// <summary>
         /// Last combo used for attacking
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IFightingArtCombination LastCombo { get; set; }
 
         /// <summary>
         /// Who you're primarily attacking
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IMobile PrimaryTarget { get; set; }
 
         /// <summary>
         /// Who you're fighting in general
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public HashSet<Tuple<IMobile, int>> EnemyGroup { get; set; }
 
         /// <summary>
         /// Who you're support/tank focus is
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IMobile PrimaryDefending { get; set; }
 
         /// <summary>
         /// Who is in your group
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public HashSet<IMobile> AllianceGroup { get; set; }
 
@@ -652,7 +651,7 @@ namespace NetMud.Data.Players
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            List<T> contents = new List<T>();
+            List<T> contents = new();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -677,7 +676,7 @@ namespace NetMud.Data.Players
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            List<T> contents = new List<T>();
+            List<T> contents = new();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -995,7 +994,7 @@ namespace NetMud.Data.Players
         {
             try
             {
-                PlayerData dataAccessor = new PlayerData();
+                PlayerData dataAccessor = new();
                 dataAccessor.WriteOnePlayer(this);
             }
             catch

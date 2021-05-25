@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebSockets;
-using NetMud.DataStructure.System;
+﻿using NetMud.DataStructure.System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -113,7 +112,7 @@ namespace NetMud.Websock
         /// <returns>a single string blob of all the output encapsulated</returns>
         public string EncapsulateOutput(IEnumerable<string> lines)
         {
-            StringBuilder returnString = new StringBuilder();
+            StringBuilder returnString = new();
 
             foreach (string line in lines)
             {

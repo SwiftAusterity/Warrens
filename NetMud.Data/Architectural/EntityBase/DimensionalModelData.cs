@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -22,7 +21,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.ReviewOnly; } }
 
@@ -155,7 +154,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 short yCount = 21;
                 foreach (string myString in delimitedPlanes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    DimensionalModelPlane newPlane = new DimensionalModelPlane();
+                    DimensionalModelPlane newPlane = new();
                     string[] currentLineNodes = myString.Split(new char[] { ',' });
 
                     //Name is first
@@ -165,7 +164,7 @@ namespace NetMud.Data.Architectural.EntityBase
                     short xCount = 1;
                     foreach (string nodeString in currentLineNodes.Skip(1))
                     {
-                        DimensionalModelNode newNode = new DimensionalModelNode();
+                        DimensionalModelNode newNode = new();
                         string[] nodeStringComponents = nodeString.Split(new char[] { '|' });
 
                         newNode.XAxis = xCount;

@@ -3,7 +3,6 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -21,7 +20,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// When the from word is specifically this
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Origin Word", Description = "When the origin word is specifically this.")]
         [UIHint("DictataList")]
@@ -55,7 +54,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// When the from word is specifically this
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Specific Word", Description = "When the following word is specifically this.")]
         [UIHint("DictataList")]
@@ -106,7 +105,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The word this turns into
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Transformed Word", Description = "The word this turns into.")]
         [UIHint("DictataList")]

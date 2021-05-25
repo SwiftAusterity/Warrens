@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -9,8 +7,7 @@ using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -41,7 +38,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageDictionaryViewModel vModel = new ManageDictionaryViewModel(ConfigDataCache.GetAll<ILexeme>())
+            ManageDictionaryViewModel vModel = new(ConfigDataCache.GetAll<ILexeme>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -105,7 +102,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel()
+            AddEditDictionaryViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -145,7 +142,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            AddEditDictionaryViewModel vModel = new AddEditDictionaryViewModel(obj.WordForms)
+            AddEditDictionaryViewModel vModel = new(obj.WordForms)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = (Lexeme)obj
@@ -204,13 +201,13 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            Lexeme relatedLex = new Lexeme
+            Lexeme relatedLex = new()
             {
                 Name = vModel.Word,
                 Language = lex.Language
             };
 
-            Dictata relatedWord = new Dictata()
+            Dictata relatedWord = new()
             {
                 Name = vModel.Word,
                 Severity = dict.Severity + vModel.Severity,
@@ -324,7 +321,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            AddEditDictataViewModel vModel = new AddEditDictataViewModel(lex)
+            AddEditDictataViewModel vModel = new(lex)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -373,7 +370,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            AddEditDictataViewModel vModel = new AddEditDictataViewModel(lex, obj)
+            AddEditDictataViewModel vModel = new(lex, obj)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

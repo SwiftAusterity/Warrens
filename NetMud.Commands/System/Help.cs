@@ -46,7 +46,7 @@ namespace NetMud.Commands.System
 
             ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
-            Message messagingObject = new Message(toActor);
+            Message messagingObject = new(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -59,7 +59,7 @@ namespace NetMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 string.Format("Valid Syntax: help &lt;topic&gt;")
             };
@@ -81,7 +81,7 @@ namespace NetMud.Commands.System
 
         private IList<string> GetHelpHeader(IHelpful subject)
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
             string subjectName = subject.GetType().Name;
             string typeName = "Help";
 

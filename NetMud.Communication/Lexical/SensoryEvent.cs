@@ -154,7 +154,7 @@ namespace NetMud.Communication.Lexical
         /// <returns>A long description</returns>
         public IEnumerable<ILexicalSentence> Unpack(LexicalContext overridingContext = null, bool anonymize = false)
         {
-            List<ILexicalSentence> sentences = new List<ILexicalSentence>();
+            List<ILexicalSentence> sentences = new();
 
             //short circuit empty lexica
             if (string.IsNullOrWhiteSpace(Event?.Phrase))
@@ -195,7 +195,7 @@ namespace NetMud.Communication.Lexical
                 Event.Type = LexicalType.Pronoun;
             }
 
-            List<ILexica> subjects = new List<ILexica>
+            List<ILexica> subjects = new()
             {
                 Event
             };
@@ -260,7 +260,7 @@ namespace NetMud.Communication.Lexical
 
         private ILexica RunObscura(MessagingType sensoryType, ILexica subject, IEntity observer, bool over)
         {
-            LexicalContext context = new LexicalContext(observer)
+            LexicalContext context = new(observer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.FirstPerson,

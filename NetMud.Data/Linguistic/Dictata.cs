@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -22,7 +21,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The unique key language_name_id
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public string UniqueKey => string.Format("{0}_{1}_{2}", Language.Name, Name, FormGroup);
 
@@ -44,7 +43,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The language this is derived from
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Language", Description = "The language this is in.")]
         [UIHint("LanguageList")]
@@ -199,7 +198,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Things this is the same as mostly
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Synonyms", Description = "The synonyms (similar) of this word/phrase.")]
         [UIHint("CollectionSynonymList")]
@@ -234,7 +233,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// Things this is specifically opposite of mostly
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Antonyms", Description = "The antonyms (opposite) of this word/phrase.")]
         [UIHint("CollectionDictataList")]
@@ -371,7 +370,7 @@ namespace NetMud.Data.Linguistic
         /// <returns></returns>
         public ILexica GetLexica(GrammaticalType role, LexicalContext context)
         {
-            return new Lexica(WordType, role, Name, context);
+            return new Linguistic.Lexica(WordType, role, Name, context);
         }
 
         /// <summary>

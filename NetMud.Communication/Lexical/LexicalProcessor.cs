@@ -1,4 +1,5 @@
-﻿using NetMud.DataAccess;
+﻿using Microsoft.AspNetCore.Http;
+using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
@@ -12,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace NetMud.Communication.Lexical
 {
@@ -22,7 +22,7 @@ namespace NetMud.Communication.Lexical
     public static class LexicalProcessor
     {
         private static readonly ObjectCache globalCache = MemoryCache.Default;
-        private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
+        private static readonly CacheItemPolicy globalPolicy = new();
         private static readonly string wordNetTokenCacheKey = "WordNetHarness";
         private static readonly string mirriamWebsterTokenCacheKey = "MirriamHarness";
 
@@ -83,7 +83,7 @@ namespace NetMud.Communication.Lexical
         {
             word = word.ToLower();
 
-            Regex rgx = new Regex("[^a-z -]");
+            Regex rgx = new("[^a-z -]");
 
             if (rgx.IsMatch(word))
             {
@@ -403,7 +403,7 @@ namespace NetMud.Communication.Lexical
 
         public static void LoadWordnet()
         {
-            string wordNetPath = HttpContext.Current.Server.MapPath("/FileStore/wordnet/");
+            string wordNetPath = "";//HttpContext.Current.Server.MapPath("/FileStore/wordnet/");
 
             if (!Directory.Exists(wordNetPath))
             {

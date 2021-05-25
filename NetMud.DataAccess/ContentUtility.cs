@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.Hosting;
 
 namespace NetMud.DataAccess
 {
@@ -24,10 +23,10 @@ namespace NetMud.DataAccess
 
             if (VerifyDirectory(BaseMusicDirectoryName))
             {
-                names = Directory.EnumerateFiles(HostingEnvironment.MapPath(BaseMusicDirectoryName), "*.mp3", SearchOption.TopDirectoryOnly);
+               // names = Directory.EnumerateFiles(HostingEnvironment.MapPath(BaseMusicDirectoryName), "*.mp3", SearchOption.TopDirectoryOnly);
             }
 
-            Dictionary<string, string> returnValues = new Dictionary<string, string>();
+            Dictionary<string, string> returnValues = new();
 
             foreach(string uri in names)
             {
@@ -56,7 +55,7 @@ namespace NetMud.DataAccess
 
             try
             {
-                return Directory.Exists(HostingEnvironment.MapPath(mappedName));
+                return false;// Directory.Exists(HostingEnvironment.MapPath(mappedName));
             }
             catch (Exception ex)
             {

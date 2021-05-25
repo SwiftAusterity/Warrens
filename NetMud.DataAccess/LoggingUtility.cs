@@ -55,7 +55,7 @@ namespace NetMud.DataAccess
         /// <returns>a list of the log file names</returns>
         public static IEnumerable<string> GetCurrentLogNames()
         {
-            Logger logger = new Logger();
+            Logger logger = new();
 
             return logger.GetCurrentLogNames();
         }
@@ -67,7 +67,7 @@ namespace NetMud.DataAccess
         /// <returns>the content</returns>
         public static string GetCurrentLogContent(string channel)
         {
-            Logger logger = new Logger();
+            Logger logger = new();
 
             return logger.GetCurrentLogContent(channel);
         }
@@ -90,7 +90,7 @@ namespace NetMud.DataAccess
         /// <returns>success status</returns>
         public static bool RolloverLog(string channel)
         {
-            Logger logger = new Logger();
+            Logger logger = new();
 
             return logger.RolloverLog(channel);
         }
@@ -103,7 +103,7 @@ namespace NetMud.DataAccess
         /// <param name="keepItQuiet">Announce it in game or not</param>
         private static void CommitLog(string content, string channel, bool keepItQuiet)
         {
-            Logger logger = new Logger();
+            Logger logger = new();
 
             logger.WriteToLog(content, channel, keepItQuiet);
         }

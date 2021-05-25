@@ -6,7 +6,6 @@ using NetMud.DataStructure.Player;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
 namespace NetMud.Models.Admin
 {
@@ -67,7 +66,6 @@ namespace NetMud.Models.Admin
         [StringLength(8000, ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body Content (HTML)", Description = "HTML, css and javascript which drives your module.")]
         [DataType(DataType.MultilineText)]
-        [AllowHtml]
         public string BodyHtml { get; set; }
 
         [Range(100, 1000, ErrorMessage = "The {0} must be between {2} and {1}.")]

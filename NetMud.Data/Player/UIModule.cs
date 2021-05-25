@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Player
 {
@@ -21,7 +20,7 @@ namespace NetMud.Data.Player
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 

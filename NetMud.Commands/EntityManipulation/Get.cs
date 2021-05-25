@@ -30,7 +30,7 @@ namespace NetMud.Commands.EntityManipulation
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
             IEntity thing = (IEntity)Subject;
             IContains actor = (IContains)Actor;
             IContains place;
@@ -56,7 +56,7 @@ namespace NetMud.Commands.EntityManipulation
 
             ILexicalParagraph toOrigin = new LexicalParagraph(toRoomMessage);
 
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new(toActor)
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin }
             };
@@ -72,7 +72,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: get &lt;object&gt;",
                 "take &lt;object&gt;".PadWithString(14, "&nbsp;", true),

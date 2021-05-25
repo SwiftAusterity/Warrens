@@ -43,7 +43,7 @@ namespace NetMud.Data.Inanimate
             FullStackSize = thePile.Count();
             Item = thePile.First().Template<IInanimateTemplate>();
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             IInanimate plainItem = thePile.FirstOrDefault(item => item.Qualities == null || item.Qualities.Count() == 0);
 

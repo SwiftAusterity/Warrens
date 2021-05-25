@@ -1,5 +1,4 @@
 ﻿using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Gaia;
 using NetMud.Data.Inanimate;
 using NetMud.Data.Locale;
 using NetMud.Data.NPC;
@@ -37,7 +36,7 @@ namespace NetMud.Backup
         /// <returns>success state</returns>
         public bool NewWorldFallback()
         {
-            LiveData liveDataAccessor = new LiveData();
+            LiveData liveDataAccessor = new();
 
             //This means we delete the entire Current livedata dir since we're falling back.
             string currentLiveDirectory = liveDataAccessor.BaseDirectory + liveDataAccessor.CurrentDirectoryName;
@@ -45,7 +44,7 @@ namespace NetMud.Backup
             //No backup directory? No live data.
             if (Directory.Exists(currentLiveDirectory))
             {
-                DirectoryInfo currentDir = new DirectoryInfo(currentLiveDirectory);
+                DirectoryInfo currentDir = new(currentLiveDirectory);
 
                 LoggingUtility.Log("Current Live directory deleted during New World Fallback Procedures.", LogChannels.Backup, true);
 
@@ -149,7 +148,7 @@ namespace NetMud.Backup
         /// <returns>Success state</returns>
         public bool WriteLiveBackup(string backupName)
         {
-            LiveData liveDataAccessor = new LiveData();
+            LiveData liveDataAccessor = new();
 
             try
             {
@@ -175,7 +174,7 @@ namespace NetMud.Backup
         /// <returns>whether or not it succeeded</returns>
         public bool WritePlayers()
         {
-            PlayerData playerAccessor = new PlayerData();
+            PlayerData playerAccessor = new();
             try
             {
                 LoggingUtility.Log("All Players backup INITIATED.", LogChannels.Backup, true);
@@ -205,7 +204,7 @@ namespace NetMud.Backup
         /// <returns>Success state</returns>
         public bool RestoreLiveBackup()
         {
-            LiveData liveDataAccessor = new LiveData();
+            LiveData liveDataAccessor = new();
 
             string currentBackupDirectory = liveDataAccessor.BaseDirectory + liveDataAccessor.CurrentDirectoryName;
 
@@ -220,13 +219,13 @@ namespace NetMud.Backup
             try
             {
                 //dont load players here
-                List<IEntity> entitiesToLoad = new List<IEntity>();
+                List<IEntity> entitiesToLoad = new();
                 IEnumerable<Type> implimentedTypes = typeof(EntityPartial).Assembly.GetTypes().Where(ty => ty.GetInterfaces().Contains(typeof(IEntity))
                                                                                                 && ty.IsClass
                                                                                                 && !ty.IsAbstract
                                                                                                 && !ty.GetCustomAttributes<IgnoreAutomatedBackupAttribute>().Any());
 
-                foreach (Type type in implimentedTypes.OrderByDescending(type => type == typeof(Gaia) ? 6 :
+                foreach (Type type in implimentedTypes.OrderByDescending(type => type == typeof(Data.Gaia.Gaia) ? 6 :
                                                                                 type == typeof(Zone) ? 5 :
                                                                                 type == typeof(Locale) ? 4 :
                                                                                 type == typeof(Room) ? 3 :
@@ -237,7 +236,7 @@ namespace NetMud.Backup
                         continue;
                     }
 
-                    DirectoryInfo entityFilesDirectory = new DirectoryInfo(currentBackupDirectory + type.Name);
+                    DirectoryInfo entityFilesDirectory = new(currentBackupDirectory + type.Name);
 
                     foreach (FileInfo file in entityFilesDirectory.EnumerateFiles())
                     {
@@ -246,7 +245,7 @@ namespace NetMud.Backup
                 }
 
                 //Check we found actual data
-                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Gaia)))
+                if (!entitiesToLoad.Any(ent => ent.GetType() == typeof(Data.Gaia.Gaia)))
                 {
                     throw new Exception("No Worlds found, failover.");
                 }
@@ -398,7 +397,7 @@ namespace NetMud.Backup
 
         private void ParseDimension()
         {
-            HashSet<ILocaleTemplate> localePool = new HashSet<ILocaleTemplate>(TemplateCache.GetAll<ILocaleTemplate>());
+            HashSet<ILocaleTemplate> localePool = new(TemplateCache.GetAll<ILocaleTemplate>());
 
             foreach (ILocaleTemplate locale in localePool)
             {

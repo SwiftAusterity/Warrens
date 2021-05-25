@@ -19,7 +19,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Web;
+using AlloyTemplates;
 
 namespace NetMud
 {
@@ -79,7 +79,7 @@ namespace NetMud
             ProcessSystemVerbs(globalConfig.BaseLanguage);
 
             IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
-            HttpApplication instance = HttpContext.Current.ApplicationInstance;
+            HttpApplication instance = HttpContextHelper.Current.ApplicationInstance;
             Assembly asm = instance.GetType().BaseType.Assembly;
             Version v = asm.GetName().Version;
 
@@ -99,7 +99,7 @@ namespace NetMud
             //Load structural data next
             Templates.LoadEverythingToCache();
 
-            HotBackup hotBack = new HotBackup();
+            HotBackup hotBack = new();
 
             //Our live data restore failed, reload the entire world from backing data
             if (!hotBack.RestoreLiveBackup())
@@ -122,7 +122,7 @@ namespace NetMud
                 void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);
                 void activityLogger(string message) => LoggingUtility.Log(message, LogChannels.GossipServer);
 
-                GossipClient gossipServer = new GossipClient(gossipConfig, exceptionLogger, activityLogger, playerList);
+                GossipClient gossipServer = new(gossipConfig, exceptionLogger, activityLogger, playerList);
 
                 Task.Run(() => gossipServer.Launch());
 

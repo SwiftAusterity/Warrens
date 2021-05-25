@@ -1,6 +1,5 @@
 ﻿using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
-using NetMud.Data.Linguistic;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.DataStructure.Linguistic;
@@ -338,7 +337,7 @@ namespace NetMud.Data.Zone
 
             ISensoryEvent me = GetSelf(MessagingType.Visible, strength);
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -347,7 +346,7 @@ namespace NetMud.Data.Zone
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -356,7 +355,7 @@ namespace NetMud.Data.Zone
                 Tense = LexicalTense.Present
             };
 
-            Lexica verb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads", collectiveContext);
+            ILexica verb = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "leads", collectiveContext);
 
             me.Event.TryModify(verb);
 
@@ -375,7 +374,7 @@ namespace NetMud.Data.Zone
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            LexicalContext skyContext = new LexicalContext(viewer)
+            LexicalContext skyContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.None,
@@ -412,7 +411,7 @@ namespace NetMud.Data.Zone
 
                         me.TryModify(audibleDescs);
 
-                        me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
+                        me.TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                     case MessagingType.Olefactory:
                         IEnumerable<ISensoryEvent> smellDescs = GetOlefactoryDescriptives(viewer);
@@ -426,7 +425,7 @@ namespace NetMud.Data.Zone
 
                         me.TryModify(smellDescs);
 
-                        me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
+                        me.TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                     case MessagingType.Tactile:
                         IEnumerable<ISensoryEvent> touchDescs = GetTouchDescriptives(viewer);
@@ -439,7 +438,7 @@ namespace NetMud.Data.Zone
 
                         me.TryModify(touchDescs);
 
-                        me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
+                        me.TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                     case MessagingType.Psychic:
                     case MessagingType.Taste:
@@ -449,7 +448,7 @@ namespace NetMud.Data.Zone
 
                         me.TryModify(GetVisibleDescriptives(viewer));
 
-                        me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
+                        me.TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                 }
 
@@ -572,7 +571,7 @@ namespace NetMud.Data.Zone
             {
                 SensoryType = type,
                 Strength = strength,
-                Event = new Lexica() { Phrase = Type.ToString(), Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
+                Event = new Linguistic.Lexica() { Phrase = Type.ToString(), Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
             };
         }
         #endregion

@@ -30,8 +30,8 @@ namespace NetMud.Utility
         {
             JsonSerializer serializer = GetSerializer();
 
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
+            StringBuilder sb = new();
+            StringWriter writer = new(sb);
 
             serializer.Serialize(writer, thingToSerialize);
 

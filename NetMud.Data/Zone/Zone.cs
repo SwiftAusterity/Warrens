@@ -2,7 +2,6 @@
 using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
@@ -22,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Zone
 {
@@ -36,7 +34,7 @@ namespace NetMud.Data.Zone
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -75,7 +73,7 @@ namespace NetMud.Data.Zone
         public int BaseElevation { get; set; }
 
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IMap _map { get; set; }
 
         public IMap Map
@@ -143,7 +141,7 @@ namespace NetMud.Data.Zone
         /// <param name="target">the target</param>
         public void BroadcastEvent(string message, IEntity sender = null, IEntity subject = null, IEntity target = null)
         {
-            Message mc = new Message
+            Message mc = new()
             {
                 ToOrigin = new List<ILexicalParagraph>() { new LexicalParagraph(message) }
             };
@@ -205,7 +203,7 @@ namespace NetMud.Data.Zone
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -214,7 +212,7 @@ namespace NetMud.Data.Zone
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -224,7 +222,7 @@ namespace NetMud.Data.Zone
             };
 
             //Self becomes the first sense in the list
-            List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
+            List<ISensoryEvent> sensoryOutput = new();
             foreach (MessagingType sense in sensoryTypes)
             {
                 ISensoryEvent me = GetSelf(sense);
@@ -242,12 +240,12 @@ namespace NetMud.Data.Zone
 
                         me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberSounds = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
+                        ILexica uberSounds = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
                         uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberSounds.TryModify(newDesc);
@@ -271,12 +269,12 @@ namespace NetMud.Data.Zone
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
+                        ILexica uberSmells = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
                         uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberSmells.TryModify(newDesc);
@@ -300,14 +298,14 @@ namespace NetMud.Data.Zone
 
                         me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
+                        ILexica collectivePsy = new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
 
                         ILexica uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
                         uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberPsy.TryModify(newDesc);
@@ -325,9 +323,9 @@ namespace NetMud.Data.Zone
                         me.Strength = GetTactileDelta(viewer);
 
                         //Add the temperature
-                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
-                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
-                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
+                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Linguistic.Lexica[] {
+                            new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
+                            new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
                         });
 
                         break;
@@ -340,14 +338,14 @@ namespace NetMud.Data.Zone
                         {
                             me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                            Lexica collectiveSight = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
+                            ILexica collectiveSight = new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
 
                             ILexica uberSight = collectiveSight.TryModify(LexicalType.Verb, GrammaticalType.Verb, "see");
                             uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                             foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                             {
-                                Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                                ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                                 newDesc.TryModify(desc.Event.Modifiers);
 
                                 uberSight.TryModify(newDesc);
@@ -479,7 +477,7 @@ namespace NetMud.Data.Zone
             IZoneTemplate zD = Template<IZoneTemplate>();
             bool canSeeSky = IsOutside(); //TODO: cloud cover
 
-            List<ICelestial> returnList = new List<ICelestial>();
+            List<ICelestial> returnList = new();
 
             if (!canSeeSky)
                 return returnList;
@@ -518,7 +516,7 @@ namespace NetMud.Data.Zone
         {
             PrecipitationAmount pAmount = PrecipitationAmount.Clear;
             PrecipitationType pType = PrecipitationType.Clear;
-            HashSet<WeatherType> wTypes = new HashSet<WeatherType>();
+            HashSet<WeatherType> wTypes = new();
 
             float totalRainVolume = WeatherEvents.Where(wev => wev.Type != WeatherEventType.Tectonic).Sum(wev => wev.PrecipitationAmount);
             float totalStrength = WeatherEvents.Where(wev => wev.Type != WeatherEventType.Tectonic).Sum(wev => wev.Strength);
@@ -771,7 +769,7 @@ namespace NetMud.Data.Zone
 
         private bool AdvanceResources()
         {
-            Random rand = new Random();
+            Random rand = new();
             IZoneTemplate bS = Template<IZoneTemplate>();
 
             if (FloraNaturalResources.Count() == 0 && bS.FloraResourceSpawn.Count() != 0)

@@ -40,7 +40,7 @@ namespace NetMud.Commands.Social
 
         internal override bool ExecutionBody()
         {
-            Message messagingObject = new Message(new LexicalParagraph("You get laid, fucked, fapfapfap."));
+            Message messagingObject = new(new LexicalParagraph("You get laid, fucked, fapfapfap."));
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -49,7 +49,7 @@ namespace NetMud.Commands.Social
 
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: laid"
             };

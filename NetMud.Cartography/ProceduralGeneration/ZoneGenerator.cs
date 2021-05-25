@@ -115,7 +115,7 @@ namespace NetMud.Cartography.ProceduralGeneration
             VerifyLocale(locale);
             VerifyDimensions(width, length, elevation, depth);
 
-            Random rand = new Random();
+            Random rand = new();
             _randomizer = new Random(Seed);
 
             Seed = rand.Next(10000);
@@ -135,7 +135,7 @@ namespace NetMud.Cartography.ProceduralGeneration
         {
             //We'll build the potential rooms first just using strings
             string[,,] prototypeMap = new string[Width * 3 + 1, Length * 3 + 1, (Elevation + Depth) * 3 + 1];
-            Tuple<int, int, int> center = new Tuple<int, int, int>(Width * 3 / 2 + 1, Length * 3 / 2 + 1, (Elevation + Depth) * 3 / 2 + 1);
+            Tuple<int, int, int> center = new(Width * 3 / 2 + 1, Length * 3 / 2 + 1, (Elevation + Depth) * 3 / 2 + 1);
 
             //Find the absolute max boundings
             int maxX = prototypeMap.GetUpperBound(0);

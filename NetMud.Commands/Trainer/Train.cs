@@ -45,7 +45,7 @@ namespace NetMud.Commands.EntityManipulation
             {
                 string listings = trainer.RenderInstructionList(Actor);
 
-                Message listingMessage = new Message(new LexicalParagraph(listings));
+                Message listingMessage = new(new LexicalParagraph(listings));
 
                 listingMessage.ExecuteMessaging(Actor, null, null, null, null);
             }
@@ -73,7 +73,7 @@ namespace NetMud.Commands.EntityManipulation
             ILexicalParagraph toArea = new LexicalParagraph("$A$ trains with $S$.");
 
             //TODO: language outputs
-            Message messagingObject = new Message(new LexicalParagraph(string.Format("You learn from $S$ for {0}blz.", price)))
+            Message messagingObject = new(new LexicalParagraph(string.Format("You learn from $S$ for {0}blz.", price)))
             {
                 ToOrigin = new List<ILexicalParagraph> { toArea }
             };
@@ -89,7 +89,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: train &lt;direction&gt; &lt;ability|proficency&gt;",
                 "train &lt;?|list&gt;".PadWithString(14, "&nbsp;", true)

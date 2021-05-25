@@ -2,7 +2,6 @@
 using NetMud.Communication.Lexical;
 using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural.Serialization;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataAccess.FileSystem;
@@ -20,7 +19,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -44,7 +42,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// An internal date for checking the last time this was saved
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         internal DateTime CleanUntil { get; set; } = DateTime.Now;
 
@@ -56,7 +54,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public abstract string TemplateName { get; }
 
@@ -74,14 +72,14 @@ namespace NetMud.Data.Architectural.EntityBase
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         private string[] _keywords;
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public string[] Keywords
         {
             get
@@ -140,7 +138,7 @@ namespace NetMud.Data.Architectural.EntityBase
 
         private IChannelType _internalDescriptor;
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         public virtual IChannelType ConnectionType
         {
@@ -161,42 +159,42 @@ namespace NetMud.Data.Architectural.EntityBase
         /// Who created this thing, their GlobalAccountHandle
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public string CreatorHandle { get { return Template<ITemplate>().CreatorHandle; } }
 
         /// <summary>
         /// Who created this thing
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IAccount Creator { get { return Template<ITemplate>().Creator; } }
 
         /// <summary>
         /// The creator's account permissions level
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public StaffRank CreatorRank { get { return Template<ITemplate>().CreatorRank; } }
         #endregion
         #region Command Queue
         /// <summary>
         /// Buffer of output to send to clients via WriteTo
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IList<IEnumerable<string>> OutputBuffer { get; set; }
 
         /// <summary>
         /// Buffer of command string input sent from the client
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IList<string> InputBuffer { get; set; }
 
         /// <summary>
         /// What is currently being executed
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public string CurrentAction { get; set; }
 
@@ -338,7 +336,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// What type of cache is this using
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public virtual CacheType CachingType => CacheType.Live;
 
         /// <summary>
@@ -403,7 +401,7 @@ namespace NetMud.Data.Architectural.EntityBase
                     return true;
                 }
 
-                LiveData dataAccessor = new LiveData();
+                LiveData dataAccessor = new();
                 dataAccessor.WriteEntity(this);
             }
             catch
@@ -423,7 +421,7 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             try
             {
-                LiveData dataAccessor = new LiveData();
+                LiveData dataAccessor = new();
                 dataAccessor.RemoveEntity(this);
                 LiveCache.Remove(new LiveCacheKey(this));
             }
@@ -588,7 +586,7 @@ namespace NetMud.Data.Architectural.EntityBase
             {
                 SensoryType = type,
                 Strength = strength,
-                Event = new Lexica() { Phrase = TemplateName, Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
+                Event = new Linguistic.Lexica() { Phrase = TemplateName, Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
             };
         }
         #endregion
@@ -1071,7 +1069,7 @@ namespace NetMud.Data.Architectural.EntityBase
             {
                 SensoryType = MessagingType.Visible,
                 Strength = 30,
-                Event = new Lexica() { Phrase = TemplateName, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
+                Event = new Linguistic.Lexica() { Phrase = TemplateName, Type = LexicalType.Noun, Role = GrammaticalType.Subject }
             });
         }
         #endregion  
@@ -1089,7 +1087,7 @@ namespace NetMud.Data.Architectural.EntityBase
             }
 
             ITemplate dt = Template<ITemplate>();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             StaffRank rank = viewer.ImplementsType<IPlayer>() ? viewer.Template<IPlayerTemplate>().GamePermissionsRank : StaffRank.Player;
 
             sb.Append("<div class='helpItem'>");

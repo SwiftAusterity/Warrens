@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gaia
 {
@@ -27,7 +26,7 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -235,7 +234,7 @@ namespace NetMud.Data.Gaia
 
             if (CelestialPositions == null || CelestialPositions.Count() == 0)
             {
-                HashSet<ICelestialPosition> celestials = new HashSet<ICelestialPosition>();
+                HashSet<ICelestialPosition> celestials = new();
 
                 foreach (ICelestial body in bS.CelestialBodies)
                 {
@@ -276,9 +275,9 @@ namespace NetMud.Data.Gaia
 
         private HashSet<MeterologicalFront> AddFronts()
         {
-            Random rander = new Random();
+            Random rander = new();
 
-            PressureSystem neLow = new PressureSystem()
+            PressureSystem neLow = new()
             {
                 Direction = HemispherePlacement.NorthEast,
                 Angle = rander.Next(1, 45),
@@ -288,7 +287,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            PressureSystem neHigh = new PressureSystem()
+            PressureSystem neHigh = new()
             {
                 Direction = HemispherePlacement.NorthEast,
                 Angle = rander.Next(1, 45),
@@ -298,7 +297,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            PressureSystem nwLow = new PressureSystem()
+            PressureSystem nwLow = new()
             {
                 Direction = HemispherePlacement.NorthWest,
                 Angle = rander.Next(1, 45),
@@ -308,7 +307,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            PressureSystem nwHigh = new PressureSystem()
+            PressureSystem nwHigh = new()
             {
                 Direction = HemispherePlacement.NorthWest,
                 Angle = rander.Next(1, 45),
@@ -318,7 +317,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            PressureSystem seLow = new PressureSystem()
+            PressureSystem seLow = new()
             {
                 Direction = HemispherePlacement.SouthEast,
                 Angle = rander.Next(1, 45),
@@ -328,7 +327,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            PressureSystem seHigh = new PressureSystem()
+            PressureSystem seHigh = new()
             {
                 Direction = HemispherePlacement.SouthEast,
                 Angle = rander.Next(1, 45),
@@ -338,7 +337,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            PressureSystem swLow = new PressureSystem()
+            PressureSystem swLow = new()
             {
                 Direction = HemispherePlacement.SouthWest,
                 Angle = rander.Next(1, 45),
@@ -348,7 +347,7 @@ namespace NetMud.Data.Gaia
                 Strength = rander.Next(1, 100)
             };
 
-            PressureSystem swHigh = new PressureSystem()
+            PressureSystem swHigh = new()
             {
                 Direction = HemispherePlacement.SouthWest,
                 Angle = rander.Next(1, 45),
@@ -447,8 +446,8 @@ namespace NetMud.Data.Gaia
 
         private bool AdvanceWeather()
         {
-            Random rander = new Random();
-            HashSet<MeterologicalFront> newFronts = new HashSet<MeterologicalFront>();
+            Random rander = new();
+            HashSet<MeterologicalFront> newFronts = new();
             foreach (MeterologicalFront front in MeterologicalFronts)
             {
                 //TODO: Fix my bullshit math and switch weather event cloud types as they shift and fix altitude
@@ -473,7 +472,7 @@ namespace NetMud.Data.Gaia
                     {
                         float zoneVariance = zone.WeatherEvents.Sum(wEvent => (wEvent.Strength + wEvent.Drain) / (wEvent.Altitude / 10000));
 
-                        List<IWeatherEvent> zoneEventList = new List<IWeatherEvent>();
+                        List<IWeatherEvent> zoneEventList = new();
                         foreach (IWeatherEvent cloud in zone.WeatherEvents)
                         {
                             cloud.Drain += zoneVariance;
@@ -551,7 +550,7 @@ namespace NetMud.Data.Gaia
 
         private bool AdvanceCelestials()
         {
-            HashSet<ICelestialPosition> newCelestials = new HashSet<ICelestialPosition>();
+            HashSet<ICelestialPosition> newCelestials = new();
             foreach (ICelestialPosition celestial in CelestialPositions)
             {
                 if (celestial.CelestialObject.OrientationType == CelestialOrientation.SolarBody || celestial.CelestialObject.OrientationType == CelestialOrientation.ExtraSolar)

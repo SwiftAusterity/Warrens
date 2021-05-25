@@ -3,7 +3,6 @@ using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Linguistic;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -15,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gaia
 {
@@ -28,7 +26,7 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
@@ -181,7 +179,7 @@ namespace NetMud.Data.Gaia
             {
                 SensoryType = type,
                 Strength = strength,
-                Event = new Lexica() { Phrase = Name, Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
+                Event = new Linguistic.Lexica() { Phrase = Name, Type = LexicalType.ProperNoun, Role = GrammaticalType.Subject }
             };
         }
 
@@ -238,7 +236,7 @@ namespace NetMud.Data.Gaia
                             Tense = LexicalTense.Present
                         };
 
-                        LexicalContext skyContext = new LexicalContext(viewer)
+                        LexicalContext skyContext = new(viewer)
                         {
                             Determinant = true,
                             Perspective = NarrativePerspective.None,
@@ -247,7 +245,7 @@ namespace NetMud.Data.Gaia
                             Tense = LexicalTense.Present
                         };
 
-                        me.TryModify(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
+                        me.TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "sky", skyContext));
                         break;
                 }
 

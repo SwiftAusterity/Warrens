@@ -31,7 +31,7 @@ namespace NetMud.Models
 
         public AddEditConfigDataModel(string archivePath, ConfigDataType type, T item)
         {
-            ConfigData fileAccessor = new ConfigData();
+            ConfigData fileAccessor = new();
 
             DataTemplate = default;
             ValidTemplateBases = ConfigDataCache.GetAll<T>();
@@ -56,7 +56,7 @@ namespace NetMud.Models
                 templateType = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(templateType));
             }
 
-            DirectoryInfo archiveDir = new DirectoryInfo(fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName + ArchivePath + "/");
+            DirectoryInfo archiveDir = new(fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName + ArchivePath + "/");
 
             FileInfo[] potentialFiles = archiveDir.GetFiles(item.UniqueKey + "." + typeName);
 
@@ -82,7 +82,7 @@ namespace NetMud.Models
                 return new string[0];
             }
 
-            DirectoryInfo filesDirectory = new DirectoryInfo(archiveDirName);
+            DirectoryInfo filesDirectory = new(archiveDirName);
 
             return filesDirectory.EnumerateDirectories().Where(dir => dir.GetFiles(itemName + "." + typeName, SearchOption.TopDirectoryOnly).Any())
                                                         .Select(dir => dir.Name).ToArray();

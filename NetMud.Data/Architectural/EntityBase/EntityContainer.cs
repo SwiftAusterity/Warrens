@@ -80,7 +80,7 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             if (Count() > 0)
             {
-                List<Tuple<string, T>> returnList = new List<Tuple<string, T>>();
+                List<Tuple<string, T>> returnList = new();
 
                 foreach (KeyValuePair<string, HashSet<LiveCacheKey>> hashKeySet in Birthmarks)
                 {
@@ -116,7 +116,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>success status</returns>
         public bool Add(T entity)
         {
-            LiveCacheKey newKey = new LiveCacheKey(entity);
+            LiveCacheKey newKey = new(entity);
             if (Birthmarks[genericCollectionLabel].Any(mark => mark.KeyHash().Equals(newKey.KeyHash())))
             {
                 return false;
@@ -132,7 +132,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>yes it contains it or no it does not</returns>
         public bool Contains(T entity)
         {
-            LiveCacheKey newKey = new LiveCacheKey(entity);
+            LiveCacheKey newKey = new(entity);
             return Birthmarks.Values.Any(hs => hs.Any(mark => mark.KeyHash().Equals(newKey.KeyHash())));
         }
 
@@ -143,7 +143,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>success status</returns>
         public bool Remove(T entity)
         {
-            LiveCacheKey newKey = new LiveCacheKey(entity);
+            LiveCacheKey newKey = new(entity);
             if (!Birthmarks[genericCollectionLabel].Any(mark => mark.KeyHash().Equals(newKey.KeyHash())))
             {
                 return false;
@@ -210,7 +210,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 return Add(entity);
             }
 
-            LiveCacheKey key = new LiveCacheKey(entity);
+            LiveCacheKey key = new(entity);
 
             if (Birthmarks[namedContainer].Any(mark => mark.KeyHash().Equals(key.KeyHash())))
             {
@@ -232,7 +232,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 return Contains(entity);
             }
 
-            LiveCacheKey key = new LiveCacheKey(entity);
+            LiveCacheKey key = new(entity);
 
             return Birthmarks[namedContainer].Any(mark => mark.KeyHash().Equals(key.KeyHash()));
         }
@@ -249,7 +249,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 return Remove(entity);
             }
 
-            LiveCacheKey key = new LiveCacheKey(entity);
+            LiveCacheKey key = new(entity);
 
             if (!Birthmarks[namedContainer].Any(mark => mark.KeyHash().Equals(key.KeyHash())))
             {

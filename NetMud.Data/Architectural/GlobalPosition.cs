@@ -5,7 +5,6 @@ using NetMud.DataStructure.Room;
 using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural
 {
@@ -25,7 +24,7 @@ namespace NetMud.Data.Architectural
         /// The actual container that the current location is
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IZone CurrentZone
         {
             get
@@ -58,7 +57,7 @@ namespace NetMud.Data.Architectural
         /// The actual container that the current location is
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public ILocale CurrentLocale
         {
             get
@@ -91,7 +90,7 @@ namespace NetMud.Data.Architectural
         /// The actual container that the current location is
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IRoom CurrentRoom
         {
             get
@@ -124,7 +123,7 @@ namespace NetMud.Data.Architectural
         /// The actual container that the current location is
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IContains CurrentContainer
         {
             get

@@ -1,6 +1,5 @@
 ﻿using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.PropertyBinding;
-using NetMud.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +16,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
             }
 
             IEnumerable<string> coordinateGrouping = input as IEnumerable<string>;
-            HashSet<Coordinate> returnList = new HashSet<Coordinate>();
+            HashSet<Coordinate> returnList = new();
 
             for (int y = 10; y >= 0; y--)
             {

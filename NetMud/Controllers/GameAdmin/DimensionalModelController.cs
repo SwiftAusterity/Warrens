@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -8,8 +6,7 @@ using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.EntityBase;
 using NetMud.Models.Admin;
 using System;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -40,7 +37,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageDimensionalModelDataViewModel vModel = new ManageDimensionalModelDataViewModel(TemplateCache.GetAll<DimensionalModelData>())
+            ManageDimensionalModelDataViewModel vModel = new(TemplateCache.GetAll<DimensionalModelData>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -109,7 +106,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditDimensionalModelDataViewModel vModel = new AddEditDimensionalModelDataViewModel
+            AddEditDimensionalModelDataViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new DimensionalModelData()
@@ -166,7 +163,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            AddEditDimensionalModelDataViewModel vModel = new AddEditDimensionalModelDataViewModel
+            AddEditDimensionalModelDataViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

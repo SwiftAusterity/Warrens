@@ -7,7 +7,6 @@ using NetMud.DataStructure.NPC;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.NPC
 {
@@ -23,7 +22,7 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// Item type
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [InanimateTemplateDataBinder]
         [Display(Name = "Item", Description = "The item in question.")]

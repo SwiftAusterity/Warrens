@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural
 {
@@ -51,7 +50,7 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// Does this have data problems?
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public bool FitnessProblems
         {
@@ -67,7 +66,7 @@ namespace NetMud.Data.Architectural
         /// <returns>a bunch of text saying how awful your data is</returns>
         public virtual IList<string> FitnessReport()
         {
-            List<string> dataProblems = new List<string>();
+            List<string> dataProblems = new();
             IEnumerable<global::System.Reflection.PropertyInfo> requiredProperties = GetType().GetProperties().Where(prop => prop.CustomAttributes.Any(attr => attr.AttributeType.BaseType == typeof(BaseDataIntegrity)));
 
             //Sift through the props decorated with DataIntegrity Attributes
@@ -117,7 +116,7 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public abstract ContentApprovalType ApprovalType { get; }
 
@@ -152,7 +151,7 @@ namespace NetMud.Data.Architectural
         /// </summary>
         public StaffRank CreatorRank { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _creator { get; set; }
 
@@ -160,7 +159,7 @@ namespace NetMud.Data.Architectural
         /// Who created this thing
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IAccount Creator
         {
             get
@@ -197,7 +196,7 @@ namespace NetMud.Data.Architectural
         /// </summary>
         public StaffRank ApproverRank { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _approvedBy { get; set; }
 
@@ -205,7 +204,7 @@ namespace NetMud.Data.Architectural
         /// Who approved this thing
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IAccount ApprovedBy
         {
             get
@@ -254,7 +253,7 @@ namespace NetMud.Data.Architectural
                 return false;
             }
 
-            DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.TemplateData accessor = new();
             ApproveMe(approver, rank, newState);
 
             LastRevised = DateTime.Now;
@@ -271,7 +270,7 @@ namespace NetMud.Data.Architectural
         /// <returns>A list of strings</returns>
         public virtual IDictionary<string, string> SignificantDetails()
         {
-            Dictionary<string, string> returnList = new Dictionary<string, string>
+            Dictionary<string, string> returnList = new()
             {
                 { "Name", Name },
                 { "Creator", CreatorHandle },
@@ -298,7 +297,7 @@ namespace NetMud.Data.Architectural
         /// <returns>the object with Id and other db fields set</returns>
         public virtual IKeyedData Create(IAccount creator, StaffRank rank)
         {
-            DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.TemplateData accessor = new();
 
             try
             {
@@ -352,7 +351,7 @@ namespace NetMud.Data.Architectural
         /// <returns>the object with Id and other db fields set</returns>
         public virtual IKeyedData SystemCreate()
         {
-            DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.TemplateData accessor = new();
 
             try
             {
@@ -394,7 +393,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool Remove(IAccount remover, StaffRank rank)
         {
-            DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.TemplateData accessor = new();
 
             try
             {
@@ -425,7 +424,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool Save(IAccount editor, StaffRank rank)
         {
-            DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.TemplateData accessor = new();
 
             try
             {
@@ -490,7 +489,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool SystemSave()
         {
-            DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.TemplateData accessor = new();
 
             try
             {
@@ -531,7 +530,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool SystemRemove()
         {
-            DataAccess.FileSystem.TemplateData accessor = new DataAccess.FileSystem.TemplateData();
+            DataAccess.FileSystem.TemplateData accessor = new();
 
             try
             {

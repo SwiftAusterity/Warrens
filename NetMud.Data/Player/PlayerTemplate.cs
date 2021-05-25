@@ -16,7 +16,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
 {
@@ -30,7 +29,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override Type EntityClass
         {
@@ -40,7 +39,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.None; } }
 
@@ -48,7 +47,7 @@ namespace NetMud.Data.Players
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
@@ -70,7 +69,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Gender data string for player characters
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Gender is required.")]
         [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
@@ -123,7 +122,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The race data for the character
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Missing racial data.")]
         [Display(Name = "Race", Description = "Your genetic basis. Many races must be unlocked through specific means.")]
@@ -153,14 +152,14 @@ namespace NetMud.Data.Players
         /// </summary>
         public string AccountHandle { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _account { get; set; }
 
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Missing account data.")]
         public IAccount Account
@@ -276,7 +275,7 @@ namespace NetMud.Data.Players
         /// <returns>the object with Id and other db fields set</returns>
         public override IKeyedData Create(IAccount creator, StaffRank rank)
         {
-            DataAccess.FileSystem.PlayerData accessor = new DataAccess.FileSystem.PlayerData();
+            DataAccess.FileSystem.PlayerData accessor = new();
 
             try
             {
@@ -321,7 +320,7 @@ namespace NetMud.Data.Players
         /// <returns>the object with Id and other db fields set</returns>
         public override IKeyedData SystemCreate()
         {
-            DataAccess.FileSystem.PlayerData accessor = new DataAccess.FileSystem.PlayerData();
+            DataAccess.FileSystem.PlayerData accessor = new();
 
             try
             {
@@ -363,7 +362,7 @@ namespace NetMud.Data.Players
         /// <returns>success status</returns>
         public override bool Remove(IAccount remover, StaffRank rank)
         {
-            DataAccess.FileSystem.PlayerData accessor = new DataAccess.FileSystem.PlayerData();
+            DataAccess.FileSystem.PlayerData accessor = new();
 
             try
             {
@@ -388,7 +387,7 @@ namespace NetMud.Data.Players
         /// <returns>success status</returns>
         public override bool Save(IAccount editor, StaffRank rank)
         {
-            DataAccess.FileSystem.PlayerData accessor = new DataAccess.FileSystem.PlayerData();
+            DataAccess.FileSystem.PlayerData accessor = new();
 
             try
             {
@@ -415,7 +414,7 @@ namespace NetMud.Data.Players
         /// <returns>success status</returns>
         public override bool SystemSave()
         {
-            DataAccess.FileSystem.PlayerData accessor = new DataAccess.FileSystem.PlayerData();
+            DataAccess.FileSystem.PlayerData accessor = new();
 
             try
             {

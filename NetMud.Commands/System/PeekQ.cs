@@ -28,7 +28,7 @@ namespace NetMud.Commands.System
         /// </summary>
         internal override bool ExecutionBody()
         {
-            Message messagingObject = new Message(new LexicalParagraph(Actor.PeekInput()));
+            Message messagingObject = new(new LexicalParagraph(Actor.PeekInput()));
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -41,7 +41,7 @@ namespace NetMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: peek"
             };

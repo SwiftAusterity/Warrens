@@ -1,0 +1,1577 @@
+2021-05-24 20:02:51.951 -05:00 [INF] MSBuild registered from C:\Program Files\dotnet\sdk\5.0.203\
+2021-05-24 20:02:52.150 -05:00 [INF] Registered 1 extensions:
+	Default extension
+2021-05-24 20:02:59.607 -05:00 [INF] Initializing upgrade step Select an entrypoint
+2021-05-24 20:03:25.526 -05:00 [INF] Applying upgrade step Select an entrypoint
+2021-05-24 20:03:36.103 -05:00 [INF] Upgrade step Select an entrypoint applied successfully
+2021-05-24 20:03:39.141 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:03:42.590 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:03:56.435 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:03:58.640 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:04:01.940 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:04:05.179 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Gossip to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Gossip
+2021-05-24 20:04:05.684 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Gossip
+2021-05-24 20:04:05.685 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:04:07.117 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:04:09.307 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:04:09.310 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:04:11.694 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:04:12.973 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:04:15.903 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:04:17.767 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:04:20.031 -05:00 [INF] Marking assembly reference System.Configuration for removal based on package mapping configuration System.Configuration
+2021-05-24 20:04:20.035 -05:00 [INF] Adding package System.Configuration.ConfigurationManager based on package mapping configuration System.Configuration
+2021-05-24 20:04:20.513 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:04:20.519 -05:00 [INF] References to be removed: System.Configuration
+2021-05-24 20:04:20.520 -05:00 [INF] Packages to be added: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:04:22.426 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:04:22.430 -05:00 [INF] Removing outdated assembly reference: System.Configuration
+2021-05-24 20:04:22.432 -05:00 [INF] Adding package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:04:26.883 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:04:26.885 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:04:31.605 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:04:31.613 -05:00 [INF] TFM needs updated to netstandard2.0
+2021-05-24 20:04:32.948 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:04:40.039 -05:00 [INF] Updated TFM to netstandard2.0
+2021-05-24 20:04:40.040 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:04:41.396 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:04:43.611 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:04:43.613 -05:00 [INF] No package updates needed
+2021-05-24 20:04:43.613 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:04:43.665 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:04:43.667 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:04:43.690 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:04:43.716 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:04:45.420 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:04:48.720 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:04:48.722 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:04:50.480 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:04:53.224 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:04:55.543 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:04:56.604 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:05:00.728 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:05:03.293 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataStructure to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.DataStructure
+2021-05-24 20:05:06.607 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.DataStructure
+2021-05-24 20:05:06.608 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:05:07.759 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:05:13.762 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:05:13.763 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:05:15.978 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:05:17.146 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:05:20.389 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:05:20.467 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:05:22.770 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:05:22.779 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:05:22.782 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:05:22.804 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:05:22.805 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:05:22.849 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:05:22.850 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:05:22.852 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:05:22.853 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:05:26.521 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:05:26.523 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:05:28.157 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:05:28.208 -05:00 [INF] TFM needs updated to netstandard2.0
+2021-05-24 20:05:28.791 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:05:32.582 -05:00 [INF] Updated TFM to netstandard2.0
+2021-05-24 20:05:32.583 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:05:56.984 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:06:01.594 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:06:01.596 -05:00 [INF] No package updates needed
+2021-05-24 20:06:01.597 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:06:01.610 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:06:01.631 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:06:04.846 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:06:04.895 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:06:04.896 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:06:05.899 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:06:06.703 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:06:08.539 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:06:09.172 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:06:09.460 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:06:09.711 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Utility to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Utility
+2021-05-24 20:06:10.767 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Utility
+2021-05-24 20:06:10.768 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:06:10.846 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:06:10.852 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:06:10.853 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:06:11.189 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Utility\NetMud.Utility.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:06:12.160 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:06:13.407 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:06:16.177 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:06:16.254 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:06:18.714 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:06:18.717 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:06:18.719 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:06:18.724 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:06:18.726 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:06:18.757 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:06:18.759 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:06:18.760 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:06:18.761 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:06:22.864 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:06:22.866 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:06:22.946 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:06:23.046 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:06:36.511 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:06:44.648 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:06:44.649 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:06:44.727 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:06:46.880 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:06:46.882 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:06:46.885 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:06:46.887 -05:00 [INF] References to be removed: System.Web
+2021-05-24 20:06:46.887 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:07:05.280 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:07:05.282 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:07:05.284 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:07:11.195 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:07:11.198 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:07:11.276 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:07:11.278 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:07:11.281 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:07:11.850 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:07:11.890 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:07:11.891 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:07:15.290 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:07:15.861 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:07:16.563 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:07:17.300 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:07:17.893 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:07:18.490 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.DataAccess
+2021-05-24 20:07:21.464 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.DataAccess
+2021-05-24 20:07:21.466 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:07:26.629 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:07:27.204 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:07:27.205 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:07:27.506 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\NetMud.DataAccess.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:07:27.508 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\NetMud.DataAccess.csproj contains an App.config file. App.config is replaced by appsettings.json in .NET Core. You will need to delete App.config and migrate to appsettings.json if it's applicable to your project.
+2021-05-24 20:07:28.069 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.props
+2021-05-24 20:07:28.071 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.targets
+2021-05-24 20:07:28.634 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:07:29.628 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:07:32.638 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:07:32.716 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:07:35.070 -05:00 [INF] Marking package EntityFramework for removal because it appears to be a transitive dependency
+2021-05-24 20:07:35.073 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:07:35.075 -05:00 [INF] Marking package Microsoft.SqlServer.Compact for removal because it appears to be a transitive dependency
+2021-05-24 20:07:35.077 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:07:35.079 -05:00 [INF] Marking package System.ComponentModel.Annotations for removal because it appears to be a transitive dependency
+2021-05-24 20:07:35.081 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:07:35.084 -05:00 [INF] Marking assembly reference System.Configuration for removal based on package mapping configuration System.Configuration
+2021-05-24 20:07:35.085 -05:00 [INF] Adding package System.Configuration.ConfigurationManager based on package mapping configuration System.Configuration
+2021-05-24 20:07:35.114 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:07:35.116 -05:00 [INF] References to be removed: System.Configuration
+2021-05-24 20:07:35.117 -05:00 [INF] Packages to be removed: EntityFramework, Version=6.4.4
+Microsoft.CSharp, Version=4.7.0
+Microsoft.SqlServer.Compact, Version=4.0.8876.1
+Newtonsoft.Json, Version=13.0.1
+System.ComponentModel.Annotations, Version=5.0.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:07:35.118 -05:00 [INF] Packages to be added: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:07:35.182 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:07:35.183 -05:00 [INF] Removing outdated assembly reference: System.Configuration
+2021-05-24 20:07:35.184 -05:00 [INF] Removing outdated package reference: EntityFramework, Version=6.4.4
+2021-05-24 20:07:35.185 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:07:35.186 -05:00 [INF] Removing outdated package reference: Microsoft.SqlServer.Compact, Version=4.0.8876.1
+2021-05-24 20:07:35.188 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:07:35.190 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Annotations, Version=5.0.0
+2021-05-24 20:07:35.191 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:07:35.192 -05:00 [INF] Adding package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:07:38.778 -05:00 [INF] Marking package System.Configuration.ConfigurationManager for removal because it appears to be a transitive dependency
+2021-05-24 20:07:38.784 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:07:38.786 -05:00 [INF] Removing outdated package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:07:42.241 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:07:42.243 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:08:07.669 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:08:07.780 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:08:08.233 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:08:11.842 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:08:11.843 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:08:11.919 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:08:14.253 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:08:14.255 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:08:14.256 -05:00 [INF] Marking assembly reference System.Web.Extensions for removal based on package mapping configuration ASP.NET
+2021-05-24 20:08:14.364 -05:00 [WRN] No version of EntityFramework.SqlServerCompact found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:08:14.371 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:08:14.373 -05:00 [INF] References to be removed: System.Web
+System.Web.Extensions
+2021-05-24 20:08:14.374 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:08:14.425 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:08:14.427 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:08:14.428 -05:00 [INF] Removing outdated assembly reference: System.Web.Extensions
+2021-05-24 20:08:14.429 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:08:18.119 -05:00 [WRN] No version of EntityFramework.SqlServerCompact found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:08:18.123 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:08:18.125 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:08:18.205 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:08:18.207 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:08:18.211 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:08:18.217 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:08:18.220 -05:00 [INF] 0 web page namespace imports need upgraded: 
+2021-05-24 20:08:18.227 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:08:24.630 -05:00 [INF] Applying upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces
+2021-05-24 20:08:24.877 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\Cache\ConfigDataCacheKey.cs
+2021-05-24 20:08:24.897 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\Cache\LiveCacheKey.cs
+2021-05-24 20:08:24.901 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\Cache\PlayerDataCacheKey.cs
+2021-05-24 20:08:24.904 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\Cache\TemplateCacheKey.cs
+2021-05-24 20:08:24.909 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\ContentUtility.cs
+2021-05-24 20:08:24.913 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\FileSystem\ConfigData.cs
+2021-05-24 20:08:24.917 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\FileSystem\LiveData.cs
+2021-05-24 20:08:24.921 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\FileSystem\PlayerData.cs
+2021-05-24 20:08:24.926 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\FileSystem\TemplateData.cs
+2021-05-24 20:08:24.931 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.DataAccess\Logger.cs
+2021-05-24 20:08:25.014 -05:00 [INF] Applying upgrade step Update source code
+2021-05-24 20:08:26.157 -05:00 [INF] Upgrade step Update source code applied successfully
+2021-05-24 20:08:26.159 -05:00 [INF] Upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces applied successfully
+2021-05-24 20:08:29.998 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:08:30.803 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:08:30.805 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:08:32.726 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:08:33.250 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:08:33.974 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:08:34.506 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:08:35.131 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:08:35.600 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Cartography to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Cartography
+2021-05-24 20:08:36.413 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Cartography
+2021-05-24 20:08:36.414 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:08:36.493 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:08:36.953 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:08:36.954 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:08:38.235 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:08:39.402 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:08:41.967 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:08:42.046 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:08:44.595 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:08:44.597 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:08:44.601 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:08:44.602 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:08:44.632 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:08:44.633 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:08:44.635 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:08:48.381 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:08:48.383 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:08:48.460 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:08:48.597 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:08:48.619 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:08:52.656 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:08:52.657 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:08:52.735 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:08:55.230 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:08:55.232 -05:00 [INF] No package updates needed
+2021-05-24 20:08:55.233 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:08:55.234 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:08:55.253 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:08:55.693 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:08:55.723 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:08:55.724 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:08:58.458 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:08:58.531 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:08:58.715 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:08:58.923 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:08:59.024 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:08:59.188 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Lexica to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Lexica
+2021-05-24 20:09:01.071 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Lexica
+2021-05-24 20:09:01.072 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:09:01.151 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:09:01.158 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:09:01.159 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:09:02.484 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:09:03.716 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:09:06.360 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:09:06.439 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:09:09.087 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:09:09.088 -05:00 [INF] No package updates needed
+2021-05-24 20:09:09.089 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:09:09.147 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:09:09.168 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:09:13.409 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:09:13.410 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:09:13.489 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:09:16.187 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:09:16.189 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:09:16.198 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:09:16.202 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:09:16.204 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+Newtonsoft.Json, Version=13.0.1
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:09:16.234 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:09:16.235 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:09:16.236 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:09:16.237 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:09:20.614 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:09:20.617 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:09:20.695 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:09:20.697 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:09:20.716 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:09:21.070 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:09:21.104 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:09:21.105 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:09:21.255 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:09:21.357 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:09:21.525 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:09:21.603 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:09:21.614 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:09:21.616 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Communication to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Communication
+2021-05-24 20:09:24.383 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Communication
+2021-05-24 20:09:24.384 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:09:24.464 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:09:24.471 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:09:24.472 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:09:24.776 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Communication\NetMud.Communication.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:09:25.940 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:09:27.346 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:09:30.805 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:09:30.883 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:09:33.849 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.853 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.857 -05:00 [INF] Marking package System.Buffers for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.860 -05:00 [INF] Marking package System.ComponentModel.Annotations for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.866 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.873 -05:00 [INF] Marking package System.IO for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.875 -05:00 [INF] Marking package System.Linq.Async for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.878 -05:00 [INF] Marking package System.Memory for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.881 -05:00 [INF] Marking package System.Numerics.Vectors for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.898 -05:00 [INF] Marking package System.Runtime.CompilerServices.Unsafe for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.903 -05:00 [INF] Marking package System.Security.Cryptography.Encoding for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.905 -05:00 [INF] Marking package System.Security.Cryptography.Primitives for removal because it appears to be a transitive dependency
+2021-05-24 20:09:33.910 -05:00 [INF] Marking package System.Threading.Tasks.Extensions for removal because it appears to be a transitive dependency
+2021-05-24 20:09:34.007 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:09:34.010 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+Newtonsoft.Json, Version=13.0.1
+System.Buffers, Version=4.5.1
+System.ComponentModel.Annotations, Version=5.0.0
+System.Data.DataSetExtensions, Version=4.5.0
+System.IO, Version=4.3.0
+System.Linq.Async, Version=5.0.0
+System.Memory, Version=4.5.4
+System.Numerics.Vectors, Version=4.5.0
+System.Runtime.CompilerServices.Unsafe, Version=5.0.0
+System.Security.Cryptography.Encoding, Version=4.3.0
+System.Security.Cryptography.Primitives, Version=4.3.0
+System.Threading.Tasks.Extensions, Version=4.5.4
+2021-05-24 20:09:34.064 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:09:34.065 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:09:34.066 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:09:34.067 -05:00 [INF] Removing outdated package reference: System.Buffers, Version=4.5.1
+2021-05-24 20:09:34.068 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Annotations, Version=5.0.0
+2021-05-24 20:09:34.071 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:09:34.072 -05:00 [INF] Removing outdated package reference: System.IO, Version=4.3.0
+2021-05-24 20:09:34.073 -05:00 [INF] Removing outdated package reference: System.Linq.Async, Version=5.0.0
+2021-05-24 20:09:34.074 -05:00 [INF] Removing outdated package reference: System.Memory, Version=4.5.4
+2021-05-24 20:09:34.075 -05:00 [INF] Removing outdated package reference: System.Numerics.Vectors, Version=4.5.0
+2021-05-24 20:09:34.076 -05:00 [INF] Removing outdated package reference: System.Runtime.CompilerServices.Unsafe, Version=5.0.0
+2021-05-24 20:09:34.077 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Encoding, Version=4.3.0
+2021-05-24 20:09:34.079 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Primitives, Version=4.3.0
+2021-05-24 20:09:34.081 -05:00 [INF] Removing outdated package reference: System.Threading.Tasks.Extensions, Version=4.5.4
+2021-05-24 20:09:38.498 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:09:38.503 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:09:38.582 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:09:38.751 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:09:38.803 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:09:44.453 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:09:44.454 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:09:44.532 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:09:47.381 -05:00 [INF] Marking package System.Runtime.Caching for removal because it appears to be a transitive dependency
+2021-05-24 20:09:47.392 -05:00 [INF] Marking package Microsoft.AspNet.Identity.Core for removal based on package mapping configuration ASP.NET
+2021-05-24 20:09:47.393 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:09:47.394 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:09:47.395 -05:00 [INF] Marking assembly reference System.Web.Extensions for removal based on package mapping configuration ASP.NET
+2021-05-24 20:09:47.404 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:09:47.408 -05:00 [INF] References to be removed: System.Web
+System.Web.Extensions
+2021-05-24 20:09:47.409 -05:00 [INF] Packages to be removed: System.Runtime.Caching, Version=5.0.0
+Microsoft.AspNet.Identity.Core, Version=2.2.3
+2021-05-24 20:09:47.410 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:09:47.495 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:09:47.496 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:09:47.497 -05:00 [INF] Removing outdated assembly reference: System.Web.Extensions
+2021-05-24 20:09:47.498 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Identity.Core, Version=2.2.3
+2021-05-24 20:09:47.499 -05:00 [INF] Removing outdated package reference: System.Runtime.Caching, Version=5.0.0
+2021-05-24 20:09:47.501 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:09:52.157 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:09:52.161 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:09:52.238 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:09:52.239 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:09:52.240 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:09:52.245 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:09:52.248 -05:00 [INF] 0 web page namespace imports need upgraded: 
+2021-05-24 20:09:52.259 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:09:52.825 -05:00 [INF] Applying upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces
+2021-05-24 20:09:52.829 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Communication\Lexical\LexicalProcessor.cs
+2021-05-24 20:09:52.914 -05:00 [INF] Upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces applied successfully
+2021-05-24 20:09:53.091 -05:00 [INF] Applying upgrade step Apply fix for UA0005: Do not use HttpContext.Current
+2021-05-24 20:09:53.119 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Communication\Lexical\LexicalProcessor.cs
+2021-05-24 20:09:53.201 -05:00 [WRN] Diagnostic UA0005 was not fixed as expected. This may be caused by the project being in a bad state (did NuGet packages restore correctly?) or by errors in analyzers or code fix providers related to this diagnostic.
+2021-05-24 20:09:53.203 -05:00 [INF] Upgrade step Apply fix for UA0005: Do not use HttpContext.Current applied successfully
+2021-05-24 20:09:53.401 -05:00 [INF] Applying upgrade step Update source code
+2021-05-24 20:09:54.964 -05:00 [WRN] Completing source updates with 1 diagnostics still unaddressed
+2021-05-24 20:09:54.965 -05:00 [INF] Upgrade step Update source code applied successfully
+2021-05-24 20:09:55.206 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:09:55.271 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:09:55.272 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:09:55.420 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:09:55.553 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:09:55.724 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:09:55.801 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:10:14.151 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:10:14.529 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.CentralControl to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.CentralControl
+2021-05-24 20:10:16.277 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.CentralControl
+2021-05-24 20:10:16.279 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:10:16.358 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:10:16.366 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:10:16.366 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:10:17.689 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:10:19.306 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:10:22.298 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:10:22.377 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:10:25.485 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:10:25.497 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:10:25.504 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:10:25.506 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:10:25.534 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:10:25.535 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:10:25.536 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:10:30.042 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:10:30.044 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:10:30.122 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:10:30.269 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:10:30.297 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:10:35.129 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:10:35.130 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:10:35.211 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:10:38.316 -05:00 [INF] Marking package System.Runtime.Caching for removal because it appears to be a transitive dependency
+2021-05-24 20:10:38.320 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:10:38.324 -05:00 [INF] Packages to be removed: System.Runtime.Caching, Version=5.0.0
+2021-05-24 20:10:38.430 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:10:38.431 -05:00 [INF] Removing outdated package reference: System.Runtime.Caching, Version=5.0.0
+2021-05-24 20:10:43.342 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:10:43.347 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:10:43.426 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:10:43.428 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:10:43.429 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:10:43.433 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:10:43.481 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:10:44.077 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:10:44.156 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:10:44.157 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:10:44.308 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:10:44.480 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:10:44.660 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:10:44.738 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:10:44.749 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:10:44.750 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Combat to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Combat
+2021-05-24 20:10:45.767 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Combat
+2021-05-24 20:10:45.768 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:10:45.849 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:10:45.856 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:10:45.857 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:10:47.353 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:10:49.058 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:10:52.160 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:10:52.237 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:10:55.361 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:10:55.363 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:10:55.367 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:10:55.368 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:10:55.398 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:10:55.399 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:10:55.400 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:11:00.323 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:00.326 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:11:00.409 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:11:00.620 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:11:00.646 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:11:05.844 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:11:05.845 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:11:05.927 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:11:09.111 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:09.115 -05:00 [INF] No package updates needed
+2021-05-24 20:11:09.116 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:11:09.117 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:11:09.118 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:11:09.123 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:11:09.178 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:11:09.705 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:11:10.479 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:11:10.480 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:11:10.632 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:11:10.825 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:11:10.976 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:11:11.055 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:11:11.062 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:11:11.065 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Gaia to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Gaia
+2021-05-24 20:11:11.624 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Gaia
+2021-05-24 20:11:11.625 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:11:11.705 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:11:11.712 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:11:11.713 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:11:12.974 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:11:14.765 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:11:17.848 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:11:17.926 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:11:20.991 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:11:21.001 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:11:21.005 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:21.007 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:11:21.049 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:11:21.050 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:11:21.051 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:11:25.994 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:25.996 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:11:26.074 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:11:26.162 -05:00 [INF] TFM needs updated to netstandard2.0
+2021-05-24 20:11:26.187 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:11:31.090 -05:00 [INF] Updated TFM to netstandard2.0
+2021-05-24 20:11:31.092 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:11:31.173 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:11:34.126 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:34.128 -05:00 [INF] No package updates needed
+2021-05-24 20:11:34.129 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:11:34.130 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:11:34.148 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:11:34.357 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:11:34.407 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:11:34.408 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:11:34.562 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:11:34.782 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:11:34.929 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:11:35.007 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:11:35.014 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:11:35.017 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Intelligence to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Intelligence
+2021-05-24 20:11:35.569 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Intelligence
+2021-05-24 20:11:35.570 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:11:35.649 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:11:35.655 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:11:35.656 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:11:36.880 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:11:38.782 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:11:41.895 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:11:41.972 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:11:45.159 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:11:45.160 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:11:45.164 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:45.166 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:11:45.204 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:11:45.205 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:11:45.206 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:11:50.294 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:50.297 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:11:50.375 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:11:50.471 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:11:50.510 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:11:55.865 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:11:56.426 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:11:56.503 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:11:59.658 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:11:59.660 -05:00 [INF] No package updates needed
+2021-05-24 20:11:59.660 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:11:59.662 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:11:59.678 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:11:59.933 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:11:59.966 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:11:59.967 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:12:00.118 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:12:00.372 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:12:00.514 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:12:00.595 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:12:00.604 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:12:00.606 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Physics to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Physics
+2021-05-24 20:12:01.219 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Physics
+2021-05-24 20:12:01.220 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:12:01.305 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:12:01.313 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:12:01.313 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:12:02.567 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:12:04.570 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:12:07.920 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:12:07.998 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:12:11.422 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:12:11.424 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:12:11.429 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:12:11.430 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:12:11.459 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:12:11.461 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:12:11.461 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:12:17.078 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:12:17.080 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:12:17.158 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:12:17.277 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:12:17.300 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:12:22.814 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:12:22.815 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:12:22.893 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:12:26.225 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:12:26.227 -05:00 [INF] No package updates needed
+2021-05-24 20:12:26.228 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:12:26.229 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:12:26.241 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:12:26.520 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:12:26.558 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:12:26.559 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:12:26.712 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:12:26.995 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:12:27.116 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:12:27.194 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:12:27.215 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:12:27.217 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Data
+2021-05-24 20:12:32.030 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Data
+2021-05-24 20:12:32.031 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:12:32.112 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:12:32.123 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:12:32.124 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:12:32.428 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NetMud.Data.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:12:34.050 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:12:36.147 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:12:40.262 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:12:40.340 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:12:44.125 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.128 -05:00 [INF] Marking package System.ComponentModel.Annotations for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.132 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.135 -05:00 [INF] Marking package CommonMark.NET for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.139 -05:00 [INF] Marking package Microsoft.AspNet.Razor for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.144 -05:00 [INF] Marking package Microsoft.AspNet.WebPages for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.149 -05:00 [INF] Marking package Microsoft.Web.Infrastructure for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.151 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.156 -05:00 [INF] Marking package System.IO for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.158 -05:00 [INF] Marking package System.Linq.Async for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.180 -05:00 [INF] Marking package System.Security.Cryptography.Encoding for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.183 -05:00 [INF] Marking package System.Security.Cryptography.Primitives for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.187 -05:00 [INF] Marking package System.Threading.Tasks.Extensions for removal because it appears to be a transitive dependency
+2021-05-24 20:12:44.214 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:12:44.218 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.ComponentModel.Annotations, Version=5.0.0
+System.Data.DataSetExtensions, Version=4.5.0
+CommonMark.NET, Version=0.15.1
+Microsoft.AspNet.Razor, Version=3.2.7
+Microsoft.AspNet.WebPages, Version=3.2.7
+Microsoft.Web.Infrastructure, Version=1.0.0.0
+Newtonsoft.Json, Version=13.0.1
+System.IO, Version=4.3.0
+System.Linq.Async, Version=5.0.0
+System.Security.Cryptography.Encoding, Version=4.3.0
+System.Security.Cryptography.Primitives, Version=4.3.0
+System.Threading.Tasks.Extensions, Version=4.5.4
+2021-05-24 20:12:44.271 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:12:44.272 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:12:44.273 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Annotations, Version=5.0.0
+2021-05-24 20:12:44.274 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:12:44.275 -05:00 [INF] Removing outdated package reference: CommonMark.NET, Version=0.15.1
+2021-05-24 20:12:44.278 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Razor, Version=3.2.7
+2021-05-24 20:12:44.279 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.WebPages, Version=3.2.7
+2021-05-24 20:12:44.280 -05:00 [INF] Removing outdated package reference: Microsoft.Web.Infrastructure, Version=1.0.0.0
+2021-05-24 20:12:44.281 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:12:44.282 -05:00 [INF] Removing outdated package reference: System.IO, Version=4.3.0
+2021-05-24 20:12:44.283 -05:00 [INF] Removing outdated package reference: System.Linq.Async, Version=5.0.0
+2021-05-24 20:12:44.284 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Encoding, Version=4.3.0
+2021-05-24 20:12:44.285 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Primitives, Version=4.3.0
+2021-05-24 20:12:44.287 -05:00 [INF] Removing outdated package reference: System.Threading.Tasks.Extensions, Version=4.5.4
+2021-05-24 20:12:50.314 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:12:50.318 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:12:50.399 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:12:50.734 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:12:50.780 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:12:57.461 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:12:57.463 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:12:57.541 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:13:01.326 -05:00 [INF] Marking package System.ComponentModel.Composition for removal because it appears to be a transitive dependency
+2021-05-24 20:13:01.339 -05:00 [INF] Marking package Microsoft.Bcl.AsyncInterfaces for removal because it appears to be a transitive dependency
+2021-05-24 20:13:01.344 -05:00 [INF] Marking package System.Interactive.Async for removal because it appears to be a transitive dependency
+2021-05-24 20:13:01.348 -05:00 [INF] Marking package System.Runtime for removal because it appears to be a transitive dependency
+2021-05-24 20:13:01.373 -05:00 [INF] Marking package System.Security.Cryptography.Algorithms for removal because it appears to be a transitive dependency
+2021-05-24 20:13:01.378 -05:00 [INF] Marking package System.Security.Cryptography.X509Certificates for removal because it appears to be a transitive dependency
+2021-05-24 20:13:01.380 -05:00 [INF] Marking package Microsoft.AspNet.Mvc for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:01.381 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:13:01.382 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:01.383 -05:00 [INF] Marking assembly reference System.Web.Extensions for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:01.387 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:13:01.391 -05:00 [INF] References to be removed: System.Web
+System.Web.Extensions
+2021-05-24 20:13:01.392 -05:00 [INF] Packages to be removed: System.ComponentModel.Composition, Version=5.0.0
+Microsoft.Bcl.AsyncInterfaces, Version=5.0.0
+System.Interactive.Async, Version=5.0.0
+System.Runtime, Version=4.3.1
+System.Security.Cryptography.Algorithms, Version=4.3.1
+System.Security.Cryptography.X509Certificates, Version=4.3.2
+Microsoft.AspNet.Mvc, Version=5.2.7
+2021-05-24 20:13:01.393 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:13:01.497 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:13:01.498 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:13:01.499 -05:00 [INF] Removing outdated assembly reference: System.Web.Extensions
+2021-05-24 20:13:01.500 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Composition, Version=5.0.0
+2021-05-24 20:13:01.503 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Mvc, Version=5.2.7
+2021-05-24 20:13:01.504 -05:00 [INF] Removing outdated package reference: Microsoft.Bcl.AsyncInterfaces, Version=5.0.0
+2021-05-24 20:13:01.505 -05:00 [INF] Removing outdated package reference: System.Interactive.Async, Version=5.0.0
+2021-05-24 20:13:01.506 -05:00 [INF] Removing outdated package reference: System.Runtime, Version=4.3.1
+2021-05-24 20:13:01.507 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Algorithms, Version=4.3.1
+2021-05-24 20:13:01.508 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.X509Certificates, Version=4.3.2
+2021-05-24 20:13:01.509 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:13:07.819 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:13:07.824 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:13:07.903 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:13:07.905 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:13:07.906 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:13:07.915 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:13:07.916 -05:00 [INF] 0 web page namespace imports need upgraded: 
+2021-05-24 20:13:07.927 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:13:09.197 -05:00 [INF] Applying upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces
+2021-05-24 20:13:09.204 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Administrative\JournalEntry.cs
+2021-05-24 20:13:09.209 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\ActorBase\Race.cs
+2021-05-24 20:13:09.214 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\ConfigData.cs
+2021-05-24 20:13:09.219 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\DimensionalModel.cs
+2021-05-24 20:13:09.225 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\DimensionalModelData.cs
+2021-05-24 20:13:09.230 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\DimensionalModelNode.cs
+2021-05-24 20:13:09.236 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\EntityPartial.cs
+2021-05-24 20:13:09.241 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\EntityTemplatePartial.cs
+2021-05-24 20:13:09.245 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\LocationEntityPartial.cs
+2021-05-24 20:13:09.250 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\MaterialComposition.cs
+2021-05-24 20:13:09.256 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\EntityBase\ModelPartComposition.cs
+2021-05-24 20:13:09.261 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\GlobalPosition.cs
+2021-05-24 20:13:09.265 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\LookupDataPartial.cs
+2021-05-24 20:13:09.270 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\TemplatePartial.cs
+2021-05-24 20:13:09.281 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Combat\FightingArt.cs
+2021-05-24 20:13:09.286 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Combat\FightingArtCombination.cs
+2021-05-24 20:13:09.291 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Gaia\Celestial.cs
+2021-05-24 20:13:09.296 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Gaia\CelestialPosition.cs
+2021-05-24 20:13:09.301 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Gaia\Gaia.cs
+2021-05-24 20:13:09.305 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Gaia\GaiaTemplate.cs
+2021-05-24 20:13:09.310 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Gaia\TimeOfDay.cs
+2021-05-24 20:13:09.315 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Gossip\GossipConfig.cs
+2021-05-24 20:13:09.320 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Inanimate\Inanimate.cs
+2021-05-24 20:13:09.329 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Inanimate\InanimateComponent.cs
+2021-05-24 20:13:09.339 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Inanimate\InanimateTemplate.cs
+2021-05-24 20:13:09.343 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\ContractionRule.cs
+2021-05-24 20:13:09.348 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\Dictata.cs
+2021-05-24 20:13:09.352 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\DictataTransformationRule.cs
+2021-05-24 20:13:09.357 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\Language.cs
+2021-05-24 20:13:09.363 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\Lexeme.cs
+2021-05-24 20:13:09.368 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\Lexica.cs
+2021-05-24 20:13:09.373 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\WordPairRule.cs
+2021-05-24 20:13:09.379 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Linguistic\WordRule.cs
+2021-05-24 20:13:09.389 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Locale\Locale.cs
+2021-05-24 20:13:09.394 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Locale\LocaleTemplate.cs
+2021-05-24 20:13:09.400 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NaturalResource\Fauna.cs
+2021-05-24 20:13:09.405 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NaturalResource\Flora.cs
+2021-05-24 20:13:09.410 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NaturalResource\Mineral.cs
+2021-05-24 20:13:09.415 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NaturalResource\NaturalResourceDataPartial.cs
+2021-05-24 20:13:09.420 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NPC\Merchandise.cs
+2021-05-24 20:13:09.424 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NPC\NonPlayerCharacter.cs
+2021-05-24 20:13:09.429 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\NPC\NonPlayerCharacterTemplate.cs
+2021-05-24 20:13:09.433 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\AccountConfig.cs
+2021-05-24 20:13:09.438 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\Acquaintence.cs
+2021-05-24 20:13:09.443 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\Player.cs
+2021-05-24 20:13:09.448 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\PlayerMessage.cs
+2021-05-24 20:13:09.458 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\PlayerTemplate.cs
+2021-05-24 20:13:09.463 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\UIModule.cs
+2021-05-24 20:13:09.467 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Room\Pathway.cs
+2021-05-24 20:13:09.471 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Room\PathwayTemplate.cs
+2021-05-24 20:13:09.476 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Room\Room.cs
+2021-05-24 20:13:09.481 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Room\RoomTemplate.cs
+2021-05-24 20:13:09.485 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\System\GlobalConfig.cs
+2021-05-24 20:13:09.491 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Zone\FaunaResourceSpawn.cs
+2021-05-24 20:13:09.496 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Zone\FloraResourceSpawn.cs
+2021-05-24 20:13:09.501 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Zone\MineralResourceSpawn.cs
+2021-05-24 20:13:09.508 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Zone\Zone.cs
+2021-05-24 20:13:09.518 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Zone\ZoneTemplate.cs
+2021-05-24 20:13:10.024 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Administrative\JournalEntry.cs
+2021-05-24 20:13:10.029 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\PlayerMessage.cs
+2021-05-24 20:13:10.459 -05:00 [INF] Upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces applied successfully
+2021-05-24 20:13:10.672 -05:00 [INF] Applying upgrade step Apply fix for UA0010: [AllowHtmlAttribute] should be removed
+2021-05-24 20:13:10.704 -05:00 [INF] Diagnostic UA0010 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Administrative\JournalEntry.cs
+2021-05-24 20:13:10.709 -05:00 [INF] Diagnostic UA0010 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Architectural\LookupDataPartial.cs
+2021-05-24 20:13:10.714 -05:00 [INF] Diagnostic UA0010 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Data\Player\PlayerMessage.cs
+2021-05-24 20:13:11.091 -05:00 [INF] Applying upgrade step Update source code
+2021-05-24 20:13:13.537 -05:00 [INF] Upgrade step Update source code applied successfully
+2021-05-24 20:13:13.539 -05:00 [INF] Upgrade step Apply fix for UA0010: [AllowHtmlAttribute] should be removed applied successfully
+2021-05-24 20:13:13.776 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:13:13.836 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:13:13.837 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:13:13.989 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:13:14.299 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:13:14.420 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:13:14.496 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:13:14.509 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:13:14.511 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Authentication
+2021-05-24 20:13:19.473 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Authentication
+2021-05-24 20:13:19.474 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:13:19.552 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:13:19.560 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:13:19.563 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:13:19.864 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\NetMud.Authentication.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:13:19.866 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\NetMud.Authentication.csproj contains an App.config file. App.config is replaced by appsettings.json in .NET Core. You will need to delete App.config and migrate to appsettings.json if it's applicable to your project.
+2021-05-24 20:13:20.442 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.props
+2021-05-24 20:13:20.444 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.targets
+2021-05-24 20:13:20.948 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:13:23.242 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:13:27.442 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:13:27.522 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:13:31.526 -05:00 [INF] Marking package Microsoft.AspNet.Identity.Core for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.530 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.533 -05:00 [INF] Marking package Microsoft.Owin for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.536 -05:00 [INF] Marking package Microsoft.Owin.Security for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.559 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.561 -05:00 [INF] Marking package Owin for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.563 -05:00 [INF] Marking package System.ComponentModel.Annotations for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.566 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:13:31.567 -05:00 [INF] Marking assembly reference System.Configuration for removal based on package mapping configuration System.Configuration
+2021-05-24 20:13:31.569 -05:00 [INF] Adding package System.Configuration.ConfigurationManager based on package mapping configuration System.Configuration
+2021-05-24 20:13:31.644 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:13:31.647 -05:00 [INF] References to be removed: System.Configuration
+2021-05-24 20:13:31.648 -05:00 [INF] Packages to be removed: Microsoft.AspNet.Identity.Core, Version=2.2.3
+Microsoft.CSharp, Version=4.7.0
+Microsoft.Owin, Version=4.2.0
+Microsoft.Owin.Security, Version=4.2.0
+Newtonsoft.Json, Version=13.0.1
+Owin, Version=1.0
+System.ComponentModel.Annotations, Version=5.0.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:13:31.648 -05:00 [INF] Packages to be added: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:13:31.690 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:13:31.691 -05:00 [INF] Removing outdated assembly reference: System.Configuration
+2021-05-24 20:13:31.693 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Identity.Core, Version=2.2.3
+2021-05-24 20:13:31.694 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:13:31.695 -05:00 [INF] Removing outdated package reference: Microsoft.Owin, Version=4.2.0
+2021-05-24 20:13:31.697 -05:00 [INF] Removing outdated package reference: Microsoft.Owin.Security, Version=4.2.0
+2021-05-24 20:13:31.698 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:13:31.699 -05:00 [INF] Removing outdated package reference: Owin, Version=1.0
+2021-05-24 20:13:31.700 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Annotations, Version=5.0.0
+2021-05-24 20:13:31.701 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:13:31.702 -05:00 [INF] Adding package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:13:38.724 -05:00 [INF] Marking package System.Configuration.ConfigurationManager for removal because it appears to be a transitive dependency
+2021-05-24 20:13:38.732 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:13:38.753 -05:00 [INF] Removing outdated package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:13:44.988 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:13:44.990 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:13:45.068 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:13:45.242 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:13:45.280 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:13:53.921 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:13:53.922 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:13:54.001 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:13:57.863 -05:00 [INF] Marking package Microsoft.AspNet.Identity.EntityFramework for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:57.865 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:13:57.866 -05:00 [INF] Marking package Microsoft.AspNet.Identity.Owin for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:57.867 -05:00 [INF] Marking package Microsoft.Owin.Security.Cookies for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:57.868 -05:00 [INF] Marking package Microsoft.Owin.Security.OAuth for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:57.869 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:57.870 -05:00 [INF] Marking assembly reference System.Web.ApplicationServices for removal based on package mapping configuration ASP.NET
+2021-05-24 20:13:57.954 -05:00 [WRN] No version of Microsoft.AspNet.Cors found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:13:57.995 -05:00 [WRN] No version of Microsoft.Owin.Cors found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:13:57.998 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:13:58.003 -05:00 [INF] References to be removed: System.Web
+System.Web.ApplicationServices
+2021-05-24 20:13:58.004 -05:00 [INF] Packages to be removed: Microsoft.AspNet.Identity.EntityFramework, Version=2.2.3
+Microsoft.AspNet.Identity.Owin, Version=2.2.3
+Microsoft.Owin.Security.Cookies, Version=4.2.0
+Microsoft.Owin.Security.OAuth, Version=4.2.0
+2021-05-24 20:13:58.005 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:14:10.879 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:14:10.881 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:14:10.882 -05:00 [INF] Removing outdated assembly reference: System.Web.ApplicationServices
+2021-05-24 20:14:10.883 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Identity.EntityFramework, Version=2.2.3
+2021-05-24 20:14:10.884 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Identity.Owin, Version=2.2.3
+2021-05-24 20:14:10.885 -05:00 [INF] Removing outdated package reference: Microsoft.Owin.Security.Cookies, Version=4.2.0
+2021-05-24 20:14:10.886 -05:00 [INF] Removing outdated package reference: Microsoft.Owin.Security.OAuth, Version=4.2.0
+2021-05-24 20:14:10.887 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:14:17.804 -05:00 [WRN] No version of Microsoft.AspNet.Cors found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:14:17.808 -05:00 [WRN] No version of Microsoft.Owin.Cors found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:14:17.812 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:14:17.821 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:14:17.901 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:14:17.903 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:14:17.903 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:14:17.910 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:14:17.912 -05:00 [INF] 0 web page namespace imports need upgraded: 
+2021-05-24 20:14:17.927 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:14:18.818 -05:00 [INF] Applying upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces
+2021-05-24 20:14:18.821 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationDbContext.cs
+2021-05-24 20:14:18.825 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationSignInManager.cs
+2021-05-24 20:14:18.829 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationUser.cs
+2021-05-24 20:14:18.833 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationUserManager.cs
+2021-05-24 20:14:18.839 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\EmailService.cs
+2021-05-24 20:14:18.842 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\SmsService.cs
+2021-05-24 20:14:18.909 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationSignInManager.cs
+2021-05-24 20:14:18.913 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationUser.cs
+2021-05-24 20:14:18.918 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationUserManager.cs
+2021-05-24 20:14:18.992 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationSignInManager.cs
+2021-05-24 20:14:18.996 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationUserManager.cs
+2021-05-24 20:14:19.060 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Authentication\ApplicationUserManager.cs
+2021-05-24 20:14:19.126 -05:00 [INF] Applying upgrade step Update source code
+2021-05-24 20:14:21.626 -05:00 [INF] Upgrade step Update source code applied successfully
+2021-05-24 20:14:23.349 -05:00 [INF] Upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces applied successfully
+2021-05-24 20:14:23.624 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:14:24.035 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:14:24.037 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:14:24.609 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:14:25.106 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:14:25.689 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:14:26.545 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:14:26.983 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:14:27.210 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Commands to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Commands
+2021-05-24 20:14:28.820 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Commands
+2021-05-24 20:14:28.822 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:14:28.902 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:14:28.913 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:14:28.914 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:14:29.219 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Commands\NetMud.Commands.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:14:30.335 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:14:32.865 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:14:36.976 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:14:37.057 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:14:40.981 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:14:40.983 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:14:40.986 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:14:40.988 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:14:41.021 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:14:41.022 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:14:41.023 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:14:47.407 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:14:47.416 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:14:47.496 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:14:47.691 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:14:47.719 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:14:54.478 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:14:54.480 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:14:54.559 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:14:58.524 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:14:58.525 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:14:58.528 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:14:58.532 -05:00 [INF] References to be removed: System.Web
+2021-05-24 20:14:58.533 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:14:58.632 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:14:58.633 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:14:58.634 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:15:05.344 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:15:05.349 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:15:05.426 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:15:05.428 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:15:05.429 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:15:05.441 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:15:05.443 -05:00 [INF] 0 web page namespace imports need upgraded: 
+2021-05-24 20:15:05.452 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:15:06.023 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:15:06.082 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:15:06.083 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:15:06.235 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:15:06.627 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:15:06.732 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:15:06.812 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:15:06.820 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:15:06.824 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Interp to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Interp
+2021-05-24 20:15:08.692 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Interp
+2021-05-24 20:15:08.693 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:15:08.773 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:15:08.780 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:15:08.781 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:15:10.025 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:15:12.654 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:15:16.851 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:15:16.930 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:15:21.130 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:15:21.132 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:15:21.136 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:15:21.138 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:15:30.405 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:15:30.407 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:15:30.408 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:15:37.080 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:15:37.083 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:15:37.162 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:15:37.410 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:15:37.439 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:15:44.839 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:15:44.840 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:15:44.918 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:15:49.181 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:15:49.194 -05:00 [INF] No package updates needed
+2021-05-24 20:15:49.195 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:15:49.196 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:15:49.197 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:15:49.202 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:15:49.257 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:15:50.135 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:15:50.219 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:15:50.220 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:15:50.734 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:15:52.281 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:15:52.378 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:15:52.454 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:15:52.464 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:15:52.466 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Backup to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Backup
+2021-05-24 20:15:55.307 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Backup
+2021-05-24 20:15:55.308 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:15:55.388 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:15:55.396 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:15:55.397 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:15:55.708 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Backup\NetMud.Backup.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:15:56.732 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:15:59.542 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:16:03.933 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:16:04.012 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:16:08.407 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:16:08.409 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:16:08.413 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:16:08.415 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:16:08.448 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:16:08.449 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:16:08.450 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:16:15.530 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:16:15.533 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:16:15.613 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:16:15.817 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:16:15.843 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:16:23.019 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:16:23.021 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:16:23.101 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:16:27.405 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:16:27.407 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:16:27.409 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:16:27.422 -05:00 [INF] References to be removed: System.Web
+2021-05-24 20:16:27.423 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:16:27.513 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:16:27.514 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:16:27.516 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:16:34.833 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:16:34.838 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:16:34.919 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:16:34.920 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:16:34.921 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:16:34.934 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:16:34.936 -05:00 [INF] 0 web page namespace imports need upgraded: 
+2021-05-24 20:16:34.945 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:16:35.726 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:16:35.786 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:16:35.787 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:16:36.327 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:16:36.425 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:16:36.512 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:16:36.591 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:16:36.602 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:16:36.603 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Websock to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Websock
+2021-05-24 20:16:39.430 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud.Websock
+2021-05-24 20:16:39.431 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:16:39.509 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:16:39.517 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:16:39.520 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:16:39.824 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Websock\NetMud.Websock.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:16:39.826 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Websock\NetMud.Websock.csproj contains an App.config file. App.config is replaced by appsettings.json in .NET Core. You will need to delete App.config and migrate to appsettings.json if it's applicable to your project.
+2021-05-24 20:16:40.393 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.props
+2021-05-24 20:16:40.395 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.targets
+2021-05-24 20:16:40.926 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:16:43.768 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:16:48.392 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:16:48.474 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:16:53.065 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.068 -05:00 [INF] Marking package System.ComponentModel.Annotations for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.071 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.075 -05:00 [INF] Marking package Microsoft.AspNet.Identity.Core for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.084 -05:00 [INF] Marking package Microsoft.Owin for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.087 -05:00 [INF] Marking package Microsoft.Owin.Security for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.093 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.095 -05:00 [INF] Marking package Owin for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.098 -05:00 [INF] Marking package WebSocketSharp-netstandard for removal because it appears to be a transitive dependency
+2021-05-24 20:16:53.122 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:16:53.126 -05:00 [INF] Packages to be removed: Microsoft.CSharp, Version=4.7.0
+System.ComponentModel.Annotations, Version=5.0.0
+System.Data.DataSetExtensions, Version=4.5.0
+Microsoft.AspNet.Identity.Core, Version=2.2.3
+Microsoft.Owin, Version=4.2.0
+Microsoft.Owin.Security, Version=4.2.0
+Newtonsoft.Json, Version=13.0.1
+Owin, Version=1.0
+WebSocketSharp-netstandard, Version=1.0.1
+2021-05-24 20:16:53.183 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:16:53.184 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:16:53.185 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Annotations, Version=5.0.0
+2021-05-24 20:16:53.186 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:16:53.187 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Identity.Core, Version=2.2.3
+2021-05-24 20:16:53.188 -05:00 [INF] Removing outdated package reference: Microsoft.Owin, Version=4.2.0
+2021-05-24 20:16:53.190 -05:00 [INF] Removing outdated package reference: Microsoft.Owin.Security, Version=4.2.0
+2021-05-24 20:16:53.191 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:16:53.192 -05:00 [INF] Removing outdated package reference: Owin, Version=1.0
+2021-05-24 20:16:53.194 -05:00 [INF] Removing outdated package reference: WebSocketSharp-netstandard, Version=1.0.1
+2021-05-24 20:17:00.576 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:17:00.582 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:17:00.662 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:17:00.991 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:17:01.030 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:17:08.869 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:17:08.870 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:17:08.948 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:17:13.521 -05:00 [INF] Marking package System.Runtime.Caching for removal because it appears to be a transitive dependency
+2021-05-24 20:17:13.526 -05:00 [INF] Marking package EntityFramework for removal because it appears to be a transitive dependency
+2021-05-24 20:17:13.559 -05:00 [INF] Marking package Microsoft.AspNet.Identity.EntityFramework for removal based on package mapping configuration ASP.NET
+2021-05-24 20:17:13.560 -05:00 [INF] Adding framework reference Microsoft.AspNetCore.App based on package mapping configuration ASP.NET
+2021-05-24 20:17:13.561 -05:00 [INF] Marking package Microsoft.AspNet.Identity.Owin for removal based on package mapping configuration ASP.NET
+2021-05-24 20:17:13.562 -05:00 [INF] Marking package Microsoft.Owin.Security.Cookies for removal based on package mapping configuration ASP.NET
+2021-05-24 20:17:13.563 -05:00 [INF] Marking package Microsoft.Owin.Security.OAuth for removal based on package mapping configuration ASP.NET
+2021-05-24 20:17:13.564 -05:00 [INF] Marking assembly reference System.Web for removal based on package mapping configuration ASP.NET
+2021-05-24 20:17:13.642 -05:00 [WRN] No version of Microsoft.WebSockets found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:17:13.646 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:17:13.651 -05:00 [INF] References to be removed: System.Web
+2021-05-24 20:17:13.652 -05:00 [INF] Packages to be removed: System.Runtime.Caching, Version=5.0.0
+EntityFramework, Version=6.4.4
+Microsoft.AspNet.Identity.EntityFramework, Version=2.2.3
+Microsoft.AspNet.Identity.Owin, Version=2.2.3
+Microsoft.Owin.Security.Cookies, Version=4.2.0
+Microsoft.Owin.Security.OAuth, Version=4.2.0
+2021-05-24 20:17:13.653 -05:00 [INF] Framework references to be added: Microsoft.AspNetCore.App
+2021-05-24 20:17:13.765 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:17:13.766 -05:00 [INF] Removing outdated assembly reference: System.Web
+2021-05-24 20:17:13.768 -05:00 [INF] Removing outdated package reference: System.Runtime.Caching, Version=5.0.0
+2021-05-24 20:17:13.769 -05:00 [INF] Removing outdated package reference: EntityFramework, Version=6.4.4
+2021-05-24 20:17:13.769 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Identity.EntityFramework, Version=2.2.3
+2021-05-24 20:17:13.772 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Identity.Owin, Version=2.2.3
+2021-05-24 20:17:13.774 -05:00 [INF] Removing outdated package reference: Microsoft.Owin.Security.Cookies, Version=4.2.0
+2021-05-24 20:17:13.775 -05:00 [INF] Removing outdated package reference: Microsoft.Owin.Security.OAuth, Version=4.2.0
+2021-05-24 20:17:13.776 -05:00 [INF] Adding framework reference: Microsoft.AspNetCore.App
+2021-05-24 20:17:21.826 -05:00 [WRN] No version of Microsoft.WebSockets found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:17:21.830 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:17:21.835 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:17:21.915 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:17:21.917 -05:00 [INF] 0 expected template items needed
+2021-05-24 20:17:21.917 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:17:21.933 -05:00 [INF] Found 0 app settings for upgrade: 
+2021-05-24 20:17:21.934 -05:00 [INF] 0 web page namespace imports need upgraded: 
+2021-05-24 20:17:21.946 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:17:22.919 -05:00 [INF] Applying upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces
+2021-05-24 20:17:22.923 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Websock\Descriptor.cs
+2021-05-24 20:17:23.012 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud.Websock\Descriptor.cs
+2021-05-24 20:17:23.103 -05:00 [INF] Applying upgrade step Update source code
+2021-05-24 20:17:26.263 -05:00 [INF] Upgrade step Update source code applied successfully
+2021-05-24 20:17:26.265 -05:00 [INF] Upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces applied successfully
+2021-05-24 20:17:26.501 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:17:26.568 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:17:26.569 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:17:27.100 -05:00 [INF] Initializing upgrade step Select project to upgrade
+2021-05-24 20:17:27.268 -05:00 [INF] Applying upgrade step Select project to upgrade
+2021-05-24 20:17:29.697 -05:00 [INF] Upgrade step Select project to upgrade applied successfully
+2021-05-24 20:17:31.017 -05:00 [INF] Initializing upgrade step Back up project
+2021-05-24 20:17:31.930 -05:00 [INF] Applying upgrade step Back up project
+2021-05-24 20:17:32.796 -05:00 [INF] Backing up C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud
+2021-05-24 20:17:58.340 -05:00 [INF] Project backed up to C:\Users\swift\source\repos\SwiftAusterity\Warrens.backup\NetMud
+2021-05-24 20:17:58.342 -05:00 [INF] Upgrade step Back up project applied successfully
+2021-05-24 20:17:58.421 -05:00 [INF] Initializing upgrade step Convert project file to SDK style
+2021-05-24 20:17:58.436 -05:00 [INF] Applying upgrade step Convert project file to SDK style
+2021-05-24 20:17:58.437 -05:00 [INF] Converting project file format with try-convert, version 0.7.222801
+2021-05-24 20:17:58.749 -05:00 [INF] [try-convert] C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\NetMud.csproj contains a reference to System.Web, which is not supported on .NET Core. You may have significant work ahead of you to fully port this project.
+2021-05-24 20:17:58.751 -05:00 [INF] [try-convert] 'C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\NetMud.csproj' is a legacy web project and/or references System.Web. Legacy Web projects and System.Web are unsupported on .NET Core. You will need to rewrite your application or find a way to not depend on System.Web to convert this project.
+2021-05-24 20:18:01.093 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.props
+2021-05-24 20:18:01.095 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: EntityFramework.targets
+2021-05-24 20:18:01.096 -05:00 [INF] [try-convert] This project has an unrecognized custom import which may need reviewed after conversion: Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets
+2021-05-24 20:18:09.824 -05:00 [INF] [try-convert] Conversion complete!
+2021-05-24 20:18:13.043 -05:00 [INF] Project file converted successfully! The project may require additional changes to build successfully against the new .NET target.
+2021-05-24 20:18:19.098 -05:00 [INF] Upgrade step Convert project file to SDK style applied successfully
+2021-05-24 20:18:19.177 -05:00 [INF] Initializing upgrade step Clean up NuGet package references
+2021-05-24 20:18:25.004 -05:00 [INF] Marking package EntityFramework for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.332 -05:00 [INF] Marking package Microsoft.AspNet.WebApi.Client for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.352 -05:00 [INF] Marking package Microsoft.CSharp for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.402 -05:00 [INF] Marking package Microsoft.SqlServer.Compact for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.425 -05:00 [INF] Marking package Newtonsoft.Json for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.441 -05:00 [INF] Marking package System.Buffers for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.449 -05:00 [INF] Marking package System.ComponentModel.Annotations for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.458 -05:00 [INF] Marking package System.Data.DataSetExtensions for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.469 -05:00 [INF] Marking package System.IO for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.474 -05:00 [INF] Marking package System.Memory for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.482 -05:00 [INF] Marking package System.Numerics.Vectors for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.490 -05:00 [INF] Marking package System.Runtime.CompilerServices.Unsafe for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.501 -05:00 [INF] Marking package System.Security.Cryptography.Encoding for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.506 -05:00 [INF] Marking package System.Security.Cryptography.Primitives for removal because it appears to be a transitive dependency
+2021-05-24 20:18:36.522 -05:00 [INF] Marking assembly reference System.Configuration for removal based on package mapping configuration System.Configuration
+2021-05-24 20:18:36.524 -05:00 [INF] Adding package System.Configuration.ConfigurationManager based on package mapping configuration System.Configuration
+2021-05-24 20:18:36.812 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:18:36.817 -05:00 [INF] References to be removed: System.Configuration
+2021-05-24 20:18:36.818 -05:00 [INF] Packages to be removed: EntityFramework, Version=6.4.4
+Microsoft.AspNet.WebApi.Client, Version=5.2.7
+Microsoft.CSharp, Version=4.7.0
+Microsoft.SqlServer.Compact, Version=4.0.8876.1
+Newtonsoft.Json, Version=13.0.1
+System.Buffers, Version=4.5.1
+System.ComponentModel.Annotations, Version=5.0.0
+System.Data.DataSetExtensions, Version=4.5.0
+System.IO, Version=4.3.0
+System.Memory, Version=4.5.4
+System.Numerics.Vectors, Version=4.5.0
+System.Runtime.CompilerServices.Unsafe, Version=5.0.0
+System.Security.Cryptography.Encoding, Version=4.3.0
+System.Security.Cryptography.Primitives, Version=4.3.0
+2021-05-24 20:18:36.820 -05:00 [INF] Packages to be added: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:18:36.892 -05:00 [INF] Applying upgrade step Clean up NuGet package references
+2021-05-24 20:18:36.893 -05:00 [INF] Removing outdated assembly reference: System.Configuration
+2021-05-24 20:18:36.894 -05:00 [INF] Removing outdated package reference: EntityFramework, Version=6.4.4
+2021-05-24 20:18:36.896 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.WebApi.Client, Version=5.2.7
+2021-05-24 20:18:36.897 -05:00 [INF] Removing outdated package reference: Microsoft.CSharp, Version=4.7.0
+2021-05-24 20:18:36.898 -05:00 [INF] Removing outdated package reference: Microsoft.SqlServer.Compact, Version=4.0.8876.1
+2021-05-24 20:18:36.900 -05:00 [INF] Removing outdated package reference: Newtonsoft.Json, Version=13.0.1
+2021-05-24 20:18:36.901 -05:00 [INF] Removing outdated package reference: System.Buffers, Version=4.5.1
+2021-05-24 20:18:36.902 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Annotations, Version=5.0.0
+2021-05-24 20:18:36.903 -05:00 [INF] Removing outdated package reference: System.Data.DataSetExtensions, Version=4.5.0
+2021-05-24 20:18:36.904 -05:00 [INF] Removing outdated package reference: System.IO, Version=4.3.0
+2021-05-24 20:18:36.905 -05:00 [INF] Removing outdated package reference: System.Memory, Version=4.5.4
+2021-05-24 20:18:36.907 -05:00 [INF] Removing outdated package reference: System.Numerics.Vectors, Version=4.5.0
+2021-05-24 20:18:36.908 -05:00 [INF] Removing outdated package reference: System.Runtime.CompilerServices.Unsafe, Version=5.0.0
+2021-05-24 20:18:36.911 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Encoding, Version=4.3.0
+2021-05-24 20:18:36.912 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Primitives, Version=4.3.0
+2021-05-24 20:18:36.913 -05:00 [INF] Adding package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:18:46.612 -05:00 [INF] Marking package System.Configuration.ConfigurationManager for removal because it appears to be a transitive dependency
+2021-05-24 20:18:46.634 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:18:46.640 -05:00 [INF] Removing outdated package reference: System.Configuration.ConfigurationManager, Version=5.0.0
+2021-05-24 20:18:55.705 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:18:55.711 -05:00 [INF] Upgrade step Clean up NuGet package references applied successfully
+2021-05-24 20:18:55.790 -05:00 [INF] Initializing upgrade step Update TFM
+2021-05-24 20:18:56.213 -05:00 [INF] TFM needs updated to net5.0
+2021-05-24 20:18:56.290 -05:00 [INF] Applying upgrade step Update TFM
+2021-05-24 20:19:06.339 -05:00 [INF] Updated TFM to net5.0
+2021-05-24 20:19:06.341 -05:00 [INF] Upgrade step Update TFM applied successfully
+2021-05-24 20:19:06.419 -05:00 [INF] Initializing upgrade step Update NuGet Packages
+2021-05-24 20:19:12.044 -05:00 [INF] Marking package EntityFramework.SqlServerCompact for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.086 -05:00 [INF] Marking package Microsoft.AspNet.Cors for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.119 -05:00 [INF] Marking package Microsoft.Owin.Cors for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.169 -05:00 [INF] Marking package Microsoft.WebSockets for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.214 -05:00 [INF] Marking package System.ComponentModel.Composition for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.222 -05:00 [INF] Marking package System.Diagnostics.DiagnosticSource for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.233 -05:00 [INF] Marking package System.Runtime for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.241 -05:00 [INF] Marking package System.Security.Cryptography.Algorithms for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.252 -05:00 [INF] Marking package System.Security.Cryptography.X509Certificates for removal because it appears to be a transitive dependency
+2021-05-24 20:19:12.271 -05:00 [INF] Marking package Antlr for removal based on package mapping configuration Antlr
+2021-05-24 20:19:12.272 -05:00 [INF] Adding package Antlr4 based on package mapping configuration Antlr
+2021-05-24 20:19:12.274 -05:00 [INF] Marking package WebGrease for removal based on package mapping configuration WebGrease
+2021-05-24 20:19:12.326 -05:00 [WRN] No version of Microsoft.AspNet.WebApi.Owin found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:12.372 -05:00 [WRN] No version of Microsoft.Owin.Security.Facebook found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:12.414 -05:00 [WRN] No version of Microsoft.Owin.Security.Google found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:12.447 -05:00 [WRN] No version of Microsoft.Owin.Security.MicrosoftAccount found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:12.479 -05:00 [WRN] No version of Microsoft.Owin.Security.Twitter found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:12.544 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:19:12.608 -05:00 [INF] Reference to Newtonsoft package (Microsoft.AspNetCore.Mvc.NewtonsoftJson, version 5.0.6) needs added
+2021-05-24 20:19:12.609 -05:00 [INF] Packages to be removed: EntityFramework.SqlServerCompact, Version=6.4.4
+Microsoft.AspNet.Cors, Version=5.2.7
+Microsoft.Owin.Cors, Version=4.2.0
+Microsoft.WebSockets, Version=0.2.3.1
+System.ComponentModel.Composition, Version=5.0.0
+System.Diagnostics.DiagnosticSource, Version=5.0.1
+System.Runtime, Version=4.3.1
+System.Security.Cryptography.Algorithms, Version=4.3.1
+System.Security.Cryptography.X509Certificates, Version=4.3.2
+Antlr, Version=3.5.0.2
+WebGrease, Version=1.6.0
+2021-05-24 20:19:12.611 -05:00 [INF] Packages to be added: Antlr4, Version=4.6.6
+Microsoft.AspNetCore.Mvc.NewtonsoftJson, Version=5.0.6
+2021-05-24 20:19:12.736 -05:00 [INF] Applying upgrade step Update NuGet Packages
+2021-05-24 20:19:12.738 -05:00 [INF] Removing outdated package reference: Antlr, Version=3.5.0.2
+2021-05-24 20:19:12.739 -05:00 [INF] Removing outdated package reference: EntityFramework.SqlServerCompact, Version=6.4.4
+2021-05-24 20:19:12.740 -05:00 [INF] Removing outdated package reference: Microsoft.AspNet.Cors, Version=5.2.7
+2021-05-24 20:19:12.741 -05:00 [INF] Removing outdated package reference: Microsoft.Owin.Cors, Version=4.2.0
+2021-05-24 20:19:12.742 -05:00 [INF] Removing outdated package reference: Microsoft.WebSockets, Version=0.2.3.1
+2021-05-24 20:19:12.743 -05:00 [INF] Removing outdated package reference: System.ComponentModel.Composition, Version=5.0.0
+2021-05-24 20:19:12.746 -05:00 [INF] Removing outdated package reference: System.Diagnostics.DiagnosticSource, Version=5.0.1
+2021-05-24 20:19:12.747 -05:00 [INF] Removing outdated package reference: System.Runtime, Version=4.3.1
+2021-05-24 20:19:12.748 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.Algorithms, Version=4.3.1
+2021-05-24 20:19:12.749 -05:00 [INF] Removing outdated package reference: System.Security.Cryptography.X509Certificates, Version=4.3.2
+2021-05-24 20:19:12.750 -05:00 [INF] Removing outdated package reference: WebGrease, Version=1.6.0
+2021-05-24 20:19:12.752 -05:00 [INF] Adding package reference: Antlr4, Version=4.6.6
+2021-05-24 20:19:12.753 -05:00 [INF] Adding package reference: Microsoft.AspNetCore.Mvc.NewtonsoftJson, Version=5.0.6
+2021-05-24 20:19:23.864 -05:00 [WRN] No version of Microsoft.AspNet.WebApi.Owin found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:23.869 -05:00 [WRN] No version of Microsoft.Owin.Security.Facebook found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:23.873 -05:00 [WRN] No version of Microsoft.Owin.Security.Google found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:23.878 -05:00 [WRN] No version of Microsoft.Owin.Security.MicrosoftAccount found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:23.882 -05:00 [WRN] No version of Microsoft.Owin.Security.Twitter found that supports ["net5.0"]; leaving unchanged
+2021-05-24 20:19:23.908 -05:00 [WRN] .NET Upgrade Assistant analyzer NuGet package reference cannot be added because the package cannot be found
+2021-05-24 20:19:23.924 -05:00 [INF] Upgrade step Update NuGet Packages applied successfully
+2021-05-24 20:19:24.004 -05:00 [INF] Initializing upgrade step Add template files
+2021-05-24 20:19:24.029 -05:00 [INF] 4 expected template items needed
+2021-05-24 20:19:24.132 -05:00 [INF] Applying upgrade step Add template files
+2021-05-24 20:19:24.155 -05:00 [INF] Added template file Program.cs from Default extension
+2021-05-24 20:19:24.157 -05:00 [INF] File already exists, moving Startup.cs to Startup.old.cs
+2021-05-24 20:19:24.172 -05:00 [INF] Added template file Startup.cs from Default extension
+2021-05-24 20:19:24.185 -05:00 [INF] Added template file appsettings.json from Default extension
+2021-05-24 20:19:24.197 -05:00 [INF] Added template file appsettings.Development.json from Default extension
+2021-05-24 20:19:31.351 -05:00 [INF] 4 template items added
+2021-05-24 20:19:31.352 -05:00 [INF] Upgrade step Add template files applied successfully
+2021-05-24 20:19:31.431 -05:00 [INF] Initializing upgrade step Upgrade app config files
+2021-05-24 20:19:31.814 -05:00 [INF] Found 4 app settings for upgrade: webpages:Version, webpages:Enabled, ClientValidationEnabled, UnobtrusiveJavaScriptEnabled
+2021-05-24 20:19:31.816 -05:00 [INF] system.serviceModel is not supported in .NET 5. See https://devblogs.microsoft.com/dotnet/migrating-a-sample-wpf-app-to-net-core-3-part-2/#updating-wcf-client-usage for details. For now, it will be disabled.
+2021-05-24 20:19:31.818 -05:00 [INF] 2 web page namespace imports need upgraded: NetMud.Models, NetMud
+2021-05-24 20:19:33.506 -05:00 [INF] Applying upgrade step Convert Application Settings
+2021-05-24 20:19:33.522 -05:00 [INF] Upgrade step Convert Application Settings applied successfully
+2021-05-24 20:19:35.395 -05:00 [INF] Applying upgrade step Disable unsupported configuration sections
+2021-05-24 20:19:35.399 -05:00 [INF] system.serviceModel is not supported in .NET 5. See https://devblogs.microsoft.com/dotnet/migrating-a-sample-wpf-app-to-net-core-3-part-2/#updating-wcf-client-usage for details. For now, it will be disabled.
+2021-05-24 20:19:35.403 -05:00 [INF] Configuration file C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\web.config has been updated
+2021-05-24 20:19:35.405 -05:00 [INF] Upgrade step Disable unsupported configuration sections applied successfully
+2021-05-24 20:19:36.743 -05:00 [INF] Applying upgrade step Convert system.web.webPages.razor/pages/namespaces
+2021-05-24 20:19:36.747 -05:00 [INF] View imports written to C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Views\_ViewImports.cshtml
+2021-05-24 20:19:36.748 -05:00 [INF] Upgrade step Convert system.web.webPages.razor/pages/namespaces applied successfully
+2021-05-24 20:19:36.749 -05:00 [INF] Applying upgrade step Upgrade app config files
+2021-05-24 20:19:36.751 -05:00 [INF] Upgrade step Upgrade app config files applied successfully
+2021-05-24 20:19:37.414 -05:00 [INF] Initializing upgrade step Update Razor files
+2021-05-24 20:19:42.809 -05:00 [INF] Identified 3 fixable diagnostics in Razor files in project NetMud
+2021-05-24 20:19:42.872 -05:00 [INF]   2 diagnostics need fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Views\Shared\_LoginPartial.cshtml
+2021-05-24 20:19:42.874 -05:00 [INF]   1 diagnostics need fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Views\Shared\_Layout.cshtml
+2021-05-24 20:19:43.141 -05:00 [INF] Applying upgrade step Apply code fixes to Razor documents
+2021-05-24 20:19:48.695 -05:00 [INF] Updating source code in Razor document C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Views\Shared\_Layout.cshtml at line 3
+2021-05-24 20:19:48.697 -05:00 [INF] Updating source code in Razor document C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Views\Shared\_Layout.cshtml at line 0
+2021-05-24 20:19:48.710 -05:00 [INF] Updating source code in Razor document C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Views\Shared\_LoginPartial.cshtml at line 2
+2021-05-24 20:19:48.711 -05:00 [INF] Updating source code in Razor document C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Views\Shared\_LoginPartial.cshtml at line 1
+2021-05-24 20:19:53.224 -05:00 [INF] Upgrade step Apply code fixes to Razor documents applied successfully
+2021-05-24 20:19:53.226 -05:00 [INF] Applying upgrade step Update Razor files
+2021-05-24 20:19:53.227 -05:00 [INF] Upgrade step Update Razor files applied successfully
+2021-05-24 20:19:53.760 -05:00 [INF] Initializing upgrade step Update source code
+2021-05-24 20:19:57.964 -05:00 [INF] Applying upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces
+2021-05-24 20:19:57.974 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\BundleConfig.cs
+2021-05-24 20:19:57.978 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\FilterConfig.cs
+2021-05-24 20:19:57.982 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\GameConfig.cs
+2021-05-24 20:19:57.987 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\RouteConfig.cs
+2021-05-24 20:19:58.002 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\Startup.Auth.cs
+2021-05-24 20:19:58.007 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\WebApiConfig.cs
+2021-05-24 20:19:58.011 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AccountController.cs
+2021-05-24 20:19:58.016 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AdminDataApiController.cs
+2021-05-24 20:19:58.021 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\BlogController.cs
+2021-05-24 20:19:58.026 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ClientDataApiController.cs
+2021-05-24 20:19:58.031 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\FeaturesController.cs
+2021-05-24 20:19:58.035 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\CelestialsController.cs
+2021-05-24 20:19:58.040 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ContentApprovalController.cs
+2021-05-24 20:19:58.045 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DictionaryController.cs
+2021-05-24 20:19:58.051 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DimensionalModelController.cs
+2021-05-24 20:19:58.069 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FaunaController.cs
+2021-05-24 20:19:58.073 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FightingArtController.cs
+2021-05-24 20:19:58.078 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FloraController.cs
+2021-05-24 20:19:58.083 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GaiaController.cs
+2021-05-24 20:19:58.088 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GameAdminController.cs
+2021-05-24 20:19:58.094 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GenderController.cs
+2021-05-24 20:19:58.098 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\HelpController.cs
+2021-05-24 20:19:58.103 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\InanimateController.cs
+2021-05-24 20:19:58.120 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\JournalEntryController.cs
+2021-05-24 20:19:58.125 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LanguageController.cs
+2021-05-24 20:19:58.130 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LiveAdminController.cs
+2021-05-24 20:19:58.135 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LocaleController.cs
+2021-05-24 20:19:58.140 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MaterialController.cs
+2021-05-24 20:19:58.145 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MineralsController.cs
+2021-05-24 20:19:58.150 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\NPCController.cs
+2021-05-24 20:19:58.155 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PathwayController.cs
+2021-05-24 20:19:58.161 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PlayerController.cs
+2021-05-24 20:19:58.165 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RaceController.cs
+2021-05-24 20:19:58.170 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RoomController.cs
+2021-05-24 20:19:58.176 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\UIModulesController.cs
+2021-05-24 20:19:58.181 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ZoneController.cs
+2021-05-24 20:19:58.198 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameClientController.cs
+2021-05-24 20:19:58.203 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\HomeController.cs
+2021-05-24 20:19:58.209 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\LoggingController.cs
+2021-05-24 20:19:58.214 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ManageController.cs
+2021-05-24 20:19:58.219 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:19:58.224 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\Admin\HelpViewModels.cs
+2021-05-24 20:19:58.229 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\Admin\JournalEntryViewModels.cs
+2021-05-24 20:19:58.234 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\Admin\PlayerViewModels.cs
+2021-05-24 20:19:58.240 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\Admin\UIModulesViewModels.cs
+2021-05-24 20:19:58.255 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:19:58.261 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\InterfaceModelBinder.cs
+2021-05-24 20:19:58.265 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Startup.old.cs
+2021-05-24 20:19:58.269 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\WebSocketService.ashx.cs
+2021-05-24 20:19:58.804 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\RouteConfig.cs
+2021-05-24 20:19:58.809 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\Startup.Auth.cs
+2021-05-24 20:19:58.814 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AccountController.cs
+2021-05-24 20:19:58.819 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AdminDataApiController.cs
+2021-05-24 20:19:58.825 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\BlogController.cs
+2021-05-24 20:19:58.830 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ClientDataApiController.cs
+2021-05-24 20:19:58.835 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\FeaturesController.cs
+2021-05-24 20:19:58.840 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\CelestialsController.cs
+2021-05-24 20:19:58.846 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ContentApprovalController.cs
+2021-05-24 20:19:58.864 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DictionaryController.cs
+2021-05-24 20:19:58.869 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DimensionalModelController.cs
+2021-05-24 20:19:58.874 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FaunaController.cs
+2021-05-24 20:19:58.879 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FightingArtController.cs
+2021-05-24 20:19:58.884 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FloraController.cs
+2021-05-24 20:19:58.889 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GaiaController.cs
+2021-05-24 20:19:58.895 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GameAdminController.cs
+2021-05-24 20:19:58.900 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GenderController.cs
+2021-05-24 20:19:58.907 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\HelpController.cs
+2021-05-24 20:19:58.913 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\InanimateController.cs
+2021-05-24 20:19:58.918 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\JournalEntryController.cs
+2021-05-24 20:19:58.922 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LanguageController.cs
+2021-05-24 20:19:58.929 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LiveAdminController.cs
+2021-05-24 20:19:58.966 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LocaleController.cs
+2021-05-24 20:19:58.972 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MaterialController.cs
+2021-05-24 20:19:58.979 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MineralsController.cs
+2021-05-24 20:19:58.986 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\NPCController.cs
+2021-05-24 20:19:58.992 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PathwayController.cs
+2021-05-24 20:19:58.997 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PlayerController.cs
+2021-05-24 20:19:59.002 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RaceController.cs
+2021-05-24 20:19:59.007 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RoomController.cs
+2021-05-24 20:19:59.012 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\UIModulesController.cs
+2021-05-24 20:19:59.030 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ZoneController.cs
+2021-05-24 20:19:59.034 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameClientController.cs
+2021-05-24 20:19:59.040 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\HomeController.cs
+2021-05-24 20:19:59.047 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\LoggingController.cs
+2021-05-24 20:19:59.052 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ManageController.cs
+2021-05-24 20:19:59.058 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:19:59.063 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:19:59.070 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Startup.old.cs
+2021-05-24 20:19:59.076 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\WebSocketService.ashx.cs
+2021-05-24 20:19:59.573 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\Startup.Auth.cs
+2021-05-24 20:19:59.578 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AccountController.cs
+2021-05-24 20:19:59.583 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AdminDataApiController.cs
+2021-05-24 20:19:59.588 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\BlogController.cs
+2021-05-24 20:19:59.593 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ClientDataApiController.cs
+2021-05-24 20:19:59.599 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\FeaturesController.cs
+2021-05-24 20:19:59.604 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\CelestialsController.cs
+2021-05-24 20:19:59.647 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ContentApprovalController.cs
+2021-05-24 20:19:59.652 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DictionaryController.cs
+2021-05-24 20:19:59.656 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DimensionalModelController.cs
+2021-05-24 20:19:59.662 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FaunaController.cs
+2021-05-24 20:19:59.667 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FightingArtController.cs
+2021-05-24 20:19:59.671 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FloraController.cs
+2021-05-24 20:19:59.677 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GaiaController.cs
+2021-05-24 20:19:59.682 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GameAdminController.cs
+2021-05-24 20:19:59.688 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GenderController.cs
+2021-05-24 20:19:59.692 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\HelpController.cs
+2021-05-24 20:19:59.697 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\InanimateController.cs
+2021-05-24 20:19:59.702 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\JournalEntryController.cs
+2021-05-24 20:19:59.707 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LanguageController.cs
+2021-05-24 20:19:59.712 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LiveAdminController.cs
+2021-05-24 20:19:59.731 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LocaleController.cs
+2021-05-24 20:19:59.735 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MaterialController.cs
+2021-05-24 20:19:59.740 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MineralsController.cs
+2021-05-24 20:19:59.745 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\NPCController.cs
+2021-05-24 20:19:59.749 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PathwayController.cs
+2021-05-24 20:19:59.754 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PlayerController.cs
+2021-05-24 20:19:59.759 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RaceController.cs
+2021-05-24 20:19:59.764 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RoomController.cs
+2021-05-24 20:19:59.769 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\UIModulesController.cs
+2021-05-24 20:19:59.786 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ZoneController.cs
+2021-05-24 20:19:59.791 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameClientController.cs
+2021-05-24 20:19:59.796 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\HomeController.cs
+2021-05-24 20:19:59.800 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\LoggingController.cs
+2021-05-24 20:19:59.805 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ManageController.cs
+2021-05-24 20:19:59.810 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:19:59.814 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:00.378 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\Startup.Auth.cs
+2021-05-24 20:20:00.383 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AccountController.cs
+2021-05-24 20:20:00.390 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AdminDataApiController.cs
+2021-05-24 20:20:00.410 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\BlogController.cs
+2021-05-24 20:20:00.415 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ClientDataApiController.cs
+2021-05-24 20:20:00.423 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\FeaturesController.cs
+2021-05-24 20:20:00.429 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\CelestialsController.cs
+2021-05-24 20:20:00.433 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ContentApprovalController.cs
+2021-05-24 20:20:00.441 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DictionaryController.cs
+2021-05-24 20:20:00.446 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DimensionalModelController.cs
+2021-05-24 20:20:00.454 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FaunaController.cs
+2021-05-24 20:20:00.459 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FightingArtController.cs
+2021-05-24 20:20:00.465 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FloraController.cs
+2021-05-24 20:20:00.498 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GaiaController.cs
+2021-05-24 20:20:00.503 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GameAdminController.cs
+2021-05-24 20:20:00.512 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GenderController.cs
+2021-05-24 20:20:00.530 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\HelpController.cs
+2021-05-24 20:20:00.538 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\InanimateController.cs
+2021-05-24 20:20:00.544 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\JournalEntryController.cs
+2021-05-24 20:20:00.549 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LanguageController.cs
+2021-05-24 20:20:00.558 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LiveAdminController.cs
+2021-05-24 20:20:00.564 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LocaleController.cs
+2021-05-24 20:20:00.569 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MaterialController.cs
+2021-05-24 20:20:00.577 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MineralsController.cs
+2021-05-24 20:20:00.582 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\NPCController.cs
+2021-05-24 20:20:00.587 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PathwayController.cs
+2021-05-24 20:20:00.592 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PlayerController.cs
+2021-05-24 20:20:00.598 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RaceController.cs
+2021-05-24 20:20:00.603 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RoomController.cs
+2021-05-24 20:20:00.609 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\UIModulesController.cs
+2021-05-24 20:20:00.633 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ZoneController.cs
+2021-05-24 20:20:00.638 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameClientController.cs
+2021-05-24 20:20:00.643 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\HomeController.cs
+2021-05-24 20:20:00.648 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\LoggingController.cs
+2021-05-24 20:20:00.653 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ManageController.cs
+2021-05-24 20:20:00.659 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:20:01.199 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\Startup.Auth.cs
+2021-05-24 20:20:01.204 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AccountController.cs
+2021-05-24 20:20:01.209 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AdminDataApiController.cs
+2021-05-24 20:20:01.213 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ClientDataApiController.cs
+2021-05-24 20:20:01.217 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PlayerController.cs
+2021-05-24 20:20:01.223 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ManageController.cs
+2021-05-24 20:20:01.228 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:20:01.730 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\Startup.Auth.cs
+2021-05-24 20:20:01.735 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AdminDataApiController.cs
+2021-05-24 20:20:01.740 -05:00 [INF] Diagnostic UA0001 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:20:02.223 -05:00 [INF] Upgrade step Apply fix for UA0001: ASP.NET Core projects should not reference ASP.NET namespaces applied successfully
+2021-05-24 20:20:04.524 -05:00 [INF] Applying upgrade step Apply fix for UA0002: HtmlString types should be replaced with Microsoft.AspNetCore.Html.HtmlString
+2021-05-24 20:20:04.635 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:05.219 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:05.754 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:06.266 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:06.862 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:07.399 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:07.924 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:08.562 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:09.099 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:09.638 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:10.312 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:10.839 -05:00 [INF] Diagnostic UA0002 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\HtmlHelpers.cs
+2021-05-24 20:20:11.338 -05:00 [INF] Upgrade step Apply fix for UA0002: HtmlString types should be replaced with Microsoft.AspNetCore.Html.HtmlString applied successfully
+2021-05-24 20:20:14.164 -05:00 [INF] Applying upgrade step Apply fix for UA0003: ActionResult types should come from the Microsoft.AspNetCore.Mvc namespace
+2021-05-24 20:20:14.223 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AccountController.cs
+2021-05-24 20:20:14.237 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameClientController.cs
+2021-05-24 20:20:14.385 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ManageController.cs
+2021-05-24 20:20:14.432 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ZoneController.cs
+2021-05-24 20:20:14.494 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\FeaturesController.cs
+2021-05-24 20:20:14.550 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\CelestialsController.cs
+2021-05-24 20:20:14.575 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\HomeController.cs
+2021-05-24 20:20:14.638 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DictionaryController.cs
+2021-05-24 20:20:14.661 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\ContentApprovalController.cs
+2021-05-24 20:20:14.713 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FaunaController.cs
+2021-05-24 20:20:14.736 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FightingArtController.cs
+2021-05-24 20:20:14.779 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GaiaController.cs
+2021-05-24 20:20:14.804 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\FloraController.cs
+2021-05-24 20:20:14.817 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\LoggingController.cs
+2021-05-24 20:20:14.861 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\DimensionalModelController.cs
+2021-05-24 20:20:14.878 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\BlogController.cs
+2021-05-24 20:20:14.900 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GenderController.cs
+2021-05-24 20:20:14.941 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\HelpController.cs
+2021-05-24 20:20:14.978 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\GameAdminController.cs
+2021-05-24 20:20:15.034 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\InanimateController.cs
+2021-05-24 20:20:15.057 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\JournalEntryController.cs
+2021-05-24 20:20:15.102 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LanguageController.cs
+2021-05-24 20:20:15.125 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MaterialController.cs
+2021-05-24 20:20:15.195 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LiveAdminController.cs
+2021-05-24 20:20:15.241 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\MineralsController.cs
+2021-05-24 20:20:15.278 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\LocaleController.cs
+2021-05-24 20:20:15.339 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\NPCController.cs
+2021-05-24 20:20:15.364 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\UIModulesController.cs
+2021-05-24 20:20:15.410 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RaceController.cs
+2021-05-24 20:20:15.482 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\RoomController.cs
+2021-05-24 20:20:15.524 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PathwayController.cs
+2021-05-24 20:20:15.569 -05:00 [INF] Diagnostic UA0003 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\GameAdmin\PlayerController.cs
+2021-05-24 20:20:16.070 -05:00 [INF] Upgrade step Apply fix for UA0003: ActionResult types should come from the Microsoft.AspNetCore.Mvc namespace applied successfully
+2021-05-24 20:20:19.462 -05:00 [INF] Applying upgrade step Apply fix for UA0005: Do not use HttpContext.Current
+2021-05-24 20:20:19.979 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\App_Start\GameConfig.cs
+2021-05-24 20:20:20.026 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\ClientDataApiController.cs
+2021-05-24 20:20:20.095 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Controllers\AdminDataApiController.cs
+2021-05-24 20:20:20.124 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:20:20.643 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:20:21.267 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:20:21.710 -05:00 [INF] Diagnostic UA0005 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Global.asax.cs
+2021-05-24 20:20:22.090 -05:00 [INF] Upgrade step Apply fix for UA0005: Do not use HttpContext.Current applied successfully
+2021-05-24 20:20:27.041 -05:00 [INF] Applying upgrade step Apply fix for UA0010: [AllowHtmlAttribute] should be removed
+2021-05-24 20:20:27.046 -05:00 [INF] Diagnostic UA0010 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\Admin\JournalEntryViewModels.cs
+2021-05-24 20:20:27.051 -05:00 [INF] Diagnostic UA0010 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\Admin\HelpViewModels.cs
+2021-05-24 20:20:27.057 -05:00 [INF] Diagnostic UA0010 fixed in C:\Users\swift\source\repos\SwiftAusterity\Warrens\NetMud\Models\Admin\UIModulesViewModels.cs
+2021-05-24 20:20:27.483 -05:00 [INF] Applying upgrade step Update source code
+2021-05-24 20:20:32.042 -05:00 [INF] Upgrade step Update source code applied successfully
+2021-05-24 20:20:32.044 -05:00 [INF] Upgrade step Apply fix for UA0010: [AllowHtmlAttribute] should be removed applied successfully
+2021-05-24 20:20:32.653 -05:00 [INF] Initializing upgrade step Move to next project
+2021-05-24 20:20:47.619 -05:00 [INF] Applying upgrade step Move to next project
+2021-05-24 20:20:47.621 -05:00 [INF] Upgrade step Move to next project applied successfully
+2021-05-24 20:20:49.672 -05:00 [INF] Initializing upgrade step Finalize upgrade
+2021-05-24 20:20:51.229 -05:00 [INF] Applying upgrade step Finalize upgrade
+2021-05-24 20:20:51.231 -05:00 [INF] Upgrade step Finalize upgrade applied successfully
+2021-05-24 20:20:52.453 -05:00 [INF] Upgrade has completed. Please review any changes.
+2021-05-24 20:20:52.455 -05:00 [INF] Saving upgrade progress file at C:\Users\swift\source\repos\SwiftAusterity\Warrens\.upgrade-assistant

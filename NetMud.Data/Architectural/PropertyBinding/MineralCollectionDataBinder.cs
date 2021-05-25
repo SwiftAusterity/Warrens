@@ -17,7 +17,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
 
             IEnumerable<string> valueCollection = input as IEnumerable<string>;
 
-            HashSet<IMineral> collective = new HashSet<IMineral>(valueCollection.Select(str => TemplateCache.Get<IMineral>(long.Parse(str))));
+            HashSet<IMineral> collective = new(valueCollection.Select(str => TemplateCache.Get<IMineral>(long.Parse(str))));
 
             return collective;
         }

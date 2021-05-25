@@ -20,8 +20,8 @@ namespace NetMud.Data.Architectural.Serialization
         {
             JsonSerializer serializer = SerializationUtility.GetSerializer();
 
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
+            StringBuilder sb = new();
+            StringWriter writer = new(sb);
 
             serializer.Serialize(writer, this);
 
@@ -37,7 +37,7 @@ namespace NetMud.Data.Architectural.Serialization
         {
             JsonSerializer serializer = SerializationUtility.GetSerializer();
 
-            StringReader reader = new StringReader(jsonData);
+            StringReader reader = new(jsonData);
 
             return serializer.Deserialize(reader, GetType()) as IFileStored;
         }

@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gaia
 {
@@ -23,7 +22,7 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// The system type of data this attaches to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override Type EntityClass
         {
@@ -34,14 +33,14 @@ namespace NetMud.Data.Gaia
         /// What type of approval is necessary for this content
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
@@ -63,7 +62,7 @@ namespace NetMud.Data.Gaia
         /// Celestial bodies for this world
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [Display(Name = "Celestial Body", Description = "The Celestial bodies that orbit this world. (or the one this orbits)")]
         [UIHint("CollectionCelestialList")]
         [CelestialCollectionDataBinder]

@@ -31,7 +31,7 @@ namespace NutMud.Commands.Rendering
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
 
             //Just do a blank execution as the channel will handle doing the room updates
             if (Subject == null)
@@ -39,7 +39,7 @@ namespace NutMud.Commands.Rendering
                 //sb.AddRange(OriginLocation.CurrentLocation.RenderToVisible(Actor));
 
                 ///Need to do like HMR with a simple "update UI" pipeline TODO
-                Message blankMessenger = new Message(new LexicalParagraph("You observe your surroundings."));
+                Message blankMessenger = new(new LexicalParagraph("You observe your surroundings."));
 
                 blankMessenger.ExecuteMessaging(Actor, (IEntity)Subject, null, OriginLocation.CurrentRoom, null);
                 return true;
@@ -51,7 +51,7 @@ namespace NutMud.Commands.Rendering
 
             ILexicalParagraph toSubject = new LexicalParagraph("$A$ looks at YOU.");
 
-            Message messagingObject = new Message(lookTarget.RenderToVisible(Actor))
+            Message messagingObject = new(lookTarget.RenderToVisible(Actor))
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin },
                 ToSubject = new List<ILexicalParagraph> { toSubject }
@@ -68,7 +68,7 @@ namespace NutMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: look",
                 "look &lt;target&gt;".PadWithString(14, "&nbsp;", true)

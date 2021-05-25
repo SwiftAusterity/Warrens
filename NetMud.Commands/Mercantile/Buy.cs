@@ -66,7 +66,7 @@ namespace NetMud.Commands.EntityManipulation
             ILexicalParagraph toArea = new LexicalParagraph("$A$ makes a purchase from $S$.");
 
             //TODO: language outputs
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new(toActor)
             {
                 ToOrigin = new List<ILexicalParagraph> { toArea }
             };
@@ -82,7 +82,7 @@ namespace NetMud.Commands.EntityManipulation
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: buy &lt;direction&gt; &lt;item&gt;"
             };

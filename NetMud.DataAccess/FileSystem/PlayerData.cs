@@ -3,7 +3,6 @@ using NetMud.DataStructure.Inanimate;
 using NetMud.DataStructure.Player;
 using System;
 using System.IO;
-using System.Web.Hosting;
 
 namespace NetMud.DataAccess.FileSystem
 {
@@ -16,7 +15,7 @@ namespace NetMud.DataAccess.FileSystem
         {
             get
             {
-                return HostingEnvironment.MapPath(base.BaseDirectory + "Players/");
+                return null;// HostingEnvironment.MapPath(base.BaseDirectory + "Players/");
             }
         }
 
@@ -64,7 +63,7 @@ namespace NetMud.DataAccess.FileSystem
                 //Wipe out the existing one so we can create all new files
                 if (VerifyDirectory(currentDirName, false))
                 {
-                    DirectoryInfo currentRoot = new DirectoryInfo(currentDirName);
+                    DirectoryInfo currentRoot = new(currentDirName);
 
                     if (!VerifyDirectory(archiveDirName))
                     {
@@ -116,7 +115,7 @@ namespace NetMud.DataAccess.FileSystem
                     return null;
                 }
 
-                DirectoryInfo playerDirectory = new DirectoryInfo(currentBackupDirectory);
+                DirectoryInfo playerDirectory = new(currentBackupDirectory);
 
                 byte[] fileData = new byte[0];
                 using (FileStream stream = File.Open(currentBackupDirectory + GetPlayerFilename(chr.Id), FileMode.Open))
@@ -147,7 +146,7 @@ namespace NetMud.DataAccess.FileSystem
                 //We'll need one of these per container on players
                 if (Directory.Exists(playerDirectory + "Inventory/"))
                 {
-                    DirectoryInfo inventoryDirectory = new DirectoryInfo(playerDirectory + "Inventory/");
+                    DirectoryInfo inventoryDirectory = new(playerDirectory + "Inventory/");
 
                     foreach (FileInfo file in inventoryDirectory.EnumerateFiles())
                     {
@@ -182,7 +181,7 @@ namespace NetMud.DataAccess.FileSystem
                 return false;
             }
 
-            DirectoryInfo charDirectory = new DirectoryInfo(currentBackupDirectory);
+            DirectoryInfo charDirectory = new(currentBackupDirectory);
 
             foreach (FileInfo file in charDirectory.EnumerateFiles("*.playertemplate", SearchOption.AllDirectories))
             {
@@ -226,7 +225,7 @@ namespace NetMud.DataAccess.FileSystem
             try
             {
                 WriteToFile(fullFileName, entity.ToBytes());
-                LiveData liveDataWrapper = new LiveData();
+                LiveData liveDataWrapper = new();
 
                 //We also need to write out all the inventory
                 foreach (IInanimate obj in entity.Inventory.EntitiesContained())

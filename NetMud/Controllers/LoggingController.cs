@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.Models.Logging;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -35,7 +32,7 @@ namespace NetMud.Controllers
 
         public ActionResult Index(string selectedLog)
         {
-            DashboardViewModel dashboardModel = new DashboardViewModel
+            DashboardViewModel dashboardModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 

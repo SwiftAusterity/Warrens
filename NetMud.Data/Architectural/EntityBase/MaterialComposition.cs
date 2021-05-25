@@ -4,7 +4,6 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -24,7 +23,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The material it's made of
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [UIHint("MaterialList")]
         [Display(Name = "Material", Description = "The material it's made of.")]

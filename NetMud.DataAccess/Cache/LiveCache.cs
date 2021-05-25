@@ -11,7 +11,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class LiveCache
     {
-        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.Live);
+        private static readonly CacheAccessor BackingCache = new(CacheType.Live);
 
         /// <summary>
         /// Adds a single entity into the cache

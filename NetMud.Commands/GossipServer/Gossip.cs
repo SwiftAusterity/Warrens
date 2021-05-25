@@ -34,7 +34,7 @@ namespace NetMud.Commands.GossipServer
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
             IPlayer playerActor = Actor.GetType().GetInterfaces().Contains(typeof(IPlayer)) ? Actor as IPlayer : null;
 
             if (playerActor != null && !playerActor.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
@@ -93,7 +93,7 @@ namespace NetMud.Commands.GossipServer
             ILexicalParagraph toActor = new LexicalParagraph(sb.ToString());
 
             //TODO: language outputs
-            Message messagingObject = new Message(toActor);
+            Message messagingObject = new(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -106,7 +106,7 @@ namespace NetMud.Commands.GossipServer
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: gossip &lt;text&gt;",
                 "gossip @&lt;channel&gt; &lt;text&gt;".PadWithString(14, "&nbsp;", true),

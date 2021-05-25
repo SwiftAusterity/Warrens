@@ -8,20 +8,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Reflection;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gossip
 {
     public class GossipConfig : ConfigData, IGossipConfig
     {
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.None;
 
         /// <summary>
         /// Type of configuation data this is
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ConfigDataType Type => ConfigDataType.GameWorld;
 
@@ -57,14 +56,14 @@ namespace NetMud.Data.Gossip
         /// The version number
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public string Version { get; set; }
 
         /// <summary>
         /// The useragent the client sends the gossip server
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public string UserAgent
         {
             get

@@ -1,7 +1,6 @@
 ﻿using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
@@ -19,7 +18,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Inanimate
 {
@@ -33,7 +31,7 @@ namespace NetMud.Data.Inanimate
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -248,7 +246,7 @@ namespace NetMud.Data.Inanimate
             }
 
             IInanimateTemplate dt = Template<IInanimateTemplate>();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             StaffRank rank = viewer.ImplementsType<IPlayer>() ? viewer.Template<IPlayerTemplate>().GamePermissionsRank : StaffRank.Player;
 
             sb.Append("<div class='helpItem'>");
@@ -279,7 +277,7 @@ namespace NetMud.Data.Inanimate
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -288,7 +286,7 @@ namespace NetMud.Data.Inanimate
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -298,7 +296,7 @@ namespace NetMud.Data.Inanimate
             };
 
             //Self becomes the first sense in the list
-            List<ISensoryEvent> messages = new List<ISensoryEvent>();
+            List<ISensoryEvent> messages = new();
             foreach (MessagingType sense in sensoryTypes)
             {
                 ISensoryEvent me = GetSelf(sense);
@@ -312,12 +310,12 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberSounds = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
+                        ILexica uberSounds = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
                         uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.Subject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.Subject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             me.TryModify(newDesc);
@@ -336,12 +334,12 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
+                        ILexica uberSmells = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
                         uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberSmells.TryModify(newDesc);
@@ -360,14 +358,14 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
+                        ILexica collectivePsy = new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
 
                         ILexica uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
                         uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberPsy.TryModify(newDesc);
@@ -386,12 +384,12 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberTaste = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", collectiveContext);
+                        ILexica uberTaste = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", collectiveContext);
                         uberTaste.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberTaste.TryModify(newDesc);
@@ -410,12 +408,12 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberTouch = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel", collectiveContext);
+                        ILexica uberTouch = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel", collectiveContext);
                         uberTouch.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberTouch.TryModify(newDesc);
@@ -434,12 +432,12 @@ namespace NetMud.Data.Inanimate
 
                         me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica uberSight = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "appears", collectiveContext);
+                        ILexica uberSight = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "appears", collectiveContext);
                         uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberSight.TryModify(newDesc);

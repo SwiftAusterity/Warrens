@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Linguistic;
 using NetMud.Data.Room;
 using NetMud.Data.Zone;
 using NetMud.DataAccess;
@@ -19,8 +16,7 @@ using NetMud.Models.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -51,7 +47,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageZoneTemplateViewModel vModel = new ManageZoneTemplateViewModel(TemplateCache.GetAll<IZoneTemplate>())
+            ManageZoneTemplateViewModel vModel = new(TemplateCache.GetAll<IZoneTemplate>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -120,7 +116,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditZoneTemplateViewModel vModel = new AddEditZoneTemplateViewModel()
+            AddEditZoneTemplateViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
@@ -167,7 +163,7 @@ namespace NetMud.Controllers.GameAdmin
 
             IEnumerable<ILocaleTemplate> locales = TemplateCache.GetAll<ILocaleTemplate>().Where(locale => locale.ParentLocation.Equals(obj));
 
-            AddEditZoneTemplateViewModel vModel = new AddEditZoneTemplateViewModel(locales)
+            AddEditZoneTemplateViewModel vModel = new(locales)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
@@ -239,7 +235,7 @@ namespace NetMud.Controllers.GameAdmin
 
             IPathwayTemplate existingPathway = origin.GetLocalePathways().FirstOrDefault(path => ((IRoomTemplate)path.Destination).ParentLocation.Equals(locale));
 
-            AddEditZonePathwayTemplateViewModel vModel = new AddEditZonePathwayTemplateViewModel
+            AddEditZonePathwayTemplateViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -330,7 +326,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            OccurrenceViewModel vModel = new OccurrenceViewModel
+            OccurrenceViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
@@ -352,7 +348,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.SensoryEventDataObject = new SensoryEvent
                 {
-                    Event = new Lexica()
+                    Event = new Linguistic.Lexica()
                 };
             }
 
@@ -381,7 +377,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
                 {
                     Strength = vModel.SensoryEventDataObject.Strength,
-                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                    Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
@@ -393,7 +389,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
-                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                existingOccurrence.Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
                                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {

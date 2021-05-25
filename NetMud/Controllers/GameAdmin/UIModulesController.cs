@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Player;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -9,8 +7,7 @@ using NetMud.DataStructure.Player;
 using NetMud.Models.Admin;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -41,7 +38,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageUIModulesViewModel vModel = new ManageUIModulesViewModel(TemplateCache.GetAll<IUIModule>())
+            ManageUIModulesViewModel vModel = new(TemplateCache.GetAll<IUIModule>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -111,7 +108,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
+            AddEditUIModuleViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -126,7 +123,7 @@ namespace NetMud.Controllers.GameAdmin
             string message = string.Empty;
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
 
-            UIModule newObj = new UIModule
+            UIModule newObj = new()
             {
                 Name = vModel.Name,
                 BodyHtml = vModel.BodyHtml,
@@ -161,7 +158,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(long id)
         {
-            AddEditUIModuleViewModel vModel = new AddEditUIModuleViewModel
+            AddEditUIModuleViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

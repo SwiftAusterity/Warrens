@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural.ActorBase;
 using NetMud.Models.Admin;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -38,7 +35,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageGenderDataViewModel vModel = new ManageGenderDataViewModel(TemplateCache.GetAll<IGender>())
+            ManageGenderDataViewModel vModel = new(TemplateCache.GetAll<IGender>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -108,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long Template = -1)
         {
-            AddEditGenderViewModel vModel = new AddEditGenderViewModel(Template)
+            AddEditGenderViewModel vModel = new(Template)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -141,7 +138,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            AddEditGenderViewModel vModel = new AddEditGenderViewModel
+            AddEditGenderViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

@@ -45,7 +45,7 @@ namespace NetMud.Cartography
         /// <returns>a single string that is an ascii map</returns>
         public static string RenderRadiusMap(IRoom room, int radius, bool visibleOnly = false, bool forAdmin = true, bool withPathways = true, ILocale locale = null, MapRenderMode renderMode = MapRenderMode.Normal)
         {
-            StringBuilder asciiMap = new StringBuilder();
+            StringBuilder asciiMap = new();
 
             //Why?
             if (room == null)
@@ -85,7 +85,7 @@ namespace NetMud.Cartography
         /// <returns>the rendered map</returns>
         public static string RenderMap(string[,] map, bool visibileOnly, bool forAdmin, bool withPathways, IRoom centerRoom, MapRenderMode renderMode = MapRenderMode.Normal)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             if (!withPathways)
             {
@@ -440,7 +440,7 @@ namespace NetMud.Cartography
         /// <returns>a single string that is an ascii map</returns>
         public static string RenderRadiusMap(IRoomTemplate room, int radius, bool visibleOnly = false, bool forAdmin = true, bool withPathways = true, ILocaleTemplate locale = null, MapRenderMode renderMode = MapRenderMode.Normal)
         {
-            StringBuilder asciiMap = new StringBuilder();
+            StringBuilder asciiMap = new();
 
             //Why?
             if (room == null)
@@ -480,7 +480,7 @@ namespace NetMud.Cartography
         /// <returns>the rendered map</returns>
         public static string RenderMap(long[,] map, bool visibileOnly, bool forAdmin, bool withPathways, IRoomTemplate centerRoom, MapRenderMode renderMode = MapRenderMode.Normal)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             if (!withPathways)
             {

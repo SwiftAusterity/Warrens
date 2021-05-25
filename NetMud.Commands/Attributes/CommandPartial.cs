@@ -150,7 +150,7 @@ namespace NetMud.Commands.Attributes
 
         public virtual IEnumerable<string> RenderHelpBody()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 HelpText
             };
@@ -162,7 +162,7 @@ namespace NetMud.Commands.Attributes
         {
             ILexicalParagraph toActor = new LexicalParagraph(error);
 
-            Message messagingObject = new Message(toActor);
+            Message messagingObject = new(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
         }

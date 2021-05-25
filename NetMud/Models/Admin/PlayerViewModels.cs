@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;

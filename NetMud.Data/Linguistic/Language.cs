@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -23,14 +22,14 @@ namespace NetMud.Data.Linguistic
     [Serializable]
     public class Language : ConfigData, ILanguage, IComparable<ILanguage>, IEquatable<ILanguage>, IEqualityComparer<ILanguage>
     {
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
 
         /// <summary>
         /// Type of configuation data this is
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ConfigDataType Type => ConfigDataType.Language;
 
@@ -132,7 +131,7 @@ namespace NetMud.Data.Linguistic
         {
             word = word.ToLower();
 
-            Regex rgx = new Regex("[^a-z -]");
+            Regex rgx = new("[^a-z -]");
             word = rgx.Replace(word, "");
 
             if (string.IsNullOrWhiteSpace(word) || word.All(ch => ch == '-') || word.IsNumeric())

@@ -31,7 +31,7 @@ namespace NetMud.DataAccess.Cache
         /// <summary>
         /// The general storage policy
         /// </summary>
-        private readonly CacheItemPolicy _globalPolicy = new CacheItemPolicy();
+        private readonly CacheItemPolicy _globalPolicy = new();
 
         /// <summary>
         /// The cache type (affects the "ids")

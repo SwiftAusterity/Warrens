@@ -44,7 +44,7 @@ namespace NetMud.Lexica.DeepLex
 
             if (!string.IsNullOrWhiteSpace(jsonString))
             {
-                StringReader reader = new StringReader(jsonString);
+                StringReader reader = new(jsonString);
 
                 var entryCollection = Serializer.Deserialize(reader, typeof(List<DictionaryEntry>)) as List<DictionaryEntry>;
 
@@ -67,7 +67,7 @@ namespace NetMud.Lexica.DeepLex
 
             if (!string.IsNullOrWhiteSpace(jsonString))
             {
-                StringReader reader = new StringReader(jsonString);
+                StringReader reader = new(jsonString);
 
                 var entryCollection = Serializer.Deserialize(reader, typeof(List<ThesaurusEntry>)) as List<ThesaurusEntry>;
 

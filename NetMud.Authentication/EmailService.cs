@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace NetMud.Authentication
 {

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Combat
 {
@@ -49,7 +48,7 @@ namespace NetMud.Data.Combat
         /// <summary>
         /// The available arts for this combo
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Fighting Arts", Description = "Which fighting arts are in this combo, in order.")]
         [UIHint("FightingArtsCollection")]

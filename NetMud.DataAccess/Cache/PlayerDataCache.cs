@@ -12,7 +12,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class PlayerDataCache
     {
-        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.PlayerData);
+        private static readonly CacheAccessor BackingCache = new(CacheType.PlayerData);
 
         /// <summary>
         /// Adds a single entity into the cache
@@ -20,7 +20,7 @@ namespace NetMud.DataAccess.Cache
         /// <param name="objectToCache">the entity to cache</param>
         public static void Add(IPlayerTemplate objectToCache)
         {
-            PlayerDataCacheKey cacheKey = new PlayerDataCacheKey(objectToCache);
+            PlayerDataCacheKey cacheKey = new(objectToCache);
 
             BackingCache.Add(objectToCache, cacheKey);
         }
@@ -88,7 +88,7 @@ namespace NetMud.DataAccess.Cache
 
             if(!chars.Any())
             {
-                PlayerData pData = new PlayerData();
+                PlayerData pData = new();
 
                 pData.LoadAllCharactersForAccountToCache(accountHandle);
             }

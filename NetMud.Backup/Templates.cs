@@ -33,7 +33,7 @@ namespace NetMud.Backup
         /// <returns>full or partial success</returns>
         public static bool WriteFullBackup(string backupName)
         {
-            TemplateData fileAccessor = new TemplateData();
+            TemplateData fileAccessor = new();
 
             try
             {
@@ -88,7 +88,7 @@ namespace NetMud.Backup
                 return false;
             }
 
-            TemplateData fileAccessor = new TemplateData();
+            TemplateData fileAccessor = new();
             string typeDirectory = fileAccessor.BaseDirectory + fileAccessor.CurrentDirectoryName + objectType.Name + "/";
 
             if (!fileAccessor.VerifyDirectory(typeDirectory, false))
@@ -96,7 +96,7 @@ namespace NetMud.Backup
                 return false;
             }
 
-            DirectoryInfo filesDirectory = new DirectoryInfo(typeDirectory);
+            DirectoryInfo filesDirectory = new(typeDirectory);
 
             foreach (FileInfo file in filesDirectory.EnumerateFiles())
             {

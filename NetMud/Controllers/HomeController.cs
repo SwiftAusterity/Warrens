@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -10,8 +8,7 @@ using NetMud.DataStructure.System;
 using NetMud.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -42,7 +39,7 @@ namespace NetMud.Controllers
         public ActionResult Index()
         {
             ApplicationUser user = null;
-            HomeViewModel vModel = new HomeViewModel();
+            HomeViewModel vModel = new();
 
             try
             {
@@ -86,7 +83,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult ReportBug()
         {
-            BugReportModel vModel = new BugReportModel();
+            BugReportModel vModel = new();
 
             return View("~/Views/Shared/ReportBug.cshtml", "_chromelessLayout", vModel);
         }
@@ -105,7 +102,7 @@ namespace NetMud.Controllers
         [HttpGet]
         public ActionResult WordFight()
         {
-            WordFightViewModel vModel = new WordFightViewModel();
+            WordFightViewModel vModel = new();
 
             IEnumerable<ILexeme> lexes = ConfigDataCache.GetAll<ILexeme>();
 

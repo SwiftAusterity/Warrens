@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Room
 {
@@ -30,7 +29,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// The system type of data this attaches to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override Type EntityClass
         {
@@ -41,14 +40,14 @@ namespace NetMud.Data.Room
         /// What type of approval is necessary for this content
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Leader; } }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
@@ -76,7 +75,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// What is in the middle of the room
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Medium material is invalid.")]
         [Display(Name = "Medium", Description = "What the 'empty' space of the room is made of. (likely AIR, sometimes stone or dirt)")]
@@ -103,7 +102,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// What zone this belongs to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Parent Location is invalid.")]
         [Display(Name = "Parent Locale", Description = "The locale this room belongs to.")]
@@ -126,7 +125,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// Current coordinates of the room on its world map
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public Coordinate Coordinates { get; set; }
 
@@ -229,7 +228,7 @@ namespace NetMud.Data.Room
         {
             try
             {
-                LexicalContext collectiveContext = new LexicalContext(null)
+                LexicalContext collectiveContext = new(null)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.ThirdPerson,
@@ -238,9 +237,9 @@ namespace NetMud.Data.Room
                     Tense = LexicalTense.Present
                 };
 
-                List<IDictata> dictatas = new List<IDictata>
+                List<IDictata> dictatas = new()
                 {
-                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name, collectiveContext))
+                    new Dictata(new Linguistic.Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name, collectiveContext))
                 };
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 

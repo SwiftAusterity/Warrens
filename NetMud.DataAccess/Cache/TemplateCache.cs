@@ -10,7 +10,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class TemplateCache
     {
-        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.Template);
+        private static readonly CacheAccessor BackingCache = new(CacheType.Template);
 
         /// <summary>
         /// Adds a single entity into the cache
@@ -151,7 +151,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the entity requested</returns>
         public static T Get<T>(long id) where T : IKeyedData
         {
-            TemplateCacheKey key = new TemplateCacheKey(typeof(T), id);
+            TemplateCacheKey key = new(typeof(T), id);
 
             return Get<T>(key);
         }

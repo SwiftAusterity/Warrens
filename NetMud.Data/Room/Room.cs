@@ -3,7 +3,6 @@ using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
@@ -23,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Room
 {
@@ -36,7 +34,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -66,7 +64,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// The locale this belongs to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Rooms must have a locale affiliation.")]
         public ILocale ParentLocation
@@ -84,11 +82,11 @@ namespace NetMud.Data.Room
             }
         }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private Coordinate _coordinates { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         [UIHint("Coordinate")]
         public Coordinate Coordinates
@@ -117,7 +115,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// What is in the middle of the room
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Medium material is invalid.")]
         [Display(Name = "Medium", Description = "What the 'empty' space of the room is made of. (likely AIR, sometimes stone or dirt)")]
@@ -267,7 +265,7 @@ namespace NetMud.Data.Room
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -276,7 +274,7 @@ namespace NetMud.Data.Room
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -286,7 +284,7 @@ namespace NetMud.Data.Room
             };
 
             //Self becomes the first sense in the list
-            List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
+            List<ISensoryEvent> sensoryOutput = new();
             foreach (MessagingType sense in sensoryTypes)
             {
                 ISensoryEvent me = GetSelf(sense);
@@ -300,12 +298,12 @@ namespace NetMud.Data.Room
 
                         me.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberSounds = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
+                        ILexica uberSounds = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
                         uberSounds.TryModify(aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in aDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberSounds.TryModify(newDesc);
@@ -324,12 +322,12 @@ namespace NetMud.Data.Room
 
                         me.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberSmells = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
+                        ILexica uberSmells = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
                         uberSmells.TryModify(oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in oDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberSmells.TryModify(newDesc);
@@ -348,14 +346,14 @@ namespace NetMud.Data.Room
 
                         me.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        Lexica collectivePsy = new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
+                        ILexica collectivePsy = new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext);
 
                         ILexica uberPsy = collectivePsy.TryModify(LexicalType.Verb, GrammaticalType.Verb, "sense");
                         uberPsy.TryModify(pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in pDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberPsy.TryModify(newDesc);
@@ -374,12 +372,12 @@ namespace NetMud.Data.Room
 
                         me.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberTaste = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", collectiveContext);
+                        ILexica uberTaste = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", collectiveContext);
                         uberTaste.TryModify(taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in taDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberTaste.TryModify(newDesc);
@@ -398,12 +396,12 @@ namespace NetMud.Data.Room
 
                         me.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberTouch = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel", collectiveContext);
+                        ILexica uberTouch = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "feel", collectiveContext);
                         uberTouch.TryModify(tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in tDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberTouch.TryModify(newDesc);
@@ -415,9 +413,9 @@ namespace NetMud.Data.Room
                         }
 
                         //Add the temperature
-                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Lexica[] {
-                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
-                            new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
+                        me.TryModify(LexicalType.Verb, GrammaticalType.Verb, "feels").TryModify(new Linguistic.Lexica[] {
+                            new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertHumidityToType(EffectiveHumidity()).ToString(), collectiveContext),
+                            new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, MeteorologicalUtilities.ConvertTemperatureToType(EffectiveTemperature()).ToString(), collectiveContext)
                         });
 
                         break;
@@ -428,12 +426,12 @@ namespace NetMud.Data.Room
 
                         me.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Descriptive));
 
-                        ILexica uberSight = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
+                        ILexica uberSight = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
                         uberSight.TryModify(vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.DirectObject).Select(adesc => adesc.Event));
 
                         foreach (ISensoryEvent desc in vDescs.Where(adesc => adesc.Event.Role == GrammaticalType.Subject))
                         {
-                            Lexica newDesc = new Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
+                            ILexica newDesc = new Linguistic.Lexica(desc.Event.Type, GrammaticalType.DirectObject, desc.Event.Phrase, discreteContext);
                             newDesc.TryModify(desc.Event.Modifiers);
 
                             uberSight.TryModify(newDesc);

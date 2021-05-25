@@ -3,7 +3,6 @@ using NetMud.DataStructure.Architectural.EntityBase;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -40,7 +39,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// Material composition of the node
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Composition", Description = "The material this part is made of.")]
         [UIHint("MaterialList")]

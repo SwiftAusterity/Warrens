@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Script.Serialization;
 using System.ComponentModel.DataAnnotations;
 using NetMud.DataStructure.Architectural.PropertyValidation;
 using NetMud.Data.Architectural.PropertyBinding;
@@ -37,7 +36,7 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -61,7 +60,7 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// Gender data string for player characters
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Gender is required.")]
         [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
@@ -148,21 +147,21 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// How much stagger this currently has
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public int Stagger { get; set; }
 
         /// <summary>
         /// How much stagger resistance this currently has
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public int Sturdy { get; set; }
 
         /// <summary>
         /// How off balance this is. Positive is forward leaning, negative is backward leaning, 0 is in balance
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public int Balance { get; set; }
 
@@ -174,49 +173,49 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// Is the current attack executing
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public bool Executing { get; set; }
 
         /// <summary>
         /// Last attack executed
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IFightingArt LastAttack { get; set; }
 
         /// <summary>
         /// Last combo used for attacking
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IFightingArtCombination LastCombo { get; set; }
 
         /// <summary>
         /// Who you're primarily attacking
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IMobile PrimaryTarget { get; set; }
 
         /// <summary>
         /// Who you're fighting in general
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public HashSet<Tuple<IMobile, int>> EnemyGroup { get; set; }
 
         /// <summary>
         /// Who you're support/tank focus is
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IMobile PrimaryDefending { get; set; }
 
         /// <summary>
         /// Who is in your group
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public HashSet<IMobile> AllianceGroup { get; set; }
 
@@ -571,7 +570,7 @@ namespace NetMud.Data.NPC
         /// <returns>the inventory display</returns>
         public string RenderInventory(IEntity customer)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine("Current Stock:");
             foreach (IInanimate item in Inventory.EntitiesContained())
@@ -596,7 +595,7 @@ namespace NetMud.Data.NPC
         /// <returns>the biuy list display</returns>
         public string RenderPurchaseSheet(IEntity customer)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             DataStructure.Gaia.IEconomy theEconomy = CurrentLocation.CurrentZone.GetWorld().Macroeconomy;
 
             sb.AppendLine("Current Stock:");
@@ -726,7 +725,7 @@ namespace NetMud.Data.NPC
         /// <returns>the inventory display</returns>
         public string RenderInstructionList(IEntity customer)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine("Proficencies:");
             foreach (IQuality proficency in TeachableProficencies)
@@ -864,7 +863,7 @@ namespace NetMud.Data.NPC
 
             if (wander)
             {
-                Random rand = new Random();
+                Random rand = new();
                 MovementDirectionType direction = (MovementDirectionType)rand.Next(0, 7);
 
                 //Run the command like anyone else
@@ -895,7 +894,7 @@ namespace NetMud.Data.NPC
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            List<T> contents = new List<T>();
+            List<T> contents = new();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -920,7 +919,7 @@ namespace NetMud.Data.NPC
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            List<T> contents = new List<T>();
+            List<T> contents = new();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -1197,7 +1196,7 @@ namespace NetMud.Data.NPC
 
         private bool AdvanceNeeds()
         {
-            Random rand = new Random();
+            Random rand = new();
             Hypothalamus.ApplyPressure(Motivator.Hunger, 5);
             Hypothalamus.ApplyPressure(Motivator.Thirst, 5);
             Hypothalamus.ApplyPressure(Motivator.Tiredness, 5);

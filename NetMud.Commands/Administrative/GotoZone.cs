@@ -34,22 +34,22 @@ namespace NetMud.Commands.Administrative
         {
             IZone moveTo = (IZone)Subject;
 
-            LexicalParagraph toActor = new LexicalParagraph()
+            LexicalParagraph toActor = new()
             {
                 Override = "You teleport."
             };
 
-            LexicalParagraph toOrigin = new LexicalParagraph()
+            LexicalParagraph toOrigin = new()
             {
                 Override = "$A$ disappears in a puff of smoke."
             };
 
-            LexicalParagraph toDest = new LexicalParagraph()
+            LexicalParagraph toDest = new()
             {
                 Override = "$A$ appears out of nowhere."
             };
 
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new(toActor)
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin },
                 ToDestination = new List<ILexicalParagraph> { toDest }
@@ -68,7 +68,7 @@ namespace NetMud.Commands.Administrative
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: goto &lt;room name&gt;"
             };

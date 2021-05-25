@@ -16,7 +16,7 @@ namespace NetMud.Communication
         /// <summary>
         /// List of style types to element
         /// </summary>
-        private readonly Dictionary<SupportedColors, string> _colors = new Dictionary<SupportedColors, string> 
+        private readonly Dictionary<SupportedColors, string> _colors = new()
         {
             { SupportedColors.Bold,         string.Empty },
             { SupportedColors.Italics,      string.Empty },

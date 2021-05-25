@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+@using AlloyTemplates
+<!DOCTYPE html>
 <html>
 @{
     if(string.IsNullOrWhiteSpace(ViewBag.StatusMessage) && !string.IsNullOrWhiteSpace(ViewData["Message"]?.ToString()))
@@ -6,7 +7,7 @@
         ViewBag.StatusMessage = ViewData["Message"].ToString();
     }
 
-    var instance = HttpContext.Current.ApplicationInstance;
+    var instance = HttpContextHelper.Current.ApplicationInstance;
     System.Reflection.Assembly asm = instance.GetType().BaseType.Assembly;
     System.Version v = asm.GetName().Version;
 

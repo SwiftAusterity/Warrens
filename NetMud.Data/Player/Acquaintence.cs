@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
 {
@@ -19,14 +18,14 @@ namespace NetMud.Data.Players
         [DataType(DataType.Text)]
         public string PersonHandle { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _person { get; set; }
 
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IAccount Person
         {

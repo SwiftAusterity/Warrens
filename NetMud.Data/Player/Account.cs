@@ -1,6 +1,5 @@
 ﻿using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
-using NetMud.DataAccess.Database;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Player;
@@ -97,7 +96,7 @@ namespace NetMud.Data.Players
             {
                 if (_characters == null)
                 {
-                    HashSet<IPlayerTemplate> returnValue = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAllForAccountHandle(GlobalIdentityHandle));
+                    HashSet<IPlayerTemplate> returnValue = new(PlayerDataCache.GetAllForAccountHandle(GlobalIdentityHandle));
                     _characters = returnValue;
                 }
 
@@ -166,7 +165,7 @@ namespace NetMud.Data.Players
         /// <returns>errors or Empty if successful</returns>
         public string AddCharacter(IPlayerTemplate newChar)
         {
-            HashSet<IPlayerTemplate> systemChars = new HashSet<IPlayerTemplate>(PlayerDataCache.GetAll());
+            HashSet<IPlayerTemplate> systemChars = new(PlayerDataCache.GetAll());
 
             if (systemChars.Any(ch => ch.Name.Equals(newChar.Name, StringComparison.InvariantCultureIgnoreCase) && newChar.SurName.Equals(newChar.SurName, StringComparison.InvariantCultureIgnoreCase)))
             {
@@ -189,9 +188,9 @@ namespace NetMud.Data.Players
         /// <returns>the account</returns>
         public static IAccount GetByHandle(string handle)
         {
-            Dictionary<string, object> parms = new Dictionary<string, object>();
+            Dictionary<string, object> parms = new();
 
-            string sql = "select * from [Accounts] where GlobalIdentityHandle = @handle";
+            //string sql = "select * from [Accounts] where GlobalIdentityHandle = @handle";
 
             parms.Add("handle", handle);
 
@@ -199,15 +198,15 @@ namespace NetMud.Data.Players
 
             try
             {
-                DataTable ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
+                //DataTable ds = SqlWrapper.RunDataset(sql, CommandType.Text, parms);
 
-                if (ds.Rows != null)
-                {
-                    foreach (DataRow dr in ds.Rows)
-                    {
-                        account = Fill(dr);
-                    }
-                }
+                //if (ds.Rows != null)
+                //{
+                //    foreach (DataRow dr in ds.Rows)
+                //    {
+                //        account = Fill(dr);
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -232,15 +231,15 @@ namespace NetMud.Data.Players
                 return false;
             }
 
-            Dictionary<string, object> parms = new Dictionary<string, object>();
+            Dictionary<string, object> parms = new();
 
-            string sql = "delete from [Accounts] where GlobalIdentityHandle = @handle";
+            //string sql = "delete from [Accounts] where GlobalIdentityHandle = @handle";
 
             parms.Add("handle", GlobalIdentityHandle);
 
             try
             {
-                SqlWrapper.RunNonQuery(sql, CommandType.Text, parms);
+                //SqlWrapper.RunNonQuery(sql, CommandType.Text, parms);
             }
             catch (Exception ex)
             {

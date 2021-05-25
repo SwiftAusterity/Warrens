@@ -31,7 +31,7 @@ namespace NetMud.Models
 
         public AddEditTemplateModel(string archivePath, T item)
         {
-            TemplateData fileAccessor = new TemplateData();
+            TemplateData fileAccessor = new();
 
             DataTemplate = default;
             ValidTemplateBases = TemplateCache.GetAll<T>(true);
@@ -56,7 +56,7 @@ namespace NetMud.Models
                 templateType = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(typeof(T)));
             }
 
-            DirectoryInfo archiveDir = new DirectoryInfo(fileAccessor.BaseDirectory + fileAccessor.ArchiveDirectoryName + ArchivePath + "/" + typeName + "/");
+            DirectoryInfo archiveDir = new(fileAccessor.BaseDirectory + fileAccessor.ArchiveDirectoryName + ArchivePath + "/" + typeName + "/");
 
             FileInfo[] potentialFiles = archiveDir.GetFiles(item.Id + "." + typeName);
 
@@ -68,7 +68,7 @@ namespace NetMud.Models
 
         internal string[] GetArchiveNames(TemplateData fileAccessor)
         {
-            DirectoryInfo filesDirectory = new DirectoryInfo(fileAccessor.BaseDirectory + fileAccessor.ArchiveDirectoryName);
+            DirectoryInfo filesDirectory = new(fileAccessor.BaseDirectory + fileAccessor.ArchiveDirectoryName);
 
             string typeName = typeof(T).Name;
 

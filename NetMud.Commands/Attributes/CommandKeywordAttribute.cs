@@ -53,7 +53,7 @@ namespace NetMud.Commands.Attributes
             IsAlsoSubject = isAlsoSubject;
             DisplayInHelpAndCommands = displayInHelpAndCommands;
 
-            List<string> aliasList = new List<string>() { keyword };
+            List<string> aliasList = new() { keyword };
             aliasList.AddRange(aliases);
 
             Aliases = aliasList.Distinct();

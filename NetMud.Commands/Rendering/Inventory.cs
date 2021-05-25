@@ -30,9 +30,9 @@ namespace NetMud.Commands.Rendering
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
             IMobile chr = (IMobile)Actor;
-            List<ILexicalParagraph> toActor = new List<ILexicalParagraph>
+            List<ILexicalParagraph> toActor = new()
             {
                 new LexicalParagraph("You look through your belongings.")
             };
@@ -44,7 +44,7 @@ namespace NetMud.Commands.Rendering
 
             ILexicalParagraph toOrigin = new LexicalParagraph("$A$ sifts through $G$ belongings.");
 
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new(toActor)
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin }
             };
@@ -60,7 +60,7 @@ namespace NetMud.Commands.Rendering
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: inventory",
                 "inv".PadWithString(14, "&nbsp;", true)

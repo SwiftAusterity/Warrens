@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -61,7 +60,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The model we're following
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Model", Description = "The model we're following.")]
         [UIHint("DimensionalModelDataList")]
@@ -77,7 +76,7 @@ namespace NetMud.Data.Architectural.EntityBase
                 else
                 {
                     // 0d models don't have real values
-                    DimensionalModelData returnValue = new DimensionalModelData
+                    DimensionalModelData returnValue = new()
                     {
                         ModelType = DimensionalModelType.None
                     };

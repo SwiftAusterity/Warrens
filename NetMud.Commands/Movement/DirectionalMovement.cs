@@ -72,13 +72,13 @@ namespace NetMud.Commands.Movement
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> dirList = new List<string>() {
+            List<string> dirList = new() {
                 "east", "north", "northeast", "northwest", "south", "southeast", "southwest", "west", "Up", "Down"
                 , "Upnorth", "Upnortheast", "Upnorthwest", "Upsouth", "Upsouthwest", "Upsoutheast", "Upwest"
                 , "Downnorth", "Downnortheast", "Downnorthwest", "Downsouth", "Downsouthwest", "Downsoutheast", "Downwest"
             };
 
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 string.Format("Valid Syntax:"),
                 dirList.CommaList(RenderUtility.SplitListType.AllComma)

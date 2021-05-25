@@ -13,7 +13,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            HashSet<Coordinate> returnList = new HashSet<Coordinate>();
+            HashSet<Coordinate> returnList = new();
 
             for (int y = 21; y >= 0; y--)
             {

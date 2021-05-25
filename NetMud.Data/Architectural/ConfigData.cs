@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural
 {
@@ -22,14 +21,14 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// The unique key used to identify, store and retrieve data
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public virtual string UniqueKey => Name;
 
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Type", Description = "The storage type of the config data.")]
         [DataType(DataType.Text)]
@@ -49,7 +48,7 @@ namespace NetMud.Data.Architectural
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public virtual ContentApprovalType ApprovalType => ContentApprovalType.Admin; //Config data defaults to admin
 
@@ -78,7 +77,7 @@ namespace NetMud.Data.Architectural
         /// </summary>
         public StaffRank CreatorRank { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _creator { get; set; }
 
@@ -86,7 +85,7 @@ namespace NetMud.Data.Architectural
         /// Who created this thing
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IAccount Creator
         {
             get
@@ -123,7 +122,7 @@ namespace NetMud.Data.Architectural
         /// </summary>
         public StaffRank ApproverRank { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _approvedBy { get; set; }
 
@@ -131,7 +130,7 @@ namespace NetMud.Data.Architectural
         /// Who approved this thing
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IAccount ApprovedBy
         {
             get
@@ -180,7 +179,7 @@ namespace NetMud.Data.Architectural
                 return false;
             }
 
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.ConfigData accessor = new();
             ApproveMe(approver, rank, newState);
 
             PersistToCache();
@@ -195,7 +194,7 @@ namespace NetMud.Data.Architectural
         /// <returns>A list of strings</returns>
         public virtual IDictionary<string, string> SignificantDetails()
         {
-            Dictionary<string, string> returnList = new Dictionary<string, string>
+            Dictionary<string, string> returnList = new()
             {
                 { "Name", Name },
                 { "Creator", CreatorHandle },
@@ -247,7 +246,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool Remove(IAccount remover, StaffRank rank)
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.ConfigData accessor = new();
 
             try
             {                
@@ -278,7 +277,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool Save(IAccount editor, StaffRank rank)
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.ConfigData accessor = new();
 
             try
             {
@@ -340,7 +339,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool SystemSave()
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.ConfigData accessor = new();
 
             try
             {
@@ -378,7 +377,7 @@ namespace NetMud.Data.Architectural
         /// <returns>success status</returns>
         public virtual bool SystemRemove()
         {
-            DataAccess.FileSystem.ConfigData accessor = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.ConfigData accessor = new();
 
             try
             {

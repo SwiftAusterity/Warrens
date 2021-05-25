@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Cartography;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -13,9 +11,7 @@ using NetMud.Physics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Results;
+using AlloyTemplates;
 
 namespace NetMud.Controllers
 {
@@ -27,7 +23,7 @@ namespace NetMud.Controllers
         {
             get
             {
-                return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? HttpContextHelper.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
@@ -186,7 +182,7 @@ namespace NetMud.Controllers
                     return "Invalid Location";
                 }
 
-                Tuple<IUIModule, int> moduleTuple = new Tuple<IUIModule, int>(module, location);
+                Tuple<IUIModule, int> moduleTuple = new(module, location);
 
                 //Remove this module
                 if (modules.Any(mod => mod.Item1.Equals(module) && mod.Item2.Equals(location)))
@@ -226,7 +222,7 @@ namespace NetMud.Controllers
             }
 
             List<Tuple<IUIModule, int>> modules = account.Config.UIModules.ToList();
-            Tuple<IUIModule, int> moduleTuple = new Tuple<IUIModule, int>(module, location);
+            Tuple<IUIModule, int> moduleTuple = new(module, location);
 
             //Remove this module
             if (modules.Any(mod => mod.Item1.Equals(module)))

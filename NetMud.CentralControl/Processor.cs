@@ -15,7 +15,7 @@ namespace NetMud.CentralControl
     public static class Processor
     {
         private static readonly ObjectCache globalCache = MemoryCache.Default;
-        private static readonly CacheItemPolicy globalPolicy = new CacheItemPolicy();
+        private static readonly CacheItemPolicy globalPolicy = new();
         private static readonly string cancellationTokenCacheKeyFormat = "AsyncCancellationToken.{0}";
         private static readonly string subscriptionLoopCacheKeyFormat = "SubscriptionLoop.{0}";
         private static readonly int _maxPulseCount = 18000; //half an hour
@@ -34,7 +34,7 @@ namespace NetMud.CentralControl
             //Only one means we need to start the loop
             if (currentList.Count() == 1)
             {
-                CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+                CancellationTokenSource cancelTokenSource = new();
 
                 StoreCancellationToken(designator, cancelTokenSource);
 
@@ -74,7 +74,7 @@ namespace NetMud.CentralControl
                     }
                 }
 
-                Task newLoop = new Task(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
+                Task newLoop = new(looperProcess, new SubscriptionLoopArgs(designator, 0), cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
                 newLoop.ContinueWith((previousTask) =>
                 {
@@ -98,7 +98,7 @@ namespace NetMud.CentralControl
         /// <param name="workProcess">What delegate process to call for the loop</param>
         public static void StartSingeltonChainedLoop(string designator, int rampupDelay, int cooldownDelay, int maxDuration, Func<bool> workProcess)
         {
-            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancelTokenSource = new();
 
             if (maxDuration > 0)
             {
@@ -113,7 +113,7 @@ namespace NetMud.CentralControl
                 return true;
             }
 
-            Task<bool> newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
+            Task<bool> newLoop = new(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
             newLoop.ContinueWith(async (previousTask) =>
             {
@@ -144,7 +144,7 @@ namespace NetMud.CentralControl
         public static void StartSingeltonLoop(string designator, int rampupDelay, int cooldownDelay, int maxDuration
             , Func<bool> workProcess, Func<bool> successTailProcess = null, Func<bool> failedTailProcess = null)
         {
-            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancelTokenSource = new();
 
             if (maxDuration > 0)
             {
@@ -159,7 +159,7 @@ namespace NetMud.CentralControl
                 return true;
             }
 
-            Task<bool> newLoop = new Task<bool>(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
+            Task<bool> newLoop = new(loopedProcess, cancelTokenSource.Token, TaskCreationOptions.LongRunning);
 
             newLoop.ContinueWith(async (previousTask) =>
             {
@@ -225,7 +225,7 @@ namespace NetMud.CentralControl
         /// <returns>All the tokens in the live cache</returns>
         public static Dictionary<string, CancellationTokenSource> GetAllLiveTaskStatusTokens()
         {
-            Dictionary<string, CancellationTokenSource> returnDict = new Dictionary<string, CancellationTokenSource>();
+            Dictionary<string, CancellationTokenSource> returnDict = new();
             foreach (KeyValuePair<string, object> kvp in globalCache.Where(kvp => kvp.Value.GetType() == typeof(CancellationTokenSource)))
             {
                 returnDict.Add(kvp.Key.Replace("AsyncCancellationToken.", string.Empty), (CancellationTokenSource)kvp.Value);

@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -24,7 +23,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -98,7 +97,7 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            List<T> contents = new List<T>();
+            List<T> contents = new();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -123,7 +122,7 @@ namespace NetMud.Data.Architectural.EntityBase
         {
             IEnumerable<Type> implimentedTypes = DataUtility.GetAllImplimentingedTypes(typeof(T));
 
-            List<T> contents = new List<T>();
+            List<T> contents = new();
 
             if (implimentedTypes.Contains(typeof(IMobile)))
             {
@@ -282,7 +281,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <returns>list of valid surrounding locations</returns>
         public virtual IEnumerable<ILocation> GetSurroundings(int strength)
         {
-            List<ILocation> radiusLocations = new List<ILocation>();
+            List<ILocation> radiusLocations = new();
             IEnumerable<IPathway> paths = GetPathways();
 
             //If we don't have any paths out what can we even do

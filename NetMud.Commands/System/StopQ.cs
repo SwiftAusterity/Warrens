@@ -28,7 +28,7 @@ namespace NetMud.Commands.System
         /// </summary>
         internal override bool ExecutionBody()
         {
-            Message messagingObject = new Message(new LexicalParagraph("You STOP your current action and queue."));
+            Message messagingObject = new(new LexicalParagraph("You STOP your current action and queue."));
 
             Actor.StopInput();
 
@@ -43,7 +43,7 @@ namespace NetMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: stop"
             };

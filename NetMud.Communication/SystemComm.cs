@@ -36,7 +36,7 @@ namespace NetMud.Communication
             string direction = "";
             WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
             using (WebResponse response = request.GetResponse())
-            using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+            using (StreamReader stream = new(response.GetResponseStream()))
             {
                 direction = stream.ReadToEnd();
             }

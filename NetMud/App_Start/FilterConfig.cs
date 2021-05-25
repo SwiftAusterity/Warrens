@@ -1,5 +1,4 @@
-﻿using System.Web.Mvc;
-
+﻿
 namespace NetMud
 {
     public class FilterConfig

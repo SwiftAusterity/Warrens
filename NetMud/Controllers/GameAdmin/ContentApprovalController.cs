@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -8,8 +6,7 @@ using NetMud.DataStructure.Architectural;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -47,7 +44,7 @@ namespace NetMud.Controllers.GameAdmin
                                                                 && item.GetType().GetInterfaces().Contains(typeof(IKeyedData))
                                                                 && !item.SuitableForUse && item.CanIBeApprovedBy(authedUser.GetStaffRank(User), authedUser.GameAccount)).OrderBy(item => item.GetType().Name);
 
-            ManageContentApprovalsViewModel viewModel = new ManageContentApprovalsViewModel(newList);
+            ManageContentApprovalsViewModel viewModel = new(newList);
 
             return View("~/Views/GameAdmin/ContentApproval/Index.cshtml", viewModel);
         }

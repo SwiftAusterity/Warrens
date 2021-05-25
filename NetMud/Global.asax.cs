@@ -2,12 +2,7 @@
 using System;
 using System.Net;
 using System.Threading;
-using System.Web;
-using System.Web.Caching;
-using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
+using AlloyTemplates;
 
 namespace NetMud
 {
@@ -29,7 +24,7 @@ namespace NetMud
 
         private static void _pingSite()
         {
-            using (WebClient refresh = new WebClient())
+            using (WebClient refresh = new())
             {
                 try
                 {
@@ -43,16 +38,16 @@ namespace NetMud
 
         private static void _SetupRefreshJob()
         {
-            if (HttpContext.Current == null)
+            if (HttpContextHelper.Current == null)
             {
                 return;
             }
 
             //remove a previous job
-            Action remove = HttpContext.Current.Cache["Refresh"] as Action;
+            Action remove = HttpContextHelper.Current.Cache["Refresh"] as Action;
             if (remove is Action)
             {
-                HttpContext.Current.Cache.Remove("Refresh");
+                HttpContextHelper.Current.Cache.Remove("Refresh");
                 remove.EndInvoke(null);
             }
 
@@ -68,7 +63,7 @@ namespace NetMud
             work.BeginInvoke(null, null);
 
             //add this job to the cache
-            HttpContext.Current.Cache.Add("Refresh",
+            HttpContextHelper.Current.Cache.Add("Refresh",
                          work,
                          null,
                          Cache.NoAbsoluteExpiration,

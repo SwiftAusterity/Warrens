@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Players;
 using NetMud.DataAccess;
 using NetMud.Models.Admin;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -58,7 +54,7 @@ namespace NetMud.Controllers.GameAdmin
         {
             RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
-            ManagePlayersViewModel vModel = new ManagePlayersViewModel(UserManager.Users)
+            ManagePlayersViewModel vModel = new(UserManager.Users)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 

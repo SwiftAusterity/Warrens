@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Zone
 {
@@ -25,7 +24,7 @@ namespace NetMud.Data.Zone
         /// The system type of data this attaches to
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override Type EntityClass
         {
             get { return typeof(Zone); }
@@ -35,14 +34,14 @@ namespace NetMud.Data.Zone
         /// What type of approval is necessary for this content
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Admin; } }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
@@ -104,7 +103,7 @@ namespace NetMud.Data.Zone
         /// <summary>
         /// What world does this belong to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "World", Description = "The World/Dimension this belongs to.")]
         [UIHint("GaiaTemplateList")]
@@ -141,7 +140,7 @@ namespace NetMud.Data.Zone
         /// <summary>
         /// Adventure templates valid for this zone
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public HashSet<IAdventureTemplate> Templates
         {
@@ -239,7 +238,7 @@ namespace NetMud.Data.Zone
         /// <returns>A copy</returns>
         public override object Clone()
         {
-            HashSet<IPathway> pathways = new HashSet<IPathway>();
+            HashSet<IPathway> pathways = new();
             foreach (IPathway pathway in Pathways)
             {
                 pathways.Add((IPathway)pathway.Clone());

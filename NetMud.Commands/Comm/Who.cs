@@ -30,7 +30,7 @@ namespace NetMud.Commands.Comm
 
             ILexicalParagraph toActor = new LexicalParagraph(string.Join(",", whoList.Select(who => who.GetDescribableName(Actor))));
 
-            Message messagingObject = new Message(toActor);
+            Message messagingObject = new(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -39,7 +39,7 @@ namespace NetMud.Commands.Comm
 
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: who"
             };

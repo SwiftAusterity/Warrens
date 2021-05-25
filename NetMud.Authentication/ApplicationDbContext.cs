@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Data.Players;
+﻿using NetMud.Data.Players;
 using System.Data.Entity;
 
 namespace NetMud.Authentication

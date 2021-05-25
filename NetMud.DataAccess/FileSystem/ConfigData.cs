@@ -2,7 +2,6 @@
 using NetMud.Utility;
 using System;
 using System.IO;
-using System.Web.Hosting;
 
 namespace NetMud.DataAccess.FileSystem
 {
@@ -16,7 +15,7 @@ namespace NetMud.DataAccess.FileSystem
             get
             {
                 //Base dir is weird for config as it might be anywhere (but not outside the base dir)
-                return HostingEnvironment.MapPath(base.BaseDirectory);
+                return null;//HostingEnvironment.MapPath(base.BaseDirectory);
             }
         }
 
@@ -212,7 +211,7 @@ namespace NetMud.DataAccess.FileSystem
             {
                 CullDirectoryCount(archivedDirName);
 
-                DirectoryInfo currentRoot = new DirectoryInfo(currentDirName);
+                DirectoryInfo currentRoot = new(currentDirName);
 
                 string backupDir = archivedDirName + DatedBackupDirectory;
                 if (!string.IsNullOrWhiteSpace(backupName))

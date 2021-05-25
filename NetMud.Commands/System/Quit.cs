@@ -33,7 +33,7 @@ namespace NetMud.Commands.System
         /// </summary>
         internal override bool ExecutionBody()
         {
-            List<string> sb = new List<string>();
+            List<string> sb = new();
 
             IPlayer player = (IPlayer)Actor;
             ILexicalParagraph toActor = new LexicalParagraph("You exit this reality.");
@@ -41,14 +41,14 @@ namespace NetMud.Commands.System
             ILexicalParagraph toOrigin = new LexicalParagraph("$A$ exits this reality.");
 
 
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new(toActor)
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin }
             };
 
             messagingObject.ExecuteMessaging(Actor, null, null, OriginLocation.CurrentZone, null);
 
-            PlayerData playerDataWrapper = new PlayerData();
+            PlayerData playerDataWrapper = new();
 
             //Save the player out
             playerDataWrapper.WriteOnePlayer(player);
@@ -63,7 +63,7 @@ namespace NetMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: quit",
                 "exit".PadWithString(14, "&nbsp;", true)

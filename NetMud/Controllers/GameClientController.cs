@@ -1,10 +1,7 @@
-﻿using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Controllers
 {
@@ -35,7 +32,7 @@ namespace Controllers
 
         public ActionResult Index()
         {
-            GameContextModel model = new GameContextModel
+            GameContextModel model = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

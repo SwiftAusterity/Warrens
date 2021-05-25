@@ -191,10 +191,10 @@ namespace NetMud.Physics
 
         private static string FlattenFlatModel(IDimensionalModelData model, bool forWeb = false)
         {
-            StringBuilder flattenedModel = new StringBuilder();
+            StringBuilder flattenedModel = new();
 
             //load the plane up with blanks
-            List<string[]> flattenedPlane = new List<string[]>
+            List<string[]> flattenedPlane = new()
             {
                 new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },
                 new string[] { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " },

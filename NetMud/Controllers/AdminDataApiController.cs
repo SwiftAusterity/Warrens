@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Cartography;
 using NetMud.Data.Architectural.EntityBase;
 using NetMud.Data.Players;
@@ -16,9 +13,7 @@ using NetMud.DataStructure.Room;
 using NetMud.Physics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Results;
+using AlloyTemplates;
 
 namespace NetMud.Controllers
 {
@@ -30,7 +25,7 @@ namespace NetMud.Controllers
         {
             get
             {
-                return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? HttpContextHelper.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
@@ -242,7 +237,7 @@ namespace NetMud.Controllers
                 }
                 else
                 {
-                    PathwayTemplate reversePath = new PathwayTemplate
+                    PathwayTemplate reversePath = new()
                     {
                         Name = newObj.Name,
                         DegreesFromNorth = Utilities.ReverseDirection(newObj.DegreesFromNorth),

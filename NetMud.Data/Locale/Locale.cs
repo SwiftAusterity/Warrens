@@ -4,7 +4,6 @@ using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.EntityBase;
-using NetMud.Data.Linguistic;
 using NetMud.Data.Zone;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
@@ -19,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Locale
 {
@@ -31,7 +29,7 @@ namespace NetMud.Data.Locale
         /// <summary>
         /// The name of the object in the data template
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string TemplateName
         {
@@ -53,7 +51,7 @@ namespace NetMud.Data.Locale
         /// The name used in the tag for discovery checking
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public string DiscoveryName
         {
             get
@@ -73,7 +71,7 @@ namespace NetMud.Data.Locale
         /// The interior map of the locale
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public ILiveMap Interior { get; set; }
 
         [JsonProperty("ParentLocation")]
@@ -82,7 +80,7 @@ namespace NetMud.Data.Locale
         /// <summary>
         /// The zone this belongs to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Locales must have a zone affiliation.")]
         public IZone ParentLocation
@@ -274,7 +272,7 @@ namespace NetMud.Data.Locale
         /// <returns>The adjascent locales and zones</returns>
         public IEnumerable<ILocation> GetSurroundings()
         {
-            List<ILocation> radiusLocations = new List<ILocation>();
+            List<ILocation> radiusLocations = new();
             IEnumerable<IPathway> paths = LiveCache.GetAll<IPathway>().Where(path => path.Origin.Equals(this));
 
             //If we don't have any paths out what can we even do
@@ -311,7 +309,7 @@ namespace NetMud.Data.Locale
                 sensoryTypes = new MessagingType[] { MessagingType.Audible, MessagingType.Olefactory, MessagingType.Psychic, MessagingType.Tactile, MessagingType.Taste, MessagingType.Visible };
             }
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -320,7 +318,7 @@ namespace NetMud.Data.Locale
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -329,10 +327,10 @@ namespace NetMud.Data.Locale
                 Tense = LexicalTense.Present
             };
 
-            List<ISensoryEvent> sensoryOutput = new List<ISensoryEvent>();
+            List<ISensoryEvent> sensoryOutput = new();
             foreach (MessagingType sense in sensoryTypes)
             {
-                SensoryEvent me = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, sense);
+                SensoryEvent me = new(new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, sense);
                 ILexica senseVerb = null;
                 IEnumerable<ISensoryEvent> senseDescs = Enumerable.Empty<ISensoryEvent>();
 
@@ -341,7 +339,7 @@ namespace NetMud.Data.Locale
                     case MessagingType.Audible:
                         me.Strength = GetAudibleDelta(viewer);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
+                        senseVerb = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", collectiveContext);
 
                         IEnumerable<ISensoryEvent> audibleDescs = GetAudibleDescriptives(viewer);
 
@@ -353,7 +351,7 @@ namespace NetMud.Data.Locale
                         ISensoryEvent audibleNoun = null;
                         if (!audibleDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
                         {
-                            audibleNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "noise", discreteContext), me.Strength, sense);
+                            audibleNoun = new SensoryEvent(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "noise", discreteContext), me.Strength, sense);
                         }
                         else
                         {
@@ -366,7 +364,7 @@ namespace NetMud.Data.Locale
                     case MessagingType.Olefactory:
                         me.Strength = GetOlefactoryDelta(viewer);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
+                        senseVerb = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", collectiveContext);
 
                         IEnumerable<ISensoryEvent> smellDescs = GetOlefactoryDescriptives(viewer);
 
@@ -378,7 +376,7 @@ namespace NetMud.Data.Locale
                         ISensoryEvent smellNoun = null;
                         if (!smellDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
                         {
-                            smellNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "odor", discreteContext), me.Strength, sense);
+                            smellNoun = new SensoryEvent(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "odor", discreteContext), me.Strength, sense);
                         }
                         else
                         {
@@ -391,7 +389,7 @@ namespace NetMud.Data.Locale
                     case MessagingType.Psychic:
                         me.Strength = GetPsychicDelta(viewer);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
+                        senseVerb = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", collectiveContext);
 
                         IEnumerable<ISensoryEvent> psyDescs = GetPsychicDescriptives(viewer);
 
@@ -403,7 +401,7 @@ namespace NetMud.Data.Locale
                         ISensoryEvent psyNoun = null;
                         if (!psyDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
                         {
-                            psyNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "presence", discreteContext), me.Strength, sense);
+                            psyNoun = new SensoryEvent(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "presence", discreteContext), me.Strength, sense);
                         }
                         else
                         {
@@ -419,7 +417,7 @@ namespace NetMud.Data.Locale
                     case MessagingType.Visible:
                         me.Strength = GetVisibleDelta(viewer);
 
-                        senseVerb = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
+                        senseVerb = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext);
 
                         IEnumerable<ISensoryEvent> seeDescs = GetVisibleDescriptives(viewer);
 
@@ -431,7 +429,7 @@ namespace NetMud.Data.Locale
                         ISensoryEvent seeNoun = null;
                         if (!seeDescs.Any(desc => desc.Event.Role == GrammaticalType.DirectObject))
                         {
-                            seeNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "thing", discreteContext), me.Strength, sense);
+                            seeNoun = new SensoryEvent(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "thing", discreteContext), me.Strength, sense);
                         }
                         else
                         {

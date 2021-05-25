@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataStructure.Linguistic;
 
@@ -30,7 +29,7 @@ namespace NetMud.Data.NPC
         /// The system type for the entity this attaches to
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override Type EntityClass
         {
             get { return typeof(NonPlayerCharacter); }
@@ -39,7 +38,7 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
@@ -47,7 +46,7 @@ namespace NetMud.Data.NPC
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
@@ -68,7 +67,7 @@ namespace NetMud.Data.NPC
         /// <summary>
         /// Gender data string for player characters
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Gender is required.")]
         [Display(Name = "Gender", Description = "Your gender. You can submit new gender matrices on the dashboard.")]
@@ -104,7 +103,7 @@ namespace NetMud.Data.NPC
         /// What we're spawning
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [NonNullableDataIntegrity("Race must be set.")]
         [Display(Name = "Race", Description = "The NPC's Race")]
         [UIHint("RaceList")]

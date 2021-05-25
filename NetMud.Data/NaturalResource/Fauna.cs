@@ -2,7 +2,6 @@
 using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.ActorBase;
@@ -15,7 +14,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.NaturalResource
 {
@@ -50,7 +48,7 @@ namespace NetMud.Data.NaturalResource
         /// What we're spawning
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [NonNullableDataIntegrity("Race must be set.")]
         [Display(Name = "Race", Description = "What race this herd is composed of. Non-sentient races only.")]
         [UIHint("RaceList")]
@@ -104,7 +102,7 @@ namespace NetMud.Data.NaturalResource
                 return new LexicalParagraph();
             }
 
-            LexicalContext personalContext = new LexicalContext(viewer)
+            LexicalContext personalContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -113,7 +111,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -122,7 +120,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -148,7 +146,7 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "large";
             }
 
-            SensoryEvent collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.Subject, Race.CollectiveNoun, discreteContext), 
+            SensoryEvent collectiveNoun = new(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, Race.CollectiveNoun, discreteContext), 
                                                 GetVisibleDelta(viewer), MessagingType.Visible);
 
             ISensoryEvent me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
@@ -159,12 +157,12 @@ namespace NetMud.Data.NaturalResource
 
             if (!string.IsNullOrWhiteSpace(sizeWord))
             {
-                collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
+                collectiveNoun.TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
             }
 
-            Lexica observer = new Lexica(LexicalType.Pronoun, GrammaticalType.DirectObject, "you", personalContext);
+            ILexica observer = new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.DirectObject, "you", personalContext);
 
-            collectiveNoun.TryModify(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "roams", personalContext).TryModify(observer, true));
+            collectiveNoun.TryModify(new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "roams", personalContext).TryModify(observer, true));
 
             return new LexicalParagraph(collectiveNoun);
         }

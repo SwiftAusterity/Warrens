@@ -32,7 +32,7 @@ namespace NetMud.Commands.Comm
             ILexicalParagraph toArea = new LexicalParagraph(string.Format("$A$ says '{0}'", Subject));
 
             //TODO: language outputs
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new(toActor)
             {
                 ToOrigin = new List<ILexicalParagraph> { toArea }
             };
@@ -48,7 +48,7 @@ namespace NetMud.Commands.Comm
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: say &lt;text&gt;",
                 "speak &lt;text&gt;".PadWithString(14, "&nbsp;", true)

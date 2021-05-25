@@ -30,7 +30,7 @@ namespace NetMud.Utility
                 scale = 28;
             }
 
-            decimal r = new decimal(rnd.Next(), rnd.Next(), rnd.Next(), false, scale);
+            decimal r = new(rnd.Next(), rnd.Next(), rnd.Next(), false, scale);
 
             if (Math.Sign(from) == Math.Sign(to) || from == 0 || to == 0)
             {
@@ -750,7 +750,7 @@ namespace NetMud.Utility
             {
                 get
                 {
-                    using (MemoryStream memoryStream = new MemoryStream(XmlBinary))
+                    using (MemoryStream memoryStream = new(XmlBinary))
                     using (XmlReader xmlReader = XmlReader.Create(memoryStream))
                     {
                         XDocument xml = XDocument.Load(xmlReader);
@@ -759,8 +759,8 @@ namespace NetMud.Utility
                 }
                 set
                 {
-                    XmlWriterSettings settings = new XmlWriterSettings { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
-                    using (MemoryStream memoryStream = new MemoryStream())
+                    XmlWriterSettings settings = new() { OmitXmlDeclaration = true, Encoding = Encoding.UTF8 };
+                    using (MemoryStream memoryStream = new())
                     using (XmlWriter xmlWriter = XmlWriter.Create(memoryStream, settings))
                     {
                         value.WriteTo(xmlWriter);

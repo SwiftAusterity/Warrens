@@ -28,7 +28,7 @@ namespace NetMud.Commands.System
         /// </summary>
         internal override bool ExecutionBody()
         {
-            Message messagingObject = new Message((new LexicalParagraph("You HALT your current action.")));
+            Message messagingObject = new((new LexicalParagraph("You HALT your current action.")));
 
             Actor.HaltInput();
 
@@ -43,7 +43,7 @@ namespace NetMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: halt"
             };

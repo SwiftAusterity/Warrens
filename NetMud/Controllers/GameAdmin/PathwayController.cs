@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Cartography;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Linguistic;
 using NetMud.Data.Room;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -14,8 +11,7 @@ using NetMud.DataStructure.Room;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -49,7 +45,7 @@ namespace NetMud.Controllers.GameAdmin
         [Route(@"Pathway/Remove/{removeId?}/{authorizeRemove?}/{unapproveId?}/{authorizeUnapprove?}")]
         public ActionResult Remove(long removeId = -1, string authorizeRemove = "", long unapproveId = -1, string authorizeUnapprove = "")
         {
-            AddEditPathwayTemplateViewModel vModel = new AddEditPathwayTemplateViewModel
+            AddEditPathwayTemplateViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -103,7 +99,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 IRoomTemplate origin = TemplateCache.Get<IRoomTemplate>(originRoomId);
 
-                AddPathwayWithRoomTemplateViewModel vModel = new AddPathwayWithRoomTemplateViewModel
+                AddPathwayWithRoomTemplateViewModel vModel = new()
                 {
                     AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -130,7 +126,7 @@ namespace NetMud.Controllers.GameAdmin
                     pathwayTemplate = new PathwayTemplate() { Origin = origin, Destination = destination, DegreesFromNorth = degreesFromNorth, InclineGrade = incline };
                 }
 
-                AddEditPathwayTemplateViewModel vModel = new AddEditPathwayTemplateViewModel
+                AddEditPathwayTemplateViewModel vModel = new()
                 {
                     AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -170,7 +166,7 @@ namespace NetMud.Controllers.GameAdmin
                 {
                     if (vModel.CreateReciprocalPath)
                     {
-                        PathwayTemplate reversePath = new PathwayTemplate
+                        PathwayTemplate reversePath = new()
                         {
                             Name = newObj.Name,
                             DegreesFromNorth = Utilities.ReverseDirection(newObj.DegreesFromNorth),
@@ -221,7 +217,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Edit(long id, long originRoomId, long destinationRoomId)
         {
             string message = string.Empty;
-            AddEditPathwayTemplateViewModel vModel = new AddEditPathwayTemplateViewModel
+            AddEditPathwayTemplateViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -287,7 +283,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            OccurrenceViewModel vModel = new OccurrenceViewModel
+            OccurrenceViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
@@ -309,7 +305,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.SensoryEventDataObject = new SensoryEvent
                 {
-                    Event = new Lexica()
+                    Event = new Linguistic.Lexica()
                 };
             }
 
@@ -338,7 +334,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
                 {
                     Strength = vModel.SensoryEventDataObject.Strength,
-                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                    Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
@@ -350,7 +346,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
-                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                existingOccurrence.Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
                                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Commands.Attributes;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -23,8 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -67,7 +64,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                NPCsViewModel vModel = new NPCsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                NPCsViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -98,7 +95,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                ItemsViewModel vModel = new ItemsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                ItemsViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -129,7 +126,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                FloraViewModel vModel = new FloraViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                FloraViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -160,7 +157,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                FaunaViewModel vModel = new FaunaViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                FaunaViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -191,7 +188,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                MineralsViewModel vModel = new MineralsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                MineralsViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -222,7 +219,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                RacesViewModel vModel = new RacesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                RacesViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -253,7 +250,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                WorldsViewModel vModel = new WorldsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                WorldsViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -284,7 +281,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                ZonesViewModel vModel = new ZonesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                ZonesViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -315,7 +312,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                LocalesViewModel vModel = new LocalesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                LocalesViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -346,7 +343,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                CelestialsViewModel vModel = new CelestialsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                CelestialsViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -377,7 +374,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                LanguagesViewModel vModel = new LanguagesViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                LanguagesViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -408,7 +405,7 @@ namespace NetMud.Controllers
                     StaffRank userRank = user.GetStaffRank(User);
                 }
 
-                MaterialsViewModel vModel = new MaterialsViewModel(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
+                MaterialsViewModel vModel = new(validEntries.Where(item => item.Name.ToLower().Contains(searcher)))
                 {
                     AuthedUser = user,
                     SearchTerm = SearchTerm,
@@ -457,7 +454,7 @@ namespace NetMud.Controllers
                 }
             }
 
-            HelpViewModel vModel = new HelpViewModel(validEntries.Where(help => help.HelpText.ToLower().Contains(searcher) || help.Name.ToLower().Contains(searcher)))
+            HelpViewModel vModel = new(validEntries.Where(help => help.HelpText.ToLower().Contains(searcher) || help.Name.ToLower().Contains(searcher)))
             {
                 AuthedUser = user,
                 SearchTerm = SearchTerm,
@@ -479,7 +476,7 @@ namespace NetMud.Controllers
                 StaffRank userRank = user.GetStaffRank(User);
             }
 
-            FightingArtsViewModel vModel = new FightingArtsViewModel(validEntries.Where(help => help.Name.ToLower().Contains(searcher)))
+            FightingArtsViewModel vModel = new(validEntries.Where(help => help.Name.ToLower().Contains(searcher)))
             {
                 AuthedUser = user,
                 SearchTerm = SearchTerm

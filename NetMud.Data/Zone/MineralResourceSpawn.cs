@@ -5,7 +5,6 @@ using NetMud.DataStructure.Zone;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Zone
 {
@@ -18,7 +17,7 @@ namespace NetMud.Data.Zone
         /// <summary>
         /// The resource at hand
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Resource", Description = "The resource that will spawn.")]
         [UIHint("MineralResourceList")]

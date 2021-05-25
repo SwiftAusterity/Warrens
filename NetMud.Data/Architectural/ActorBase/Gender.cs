@@ -121,7 +121,7 @@ namespace NetMud.Data.Architectural.ActorBase
 
         private void EnsureDictionary()
         {
-            Lexeme collective = new Lexeme()
+            Lexeme collective = new()
             {
                 Name = Collective,
                 WordForms = new IDictata[] {
@@ -141,7 +141,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            Lexeme possessive = new Lexeme()
+            Lexeme possessive = new()
             {
                 Name = Possessive,
                 WordForms = new IDictata[] {
@@ -161,7 +161,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            Lexeme baseWord = new Lexeme()
+            Lexeme baseWord = new()
             {
                 Name = Base,
                 WordForms = new IDictata[] {
@@ -181,7 +181,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            Lexeme adult = new Lexeme()
+            Lexeme adult = new()
             {
                 Name = Adult,
                 WordForms = new IDictata[] {
@@ -201,7 +201,7 @@ namespace NetMud.Data.Architectural.ActorBase
                 }
             };
 
-            Lexeme child = new Lexeme()
+            Lexeme child = new()
             {
                 Name = Child,
                 WordForms = new IDictata[] {

@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Gaia;
-using NetMud.Data.Linguistic;
 using NetMud.Data.Zone;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
@@ -17,8 +13,7 @@ using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -51,7 +46,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Zones(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            LiveZonesViewModel vModel = new LiveZonesViewModel(LiveCache.GetAll<IZone>())
+            LiveZonesViewModel vModel = new(LiveCache.GetAll<IZone>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
@@ -67,7 +62,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Zone(string birthMark, ViewZoneViewModel viewModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            ViewZoneViewModel vModel = new ViewZoneViewModel(birthMark)
+            ViewZoneViewModel vModel = new(birthMark)
             {
                 AuthedUser = authedUser,
                 Elegance = viewModel.Elegance,
@@ -128,7 +123,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            LiveOccurrenceViewModel vModel = new LiveOccurrenceViewModel
+            LiveOccurrenceViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
@@ -150,7 +145,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.SensoryEventDataObject = new SensoryEvent
                 {
-                    Event = new Lexica()
+                    Event = new Linguistic.Lexica()
                 };
             }
 
@@ -180,7 +175,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
                 {
                     Strength = vModel.SensoryEventDataObject.Strength,
-                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                    Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
@@ -192,7 +187,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
-                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                existingOccurrence.Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
                                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {
@@ -286,7 +281,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Worlds(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            LiveWorldsViewModel vModel = new LiveWorldsViewModel(LiveCache.GetAll<IGaia>())
+            LiveWorldsViewModel vModel = new(LiveCache.GetAll<IGaia>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
@@ -302,7 +297,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult World(string birthMark, ViewZoneViewModel viewModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            ViewGaiaViewModel vModel = new ViewGaiaViewModel(birthMark)
+            ViewGaiaViewModel vModel = new(birthMark)
             {
                 AuthedUser = authedUser,
                 Elegance = viewModel.Elegance,
@@ -356,7 +351,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Inanimates(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            LiveInanimatesViewModel vModel = new LiveInanimatesViewModel(LiveCache.GetAll<IInanimate>())
+            LiveInanimatesViewModel vModel = new(LiveCache.GetAll<IInanimate>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
@@ -372,7 +367,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Inanimate(string birthMark, ViewZoneViewModel viewModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            ViewInanimateViewModel vModel = new ViewInanimateViewModel(birthMark)
+            ViewInanimateViewModel vModel = new(birthMark)
             {
                 AuthedUser = authedUser,
                 Elegance = viewModel.Elegance,
@@ -389,7 +384,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult NPCs(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            LiveNPCsViewModel vModel = new LiveNPCsViewModel(LiveCache.GetAll<INonPlayerCharacter>())
+            LiveNPCsViewModel vModel = new(LiveCache.GetAll<INonPlayerCharacter>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
@@ -405,7 +400,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult NPC(string birthMark, ViewZoneViewModel viewModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            ViewIntelligenceViewModel vModel = new ViewIntelligenceViewModel(birthMark)
+            ViewIntelligenceViewModel vModel = new(birthMark)
             {
                 AuthedUser = authedUser,
                 Elegance = viewModel.Elegance,
@@ -422,7 +417,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Rooms(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            LiveRoomsViewModel vModel = new LiveRoomsViewModel(LiveCache.GetAll<IRoom>())
+            LiveRoomsViewModel vModel = new(LiveCache.GetAll<IRoom>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
@@ -438,7 +433,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Room(string birthMark, ViewZoneViewModel viewModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            ViewRoomViewModel vModel = new ViewRoomViewModel(birthMark)
+            ViewRoomViewModel vModel = new(birthMark)
             {
                 AuthedUser = authedUser,
                 Elegance = viewModel.Elegance,
@@ -455,7 +450,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Locales(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            LiveLocalesViewModel vModel = new LiveLocalesViewModel(LiveCache.GetAll<ILocale>())
+            LiveLocalesViewModel vModel = new(LiveCache.GetAll<ILocale>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 CurrentPageNumber = CurrentPageNumber,
@@ -471,7 +466,7 @@ namespace NetMud.Controllers.GameAdmin
         public ActionResult Locale(string birthMark, ViewZoneViewModel viewModel)
         {
             ApplicationUser authedUser = UserManager.FindById(User.Identity.GetUserId());
-            ViewLocaleViewModel vModel = new ViewLocaleViewModel(birthMark)
+            ViewLocaleViewModel vModel = new(birthMark)
             {
                 AuthedUser = authedUser,
                 Elegance = viewModel.Elegance,

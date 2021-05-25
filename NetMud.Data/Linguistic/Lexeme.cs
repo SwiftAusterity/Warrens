@@ -15,27 +15,26 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
     public class Lexeme : ConfigData, ILexeme, IComparable<ILexeme>, IEquatable<ILexeme>, IEqualityComparer<ILexeme>
     {
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.ReviewOnly;
 
         /// <summary>
         /// The unique key used to identify, store and retrieve data
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string UniqueKey => string.Format("{0}_{1}", Language.Name, Name);
 
         /// <summary>
         /// Type of configuation data this is
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ConfigDataType Type => ConfigDataType.Dictionary;
 
@@ -82,7 +81,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The language this is derived from
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Language", Description = "The language this is in.")]
         [UIHint("LanguageList")]
@@ -155,7 +154,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>the word with changes</returns>
         public IDictata AddNewForm(IDictata newWord)
         {
-            HashSet<IDictata> existingWords = new HashSet<IDictata>(WordForms);
+            HashSet<IDictata> existingWords = new(WordForms);
 
             //Easy way - we dont have one with this type at all
             //Hard way - reject if our semantics are similar by count and the semantics lists match
@@ -202,14 +201,14 @@ namespace NetMud.Data.Linguistic
                 short formGrouping = -1;
                 string newName = string.Empty;
 
-                Lexeme newLexeme = new Lexeme()
+                Lexeme newLexeme = new()
                 {
                     Language = language
                 };
 
                 foreach (IDictata word in WordForms)
                 {
-                    LexicalContext context = new LexicalContext(null)
+                    LexicalContext context = new(null)
                     {
                         Language = language,
                         Perspective = word.Perspective,
@@ -237,7 +236,7 @@ namespace NetMud.Data.Linguistic
                             newName = newWord;
                             newLexeme.Name = newName;
 
-                            Dictata newDictata = new Dictata(newWord, formGrouping++)
+                            Dictata newDictata = new(newWord, formGrouping++)
                             {
                                 Elegance = word.Elegance,
                                 Severity = word.Severity,
@@ -516,14 +515,14 @@ namespace NetMud.Data.Linguistic
 
                 foreach (IDictata word in synonyms)
                 {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(word.Synonyms);
+                    HashSet<IDictata> syns = new(word.Synonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     word.Synonyms = syns;
                 }
 
                 foreach (IDictata word in antonyms)
                 {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(word.Antonyms);
+                    HashSet<IDictata> ants = new(word.Antonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.Antonyms = ants;
                 }
@@ -585,14 +584,14 @@ namespace NetMud.Data.Linguistic
 
                 foreach (IDictata word in synonyms)
                 {
-                    HashSet<IDictata> syns = new HashSet<IDictata>(word.Synonyms);
+                    HashSet<IDictata> syns = new(word.Synonyms);
                     syns.RemoveWhere(syn => syn.Equals(this));
                     word.Synonyms = syns;
                 }
 
                 foreach (IDictata word in antonyms)
                 {
-                    HashSet<IDictata> ants = new HashSet<IDictata>(word.Antonyms);
+                    HashSet<IDictata> ants = new(word.Antonyms);
                     ants.RemoveWhere(syn => syn.Equals(this));
                     word.Antonyms = ants;
                 }

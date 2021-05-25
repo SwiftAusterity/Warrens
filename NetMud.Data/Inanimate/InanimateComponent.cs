@@ -4,7 +4,6 @@ using NetMud.DataStructure.Inanimate;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Inanimate
 {
@@ -15,7 +14,7 @@ namespace NetMud.Data.Inanimate
         public TemplateCacheKey _item { get; set; }
 
         [JsonIgnore]
-        [ScriptIgnore]
+
         [Display(Name = "Component", Description = "The object of the collection.")]
         [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]

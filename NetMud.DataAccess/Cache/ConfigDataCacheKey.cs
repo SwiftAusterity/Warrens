@@ -1,7 +1,6 @@
 ﻿using NetMud.DataStructure.Architectural;
 using Newtonsoft.Json;
 using System;
-using System.Web.Script.Serialization;
 
 namespace NetMud.DataAccess.Cache
 {
@@ -12,7 +11,7 @@ namespace NetMud.DataAccess.Cache
     public class ConfigDataCacheKey : ICacheKey
     {
         [JsonIgnore]
-        [ScriptIgnore]
+
         public CacheType CacheType => CacheType.ConfigData;
 
         /// <summary>

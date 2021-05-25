@@ -9,8 +9,6 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
 {
@@ -23,28 +21,24 @@ namespace NetMud.Data.Players
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.None; //Config data defaults to admin
 
         /// <summary>
         /// Type of configuation data this is
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ConfigDataType Type => ConfigDataType.Player;
 
         /// <summary>
         /// The unique key used to identify, store and retrieve data
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override string UniqueKey => string.Format("{0}_{1}_{2}", Name, RecipientName, Sent.ToBinary());
 
-        /// <summary>
-        /// The body of the message
-        /// </summary>
-        [AllowHtml]
         [MarkdownStringLengthValidator(ErrorMessage = "The {0} must be between {2} and {1} characters long.", MinimumLength = 20)]
         [Display(Name = "Body", Description = "The body of the message.")]
         [DataType("Markdown")]
@@ -69,14 +63,14 @@ namespace NetMud.Data.Players
         /// </summary>
         public string SenderName { get; set; }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _sender { get; set; }
 
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IAccount Sender
         {
@@ -99,7 +93,7 @@ namespace NetMud.Data.Players
             }
         }
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _recipientAccount { get; set; }
 
@@ -107,7 +101,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The account recieving this
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Recipient Account", Description = "The account you are sending this to.")]
         [DataType(DataType.Text)]
@@ -140,7 +134,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Recipeint character
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Recipient", Description = "The character you are sending this to. Can be blank.")]
         [DataType(DataType.Text)]

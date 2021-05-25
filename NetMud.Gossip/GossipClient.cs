@@ -126,9 +126,9 @@ namespace NetMud.Gossip
         /// </summary>
         private void OnOpen(object sender, EventArgs e)
         {
-            Authentication authenticateBlock = new Authentication(ConfigSettings);
+            Authentication authenticateBlock = new(ConfigSettings);
 
-            TransportMessage auth = new TransportMessage()
+            TransportMessage auth = new()
             {
                 Event = authenticateBlock.Type,
                 Payload = authenticateBlock
@@ -159,12 +159,12 @@ namespace NetMud.Gossip
                     ReconnectLoop();
                     break;
                 case "heartbeat":
-                    HeartbeatResponse whoBlock = new HeartbeatResponse()
+                    HeartbeatResponse whoBlock = new()
                     {
                         Players = UserList().Select(player => player.Name).ToArray()
                     };
 
-                    TransportMessage response = new TransportMessage()
+                    TransportMessage response = new()
                     {
                         Event = whoBlock.Type,
                         Payload = whoBlock
@@ -269,14 +269,14 @@ namespace NetMud.Gossip
 
         public void SendMessage(string userName, string messageBody, string channel = "gossip")
         {
-            NewMessage messageBlock = new NewMessage()
+            NewMessage messageBlock = new()
             {
                 ChannelName = channel,
                 MessageBody = messageBody,
                 Username = userName
             };
 
-            TransportMessage message = new TransportMessage()
+            TransportMessage message = new()
             {
                 Event = messageBlock.Type,
                 Payload = messageBlock
@@ -287,7 +287,7 @@ namespace NetMud.Gossip
 
         public void SendDirectMessage(string userName, string targetGame, string targetPlayer, string messageBody)
         {
-            NewDirectMessage messageBlock = new NewDirectMessage()
+            NewDirectMessage messageBlock = new()
             {
                 Gamename = targetGame,
                 Target = targetPlayer,
@@ -295,7 +295,7 @@ namespace NetMud.Gossip
                 Username = userName
             };
 
-            TransportMessage message = new TransportMessage()
+            TransportMessage message = new()
             {
                 Event = messageBlock.Type,
                 Payload = messageBlock
@@ -309,13 +309,13 @@ namespace NetMud.Gossip
         {
             if (MyClient != null)
             {
-                TransportMessage message = new TransportMessage();
+                TransportMessage message = new();
 
                 switch (type)
                 {
                     case Notifications.LogIn:
                     case Notifications.EnterGame:
-                        SignIn loginNotify = new SignIn()
+                        SignIn loginNotify = new()
                         {
                             PlayerName = userName
                         };
@@ -325,7 +325,7 @@ namespace NetMud.Gossip
                         break;
                     case Notifications.LogOff:
                     case Notifications.LeaveGame:
-                        SignOut logoutNotify = new SignOut()
+                        SignOut logoutNotify = new()
                         {
                             PlayerName = userName
                         };
@@ -357,8 +357,8 @@ namespace NetMud.Gossip
 
             serializer.TypeNameHandling = TypeNameHandling.None;
 
-            StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
+            StringBuilder sb = new();
+            StringWriter writer = new(sb);
 
             serializer.Serialize(writer, message);
 
@@ -376,7 +376,7 @@ namespace NetMud.Gossip
             {
                 JsonSerializer serializer = SerializationUtility.GetSerializer();
 
-                StringReader reader = new StringReader(jsonData);
+                StringReader reader = new(jsonData);
 
                 return serializer.Deserialize(reader, typeof(TransportMessage)) as TransportMessage;
             }

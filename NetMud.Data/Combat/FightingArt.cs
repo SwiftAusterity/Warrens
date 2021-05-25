@@ -7,7 +7,6 @@ using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Combat
 {
@@ -18,7 +17,7 @@ namespace NetMud.Data.Combat
         /// What type of approval is necessary for this content
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
         /// <summary>

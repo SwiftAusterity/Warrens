@@ -2,7 +2,6 @@
 using NetMud.DataStructure.Player;
 using Newtonsoft.Json;
 using System;
-using System.Web.Script.Serialization;
 
 namespace NetMud.DataAccess.Cache
 {
@@ -16,7 +15,7 @@ namespace NetMud.DataAccess.Cache
         /// The type of cache this is used for
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public CacheType CacheType
         {
             get { return CacheType.PlayerData; }

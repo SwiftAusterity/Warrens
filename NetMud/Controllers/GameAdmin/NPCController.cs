@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -11,8 +8,7 @@ using NetMud.DataStructure.NPC;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -43,7 +39,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageNPCDataViewModel vModel = new ManageNPCDataViewModel(TemplateCache.GetAll<INonPlayerCharacterTemplate>())
+            ManageNPCDataViewModel vModel = new(TemplateCache.GetAll<INonPlayerCharacterTemplate>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -112,7 +108,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(long Template = -1)
         {
-            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(Template)
+            AddEditNPCDataViewModel vModel = new(Template)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -151,7 +147,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = "That does not exist" });
             }
 
-            AddEditNPCDataViewModel vModel = new AddEditNPCDataViewModel(ArchivePath, obj)
+            AddEditNPCDataViewModel vModel = new(ArchivePath, obj)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -210,7 +206,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            OccurrenceViewModel vModel = new OccurrenceViewModel
+            OccurrenceViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
@@ -232,7 +228,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.SensoryEventDataObject = new SensoryEvent
                 {
-                    Event = new Lexica()
+                    Event = new Linguistic.Lexica()
                 };
             }
 
@@ -261,7 +257,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
                 {
                     Strength = vModel.SensoryEventDataObject.Strength,
-                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                    Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
@@ -273,7 +269,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
-                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                existingOccurrence.Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
                                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {

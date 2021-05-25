@@ -2,7 +2,6 @@
 using NetMud.Communication.Messaging;
 using NetMud.Data.Architectural.DataIntegrity;
 using NetMud.Data.Architectural.PropertyBinding;
-using NetMud.Data.Linguistic;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Architectural.EntityBase;
@@ -15,7 +14,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.NaturalResource
 {
@@ -46,7 +44,7 @@ namespace NetMud.Data.NaturalResource
         /// Bulk material of plant. Stem, trunk, etc.
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [NonNullableDataIntegrity("Wood must have a value.")]
         [Display(Name = "Wood/Bark", Description = "Bulk material of plant. Stem, trunk, etc.")]
         [UIHint("MaterialList")]
@@ -70,7 +68,7 @@ namespace NetMud.Data.NaturalResource
         /// Flowering element of plant
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [Display(Name = "Flower", Description = "Flowering element of plant")]
         [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
@@ -93,7 +91,7 @@ namespace NetMud.Data.NaturalResource
         /// Leaves of the plant.
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [Display(Name = "Leaves", Description = "Leaves of the plant.")]
         [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
@@ -116,7 +114,7 @@ namespace NetMud.Data.NaturalResource
         /// Fruit of the plant, can be inedible like a pinecone
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [Display(Name = "Fruit", Description = "Fruit of the plant, can be inedible like a pinecone")]
         [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
@@ -139,7 +137,7 @@ namespace NetMud.Data.NaturalResource
         /// Seed of the plant.
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         [Display(Name = "Seed", Description = "Seed of the plant.")]
         [UIHint("InanimateTemplateList")]
         [InanimateTemplateDataBinder]
@@ -215,7 +213,7 @@ namespace NetMud.Data.NaturalResource
                 return new LexicalParagraph();
             }
 
-            LexicalContext collectiveContext = new LexicalContext(viewer)
+            LexicalContext collectiveContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.SecondPerson,
@@ -224,7 +222,7 @@ namespace NetMud.Data.NaturalResource
                 Tense = LexicalTense.Present
             };
 
-            LexicalContext discreteContext = new LexicalContext(viewer)
+            LexicalContext discreteContext = new(viewer)
             {
                 Determinant = false,
                 Perspective = NarrativePerspective.ThirdPerson,
@@ -250,12 +248,12 @@ namespace NetMud.Data.NaturalResource
                 sizeWord = "vast";
             }
 
-            SensoryEvent observer = new SensoryEvent(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, MessagingType.Visible)
+            SensoryEvent observer = new(new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", collectiveContext), 0, MessagingType.Visible)
             {
                 Strength = GetVisibleDelta(viewer)
             };
 
-            SensoryEvent collectiveNoun = new SensoryEvent(new Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "forest", collectiveContext),
+            SensoryEvent collectiveNoun = new(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.DirectObject, "forest", collectiveContext),
                                                 GetVisibleDelta(viewer), MessagingType.Visible);
 
             ISensoryEvent me = GetSelf(MessagingType.Visible, GetVisibleDelta(viewer));
@@ -263,11 +261,11 @@ namespace NetMud.Data.NaturalResource
 
             collectiveNoun.TryModify(me);
 
-            SensoryEvent senseVerb = new SensoryEvent(new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext), me.Strength, MessagingType.Visible);
+            SensoryEvent senseVerb = new(new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", collectiveContext), me.Strength, MessagingType.Visible);
 
             if (!string.IsNullOrWhiteSpace(sizeWord))
             {
-                collectiveNoun.TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
+                collectiveNoun.TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, sizeWord, discreteContext));
             }
 
             senseVerb.TryModify(collectiveNoun);

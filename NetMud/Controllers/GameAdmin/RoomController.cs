@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Communication.Lexical;
-using NetMud.Data.Linguistic;
 using NetMud.Data.Locale;
 using NetMud.Data.Room;
 using NetMud.DataAccess;
@@ -17,8 +14,7 @@ using NetMud.DataStructure.Zone;
 using NetMud.Models.Admin;
 using System;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -49,7 +45,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageRoomTemplateViewModel vModel = new ManageRoomTemplateViewModel(TemplateCache.GetAll<IRoomTemplate>())
+            ManageRoomTemplateViewModel vModel = new(TemplateCache.GetAll<IRoomTemplate>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -64,7 +60,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Map(long ID)
         {
-            RoomMapViewModel vModel = new RoomMapViewModel
+            RoomMapViewModel vModel = new()
             {
                 Here = TemplateCache.Get<IRoomTemplate>(ID)
             };
@@ -137,7 +133,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = "Invalid Locale" });
             }
 
-            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
+            AddEditRoomTemplateViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -231,7 +227,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
-            AddEditRoomTemplateViewModel vModel = new AddEditRoomTemplateViewModel
+            AddEditRoomTemplateViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 ValidMaterials = TemplateCache.GetAll<IMaterial>(),
@@ -380,7 +376,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ModalErrorOrClose", new { Message = message });
             }
 
-            OccurrenceViewModel vModel = new OccurrenceViewModel
+            OccurrenceViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,
@@ -402,7 +398,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 vModel.SensoryEventDataObject = new SensoryEvent
                 {
-                    Event = new Lexica()
+                    Event = new Linguistic.Lexica()
                 };
             }
 
@@ -431,7 +427,7 @@ namespace NetMud.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
                 {
                     Strength = vModel.SensoryEventDataObject.Strength,
-                    Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                    Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
@@ -443,7 +439,7 @@ namespace NetMud.Controllers.GameAdmin
             {
                 existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
-                existingOccurrence.Event = new Lexica(vModel.SensoryEventDataObject.Event.Type,
+                existingOccurrence.Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
                                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {

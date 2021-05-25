@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Hosting;
 
 namespace NetMud.DataAccess
 {
@@ -23,7 +22,7 @@ namespace NetMud.DataAccess
         {
             get
             {
-                return HostingEnvironment.MapPath(base.BaseDirectory + "Logs/");
+                return null;// HostingEnvironment.MapPath(base.BaseDirectory + "Logs/");
             }
         }
 

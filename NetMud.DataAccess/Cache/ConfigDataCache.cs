@@ -8,7 +8,7 @@ namespace NetMud.DataAccess.Cache
     /// </summary>
     public static class ConfigDataCache
     {
-        private static readonly CacheAccessor BackingCache = new CacheAccessor(CacheType.ConfigData);
+        private static readonly CacheAccessor BackingCache = new(CacheType.ConfigData);
 
         /// <summary>
         /// Adds a single entity into the cache
@@ -89,7 +89,7 @@ namespace NetMud.DataAccess.Cache
         /// <returns>the entity requested</returns>
         public static T Get<T>(string uniqueKey) where T : IConfigData
         {
-            ConfigDataCacheKey key = new ConfigDataCacheKey(typeof(T), uniqueKey);
+            ConfigDataCacheKey key = new(typeof(T), uniqueKey);
 
             return Get<T>(key);
         }

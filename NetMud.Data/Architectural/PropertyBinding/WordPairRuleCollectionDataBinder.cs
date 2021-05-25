@@ -13,7 +13,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
                 return null;
             }
 
-            HashSet<IWordPairRule> collective = new HashSet<IWordPairRule>();
+            HashSet<IWordPairRule> collective = new();
 
             return collective;
         }

@@ -3,7 +3,6 @@ using NetMud.DataStructure.Gaia;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Gaia
 {
@@ -19,7 +18,7 @@ namespace NetMud.Data.Gaia
         /// <summary>
         /// The celestial object
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "CelestialObject", Description = "The celestial object.")]
         [UIHint("CelestialList")]

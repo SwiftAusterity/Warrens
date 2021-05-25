@@ -38,7 +38,7 @@ namespace NetMud.Commands.System
         {
             IInanimateTemplate newObject = (IInanimateTemplate)Subject;
             IMobile initator = (IMobile)Actor;
-            List<string> sb = new List<string>();
+            List<string> sb = new();
             IInanimate entityObject;
 
             //No target = spawn to inventory
@@ -64,7 +64,7 @@ namespace NetMud.Commands.System
 
             ILexicalParagraph toTarget = new LexicalParagraph("You have been given $S$");
 
-            Message messagingObject = new Message(toActor)
+            Message messagingObject = new(toActor)
             {
                 ToOrigin = new List<ILexicalParagraph> { toOrigin },
                 ToSubject = new List<ILexicalParagraph> { toSubject },
@@ -82,7 +82,7 @@ namespace NetMud.Commands.System
         /// <returns>string</returns>
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 string.Format("Valid Syntax: spawnNewObject &lt;object name&gt;"),
                 "spawnNewObject  &lt;object name&gt;  &lt;location name to spawn to&gt;".PadWithString(14, "&nbsp;", true)

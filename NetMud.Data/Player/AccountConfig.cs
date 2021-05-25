@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Players
 {
@@ -28,25 +27,25 @@ namespace NetMud.Data.Players
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.None;
 
         /// <summary>
         /// The type of data this is (for storage)
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ConfigDataType Type => ConfigDataType.Player;
 
-        [ScriptIgnore]
+
         [JsonIgnore]
         private IAccount _account { get; set; }
 
         /// <summary>
         /// Account data object this is owned by
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IAccount Account
         {
@@ -110,7 +109,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// Messages to this account
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IEnumerable<IPlayerMessage> Notifications
         {
@@ -138,7 +137,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The modules to load. Module, quadrant
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public IEnumerable<Tuple<IUIModule, int>> UIModules
         {
@@ -171,7 +170,7 @@ namespace NetMud.Data.Players
         /// <summary>
         /// The UI language for output purposes
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Game UI Language", Description = "The language the game will output to you while playing.")]
         [UIHint("LanguageList")]
@@ -283,11 +282,11 @@ namespace NetMud.Data.Players
                 _account = account;
             }
 
-            DataAccess.FileSystem.ConfigData configData = new DataAccess.FileSystem.ConfigData();
+            DataAccess.FileSystem.ConfigData configData = new();
 
             string directory = configData.GetCurrentDirectoryForEntity(this);
 
-            DirectoryInfo charDirectory = new DirectoryInfo(directory);
+            DirectoryInfo charDirectory = new(directory);
             IAccountConfig newConfig = null;
 
             try
@@ -367,7 +366,7 @@ namespace NetMud.Data.Players
             {
                 IEnumerable<FileInfo> files = charDirectory.EnumerateFiles("*.PlayerMessage", SearchOption.TopDirectoryOnly);
 
-                List<IPlayerMessage> dataList = new List<IPlayerMessage>();
+                List<IPlayerMessage> dataList = new();
                 foreach (FileInfo file in files)
                 {
                     if (file == null)

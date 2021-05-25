@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.EntityBase
 {
@@ -19,7 +18,7 @@ namespace NetMud.Data.Architectural.EntityBase
         /// <summary>
         /// The system type for the entity this attaches to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public abstract Type EntityClass { get; }
 
@@ -27,14 +26,14 @@ namespace NetMud.Data.Architectural.EntityBase
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         internal string[] _keywords;
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public abstract string[] Keywords { get; set; }
 
         /// <summary>

@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Architectural;
 using NetMud.DataStructure.Linguistic;
 using NetMud.Models.Admin;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -39,7 +36,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageLanguageDataViewModel vModel = new ManageLanguageDataViewModel(ConfigDataCache.GetAll<ILanguage>())
+            ManageLanguageDataViewModel vModel = new(ConfigDataCache.GetAll<ILanguage>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -108,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add(string Template = "")
         {
-            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel(Template)
+            AddEditLanguageViewModel vModel = new(Template)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };
@@ -148,7 +145,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToAction("Index", new { Message = message });
             }
 
-            AddEditLanguageViewModel vModel = new AddEditLanguageViewModel(ArchivePath, obj)
+            AddEditLanguageViewModel vModel = new(ArchivePath, obj)
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId())
             };

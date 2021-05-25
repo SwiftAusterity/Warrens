@@ -34,8 +34,8 @@ namespace NetMud.Commands.System
                 return false;
             }
 
-            List<string> returnStrings = new List<string>();
-            StringBuilder sb = new StringBuilder();
+            List<string> returnStrings = new();
+            StringBuilder sb = new();
 
             Assembly commandsAssembly = Assembly.GetAssembly(typeof(CommandParameterAttribute));
 
@@ -45,7 +45,7 @@ namespace NetMud.Commands.System
 
             returnStrings.Add("Commands:");
 
-            List<string> commandNames = new List<string>();
+            List<string> commandNames = new();
             foreach (global::System.Type command in loadedCommands)
             {
                 foreach(CommandKeywordAttribute commandName in command.GetCustomAttributes<CommandKeywordAttribute>().Where(key => key.DisplayInHelpAndCommands))
@@ -73,7 +73,7 @@ namespace NetMud.Commands.System
 
             ILexicalParagraph toActor = new LexicalParagraph(string.Join(" ", returnStrings));
 
-            Message messagingObject = new Message(toActor);
+            Message messagingObject = new(toActor);
 
             messagingObject.ExecuteMessaging(Actor, null, null, null, null);
 
@@ -82,7 +82,7 @@ namespace NetMud.Commands.System
 
         public override IEnumerable<string> RenderSyntaxHelp()
         {
-            List<string> sb = new List<string>
+            List<string> sb = new()
             {
                 "Valid Syntax: commands"
             };

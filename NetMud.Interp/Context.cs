@@ -268,7 +268,7 @@ namespace NetMud.Interp
                     CommandKeywordAttribute keywordAttribute = commandType.GetCustomAttributes<CommandKeywordAttribute>().Single(att => att.Aliases.Any(alias =>
                                                             alias.Equals(currentCommandString, StringComparison.InvariantCultureIgnoreCase)));
 
-                    CommandPackage newCommand = new CommandPackage
+                    CommandPackage newCommand = new()
                     {
                         CommandType = commandType,
                         CommandPhrase = keywordAttribute.Keyword
@@ -574,7 +574,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                List<IPathway> validPaths = new List<IPathway>();
+                List<IPathway> validPaths = new();
 
                 validPaths.AddRange(Actor.CurrentLocation.CurrentLocation().GetPathways().Where(dest => dest.TemplateName.Equals(currentParmString, StringComparison.InvariantCultureIgnoreCase)));
 
@@ -723,7 +723,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                List<T> validObjects = new List<T>();
+                List<T> validObjects = new();
 
                 switch (seekRange.Type)
                 {
@@ -971,7 +971,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                List<T> validObjects = new List<T>();
+                List<T> validObjects = new();
 
                 validObjects.AddRange(subjectCollection.Select(sbj => sbj.CurrentLocation.CurrentLocation())
                                                         .Where(cl => cl.Keywords.Any(key => key.Contains(currentParmString))).Select(ent => (T)ent));
@@ -1023,7 +1023,7 @@ namespace NetMud.Interp
                         //Now try to set the subject
                         IContains container = (IContains)parm;
 
-                        List<IEntity> validSubjects = new List<IEntity>();
+                        List<IEntity> validSubjects = new();
 
                         validSubjects.AddRange(subjectCollection.Where(sbj => sbj.CurrentLocation.CurrentLocation().Equals(container)));
 
@@ -1098,7 +1098,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                List<T> validObjects = new List<T>();
+                List<T> validObjects = new();
 
                 validObjects.AddRange(subjectCollection.Where(cl => cl.Keywords != null && cl.Keywords.Any(key => key.Equals(currentParmString, StringComparison.InvariantCultureIgnoreCase))).Select(ent => ent));
 
@@ -1198,7 +1198,7 @@ namespace NetMud.Interp
                     continue;
                 }
 
-                List<T> validObjects = new List<T>();
+                List<T> validObjects = new();
 
                 if (typeof(T) == typeof(IQuality))
                 {
@@ -1303,11 +1303,11 @@ namespace NetMud.Interp
         /// <returns>the right parameters</returns>
         private List<string> ParseQuotesOut()
         {
-            List<string> originalStrings = new List<string>();
+            List<string> originalStrings = new();
             string baseString = OriginalCommandString;
 
             int foundStringIterator = 0;
-            List<string> foundStrings = new List<string>();
+            List<string> foundStrings = new();
 
             //Do we have magic string collectors? quotation marks demarcate a single parameter being passed in
             while (baseString.Contains("\""))
@@ -1344,7 +1344,7 @@ namespace NetMud.Interp
 
             //Either add the modified one or add the normal one
             int iterator = 0;
-            List<string> returnStrings = new List<string>();
+            List<string> returnStrings = new();
             foreach (string returnString in originalStrings)
             {
                 if (iterator >= originalStrings.Count)

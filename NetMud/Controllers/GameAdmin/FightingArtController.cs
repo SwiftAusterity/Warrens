@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Combat;
 using NetMud.DataAccess;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
 using NetMud.DataStructure.Combat;
 using NetMud.Models.Admin;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers.GameAdmin
 {
@@ -39,7 +36,7 @@ namespace NetMud.Controllers.GameAdmin
 
         public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            ManageFightingArtViewModel vModel = new ManageFightingArtViewModel(TemplateCache.GetAll<IFightingArt>())
+            ManageFightingArtViewModel vModel = new(TemplateCache.GetAll<IFightingArt>())
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
 
@@ -108,7 +105,7 @@ namespace NetMud.Controllers.GameAdmin
         [HttpGet]
         public ActionResult Add()
         {
-            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
+            AddEditFightingArtViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = new FightingArt()
@@ -150,7 +147,7 @@ namespace NetMud.Controllers.GameAdmin
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
-            AddEditFightingArtViewModel vModel = new AddEditFightingArtViewModel
+            AddEditFightingArtViewModel vModel = new()
             {
                 AuthedUser = UserManager.FindById(User.Identity.GetUserId()),
                 DataObject = obj,

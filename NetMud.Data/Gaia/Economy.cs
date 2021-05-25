@@ -73,7 +73,7 @@ namespace NetMud.Data.Gaia
                 newBaseValue += Math.Max(1, basis.Qualities.Sum(quality => quality.Value));
             }
 
-            EconomicBasis newBasis = new EconomicBasis()
+            EconomicBasis newBasis = new()
             {
                 Adjustment = 1,
                 Basis = newBaseValue,
@@ -114,7 +114,7 @@ namespace NetMud.Data.Gaia
             newBaseValue += trend.Count(letter => fives.Contains(letter)) * 5;
             newBaseValue += trend.Count(letter => eights.Contains(letter)) * 8;
 
-            EconomicTrend newTrend = new EconomicTrend()
+            EconomicTrend newTrend = new()
             {
                 Adjustment = 1,
                 Basis = newBaseValue,

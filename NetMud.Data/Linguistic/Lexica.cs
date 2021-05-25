@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -57,7 +56,7 @@ namespace NetMud.Data.Linguistic
         /// The context for this, which gets passed downards to anything modifying it
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public LexicalContext Context { get; set; }
 
         public Lexica()
@@ -118,9 +117,9 @@ namespace NetMud.Data.Linguistic
                 return null;
             }
 
-            Dictata dict = new Dictata(this);
+            Dictata dict = new(this);
 
-            Lexeme lex = new Lexeme()
+            Lexeme lex = new()
             {
                 Name = Phrase,
                 Language = dict.Language
@@ -142,7 +141,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(ILexica modifier, bool passthru = false)
         {
-            HashSet<ILexica> newModifiers = new HashSet<ILexica>(Modifiers);
+            HashSet<ILexica> newModifiers = new(Modifiers);
 
             if (!newModifiers.Contains(modifier))
             {
@@ -227,7 +226,7 @@ namespace NetMud.Data.Linguistic
         /// <returns>Whether or not it succeeded</returns>
         public ILexica TryModify(LexicalType type, GrammaticalType role, string phrase, bool passthru = false)
         {
-            ILexica modifier = new Lexica(type, role, phrase, Context);
+            ILexica modifier = new Linguistic.Lexica(type, role, phrase, Context);
 
             modifier = TryModify(modifier);
 
@@ -329,13 +328,13 @@ namespace NetMud.Data.Linguistic
             }
 
             //Placement ordering
-            List<Tuple<ILexica, int>> modifierList = new List<Tuple<ILexica, int>>
+            List<Tuple<ILexica, int>> modifierList = new()
             {
                 new Tuple<ILexica, int>(newLex, 0)
             };
 
             //modification rules ordered by specificity
-            List<ILexica> currentModifiers = new List<ILexica>(newLex.Modifiers);
+            List<ILexica> currentModifiers = new(newLex.Modifiers);
             foreach (ILexica modifier in currentModifiers)
             {
                 foreach (IWordPairRule wordRule in Context.Language.WordPairRules.Where(rul => rul.Matches(newLex, modifier))
@@ -490,7 +489,7 @@ namespace NetMud.Data.Linguistic
         /// <param name="entity">the subject</param>
         private LexicalContext BuildContext(IEntity entity, IEntity observer)
         {
-            LexicalContext context = new LexicalContext(observer);
+            LexicalContext context = new(observer);
 
             bool specific = true;
             ILocation entityLocation = entity?.CurrentLocation?.CurrentLocation();
@@ -523,7 +522,7 @@ namespace NetMud.Data.Linguistic
         {
             ILexica message = null;
 
-            LexicalContext context = new LexicalContext(observer)
+            LexicalContext context = new(observer)
             {
                 Determinant = true,
                 Perspective = NarrativePerspective.FirstPerson,
@@ -535,62 +534,62 @@ namespace NetMud.Data.Linguistic
                 case MessagingType.Audible:
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "soft", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "soft", context));
 
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "loud", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "hear", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "sounds", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "loud", context));
                     }
                     break;
                 case MessagingType.Olefactory:
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
 
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "pungent", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "smell", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "pungent", context));
                     }
                     break;
                 case MessagingType.Psychic:
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "vague", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "vague", context));
 
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "disturbing", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "sense", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "presence", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "disturbing", context));
                     }
                     break;
                 case MessagingType.Tactile:
                     context.Position = LexicalPosition.Attached;
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "brushes", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "skin", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "lightly", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "brushes", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "skin", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "lightly", context));
 
                     }
                     else
                     {
                         context.Elegance = -5;
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "rubs", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "rubs", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Pronoun, GrammaticalType.Subject, "you", context));
                     }
                     break;
                 case MessagingType.Taste:
@@ -598,17 +597,17 @@ namespace NetMud.Data.Linguistic
 
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "subtle", context));
 
                     }
                     else
                     {
                         context.Elegance = -5;
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
-                                                        .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
-                                                        .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "offensive", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "taste", observer, observer)
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "something", context))
+                                                        .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "offensive", context));
                     }
                     break;
                 case MessagingType.Visible:
@@ -616,14 +615,14 @@ namespace NetMud.Data.Linguistic
 
                     if (!over)
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
-                                                .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "shadows", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
+                                                .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "shadows", context));
                     }
                     else
                     {
-                        message = new Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
-                                                .TryModify(new Lexica(LexicalType.Noun, GrammaticalType.Subject, "lights", context))
-                                                .TryModify(new Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "blinding", context));
+                        message = new Linguistic.Lexica(LexicalType.Verb, GrammaticalType.Verb, "see", observer, observer)
+                                                .TryModify(new Linguistic.Lexica(LexicalType.Noun, GrammaticalType.Subject, "lights", context))
+                                                .TryModify(new Linguistic.Lexica(LexicalType.Adjective, GrammaticalType.Descriptive, "blinding", context));
                     }
                     break;
             }
@@ -714,7 +713,7 @@ namespace NetMud.Data.Linguistic
 
         public ILexica Clone()
         {
-            return new Lexica(Type, Role, Phrase, Context)
+            return new Linguistic.Lexica(Type, Role, Phrase, Context)
             {
                 Modifiers = new HashSet<ILexica>(Modifiers.Select(mod => mod.Clone()))
             };

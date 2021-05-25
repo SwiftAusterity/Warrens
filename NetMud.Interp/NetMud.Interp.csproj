@@ -1,88 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0C46DAB6-27FD-4117-ACF6-0B8440614AA0}</ProjectGuid>
+    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetMud.Interp</RootNamespace>
-    <AssemblyName>NetMud.Interp</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\NetMud.Commands\NetMud.Commands.csproj" />
+    <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj" />
+    <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj" />
+    <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj" />
+    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj" />
+    <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CommandPackage.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="Interpret.cs" />
-    <Compile Include="LexicalInterpretationEngine.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NetMud.Commands\NetMud.Commands.csproj">
-      <Project>{39b7f303-cf48-41df-b56b-325987e7f7e6}</Project>
-      <Name>NetMud.Commands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Communication\NetMud.Communication.csproj">
-      <Project>{7f19324f-1b9c-467d-816a-74a36eb74cde}</Project>
-      <Name>NetMud.Communication</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.DataAccess\NetMud.DataAccess.csproj">
-      <Project>{25b53ef7-e51c-4ee5-a04c-dd8797cff58f}</Project>
-      <Name>NetMud.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.DataStructure\NetMud.DataStructure.csproj">
-      <Project>{88b7a648-fe23-4e88-9b60-ae17c8858af4}</Project>
-      <Name>NetMud.DataStructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Data\NetMud.Data.csproj">
-      <Project>{8b2cb5f6-65ca-4458-856b-6957e9309dbb}</Project>
-      <Name>NetMud.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NetMud.Utility\NetMud.Utility.csproj">
-      <Project>{9f3caec0-73dc-463c-8ef7-13b83bc8fb12}</Project>
-      <Name>NetMud.Utility</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

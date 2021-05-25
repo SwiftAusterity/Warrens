@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using NetMud.Authentication;
+﻿using NetMud.Authentication;
 using NetMud.Data.Players;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Administrative;
@@ -13,8 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMud.Controllers
 {
@@ -119,7 +115,7 @@ namespace NetMud.Controllers
         public ActionResult Register()
         {
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-            RegisterViewModel vModel = new RegisterViewModel();
+            RegisterViewModel vModel = new();
 
             if (!globalConfig.UserCreationActive)
             {
@@ -143,9 +139,9 @@ namespace NetMud.Controllers
 
             if (ModelState.IsValid)
             {
-                Account newGameAccount = new Account(model.GlobalUserHandle);
+                Account newGameAccount = new(model.GlobalUserHandle);
 
-                ApplicationUser user = new ApplicationUser { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
+                ApplicationUser user = new() { UserName = model.Email, Email = model.Email, GameAccount = newGameAccount };
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -172,7 +168,7 @@ namespace NetMud.Controllers
 
         private void CreateAccountPlayerAndConfig(IAccount account)
         {
-            AccountConfig newAccountConfig = new AccountConfig(account);
+            AccountConfig newAccountConfig = new(account);
 
             IEnumerable<IUIModule> uiModules = TemplateCache.GetAll<IUIModule>().Where(uim => uim.SystemDefault > 0);
 
@@ -306,7 +302,7 @@ namespace NetMud.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        internal class ChallengeResult : HttpUnauthorizedResult
+        internal class ChallengeResult : UnauthorizedResult
         {
             public ChallengeResult(string provider, string redirectUri)
                 : this(provider, redirectUri, null)

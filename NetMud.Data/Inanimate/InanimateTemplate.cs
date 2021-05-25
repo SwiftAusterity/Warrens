@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Inanimate
 {
@@ -29,7 +28,7 @@ namespace NetMud.Data.Inanimate
         /// The system type for the entity this attaches to
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override Type EntityClass
         {
             get { return typeof(Inanimate); }
@@ -38,7 +37,7 @@ namespace NetMud.Data.Inanimate
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
@@ -46,14 +45,14 @@ namespace NetMud.Data.Inanimate
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
             {
                 if (_keywords == null || _keywords.Length == 0)
                 {
-                    List<string> wordList = new List<string>() { Name };
+                    List<string> wordList = new() { Name };
                     wordList.AddRange(Name.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries));
                     _keywords = wordList.ToArray();
                 }
@@ -132,7 +131,7 @@ namespace NetMud.Data.Inanimate
             IEnumerable<IInanimate> crafterInventory = crafterContainer.GetContents<IInanimate>();
 
             //Find components
-            List<IInanimate> itemsToUse = new List<IInanimate>();
+            List<IInanimate> itemsToUse = new();
             foreach (IInanimateComponent component in Components)
             {
                 int inventoryCount = crafterInventory.Count(item => item.TemplateId.Equals(component.Item.Id));
@@ -155,7 +154,7 @@ namespace NetMud.Data.Inanimate
             int i = 0;
             while (i < Produces)
             {
-                Inanimate newItem = new Inanimate(this, crafterContainer.GetContainerAsLocation());
+                Inanimate newItem = new(this, crafterContainer.GetContainerAsLocation());
                 i++;
             }
 
@@ -168,7 +167,7 @@ namespace NetMud.Data.Inanimate
         /// <returns>formatted list of components and requirements</returns>
         public string RenderBlueprints(IEntity actor)
         {
-            StringBuilder returnValue = new StringBuilder();
+            StringBuilder returnValue = new();
 
             returnValue.AppendFormattedLine("Crafts: ({0}) {1}", Produces, Name);
 

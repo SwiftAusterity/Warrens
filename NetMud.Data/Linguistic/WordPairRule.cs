@@ -1,12 +1,10 @@
 ﻿using NetMud.Data.Architectural.PropertyBinding;
 using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
-using NetMud.Utility;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -35,7 +33,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// When the from word is specifically this
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Specific Word", Description = "When the From word is this or a synonym of this (only native synonyms) this rule applies.")]
         [UIHint("DictataList")]
@@ -69,7 +67,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// When the additional word (like the article) should be this explicitely
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Specific Addition", Description = "When the additional word (like the article being added) should be this explicitely.")]
         [UIHint("DictataList")]

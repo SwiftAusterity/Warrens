@@ -33,8 +33,8 @@ namespace NetMud.Communication.Lexical
                 object[] body = new object[] { new { Text = phrase } };
                 string requestBody = JsonConvert.SerializeObject(body);
 
-                using (HttpClient client = new HttpClient())
-                using (HttpRequestMessage request = new HttpRequestMessage())
+                using (HttpClient client = new())
+                using (HttpRequestMessage request = new())
                 {
                     // Set the method to POST
                     request.Method = HttpMethod.Post;
@@ -147,7 +147,7 @@ namespace NetMud.Communication.Lexical
 
             if (context.Severity + context.Elegance + context.Quality == 0)
             {
-                List<Tuple<IDictata, int>> rankedWords = new List<Tuple<IDictata, int>>
+                List<Tuple<IDictata, int>> rankedWords = new()
                 {
                     new Tuple<IDictata, int>(baseWord, GetSynonymRanking(baseWord, context))
                 };
@@ -174,7 +174,7 @@ namespace NetMud.Communication.Lexical
 
         private static IDictata GetRelatedWord(IDictata baseWord, IEnumerable<IDictata> possibleWords, int severityModifier, int eleganceModifier, int qualityModifier)
         {
-            Dictionary<IDictata, int> rankedWords = new Dictionary<IDictata, int>();
+            Dictionary<IDictata, int> rankedWords = new();
             foreach (IDictata word in possibleWords)
             {
                 int rating = 0;
@@ -199,7 +199,7 @@ namespace NetMud.Communication.Lexical
             }
 
             //try to downgrade word
-            Dictionary<IDictata, int> rankedWords = new Dictionary<IDictata, int>();
+            Dictionary<IDictata, int> rankedWords = new();
             foreach (IDictata possibleWord in possibleWords)
             {
                 int rating = Math.Abs(word.Quality + (Math.Abs(obscureStrength) * -1) - possibleWord.Quality);
@@ -230,7 +230,7 @@ namespace NetMud.Communication.Lexical
                 //pronouns become "it"
                 if (nounWordTypes.Contains(newWord.WordType))
                 {
-                    LexicalContext itContext = new LexicalContext(null)
+                    LexicalContext itContext = new(null)
                     {
                         Determinant = false,
                         Plural = false,

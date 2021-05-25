@@ -75,7 +75,7 @@ namespace NetMud.Communication.Messaging
         public void Unpack(LexicalContext overridingContext = null)
         {
             //Clean them out
-            List<ILexicalSentence> sentences = new List<ILexicalSentence>();
+            List<ILexicalSentence> sentences = new();
 
             foreach (ISensoryEvent sensoryEvent in Events)
             {
@@ -96,15 +96,15 @@ namespace NetMud.Communication.Messaging
                 return Override;
             }
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             if (Sentences.Count == 0 || overridingContext != null)
             {
                 Unpack(overridingContext);
             }
 
-            List<int> removedSentences = new List<int>();
-            List<ILexicalSentence> finalSentences = new List<ILexicalSentence>();
+            List<int> removedSentences = new();
+            List<ILexicalSentence> finalSentences = new();
             for (int i = 0; i < Sentences.Count(); i++)
             {
                 if (removedSentences.Contains(i))
@@ -173,7 +173,7 @@ namespace NetMud.Communication.Messaging
                     first.Subject = second.Subject;
                     break;
                 case -1:
-                    List<Tuple<ISensoryEvent, short>> newSubjects = new List<Tuple<ISensoryEvent, short>>();
+                    List<Tuple<ISensoryEvent, short>> newSubjects = new();
                     newSubjects.AddRange(first.Subject);
                     newSubjects.AddRange(second.Subject.Where(sub => !newSubjects.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
 
@@ -190,7 +190,7 @@ namespace NetMud.Communication.Messaging
                     first.Subject = newSubjects;
                     break;
                 case -2:
-                    List<Tuple<ISensoryEvent, short>> newPredicates = new List<Tuple<ISensoryEvent, short>>();
+                    List<Tuple<ISensoryEvent, short>> newPredicates = new();
                     newPredicates.AddRange(first.Predicate);
                     newPredicates.AddRange(second.Predicate.Where(sub => !newPredicates.Any(nSub => nSub.Item1.Event.Phrase.Equals(sub.Item1.Event.Phrase, StringComparison.InvariantCultureIgnoreCase))));
 
@@ -208,7 +208,7 @@ namespace NetMud.Communication.Messaging
                     break;
             }
 
-            List<Tuple<ISensoryEvent, short>> newModifiers = new List<Tuple<ISensoryEvent, short>>();
+            List<Tuple<ISensoryEvent, short>> newModifiers = new();
             newModifiers.AddRange(first.Modifiers);
             newModifiers.AddRange(second.Modifiers);
 

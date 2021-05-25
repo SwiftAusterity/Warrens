@@ -3,7 +3,6 @@ using NetMud.DataAccess.Cache;
 using NetMud.DataStructure.Linguistic;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Linguistic
 {
@@ -18,7 +17,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// One of the words in the contraction (not an indicator of order)
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "First", Description = "One of the words in the contraction (not an indicator of order).")]
         [UIHint("DictataList")]
@@ -52,7 +51,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// One of the words in the contraction (not an indicator of order)
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Second", Description = "One of the words in the contraction (not an indicator of order).")]
         [UIHint("DictataList")]
@@ -86,7 +85,7 @@ namespace NetMud.Data.Linguistic
         /// <summary>
         /// The contraction this turns into
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Contraction", Description = "The contraction this turns into.")]
         [UIHint("DictataList")]

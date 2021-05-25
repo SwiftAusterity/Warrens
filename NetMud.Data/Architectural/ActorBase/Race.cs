@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Architectural.ActorBase
 {
@@ -49,7 +48,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// the torso object
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Torso is invalid.")]
         [Display(Name = "Torso Object", Description = "The # of and object that this thing's torso is made of.")]
@@ -73,7 +72,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// The head object
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Head is invalid.")]
         [Display(Name = "Head Object", Description = "The object that this thing's head is made of.")]
@@ -111,7 +110,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// Material that is the blood
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Blood material is invalid.")]
         [Display(Name = "Blood Type", Description = "The material this thing's blood is composed of.")]
@@ -174,7 +173,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// What is the starting room of new players
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Starting Location is invalid.")]
         [Display(Name = "Starting Zone", Description = "The zone this begins in when made as a player.")]
@@ -198,7 +197,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <summary>
         /// When a player loads without a location where do we send them
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Emergency Location is invalid.")]
         [Display(Name = "Recall Zone", Description = "The 'emergency' zone this shows up in when the system can't figure out where else to put it. (post-newbie zone for players)")]
@@ -244,7 +243,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// </summary>
         public IEnumerable<BodyPart> FullAnatomy()
         {
-            List<BodyPart> anatomy = new List<BodyPart>();
+            List<BodyPart> anatomy = new();
 
             if (Arms != null)
             {
@@ -295,7 +294,7 @@ namespace NetMud.Data.Architectural.ActorBase
         /// <returns>List of strings as rows for rendering</returns>
         public IEnumerable<string> RenderAnatomy(bool forWeb)
         {
-            List<string> stringList = new List<string>();
+            List<string> stringList = new();
 
             if (Head != null)
             {

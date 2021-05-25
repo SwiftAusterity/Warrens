@@ -10,7 +10,7 @@ namespace NetMud.Data.Architectural.PropertyBinding
     {
         public override object Convert(object input)
         {
-            HashSet<IDimensionalModelNode> nodes = new HashSet<IDimensionalModelNode>();
+            HashSet<IDimensionalModelNode> nodes = new();
             IEnumerable<string> nodeValues = input as IEnumerable<string>;
 
             short i = 0;

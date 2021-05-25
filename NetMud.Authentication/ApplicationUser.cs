@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using NetMud.Data.Players;
+﻿using NetMud.Data.Players;
 using NetMud.DataStructure.Administrative;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;

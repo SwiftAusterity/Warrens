@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Room
 {
@@ -33,7 +32,7 @@ namespace NetMud.Data.Room
         /// The system type for the entity this attaches to
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override Type EntityClass
         {
             get { return typeof(Pathway); }
@@ -43,14 +42,14 @@ namespace NetMud.Data.Room
         /// What type of approval is necessary for this content
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Leader; } }
 
         /// <summary>
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
@@ -69,7 +68,7 @@ namespace NetMud.Data.Room
         /// DegreesFromNorth translated
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public MovementDirectionType DirectionType
         {
             get
@@ -100,7 +99,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// What is in the middle of the room
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Destination is invalid.")]
         [Display(Name = "To Room", Description = "The room this leads to.")]
@@ -127,7 +126,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// What is in the middle of the room
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Origin is invalid.")]
         [Display(Name = "From Room", Description = "The room this originates from.")]
@@ -158,7 +157,7 @@ namespace NetMud.Data.Room
         /// <summary>
         /// What type of path is this? (rooms, zones, locales, etc)
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public PathwayType Type
         {
@@ -308,7 +307,7 @@ namespace NetMud.Data.Room
         {
             try
             {
-                LexicalContext collectiveContext = new LexicalContext(null)
+                LexicalContext collectiveContext = new(null)
                 {
                     Determinant = true,
                     Perspective = NarrativePerspective.ThirdPerson,
@@ -317,9 +316,9 @@ namespace NetMud.Data.Room
                     Tense = LexicalTense.Present
                 };
 
-                List<IDictata> dictatas = new List<IDictata>
+                List<IDictata> dictatas = new()
                 {
-                    new Dictata(new Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name, collectiveContext))
+                    new Dictata(new Linguistic.Lexica(LexicalType.ProperNoun, GrammaticalType.Subject, Name, collectiveContext))
                 };
                 dictatas.AddRange(Descriptives.Select(desc => desc.Event.GetDictata()));
 

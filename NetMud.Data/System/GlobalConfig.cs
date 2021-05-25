@@ -9,21 +9,20 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.System
 {
     [Serializable]
     public class GlobalConfig : ConfigData, IGlobalConfig
     {
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType => ContentApprovalType.None;
 
         /// <summary>
         /// Type of configuation data this is
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ConfigDataType Type => ConfigDataType.GameWorld;
 
@@ -92,7 +91,7 @@ namespace NetMud.Data.System
         /// <summary>
         /// The language this is derived from
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [Display(Name = "Base Language", Description = "The base language for the system.")]
         [UIHint("LanguageList")]

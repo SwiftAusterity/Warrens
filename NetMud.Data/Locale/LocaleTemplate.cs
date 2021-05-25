@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web.Script.Serialization;
 
 namespace NetMud.Data.Locale
 {
@@ -24,7 +23,7 @@ namespace NetMud.Data.Locale
     public class LocaleTemplate : EntityTemplatePartial, ILocaleTemplate
     {
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override Type EntityClass
         {
             get { return typeof(Locale); }
@@ -33,7 +32,7 @@ namespace NetMud.Data.Locale
         /// <summary>
         /// What type of approval is necessary for this content
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         public override ContentApprovalType ApprovalType { get { return ContentApprovalType.Staff; } }
 
@@ -41,7 +40,7 @@ namespace NetMud.Data.Locale
         /// keywords this entity is referrable by in the world by the parser
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public override string[] Keywords
         {
             get
@@ -72,7 +71,7 @@ namespace NetMud.Data.Locale
         /// The interior map of the locale
         /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
+
         public IMap Interior { get; set; }
 
         [JsonProperty("ParentLocation")]
@@ -81,7 +80,7 @@ namespace NetMud.Data.Locale
         /// <summary>
         /// The zone this belongs to
         /// </summary>
-        [ScriptIgnore]
+
         [JsonIgnore]
         [NonNullableDataIntegrity("Locales must have a zone affiliation.")]
         public IZoneTemplate ParentLocation
